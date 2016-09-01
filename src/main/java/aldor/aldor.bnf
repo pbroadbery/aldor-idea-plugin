@@ -1,0 +1,559 @@
+{
+  parserUtilClass="aldor.AldorParserUtil"
+
+  parserClass="aldor.AldorParser"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  elementTypeHolderClass="aldor.AldorTypes"
+  elementTypeClass="aldor.AldorElementType"
+
+  tokenTypeClass="aldor.AldorTokenType"
+  tokenTypeFactory = "aldor.AldorTokenTypes.createToken"
+
+  psiClassPrefix="Aldor"
+  psiImplClassSuffix="Impl"
+  psiPackage="aldor.psi"
+  psiImplPackage="aldor.impl"
+
+  name("E[0-9].*")='InfixedExpr'
+  extends("E[0-9].*")=InfixedExpr
+
+  name("Jx.*")='Application'
+  extends("Jx.*")='Application'
+
+  tokens = [
+          TK_Id TK_Blank TK_Int TK_Float TK_String TK_PreDoc TK_PostDoc
+          TK_Comment TK_SysCmd TK_Error
+
+          KW_Add KW_And KW_Always KW_Assert KW_Break KW_But KW_By
+          KW_Case KW_Catch KW_Default KW_Define KW_Delay KW_Do KW_Else
+          KW_Except KW_Export KW_Exquo KW_Extend KW_Finally KW_Fix
+          KW_For KW_Fluid KW_Free KW_From KW_Generate KW_Goto KW_Has
+          KW_If KW_Import KW_In KW_Inline KW_Is KW_Isnt KW_Iterate
+          KW_Let KW_Local KW_Macro KW_Mod KW_Never KW_Not KW_Of KW_Or
+          KW_Pretend KW_Quo KW_Reference KW_Rem KW_Repeat KW_Return
+          KW_Rule KW_Select KW_Then KW_Throw KW_To KW_Try KW_Where
+          KW_While KW_With KW_Yield
+
+          KW_Quote KW_Grave KW_Ampersand KW_Comma KW_Semicolon KW_Dollar
+          KW_Sharp KW_At
+
+          KW_Assign KW_Colon KW_ColonStar KW_2Colon
+
+          KW_Star KW_2Star
+
+          KW_Dot KW_2Dot
+
+          KW_EQ KW_2EQ KW_MArrow KW_Implies
+
+          KW_GT KW_2GT KW_GE
+
+          KW_LT KW_2LT KW_LE KW_LArrow
+
+          KW_Hat KW_HatE
+
+          KW_Tilde KW_TildeE
+
+          KW_Plus KW_PlusMinus KW_MapsTo KW_MapsToStar
+
+          KW_Minus KW_RArrow KW_MapStar
+
+          KW_Slash KW_Wedge
+
+          KW_Backslash KW_Vee
+
+          KW_OBrack KW_OBBrack KW_OCurly KW_OBCurly KW_OParen KW_OBParen
+
+          KW_CBrack KW_CCurly KW_CParen
+
+          KW_Bar KW_CBBrack KW_CBCurly KW_CBParen KW_2Bar
+
+          KW_NewLine KW_StartPile KW_EndPile KW_SetTab KW_BackSet KW_BackTab KW_Juxtapose
+
+          TK_LIMIT
+   ]
+
+}
+
+Goal ::= CurlyContents_Labelled
+//Expression ::= enlist1a(Labelled, KW_SEMICOLON)
+Expression ::= enlist1a_Labelled_KW_SEMICOLON
+
+Labelled ::= Declaration | KW_At Atom opt_Labelled | Comma
+
+Declaration ::=
+          KW_Macro MacroBody
+        | KW_Extend Sig
+        | KW_Local Sig
+        | KW_Free Sig
+        | KW_Fluid Sig
+        | KW_Default Sig
+        | KW_Define Sig
+        | KW_Fix Sig
+        | KW_Inline opt_Sig opt_FromPart
+        | KW_Import opt_Sig opt_FromPart
+        | ExportDecl
+
+ExportDecl ::= KW_Export opt_Sig
+               | KW_Export opt_Sig ToPart
+               | KW_Export opt_Sig FromPart
+
+ToPart ::= KW_To Infixed
+
+FromPart ::= KW_From enlist1_Infixed_KW_Comma
+
+MacroBody ::= Sig | ExportDecl | KW_Import Sig opt_FromPart
+
+Sig ::= DeclBinding | Block
+
+DeclPart ::= KW_Colon Type | KW_ColonStar Type
+
+Comma ::= enlist1_CommaItem_KW_Comma
+CommaItem ::= Binding_AnyStatement (KW_Where CommaItem)?
+
+DeclBinding ::= BindingR_InfixedExprsDecl_AnyStatement
+
+InfixedExprsDecl ::= InfixedExprs DeclPart?
+
+InfixedExprs ::= enlist1_InfixedExpr_KW_Comma
+
+//Binding_E ::= BindingL_Infixed_E
+Binding_AnyStatement ::= BindingL_Infixed_AnyStatement
+Binding_Collection ::= BindingL_Infixed_Collection
+//Binding_InfixedExprsDecl ::= BindingL_Infixed_InfixedExprsDecl
+Binding_BalStatement ::= BindingL_Infixed_BalStatement
+//BindingL_R_L ::=
+//               | R KW_Assign_BindingL_R_L
+//               | R KW_2EQ BindingL_R_L
+//               | R KW_MArrow BindingL_R_L
+//               | R KW_MapsTo BindingL_R_L
+//               | R KW_MapsToStar BindingL_R_L
+//               | L
+
+BindingL_Infixed_AnyStatement ::=
+                 Infixed (KW_Assign BindingL_Infixed_AnyStatement
+                          | KW_2EQ BindingL_Infixed_AnyStatement
+                          | KW_MArrow BindingL_Infixed_AnyStatement
+                          | KW_MapsTo BindingL_Infixed_AnyStatement
+                          | KW_MapsToStar BindingL_Infixed_AnyStatement)
+               | AnyStatement
+
+BindingL_Infixed_BalStatement ::=
+                 Infixed (KW_Assign BindingL_Infixed_BalStatement
+                          | KW_2EQ BindingL_Infixed_BalStatement
+                          | KW_MArrow BindingL_Infixed_BalStatement
+                          | KW_MapsTo BindingL_Infixed_BalStatement
+                          | KW_MapsToStar BindingL_Infixed_BalStatement)
+               | BalStatement
+
+BindingL_Infixed_Collection ::=
+                 Infixed (KW_Assign BindingL_Infixed_Collection
+                          | KW_2EQ BindingL_Infixed_Collection
+                          | KW_MArrow BindingL_Infixed_Collection
+                          | KW_MapsTo BindingL_Infixed_Collection
+                          | KW_MapsToStar BindingL_Infixed_Collection)
+               | Collection
+/*
+BindingL_Infixed_InfixedExprsDecl ::=
+               Infixed (KW_Assign BindingL_Infixed_InfixedExprsDecl
+                        | KW_2EQ BindingL_Infixed_InfixedExprsDecl
+                        | KW_MArrow BindingL_Infixed_InfixedExprsDecl
+                        | KW_MapsTo BindingL_Infixed_InfixedExprsDecl
+                        | KW_MapsToStar BindingL_Infixed_InfixedExprsDecl)
+             | InfixedExprsDecl
+*/
+/*
+BindingR_R_L ::=
+               | R KW_Assign Binding_L
+               | R KW_2EQ Binding_L
+               | R KW_MArrow Binding_L
+               | R KW_MapsTo Binding_L
+               | R KW_MapsToStar Binding_L
+               | R
+*/
+
+/*
+BindingR_InfixedExprsDecl_InfixedExprsDecl ::=
+     Binding_InfixedExprsDecl (KW_Assign Binding_InfixedExprsDecl
+                               | KW_2EQ Binding_InfixedExprsDecl
+                               | KW_MArrow Binding_InfixedExprsDecl
+                               | KW_MapsTo Binding_InfixedExprsDecl
+                               | KW_MapsToStar Binding_InfixedExprsDecl)?
+*/
+
+BindingR_InfixedExprsDecl_AnyStatement ::= InfixedExprsDecl (KW_Assign Binding_AnyStatement
+                                                             | KW_2EQ Binding_AnyStatement
+                                                             | KW_MArrow Binding_AnyStatement
+                                                             | KW_MapsTo Binding_AnyStatement
+                                                             | KW_MapsToStar Binding_AnyStatement)?
+
+//no_semicolon ::= ! KW_Semicolon
+
+AnyStatement ::= KW_If CommaItem KW_Then Binding_AnyStatement | Flow_AnyStatement
+
+BalStatement ::= Flow_BalStatement
+
+/*
+Flow_XX ::= Collection
+| KW_If CommaItem KW_Then Binding_BalStatement KW_Else Binding_XX
+| Collection KW_Implies Binding_XX
+| Iterators KW_Repeat Binding_XX
+| KW_Repeat Binding_XX
+| KW_Try Binding_XX KW_But ButExpr AlwaysPart_XX
+| KW_Try Binding_XX KW_Catch ButExpr AlwaysPart_XX
+| KW_Select Binding_AnyStatement KW_In Cases
+| KW_Do Binding_XX
+| KW_Delay Binding_XX
+| KW_Reference Binding_XX
+| KW_Generate GenBound Binding_XX
+| KW_Assert Binding_XX
+| KW_Iterate opt_Name
+| KW_Break opt_Name
+| KW_Return opt_Collection
+| KW_Yield Binding_XX
+| KW_Except Binding_XX
+| KW_Throw Binding_XX
+| KW_Goto Id
+| KW_Never
+*/
+
+Flow_AnyStatement ::=
+  KW_If CommaItem KW_Then Binding_BalStatement KW_Else Binding_AnyStatement
+| Iterators KW_Repeat Binding_AnyStatement
+| KW_Repeat Binding_AnyStatement
+| KW_Try Binding_AnyStatement KW_But ButExpr AlwaysPart_AnyStatement
+| KW_Try Binding_AnyStatement KW_Catch ButExpr AlwaysPart_AnyStatement
+| KW_Select Binding_AnyStatement KW_In Cases
+| KW_Do Binding_AnyStatement
+| KW_Delay Binding_AnyStatement
+| KW_Reference Binding_AnyStatement
+| KW_Generate GenBound Binding_AnyStatement
+| KW_Assert Binding_AnyStatement
+| KW_Iterate opt_xName
+| KW_Break opt_xName
+| KW_Return opt_Collection
+| KW_Yield Binding_AnyStatement
+| KW_Except Binding_AnyStatement
+| KW_Throw Binding_AnyStatement
+| KW_Goto Id
+| KW_Never
+| Collection (KW_Implies Binding_AnyStatement)?
+
+Flow_BalStatement ::=
+  KW_If CommaItem KW_Then Binding_BalStatement KW_Else Binding_BalStatement
+| Iterators KW_Repeat Binding_BalStatement
+| KW_Repeat Binding_BalStatement
+| KW_Try Binding_BalStatement KW_But ButExpr AlwaysPart_BalStatement
+| KW_Try Binding_BalStatement KW_Catch ButExpr AlwaysPart_BalStatement
+| KW_Select Binding_BalStatement KW_In Cases
+| KW_Do Binding_BalStatement
+| KW_Delay Binding_BalStatement
+| KW_Reference Binding_BalStatement
+| KW_Generate GenBound Binding_BalStatement
+| KW_Assert Binding_BalStatement
+| KW_Iterate opt_xName
+| KW_Break opt_xName
+| KW_Return opt_Collection
+| KW_Yield Binding_AnyStatement
+| KW_Except Binding_AnyStatement
+| KW_Throw Binding_AnyStatement
+| KW_Goto Id
+| KW_Never
+| Collection (KW_Implies Binding_BalStatement)?
+
+
+
+GenBound ::= KW_To CommaItem KW_Of | Nothing
+
+ButExpr ::= DeclBinding KW_In Cases | Nothing
+
+Cases ::= Binding_Collection
+
+/*AlwaysPart_XX ::= KW_Always Binding_XX
+                | KW_Finally Binding_XX
+                | Nothing */
+AlwaysPart_AnyStatement ::= KW_Always Binding_AnyStatement
+                | KW_Finally Binding_AnyStatement
+                | Nothing
+
+AlwaysPart_BalStatement ::= KW_Always Binding_BalStatement
+                | KW_Finally Binding_BalStatement
+                | Nothing
+
+Collection ::= Infixed Iterators?
+
+Iterators ::= Iterators1
+
+//Iterators1 ::= Iterator | Iterators1 Iterator
+Iterators1 ::= Iterator+
+Iterator ::= KW_For ForLhs KW_In Infixed opt_SuchthatPart
+              | KW_While Infixed
+
+ForLhs ::= Infixed
+        | KW_Free Infixed
+        | KW_Local Infixed
+        | KW_Fluid Infixed
+
+SuchThatPart ::= KW_Bar Infixed
+
+Infixed ::= InfixedExpr DeclPart? | Block
+
+InfixedExpr ::= E3 | E11_Op
+
+//E3 ::= E4 | E3 KW_And E4 | E3 KW_Or E4 | E3 LatticeOp E4
+
+E3 ::= E4 ((KW_And | KW_Or | LatticeOp) E4)*
+
+//E4 ::= E5 | E4 KW_Has E5 | E4 RelationOp E5 | RelationOp E5
+E4 ::= (E5 | RelationOp E5) (KW_Has E5 | RelationOp E5)*
+
+//E5 ::= E6 | E5 SegOp | E5 SegOp E6
+E5 ::= E6 (SegOp E6?)*
+//E6 ::= E7 | E6 PlusOp E7 | PlusOp E7
+
+E6 ::= (E7 | PlusOp E7) (PlusOp E7)*
+
+//E7 ::= E8| E7 QuotientOp E8
+E7 ::= E8 (QuotientOp E8)*
+
+//E8 ::= E9 | E8 TimesOp E9
+
+E8 ::= E9 (TimesOp E9)*
+
+E9 ::= E11_E12 PowerOp E9 | E11_E12
+
+/*
+E11_X ::= X
+| E11_X KW_2Colon E12
+| E11_X KW_At E12
+| E11_X KW_Pretend E12
+
+X ((KW_2Colon | KW_At | KW_Pretend) E12)*
+
+*/
+
+E11_E12 ::= E12 ((KW_2Colon | KW_At | KW_Pretend) E12)*
+E11_Op ::= Op ((KW_2Colon | KW_At | KW_Pretend) E12)*
+
+Type ::= E11_E12
+
+E12 ::= E13 (ArrowOp E12)?
+
+
+E13 ::= E14 (KW_Dollar QualTail)?
+
+QualTail ::= JxLeftJuxtaposed (KW_Dollar QualTail)?
+
+OpQualTail ::= Molecule (KW_Dollar OpQualTail)?
+
+
+//E14 ::= E15
+//| opt_E14 KW_With DeclMolecule
+//| opt_E14 KW_Add DeclMolecule
+//| E14 KW_Except E15
+//| E14 KW_Throw E15
+
+//E14 ::= (KW_With | KW_Add | E15) ((KW_With DeclMolecule) | (KW_Add DeclMolecule) | (KW_Except E15) | (KW_Throw E15))*
+E14 ::= ((E15? (KW_With DeclMolecule | KW_Add DeclMolecule)) | (E15 (KW_Except E15 | KW_Throw E15| Nothing))) (KW_With | KW_Add DeclMolecule)*
+
+E15 ::= Application
+
+Op ::= ArrowOp
+| LatticeOp
+| RelationOp
+| SegOp
+| PlusOp
+| QuotientOp
+| TimesOp
+| PowerOp
+
+NakedOp ::= UnqualOp_ArrowTok
+| UnqualOp_LatticeTok
+| UnqualOp_RelationTok
+| UnqualOp_SegTok
+| UnqualOp_PlusTok
+| UnqualOp_QuotientTok
+| UnqualOp_TimesTok
+| UnqualOp_PowerTok
+
+ArrowOp ::=	 QualOp_ArrowTok
+LatticeOp::=	 QualOp_LatticeTok
+RelationOp::=	 QualOp_RelationTok
+SegOp::= 		 QualOp_SegTok
+PlusOp::=	 QualOp_PlusTok
+QuotientOp::=	 QualOp_QuotientTok
+TimesOp::= 	 QualOp_TimesTok
+PowerOp::= 	 QualOp_PowerTok
+
+ArrowTok::=	 KW_RArrow | KW_LArrow | KW_MapStar
+LatticeTok::= KW_Vee    | KW_Wedge
+RelationTok::=KW_EQ     | KW_TildeE | KW_HatE |
+		 KW_GE     | KW_GT     | KW_2GT  |
+		 KW_LE     | KW_LT     | KW_2LT  |
+		 KW_Is     | KW_Isnt   | KW_Case
+SegTok ::=	 KW_2Dot   | KW_By ;
+PlusTok ::=	 KW_Plus   | KW_Minus  | KW_PlusMinus
+QuotientTok::=KW_Mod    | KW_Quo    | KW_Rem | KW_Exquo
+TimesTok::=	 KW_Star   | KW_Slash  | KW_Backslash
+PowerTok::=	 KW_2Star  | KW_Hat ;
+
+/*
+ * Juxtaposed Expressions
+ *
+ * a b c d                   as(.(.(.)))
+ * f(a).2(b)(c).x.y.(d).(e)  as(((.).).)
+ *
+ */
+
+Application::= JxRightJuxtaposed
+
+JxRightJuxtaposed ::= Jxright_Molecule
+;
+
+JxLeftJuxtaposed ::= Jxleft_Molecule
+
+//Jxright_H ::= Jxleft_H Jxright_Atom? | KW_Not Jxright_Atom
+
+Jxright_Molecule ::= Jxleft_Molecule Jxright_Atom? | KW_Not Jxright_Atom
+
+Jxright_Atom ::= Jxleft_Atom Jxright_Atom? | KW_Not Jxright_Atom
+/*
+Jleft_H::= H
+| KW_Not BlockEnclosure
+| Jleft_H BlockEnclosure
+| Jleft_H KW_Dot BlockMolecule
+*/
+
+//Jxleft_H ::= (H | KW_Not BlockEnclosure) (BlockEnclosure | KW_Dot BlockMolecule)*
+
+
+Jxleft_Molecule::= (Molecule | KW_Not BlockEnclosure) (BlockEnclosure | KW_Dot BlockMolecule)*
+Jxleft_Atom::= (Atom | KW_Not BlockEnclosure) (BlockEnclosure | KW_Dot BlockMolecule)*
+
+Molecule ::= Atom | BlockEnclosure
+
+Enclosure ::= Parened | Bracketed | QuotedIds
+
+DeclMolecule ::= Block | opt_Application
+
+BlockMolecule ::= Atom
+            | Enclosure
+            | Block
+
+
+BlockEnclosure ::= Enclosure | Block
+
+Block ::= Piled_Expression
+        | Curly_Labelled
+
+Parened ::= KW_OParen KW_CParen
+| KW_OParen Expression KW_CParen
+
+Bracketed ::= KW_OBrack KW_CBrack
+| KW_OBrack Expression KW_CBrack
+
+QuotedIds ::= KW_Quote KW_Quote
+| KW_Quote Names KW_Quote
+
+Names::= enlist1_Name_KW_Comma
+
+Atom ::= Id | Literal
+
+xName ::= Id | NakedOp
+
+Id ::= TK_Id | KW_Sharp | KW_Tilde
+
+Literal ::= TK_Int | TK_Float | TK_String
+
+Nothing ::=
+
+//UnqualOp_Xop ::= Xop
+UnqualOp_ArrowTok ::= ArrowTok
+UnqualOp_LatticeTok ::= LatticeTok
+UnqualOp_RelationTok ::= RelationTok
+UnqualOp_SegTok ::= SegTok
+UnqualOp_PlusTok ::= PlusTok
+UnqualOp_QuotientTok ::= QuotientTok
+UnqualOp_TimesTok ::= TimesTok
+UnqualOp_PowerTok ::= PowerTok
+
+
+//QualOp_op ::= op | op KW_Dollar OpQualTail
+QualOp_ArrowTok ::= ArrowTok KW_Dollar OpQualTail | ArrowTok
+QualOp_LatticeTok ::= LatticeTok KW_Dollar OpQualTail | LatticeTok
+QualOp_RelationTok ::=  RelationTok KW_Dollar OpQualTail | RelationTok
+QualOp_SegTok ::= SegTok KW_Dollar OpQualTail | SegTok
+QualOp_PlusTok ::= PlusTok KW_Dollar OpQualTail | PlusTok
+QualOp_QuotientTok ::= QuotientTok KW_Dollar OpQualTail | QuotientTok
+QualOp_TimesTok ::= TimesTok KW_Dollar OpQualTail | TimesTok
+QualOp_PowerTok ::= PowerTok KW_Dollar OpQualTail | PowerTok
+
+//opt_E ::= E?
+opt_Application ::= Application?
+//opt_E14 ::= E14?
+opt_FromPart ::= FromPart?
+//opt_ToPart ::= ToPart?
+opt_Labelled ::= Labelled?
+opt_Sig ::= Sig?
+opt_xName ::= xName?
+opt_Collection ::= Collection?
+opt_SuchthatPart ::= SuchThatPart?
+
+//enlist1_E_Sep ::= enlister1_E_Sep
+enlist1_CommaItem_KW_Comma ::= enlister1_CommaItem_KW_Comma
+enlist1_Infixed_KW_Comma ::= enlister1_Infixed_KW_Comma
+enlist1_InfixedExpr_KW_Comma ::= enlister1_InfixedExpr_KW_Comma
+enlist1_Name_KW_Comma ::= enlister1_xName_KW_Comma
+
+//enlist2_E_Sep ::= enlister1_E_Sep
+
+//enlister1_E_Sep ::= E | enlister1_E_Sep Sep E
+//enlister1 ::= E (Sep E)*
+enlister1_CommaItem_KW_Comma ::= CommaItem (KW_Comma CommaItem)*
+enlister1_Infixed_KW_Comma ::= Infixed (KW_Comma CommaItem)*
+enlister1_InfixedExpr_KW_Comma ::= InfixedExpr (KW_Comma InfixedExpr)*
+enlister1_xName_KW_Comma ::= xName (KW_Comma xName)*
+
+//enlist1a_E_Sep ::= enlister1a_E_Sep
+//enlister1a ::= E (Sep E)* Sep?
+enlist1a_Labelled_KW_SEMICOLON ::= Labelled (Semicolon Labelled)* Semicolon?
+
+//Piled_E ::= KW_SetTab PileContents_E KW_BackTab
+Piled_Expression ::= KW_SetTab PileContents_Expression KW_BackTab
+
+//Curly_E ::= KW_OCurly CurlyContents_E KW_CCurly
+Curly_Labelled ::= KW_OCurly CurlyContents_Labelled KW_CCurly
+
+//PileContents_E ::= Doc_E | PileContents_E KW_BackSet Doc_E | error KW_BackSet Doc_E
+//PileContents_E ::= (Doc_E | error KW_BackSet Doc_E) (KW_BackSet Doc_E)*
+PileContents_Expression ::= (Doc_Expression | error KW_BackSet Doc_Expression) (KW_BackSet Doc_Expression)*
+
+//CurlyContents_E ::= CurlyContentsList_E
+CurlyContents_Labelled ::= CurlyContentsList_Labelled
+
+//CurlyContentsList_E ::= CurlyContent1_E
+//            | CurlyContent1_E CurlyContentB_E
+CurlyContentsList_Labelled ::= CurlyContent1_Labelled CurlyContentB_Labelled?
+
+//CurlyContent1_E ::= Nothing
+//        | CurlyContent1_E CurlyContentA_E
+
+CurlyContent1_Labelled ::= CurlyContentA_Labelled*
+
+//CurlyContentA_E ::= CurlyContentB_E KW_Semicolon PostDocument
+//        | error KW_Semicolon PostDocument
+CurlyContentA_Labelled ::= CurlyContentB_Labelled Semicolon PostDocument
+        | error KW_Semicolon PostDocument
+
+Semicolon ::= <<semicolonOrCloseBraceNearby>>
+
+//CurlyContentB_E ::= PreDocument E PostDocument
+CurlyContentB_Labelled ::= PreDocument Labelled PostDocument
+
+// For the moment
+//Doc_E ::= E
+Doc_Expression ::= Expression
+
+PostDocument ::= TK_PostDoc*
+PreDocument ::= TK_PreDoc*

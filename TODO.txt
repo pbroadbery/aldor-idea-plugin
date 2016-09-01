@@ -1,0 +1,18 @@
+
+Lexer:
+Comments
+Pre/Post Doc
+Floating Point
+
+Extensions:
+Bracket matching
+"Goto definition"
+
+Module building:
+
+Grammar:
+Error recovery
+Tests
+
+
+
