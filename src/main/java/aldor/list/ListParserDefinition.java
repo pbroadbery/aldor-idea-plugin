@@ -28,21 +28,25 @@ public class ListParserDefinition implements ParserDefinition {
     return new ListLexerAdapter();
   }
 
+  @Override
   @NotNull
   public TokenSet getWhitespaceTokens() {
     return WHITE_SPACES;
   }
 
+  @Override
   @NotNull
   public TokenSet getCommentTokens() {
     return TokenSet.EMPTY;
   }
 
+  @Override
   @NotNull
   public TokenSet getStringLiteralElements() {
     return TokenSet.EMPTY;
   }
 
+  @Override
   @NotNull
   public PsiParser createParser(final Project project) {
     System.out.println("Creating parser for " + project.getName());
@@ -54,14 +58,17 @@ public class ListParserDefinition implements ParserDefinition {
     return FILE;
   }
 
+  @Override
   public PsiFile createFile(FileViewProvider viewProvider) {
     return new ListFile(viewProvider);
   }
 
+  @Override
   public SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode left, ASTNode right) {
     return SpaceRequirements.MAY;
   }
 
+  @Override
   @NotNull
   public PsiElement createElement(ASTNode node) {
     return ListTypes.Factory.createElement(node);

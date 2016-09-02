@@ -3,11 +3,19 @@ package pab.aldor;
 import aldor.AldorParserDefinition;
 import aldor.AldorTypes;
 import com.google.common.collect.Lists;
-import com.intellij.lang.*;
+import com.intellij.lang.ASTNode;
+import com.intellij.lang.ParserDefinition;
+import com.intellij.lang.PsiBuilder;
+import com.intellij.lang.PsiBuilderFactory;
+import com.intellij.lang.PsiParser;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.*;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiErrorElement;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiManager;
+import com.intellij.psi.PsiRecursiveElementVisitor;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import org.jetbrains.annotations.NotNull;
@@ -19,6 +27,7 @@ import java.util.List;
 /**
  * Lexer Test. Created by pab on 30/08/16.
  */
+@SuppressWarnings({"HardCodedStringLiteral", "ClassWithTooManyMethods"})
 public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
 
     @Override
@@ -202,10 +211,10 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
         ASTNode parsed = parser.parse(AldorTypes.OPT_APPLICATION, psiBuilder);
 
         logPsi(parsed.getPsi(), 0);
-        assertTrue(0 == getPsiErrorElements(parsed.getPsi()).size());
+        assertTrue(getPsiErrorElements(parsed.getPsi()).isEmpty());
     }
 
-    private PsiElement parseText(String text) {
+    private PsiElement parseText(CharSequence text) {
         ParserDefinition aldorParserDefinition = new AldorParserDefinition();
         PsiBuilder psiBuilder = PsiBuilderFactory.getInstance().createBuilder(aldorParserDefinition, aldorParserDefinition.createLexer(null),
                 text);
@@ -221,6 +230,23 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
 
         Project project = getProject();
         File file = new File("/home/pab/Work/aldorgit/aldor/aldor/lib/aldor/src/lang/sal_lang.as");
+        final List<PsiErrorElement> errors = parseFile(project, file);
+        assertEquals(0, errors.size());
+    }
+
+
+    public void testParseITools() {
+        assertNotNull(getProject());
+
+        Project project = getProject();
+        File file = new File("/home/pab/Work/aldorgit/aldor/aldor/lib/aldor/src/arith/sal_itools.as");
+        final List<PsiErrorElement> errors = parseFile(project, file);
+        assertEquals(0, errors.size());
+    }
+
+
+    @NotNull
+    private List<PsiErrorElement> parseFile(Project project, File file) {
         assertTrue(file.exists());
         VirtualFile vf = LocalFileSystem.getInstance().findFileByIoFile(file);
         assertNotNull(vf);
@@ -231,8 +257,7 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
         PsiElement psi = parseText(text);
 
         logPsi(psi, 0);
-        final List<PsiErrorElement> errors = getPsiErrorElements(psi);
-        assertEquals(0, errors.size());
+        return getPsiErrorElements(psi);
     }
 
     public void testAldorLibrary() {
@@ -241,6 +266,7 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
         Project project = getProject();
         File base = new File("/home/pab/Work/aldorgit/aldor/aldor/lib/aldor/src");
         List<File> files = findAllSource(base);
+        List<File> badFiles = Lists.newArrayList();
         for (File file: files) {
             System.out.println("Reading: " + file);
             VirtualFile vf = LocalFileSystem.getInstance().findFileByIoFile(file);
@@ -252,18 +278,26 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
             PsiElement psi = parseText(text);
 
             final List<PsiErrorElement> errors = getPsiErrorElements(psi);
-            assertEquals(0, errors.size());
+
+            if (!errors.isEmpty()) {
+                badFiles.add(file);
+            }
         }
+
+        System.out.println("Bad files: " + badFiles);
+        assertTrue(badFiles.isEmpty());
     }
 
     private List<File> findAllSource(File base) {
         List<File> files = Lists.newArrayList();
         //noinspection ConstantConditions // list files => NPE?
         for (File file: base.listFiles()) {
-            if (file.isDirectory())
+            if (file.isDirectory()) {
                 files.addAll(findAllSource(file));
-            if (file.getName().endsWith(".as"))
+            }
+            if (file.getName().endsWith(".as")) {
                 files.add(file);
+            }
         }
         return files;
     }

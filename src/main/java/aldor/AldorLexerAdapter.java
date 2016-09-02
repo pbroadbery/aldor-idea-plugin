@@ -18,8 +18,9 @@ public class AldorLexerAdapter extends FlexAdapter {
     public void advance() {
         try {
             super.advance();
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to advance: " + this.getBufferSequence());
+        } catch (RuntimeException e) {
+            //noinspection ProhibitedExceptionThrown
+            throw new RuntimeException("Failed to advance: " + this.getBufferSequence(), e);
         }
     }
 
@@ -29,9 +30,11 @@ public class AldorLexerAdapter extends FlexAdapter {
             super.locateToken();
         } catch (Error e) {
             System.out.println("error: " + Arrays.asList(e.getStackTrace()));
+            //noinspection ProhibitedExceptionThrown
             throw e;
         }
         catch (RuntimeException e) {
+            //noinspection ProhibitedExceptionThrown
             throw new RuntimeException("Locate failed: " + this.getBufferSequence(), e);
         }
     }

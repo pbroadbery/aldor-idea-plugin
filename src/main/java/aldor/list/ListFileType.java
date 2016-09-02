@@ -5,9 +5,10 @@ import com.intellij.openapi.fileTypes.LanguageFileType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import javax.swing.Icon;
 
-public class ListFileType extends LanguageFileType {
+public final class ListFileType extends LanguageFileType {
+  @SuppressWarnings("TypeMayBeWeakened")
   public static final ListFileType INSTANCE = new ListFileType();
 
   private ListFileType() {

@@ -5,8 +5,10 @@ import org.junit.Test;
 
 import java.io.StringReader;
 
+import static org.junit.Assert.assertNotNull;
+
 /**
- * Tests for List
+ * Tests for List - Barely tests anything, but "List" is just a toy language
  */
 public class ListTestClass  {
 
@@ -17,7 +19,7 @@ public class ListTestClass  {
         System.out.println("Pos: " + lla.getCurrentPosition().getState() + " " + lla.getBufferEnd() + " " + lla.getTokenType());
 
         lla.advance();
-        System.out.println(lla.getTokenType());
+        assertNotNull(lla.getTokenType());
     }
 
 }

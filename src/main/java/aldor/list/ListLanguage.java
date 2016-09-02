@@ -7,7 +7,7 @@ import com.intellij.lang.Language;
  */
 public class ListLanguage extends Language {
 
-    public static final com.intellij.lang.Language INSTANCE = new ListLanguage();
+    public static final Language INSTANCE = new ListLanguage();
 
     public ListLanguage() {
         super("List", "text/lists");

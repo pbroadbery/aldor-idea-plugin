@@ -1,7 +1,6 @@
 package pab.aldor;
 
 import aldor.AldorLexerAdapter;
-import aldor.AldorTokenTypes;
 import com.google.common.collect.Lists;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
@@ -23,7 +22,7 @@ public class AldorLexerTest {
         AldorLexerAdapter lla = new AldorLexerAdapter(new StringReader("["));
         lla.start("add");
         System.out.println("Pos: " + lla.getCurrentPosition().getState() + " " + lla.getBufferEnd() + " " + lla.getTokenType());
-        assertEquals(AldorTokenTypes.KW_Add, lla.getTokenType());
+        assertEquals(KW_Add, lla.getTokenType());
         lla.advance();
         System.out.println(lla.getTokenType());
         assertNull(lla.getTokenType());
@@ -44,7 +43,7 @@ public class AldorLexerTest {
     public void canParseDefinition() {
         AldorLexerAdapter lla = new AldorLexerAdapter(new StringReader("define foo: X == 12"));
         lla.start("define foo: X == 12");
-        List<IElementType> tokens = readTokens(lla);
+        List<IElementType> tokens = LexerFunctions.readTokens(lla);
         assertEquals(Lists.newArrayList(KW_Define, TokenType.WHITE_SPACE, TK_Id, KW_Colon, TokenType.WHITE_SPACE, TK_Id, TokenType.WHITE_SPACE, KW_2EQ, TokenType.WHITE_SPACE, TK_Int), tokens);
     }
 
@@ -53,8 +52,8 @@ public class AldorLexerTest {
     public void canParseSysCommands() {
         AldorLexerAdapter lla = new AldorLexerAdapter(null);
         lla.start("\n#foo\n");
-        List<IElementType> tokens = readTokens(lla);
-        assertEquals(Lists.newArrayList(TokenType.WHITE_SPACE, TokenType.WHITE_SPACE, TokenType.WHITE_SPACE), tokens);
+        List<IElementType> tokens = LexerFunctions.readTokens(lla);
+        assertEquals(Lists.newArrayList(TokenType.WHITE_SPACE, KW_SysCmd, TokenType.WHITE_SPACE), tokens);
     }
 
 
@@ -62,16 +61,8 @@ public class AldorLexerTest {
     public void newlines() {
         AldorLexerAdapter lla = new AldorLexerAdapter(null);
         lla.start("f\ng");
-        List<IElementType> tokens = readTokens(lla);
+        List<IElementType> tokens = LexerFunctions.readTokens(lla);
         assertEquals(Lists.newArrayList(TK_Id, TokenType.WHITE_SPACE, TK_Id), tokens);
     }
 
-    private List<IElementType> readTokens(AldorLexerAdapter lla) {
-        List<IElementType> tokens = Lists.newArrayList();
-        while (lla.getTokenType() != null) {
-            tokens.add(lla.getTokenType());
-            lla.advance();
-        }
-        return tokens;
-    }
 }

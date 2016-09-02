@@ -5,9 +5,11 @@ import com.intellij.openapi.fileTypes.LanguageFileType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import javax.swing.Icon;
 
-public class AldorFileType extends LanguageFileType {
+
+public final class AldorFileType extends LanguageFileType {
+  @SuppressWarnings("TypeMayBeWeakened")
   public static final AldorFileType INSTANCE = new AldorFileType();
 
   private AldorFileType() {

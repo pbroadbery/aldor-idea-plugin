@@ -19,7 +19,7 @@ import com.intellij.psi.TokenType;
 
 CRLF=\n|\r|\r\n
 WHITE_SPACE=[\ \t\f]
-
+INDENT=[\ \t]+
 ID =([A-Za-z%?]|_.)([A-Za-z0-9%_?!]|_.)*
 INT=[0-9]+
 
@@ -164,12 +164,14 @@ SYSCMD=#[^\n\r]*
 }
 
 <LINE_START> {
-    { SYSCMD} { yybegin(YYINITIAL); return TokenType.WHITE_SPACE;}
-    [^] { System.out.println("Nope.."); yypushback(1); yybegin(YYINITIAL); }
+    { SYSCMD} { yybegin(YYINITIAL); return AldorTokenTypes.KW_SysCmd;}
+    { INDENT } { return AldorTokenTypes.KW_Indent; }
+    [^] { yypushback(1); yybegin(YYINITIAL); }
 }
 
 <YYINITIAL> {
 "#" { return AldorTokenTypes.KW_Sharp; }
+{ WHITE_SPACE } { return TokenType.WHITE_SPACE; }
 }
 //"#pile" { return AldorTokenTypes.KW_StartPile; }
 //"#endpile" { return AldorTokenTypes.KW_EndPile; }
@@ -180,7 +182,6 @@ SYSCMD=#[^\n\r]*
 
 //"TK_LIMIT" { return AldorTokenTypes.TK_LIMIT; }
 <YYINITIAL,LINE_START> {
-{ WHITE_SPACE } { return TokenType.WHITE_SPACE; }
 
 { ID } { return AldorTokenTypes.TK_Id; }
 

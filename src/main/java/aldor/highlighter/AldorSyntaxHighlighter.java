@@ -5,7 +5,7 @@ import aldor.AldorTokenType;
 import aldor.AldorTokenTypes;
 import com.google.common.collect.Maps;
 import com.intellij.lexer.Lexer;
-import com.intellij.openapi.editor.*;
+import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.psi.tree.IElementType;
@@ -16,11 +16,12 @@ import java.util.Map;
 import static com.intellij.openapi.editor.colors.TextAttributesKey.createTextAttributesKey;
 
 public class AldorSyntaxHighlighter extends SyntaxHighlighterBase {
-    private final static TextAttributesKey[] EMPTY_ATTRIBUTES = new TextAttributesKey[0];
+    private static final TextAttributesKey[] EMPTY_ATTRIBUTES = new TextAttributesKey[0];
     private final Map<IElementType, TextAttributesKey> aldorHighlightMap = Maps.newHashMap();
 
     AldorSyntaxHighlighter() {
-        for (AldorTokenType tokenType: AldorTokenTypes.all()) {
+        super();
+        for (AldorTokenType tokenType : AldorTokenTypes.all()) {
             if (tokenType.isLangWord()) {
                 aldorHighlightMap.put(tokenType, createTextAttributesKey("KEYWORD", DefaultLanguageHighlighterColors.KEYWORD));
             }

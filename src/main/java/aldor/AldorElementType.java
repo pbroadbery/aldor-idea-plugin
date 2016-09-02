@@ -8,6 +8,7 @@ public class AldorElementType extends IElementType {
      super(debugName, AldorLanguage.INSTANCE);
   }
 
+  @Override
   @SuppressWarnings({"HardCodedStringLiteral"})
   public String toString() {
     return "Properties:" + super.toString();

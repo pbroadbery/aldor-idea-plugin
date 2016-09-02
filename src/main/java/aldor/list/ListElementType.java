@@ -8,6 +8,7 @@ public class ListElementType extends IElementType {
     super(debugName, ListLanguage.INSTANCE);
   }
 
+  @Override
   @SuppressWarnings({"HardCodedStringLiteral"})
   public String toString() {
     return "Properties:" + super.toString();

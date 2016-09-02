@@ -33,6 +33,7 @@
         <lang.parserDefinition language="Aldor" implementationClass="aldor.AldorParserDefinition"/>
 
         <lang.syntaxHighlighterFactory language="Aldor" implementationClass="aldor.highlighter.AldorSyntaxHighlighterFactory"/>
+        <lang.braceMatcher language="Aldor" implementationClass="aldor.highlighter.AldorBracketMatcher"/>
 
     </extensions>
 

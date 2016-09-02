@@ -27,21 +27,25 @@ public class AldorParserDefinition implements ParserDefinition {
         return new AldorLexerAdapter();
     }
 
+    @Override
     @NotNull
     public TokenSet getWhitespaceTokens() {
         return WHITE_SPACES;
     }
 
+    @Override
     @NotNull
     public TokenSet getCommentTokens() {
         return TokenSet.EMPTY;
     }
 
+    @Override
     @NotNull
     public TokenSet getStringLiteralElements() {
         return STRING_LITERALS;
     }
 
+    @Override
     @NotNull
     public PsiParser createParser(final Project project) {
         return new AldorParser();
@@ -52,14 +56,17 @@ public class AldorParserDefinition implements ParserDefinition {
         return FILE;
     }
 
+    @Override
     public PsiFile createFile(FileViewProvider viewProvider) {
         return new AldorFile(viewProvider);
     }
 
+    @Override
     public SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode left, ASTNode right) {
         return SpaceRequirements.MAY;
     }
 
+    @Override
     @NotNull
     public PsiElement createElement(ASTNode node) {
         return AldorTypes.Factory.createElement(node);

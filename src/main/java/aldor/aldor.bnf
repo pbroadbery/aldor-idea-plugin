@@ -520,7 +520,8 @@ enlister1_xName_KW_Comma ::= xName (KW_Comma xName)*
 enlist1a_Labelled_KW_SEMICOLON ::= Labelled (Semicolon Labelled)* Semicolon?
 
 //Piled_E ::= KW_SetTab PileContents_E KW_BackTab
-Piled_Expression ::= KW_SetTab PileContents_Expression KW_BackTab
+Piled_Expression ::= <<parsePiledExpression>>
+//KW_SetTab PileContents_Expression KW_BackTab
 
 //Curly_E ::= KW_OCurly CurlyContents_E KW_CCurly
 Curly_Labelled ::= KW_OCurly CurlyContents_Labelled KW_CCurly
