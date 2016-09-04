@@ -1,4 +1,4 @@
-package aldor;
+package aldor.lexer;
 
 import com.intellij.lexer.DelegateLexer;
 import com.intellij.lexer.LexerPosition;
@@ -7,9 +7,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-import static aldor.AldorTokenTypes.KW_BackSet;
-import static aldor.AldorTokenTypes.KW_Indent;
-import static aldor.AldorTokenTypes.KW_SetTab;
+import static aldor.lexer.AldorTokenTypes.KW_BackSet;
+import static aldor.lexer.AldorTokenTypes.KW_Indent;
+import static aldor.lexer.AldorTokenTypes.KW_SetTab;
 
 /**
  * Adds functionality to track indent width and pile mode.

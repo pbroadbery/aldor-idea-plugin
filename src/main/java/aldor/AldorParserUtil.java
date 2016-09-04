@@ -1,12 +1,13 @@
 package aldor;
 
+import aldor.lexer.AldorTokenTypes;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.parser.GeneratedParserUtilBase;
 import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.NotNull;
 
-import static aldor.AldorTokenTypes.KW_BackSet;
-import static aldor.AldorTokenTypes.KW_Semicolon;
+import static aldor.lexer.AldorTokenTypes.KW_BackSet;
+import static aldor.lexer.AldorTokenTypes.KW_Semicolon;
 
 @SuppressWarnings({"ExtendsUtilityClass", "StaticMethodOnlyUsedInOneClass"})
 public class AldorParserUtil extends GeneratedParserUtilBase {

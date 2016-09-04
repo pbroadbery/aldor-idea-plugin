@@ -1,4 +1,4 @@
-package aldor;
+package aldor.lexer;
 
 import com.google.common.collect.Maps;
 import com.intellij.psi.TokenType;

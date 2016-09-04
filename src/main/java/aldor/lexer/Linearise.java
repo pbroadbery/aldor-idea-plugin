@@ -1,5 +1,6 @@
-package aldor;
+package aldor.lexer;
 
+import aldor.SysCmd;
 import aldor.SysCmd.SysCommandType;
 import com.intellij.psi.tree.IElementType;
 
@@ -12,10 +13,10 @@ import java.util.Objects;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import static aldor.AldorTokenTypes.KW_Indent;
-import static aldor.AldorTokenTypes.KW_NewLine;
-import static aldor.AldorTokenTypes.TK_SysCmd;
-import static aldor.AldorTokenTypes.WHITE_SPACE;
+import static aldor.lexer.AldorTokenTypes.KW_Indent;
+import static aldor.lexer.AldorTokenTypes.KW_NewLine;
+import static aldor.lexer.AldorTokenTypes.TK_SysCmd;
+import static aldor.lexer.AldorTokenTypes.WHITE_SPACE;
 
 /**
  * Given a lexer, try to find a linear form of the structure

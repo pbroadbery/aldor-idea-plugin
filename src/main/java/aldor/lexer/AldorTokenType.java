@@ -1,5 +1,6 @@
-package aldor;
+package aldor.lexer;
 
+import aldor.AldorLanguage;
 import com.intellij.lang.Language;
 import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.NotNull;

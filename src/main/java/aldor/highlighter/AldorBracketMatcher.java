@@ -1,6 +1,6 @@
 package aldor.highlighter;
 
-import aldor.AldorTokenTypes;
+import aldor.lexer.AldorTokenTypes;
 import com.intellij.lang.BracePair;
 import com.intellij.lang.PairedBraceMatcher;
 import com.intellij.psi.PsiFile;

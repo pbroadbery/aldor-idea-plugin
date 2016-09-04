@@ -1,14 +1,23 @@
 package pab.aldor;
 
-import aldor.AldorIndentLexer;
-import aldor.AldorLexerAdapter;
+import aldor.lexer.AldorIndentLexer;
+import aldor.lexer.AldorLexerAdapter;
 import com.google.common.collect.Lists;
 import com.intellij.psi.tree.IElementType;
 import org.junit.Test;
 
 import java.util.List;
 
-import static aldor.AldorTokenTypes.*;
+import static aldor.lexer.AldorTokenTypes.KW_2EQ;
+import static aldor.lexer.AldorTokenTypes.KW_Assign;
+import static aldor.lexer.AldorTokenTypes.KW_BackSet;
+import static aldor.lexer.AldorTokenTypes.KW_NewLine;
+import static aldor.lexer.AldorTokenTypes.KW_Repeat;
+import static aldor.lexer.AldorTokenTypes.KW_SetTab;
+import static aldor.lexer.AldorTokenTypes.TK_Id;
+import static aldor.lexer.AldorTokenTypes.TK_Int;
+import static aldor.lexer.AldorTokenTypes.TK_SysCmd;
+import static aldor.lexer.AldorTokenTypes.WHITE_SPACE;
 import static org.junit.Assert.assertEquals;
 
 public class AldorIndentLexerTest {

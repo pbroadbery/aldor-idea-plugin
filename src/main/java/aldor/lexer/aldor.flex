@@ -1,8 +1,8 @@
-package aldor;
+package aldor.lexer;
 
 import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
-import aldor.AldorTokenTypes;
+import aldor.lexer.AldorTokenTypes;
 import com.intellij.psi.TokenType;
 
 %%

@@ -1,8 +1,8 @@
 package aldor.highlighter;
 
-import aldor.AldorLexerAdapter;
-import aldor.AldorTokenType;
-import aldor.AldorTokenTypes;
+import aldor.lexer.AldorLexerAdapter;
+import aldor.lexer.AldorTokenType;
+import aldor.lexer.AldorTokenTypes;
 import com.google.common.collect.Maps;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;

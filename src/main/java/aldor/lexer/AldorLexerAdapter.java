@@ -1,4 +1,4 @@
-package aldor;
+package aldor.lexer;
 
 import com.intellij.lexer.FlexAdapter;
 

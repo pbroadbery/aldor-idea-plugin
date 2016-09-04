@@ -1,4 +1,4 @@
-package aldor;
+package aldor.lexer;
 
 /**
  * Calculates tab widths; ultimately, TAB_WIDTH should come from the project.

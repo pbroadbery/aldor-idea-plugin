@@ -8,8 +8,8 @@
   elementTypeHolderClass="aldor.AldorTypes"
   elementTypeClass="aldor.AldorElementType"
 
-  tokenTypeClass="aldor.AldorTokenType"
-  tokenTypeFactory = "aldor.AldorTokenTypes.createToken"
+  tokenTypeClass="aldor.lexer.AldorTokenType"
+  tokenTypeFactory = "aldor.lexer.AldorTokenTypes.createToken"
 
   psiClassPrefix="Aldor"
   psiImplClassSuffix="Impl"
@@ -362,7 +362,7 @@ OpQualTail ::= Molecule (KW_Dollar OpQualTail)?
 //E14 ::= (KW_With | KW_Add | E15) ((KW_With DeclMolecule) | (KW_Add DeclMolecule) | (KW_Except E15) | (KW_Throw E15))*
 E14 ::= ((E15? (KW_With DeclMolecule | KW_Add DeclMolecule)) | (E15 (KW_Except E15 | KW_Throw E15| Nothing))) (KW_With | KW_Add DeclMolecule)*
 
-E15 ::= Application
+private E15 ::= Application
 
 Op ::= ArrowOp
 | LatticeOp
@@ -414,7 +414,6 @@ PowerTok::=	 KW_2Star  | KW_Hat ;
 Application::= JxRightJuxtaposed
 
 JxRightJuxtaposed ::= Jxright_Molecule
-;
 
 JxLeftJuxtaposed ::= Jxleft_Molecule
 
@@ -463,13 +462,13 @@ QuotedIds ::= KW_Quote KW_Quote
 
 Names::= enlist1_Name_KW_Comma
 
-Atom ::= Id | Literal
+private Atom ::= Id | Literal
 
 xName ::= Id | NakedOp
 
-Id ::= TK_Id | KW_Sharp | KW_Tilde
+private Id ::= TK_Id | KW_Sharp | KW_Tilde
 
-Literal ::= TK_Int | TK_Float | TK_String
+private Literal ::= TK_Int | TK_Float | TK_String
 
 Nothing ::=
 
