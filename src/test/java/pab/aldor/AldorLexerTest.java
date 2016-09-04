@@ -2,7 +2,6 @@ package pab.aldor;
 
 import aldor.AldorLexerAdapter;
 import com.google.common.collect.Lists;
-import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
 import org.junit.Test;
 
@@ -44,7 +43,7 @@ public class AldorLexerTest {
         AldorLexerAdapter lla = new AldorLexerAdapter(new StringReader("define foo: X == 12"));
         lla.start("define foo: X == 12");
         List<IElementType> tokens = LexerFunctions.readTokens(lla);
-        assertEquals(Lists.newArrayList(KW_Define, TokenType.WHITE_SPACE, TK_Id, KW_Colon, TokenType.WHITE_SPACE, TK_Id, TokenType.WHITE_SPACE, KW_2EQ, TokenType.WHITE_SPACE, TK_Int), tokens);
+        assertEquals(Lists.newArrayList(KW_Define, WHITE_SPACE, TK_Id, KW_Colon, WHITE_SPACE, TK_Id, WHITE_SPACE, KW_2EQ, WHITE_SPACE, TK_Int), tokens);
     }
 
 
@@ -53,7 +52,7 @@ public class AldorLexerTest {
         AldorLexerAdapter lla = new AldorLexerAdapter(null);
         lla.start("\n#foo\n");
         List<IElementType> tokens = LexerFunctions.readTokens(lla);
-        assertEquals(Lists.newArrayList(TokenType.WHITE_SPACE, KW_SysCmd, TokenType.WHITE_SPACE), tokens);
+        assertEquals(Lists.newArrayList(KW_NewLine, TK_SysCmd, KW_NewLine), tokens);
     }
 
 
@@ -62,7 +61,17 @@ public class AldorLexerTest {
         AldorLexerAdapter lla = new AldorLexerAdapter(null);
         lla.start("f\ng");
         List<IElementType> tokens = LexerFunctions.readTokens(lla);
-        assertEquals(Lists.newArrayList(TK_Id, TokenType.WHITE_SPACE, TK_Id), tokens);
+        assertEquals(Lists.newArrayList(TK_Id, KW_NewLine, TK_Id), tokens);
     }
+
+    @Test
+    public void indentedLoop() {
+        AldorLexerAdapter lla = new AldorLexerAdapter(null);
+        String text = "repeat\n  fx\n";
+        lla.start(text);
+        List<IElementType> tokens = LexerFunctions.readTokens(lla);
+        assertEquals(Lists.newArrayList(KW_Repeat, KW_NewLine, KW_Indent, TK_Id, KW_NewLine), tokens);
+    }
+
 
 }

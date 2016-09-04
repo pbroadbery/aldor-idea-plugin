@@ -10,7 +10,6 @@ import java.util.List;
 
 import static aldor.AldorTokenTypes.*;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class AldorIndentLexerTest {
 
@@ -18,19 +17,9 @@ public class AldorIndentLexerTest {
     public void testNoIndent() {
         AldorIndentLexer unit = new AldorIndentLexer(new AldorLexerAdapter());
 
-        unit.start("\nBunch of stuff\t\n");
+        unit.start("\nWords\n");
 
-        assertTrue(unit.indentMap().isEmpty());
-    }
-
-
-    @Test
-    public void testNotMuchIndentAtAll() {
-        AldorIndentLexer unit = new AldorIndentLexer(new AldorLexerAdapter());
-
-        unit.start("\n");
-
-        assertTrue(unit.indentMap().isEmpty());
+        assertEquals(Lists.newArrayList(KW_NewLine, TK_Id, KW_NewLine), LexerFunctions.readTokens(unit));
     }
 
 
@@ -38,17 +27,60 @@ public class AldorIndentLexerTest {
     public void testIndent() {
         AldorIndentLexer unit = new AldorIndentLexer(new AldorLexerAdapter());
 
-        unit.start("Hello\n  There\n MoreText");
+        unit.start("#pile\nrepeat\n  foo:= 2\nBlah");
 
         List<IElementType> tokens = LexerFunctions.readTokens(unit);
-        assertEquals(Lists.newArrayList(TK_Id, WHITE_SPACE,
-                                        KW_Indent, TK_Id, WHITE_SPACE,
-                                        KW_Indent, TK_Id), tokens);
-        System.out.println("Tokens: " + tokens);
-        System.out.println("Widths: " + unit.indentMap());
-        assertEquals(2, (int) unit.indentMap().get(6));
+        assertEquals(Lists.newArrayList(TK_SysCmd, KW_NewLine,
+                KW_Repeat, KW_NewLine,
+                KW_SetTab, TK_Id, KW_Assign, WHITE_SPACE, TK_Int, KW_NewLine,
+                TK_Id), tokens);
+     }
+
+
+    @Test
+    public void testIndent2() {
+        AldorIndentLexer unit = new AldorIndentLexer(new AldorLexerAdapter());
+
+        unit.start("#pile\nrepeat\n  foo\n  Blah\nLast");
+
+        List<IElementType> tokens = LexerFunctions.readTokens(unit);
+        assertEquals(Lists.newArrayList(TK_SysCmd, KW_NewLine,
+                KW_Repeat, KW_NewLine,
+                KW_SetTab, TK_Id, KW_NewLine,
+                KW_BackSet, TK_Id, KW_NewLine,
+                TK_Id), tokens);
     }
 
+
+    @Test
+    public void testIndent2Eq() {
+        AldorIndentLexer unit = new AldorIndentLexer(new AldorLexerAdapter());
+
+        unit.start("#pile\nFoo ==\n First\n Second\nThird");
+
+        List<IElementType> tokens = LexerFunctions.readTokens(unit);
+        assertEquals(Lists.newArrayList(TK_SysCmd, KW_NewLine,
+                TK_Id, WHITE_SPACE, KW_2EQ, KW_NewLine,
+                KW_SetTab, TK_Id, KW_NewLine,
+                KW_BackSet, TK_Id, KW_NewLine,
+                TK_Id), tokens);
+    }
+
+    @Test
+    public void testNestedBlocks() {
+        AldorIndentLexer unit = new AldorIndentLexer(new AldorLexerAdapter());
+
+        unit.start("#pile\nrepeat\n repeat1 :=\n  assign1\n  assign2\n repeat2");
+
+        List<IElementType> tokens = LexerFunctions.readTokens(unit);
+        assertEquals(Lists.newArrayList(TK_SysCmd, KW_NewLine,
+                KW_Repeat, KW_NewLine,
+                KW_SetTab, TK_Id, WHITE_SPACE, KW_Assign, KW_NewLine,
+                KW_SetTab, TK_Id, KW_NewLine,
+                KW_BackSet, TK_Id, KW_NewLine,
+                KW_BackSet, TK_Id), tokens);
+
+    }
 
 
 }

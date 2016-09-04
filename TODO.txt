@@ -1,7 +1,5 @@
 
 Lexer:
-Comments
-Pre/Post Doc
 Floating Point
 
 Extensions:
@@ -14,5 +12,8 @@ Grammar:
 Error recovery
 Tests
 
-
+-----------------------------
+Lexer:
+DONE Comments
+DONE Pre/Post Doc
 

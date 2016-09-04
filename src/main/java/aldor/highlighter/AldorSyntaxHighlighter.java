@@ -20,7 +20,6 @@ public class AldorSyntaxHighlighter extends SyntaxHighlighterBase {
     private final Map<IElementType, TextAttributesKey> aldorHighlightMap = Maps.newHashMap();
 
     AldorSyntaxHighlighter() {
-        super();
         for (AldorTokenType tokenType : AldorTokenTypes.all()) {
             if (tokenType.isLangWord()) {
                 aldorHighlightMap.put(tokenType, createTextAttributesKey("KEYWORD", DefaultLanguageHighlighterColors.KEYWORD));

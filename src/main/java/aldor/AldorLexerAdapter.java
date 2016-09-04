@@ -38,4 +38,10 @@ public class AldorLexerAdapter extends FlexAdapter {
             throw new RuntimeException("Locate failed: " + this.getBufferSequence(), e);
         }
     }
+
+    public static AldorLexerAdapter createAndStart(CharSequence text) {
+        AldorLexerAdapter lla = new AldorLexerAdapter(null);
+        lla.start(text);
+        return lla;
+    }
 }

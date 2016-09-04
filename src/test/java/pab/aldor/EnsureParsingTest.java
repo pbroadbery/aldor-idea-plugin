@@ -15,14 +15,16 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import com.intellij.psi.PsiRecursiveElementVisitor;
+import com.intellij.psi.tree.IElementType;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
+
+import static pab.aldor.ParserFunctions.getPsiErrorElements;
+import static pab.aldor.ParserFunctions.logPsi;
 
 /**
  * Lexer Test. Created by pab on 30/08/16.
@@ -202,27 +204,42 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
         assertEquals(0, errors.size());
     }
 
+
+    public void testIf() {
+        String text = "if foo then 1 else 2";
+        PsiElement psi = parseText(text, AldorTypes.IF_STATEMENT_BAL_STATEMENT);
+        logPsi(psi, 0);
+        final List<PsiErrorElement> errors = getPsiErrorElements(psi);
+        assertEquals(0, errors.size());
+    }
+
+    public void testDefine() {
+        String text = "foo: X == 2";
+        PsiElement psi = parseText(text);
+        logPsi(psi, 0);
+        final List<PsiErrorElement> errors = getPsiErrorElements(psi);
+        assertEquals(0, errors.size());
+    }
+
+    public void testWithSysCmd() {
+        String text = "foo\n#Wibble\nbar";
+        PsiElement psi = parseText(text);
+        logPsi(psi, 0);
+        final List<PsiErrorElement> errors = getPsiErrorElements(psi);
+        assertEquals(0, errors.size());
+    }
+
+
     public void testEmpty() {
         ParserDefinition aldorParserDefinition = new AldorParserDefinition();
         PsiBuilder psiBuilder = PsiBuilderFactory.getInstance().createBuilder(aldorParserDefinition, aldorParserDefinition.createLexer(null),
                 "");
 
         PsiParser parser = aldorParserDefinition.createParser(getProject());
-        ASTNode parsed = parser.parse(AldorTypes.OPT_APPLICATION, psiBuilder);
+        ASTNode parsed = parser.parse(AldorTypes.PRE_DOCUMENT, psiBuilder);
 
         logPsi(parsed.getPsi(), 0);
         assertTrue(getPsiErrorElements(parsed.getPsi()).isEmpty());
-    }
-
-    private PsiElement parseText(CharSequence text) {
-        ParserDefinition aldorParserDefinition = new AldorParserDefinition();
-        PsiBuilder psiBuilder = PsiBuilderFactory.getInstance().createBuilder(aldorParserDefinition, aldorParserDefinition.createLexer(null),
-                text);
-
-        PsiParser parser = aldorParserDefinition.createParser(getProject());
-        ASTNode parsed = parser.parse(AldorTypes.CURLY_CONTENTS_LABELLED, psiBuilder);
-
-        return parsed.getPsi();
     }
 
     public void testParseLang() {
@@ -259,6 +276,16 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
         logPsi(psi, 0);
         return getPsiErrorElements(psi);
     }
+
+    private PsiElement parseText(CharSequence text) {
+        return ParserFunctions.parseText(getProject(), text);
+    }
+
+
+    private PsiElement parseText(CharSequence text, IElementType eltType) {
+        return ParserFunctions.parseText(getProject(), text, eltType);
+    }
+
 
     public void testAldorLibrary() {
         assertNotNull(getProject());
@@ -302,32 +329,7 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
         return files;
     }
 
-    private void logPsi(PsiElement psi, int i) {
-        String text = (psi.getChildren().length == 0) ? psi.getText(): "";
-        System.out.println("(psi: " + psi + " " + text);
-        for (PsiElement elt: psi.getChildren()) {
-            logPsi(elt, i+1);
-        }
-        System.out.println(")");
-    }
-
-    @NotNull
-    private List<PsiErrorElement> getPsiErrorElements(PsiElement psi) {
-        final List<PsiErrorElement> errors = new ArrayList<>();
-
-        psi.accept(new PsiRecursiveElementVisitor() {
-
-            @Override
-            public void visitErrorElement(PsiErrorElement element) {
-                errors.add(element);
-                super.visitErrorElement(element);
-            }
-        });
-        return errors;
-    }
-
-
-    private static class AldorProjectDescriptor extends LightProjectDescriptor {
+    public static class AldorProjectDescriptor extends LightProjectDescriptor {
 
     }
 

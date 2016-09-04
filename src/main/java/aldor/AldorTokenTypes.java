@@ -3,6 +3,7 @@ package aldor;
 import com.google.common.collect.Maps;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.tree.TokenSet;
 
 import java.util.Map;
 
@@ -10,7 +11,7 @@ public final class AldorTokenTypes {
     private static final Map<String, AldorTokenType> tokenTypeForString = Maps.newHashMap();
     public static final IElementType WHITE_SPACE = TokenType.WHITE_SPACE;
     public static final IElementType BAD_CHARACTER = TokenType.BAD_CHARACTER;
-	/*
+    /*
 	 * [A] TokenTag tag
 	 * [B] Symbol	sym
 	 * [C] String	str
@@ -177,9 +178,12 @@ public final class AldorTokenTypes {
     public static final AldorTokenType KW_BackTab = createTokenType("KW_BackTab", 0, "KW_BackTab", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0);
     public static final AldorTokenType KW_Juxtapose = createTokenType("KW_Juxtapose", 0, "KW_Juxtapose", 0, 0, 0, 0, 0, 0, 0, 0, 170, 0);
     public static final AldorTokenType KW_Indent = createTokenType("KW_Indent", 0, "KW_Indent", 0, 0, 0, 0, 0, 0, 0, 0, 170, 0);
-    public static final AldorTokenType KW_SysCmd = createTokenType("KW_SysCmd", 0, "KW_SysCmd", 0, 0, 0, 0, 0, 0, 0, 0, 170, 0);
+
+    public static final AldorTokenType error = createTokenType("error", 0, "error", 0, 0, 0, 0, 0, 0, 0, 0, 170, 0);
 
     public static final AldorTokenType TK_LIMIT = createTokenType("TK_LIMIT", 0, "TK_LIMIT", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0);
+
+    public static final TokenSet DOC_TOKENS = TokenSet.create(TK_PreDoc, TK_PostDoc);
 
     @SuppressWarnings("SameParameterValue")
     private static AldorTokenType createTokenType(String name, int i, String text, int hasString, int isComment, int isOpener, int isCloser, int isFollower, int isLangword, int isLeftAssoc, int isMaybeInfix, int precedence, int isDisabled) {
@@ -192,8 +196,7 @@ public final class AldorTokenTypes {
     public static AldorTokenType createToken(String token) {
         AldorTokenType tokenType = tokenTypeForString.get(token);
         if (tokenType == null) {
-            tokenType = new AldorTokenType(token);
-            tokenTypeForString.put(token, tokenType);
+            throw new IllegalArgumentException("Unknown token: " + token);
         }
 
         return tokenType;
@@ -201,5 +204,17 @@ public final class AldorTokenTypes {
 
     public static Iterable<AldorTokenType> all() {
         return tokenTypeForString.values();
+    }
+
+    public static boolean isOpener(IElementType eltType) {
+        return ((eltType instanceof AldorTokenType) && ((AldorTokenType) eltType).isOpener());
+    }
+
+    public static boolean isCloser(IElementType eltType) {
+        return ((eltType instanceof AldorTokenType) && ((AldorTokenType) eltType).isCloser());
+    }
+
+    public static boolean isFollower(IElementType eltType) {
+        return ((eltType instanceof AldorTokenType) && ((AldorTokenType) eltType).isFollower());
     }
 }

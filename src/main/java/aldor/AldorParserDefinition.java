@@ -16,7 +16,10 @@ import org.jetbrains.annotations.NotNull;
 
 public class AldorParserDefinition implements ParserDefinition {
     private static final TokenSet STRING_LITERALS = TokenSet.create(AldorTokenTypes.TK_String);
-    private static final TokenSet WHITE_SPACES = TokenSet.create(TokenType.WHITE_SPACE, AldorTokenTypes.TK_Comment);
+    private static final TokenSet COMMENT_TOKENS = TokenSet.create(AldorTokenTypes.TK_Comment);
+    public static final TokenSet WHITE_SPACES = TokenSet.create(TokenType.WHITE_SPACE, AldorTokenTypes.KW_NewLine,
+                                                                AldorTokenTypes.TK_Comment,
+                                                                AldorTokenTypes.KW_Indent, AldorTokenTypes.TK_SysCmd);
 
     private static final IFileElementType FILE =
             new IFileElementType(Language.findInstance(AldorLanguage.class));
@@ -24,7 +27,7 @@ public class AldorParserDefinition implements ParserDefinition {
     @NotNull
     @Override
     public Lexer createLexer(Project project) {
-        return new AldorLexerAdapter();
+        return new AldorIndentLexer(new AldorLexerAdapter());
     }
 
     @Override
@@ -36,7 +39,7 @@ public class AldorParserDefinition implements ParserDefinition {
     @Override
     @NotNull
     public TokenSet getCommentTokens() {
-        return TokenSet.EMPTY;
+        return COMMENT_TOKENS;
     }
 
     @Override

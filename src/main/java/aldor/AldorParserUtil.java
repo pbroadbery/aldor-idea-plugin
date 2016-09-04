@@ -5,11 +5,10 @@ import com.intellij.lang.parser.GeneratedParserUtilBase;
 import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.NotNull;
 
-import static aldor.AldorTypes.KW_BACKTAB;
-import static aldor.AldorTypes.KW_SETTAB;
-import static aldor.AldorTypes.PILED_EXPRESSION;
+import static aldor.AldorTokenTypes.KW_BackSet;
+import static aldor.AldorTokenTypes.KW_Semicolon;
 
-@SuppressWarnings("ExtendsUtilityClass")
+@SuppressWarnings({"ExtendsUtilityClass", "StaticMethodOnlyUsedInOneClass"})
 public class AldorParserUtil extends GeneratedParserUtilBase {
 
     /*
@@ -37,7 +36,10 @@ public class AldorParserUtil extends GeneratedParserUtilBase {
         if (prevElt == AldorTokenTypes.KW_CCurly) {
             return true;
         }
-        return consumeToken(builder, AldorTokenTypes.KW_Semicolon);
+        if (builder.getTokenType() == KW_BackSet) {
+            return consumeToken(builder, KW_BackSet);
+        }
+        return consumeToken(builder, KW_Semicolon);
     }
 
     @SuppressWarnings("ObjectEquality")
@@ -49,7 +51,8 @@ public class AldorParserUtil extends GeneratedParserUtilBase {
             elt = builder.rawLookup(idx);
             if (elt == null) {
                 done = true;
-            } else if ((elt != AldorTokenTypes.TK_Comment) && (elt != AldorTokenTypes.WHITE_SPACE) && (elt != AldorTokenTypes.TK_PreDoc) && (elt != AldorTokenTypes.TK_PostDoc)) {
+            } else if (!AldorParserDefinition.WHITE_SPACES.contains(elt)
+                        && (elt != AldorTokenTypes.TK_PreDoc) && (elt != AldorTokenTypes.TK_PostDoc)) {
                 done = true;
             }
             idx--;
@@ -57,26 +60,25 @@ public class AldorParserUtil extends GeneratedParserUtilBase {
         return elt;
     }
 
+    public static boolean backSet(@NotNull PsiBuilder builder, @SuppressWarnings("UnusedParameters") int level) {
+        return false;
+    }
+
+    public static boolean backTab(@NotNull PsiBuilder builder, @SuppressWarnings("UnusedParameters") int level) {
+        return true;
+    }
 
     /*
-        Piled_Expression ::= <<parsePiledExpression>>
-        KW_SetTab PileContents_Expression KW_BackTab
+        Piled_Expression ::=  KW_SetTab PileContents_Expression KW_BackTab
+        PileContents_Expression ::= (Doc_Expression | error KW_BackSet Doc_Expression) (<<parseBackset>> Doc_Expression)*
+
+
+        if foo(
+            ....) then
+           blah()
+
     */
-    public static boolean parsePiledExpression(PsiBuilder builder, int level, @SuppressWarnings("UnusedParameters") AldorParser parser) {
-        if (!recursion_guard_(builder, level, "Piled_Expression")) {
-            return false;
-        }
-        if (!nextTokenIs(builder, KW_SETTAB)) {
-            return false;
-        }
-        PsiBuilder.Marker m = enter_section_(builder);
-        boolean r = consumeToken(builder, KW_SETTAB);
-        r = r && AldorParser.PileContents_Expression(builder, level + 1);
-        r = r && consumeToken(builder, KW_BACKTAB);
-        exit_section_(builder, m, PILED_EXPRESSION, r);
-        return r;
 
 
-    }
 
 }

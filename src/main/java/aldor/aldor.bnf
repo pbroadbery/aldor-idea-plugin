@@ -80,7 +80,7 @@ Goal ::= CurlyContents_Labelled
 //Expression ::= enlist1a(Labelled, KW_SEMICOLON)
 Expression ::= enlist1a_Labelled_KW_SEMICOLON
 
-Labelled ::= Declaration | KW_At Atom opt_Labelled | Comma
+private Labelled ::= Declaration | KW_At Atom opt_Labelled | Comma
 
 Declaration ::=
           KW_Macro MacroBody
@@ -110,7 +110,7 @@ Sig ::= DeclBinding | Block
 DeclPart ::= KW_Colon Type | KW_ColonStar Type
 
 Comma ::= enlist1_CommaItem_KW_Comma
-CommaItem ::= Binding_AnyStatement (KW_Where CommaItem)?
+private CommaItem ::= Binding_AnyStatement (KW_Where CommaItem)?
 
 DeclBinding ::= BindingR_InfixedExprsDecl_AnyStatement
 
@@ -119,10 +119,10 @@ InfixedExprsDecl ::= InfixedExprs DeclPart?
 InfixedExprs ::= enlist1_InfixedExpr_KW_Comma
 
 //Binding_E ::= BindingL_Infixed_E
-Binding_AnyStatement ::= BindingL_Infixed_AnyStatement
-Binding_Collection ::= BindingL_Infixed_Collection
+private Binding_AnyStatement ::= BindingL_Infixed_AnyStatement
+private Binding_Collection ::= BindingL_Infixed_Collection
 //Binding_InfixedExprsDecl ::= BindingL_Infixed_InfixedExprsDecl
-Binding_BalStatement ::= BindingL_Infixed_BalStatement
+private Binding_BalStatement ::= BindingL_Infixed_BalStatement
 //BindingL_R_L ::=
 //               | R KW_Assign_BindingL_R_L
 //               | R KW_2EQ BindingL_R_L
@@ -219,9 +219,9 @@ Flow_XX ::= Collection
 */
 
 Flow_AnyStatement ::=
-  KW_If CommaItem KW_Then Binding_BalStatement KW_Else Binding_AnyStatement
-| Iterators KW_Repeat Binding_AnyStatement
-| KW_Repeat Binding_AnyStatement
+  IfStatement_BalStatement
+| IterRepeatStatement_BalStatement
+| RepeatStatement_BalStatement
 | KW_Try Binding_AnyStatement KW_But ButExpr AlwaysPart_AnyStatement
 | KW_Try Binding_AnyStatement KW_Catch ButExpr AlwaysPart_AnyStatement
 | KW_Select Binding_AnyStatement KW_In Cases
@@ -239,6 +239,11 @@ Flow_AnyStatement ::=
 | KW_Goto Id
 | KW_Never
 | Collection (KW_Implies Binding_AnyStatement)?
+
+IfStatement_BalStatement ::=  KW_If CommaItem KW_Then Binding_BalStatement KW_Else Binding_AnyStatement
+
+IterRepeatStatement_BalStatement ::= Iterators KW_Repeat Binding_AnyStatement
+RepeatStatement_BalStatement ::= KW_Repeat Binding_AnyStatement
 
 Flow_BalStatement ::=
   KW_If CommaItem KW_Then Binding_BalStatement KW_Else Binding_BalStatement
@@ -297,7 +302,7 @@ ForLhs ::= Infixed
 
 SuchThatPart ::= KW_Bar Infixed
 
-Infixed ::= InfixedExpr DeclPart? | Block
+Infixed ::= Block | InfixedExpr DeclPart?
 
 InfixedExpr ::= E3 | E11_Op
 
@@ -490,45 +495,47 @@ QualOp_TimesTok ::= TimesTok KW_Dollar OpQualTail | TimesTok
 QualOp_PowerTok ::= PowerTok KW_Dollar OpQualTail | PowerTok
 
 //opt_E ::= E?
-opt_Application ::= Application?
+private opt_Application ::= Application?
 //opt_E14 ::= E14?
-opt_FromPart ::= FromPart?
+private opt_FromPart ::= FromPart?
 //opt_ToPart ::= ToPart?
-opt_Labelled ::= Labelled?
-opt_Sig ::= Sig?
-opt_xName ::= xName?
-opt_Collection ::= Collection?
-opt_SuchthatPart ::= SuchThatPart?
+private opt_Labelled ::= Labelled?
+private opt_Sig ::= Sig?
+private opt_xName ::= xName?
+private opt_Collection ::= Collection?
+private opt_SuchthatPart ::= SuchThatPart?
 
 //enlist1_E_Sep ::= enlister1_E_Sep
-enlist1_CommaItem_KW_Comma ::= enlister1_CommaItem_KW_Comma
-enlist1_Infixed_KW_Comma ::= enlister1_Infixed_KW_Comma
-enlist1_InfixedExpr_KW_Comma ::= enlister1_InfixedExpr_KW_Comma
-enlist1_Name_KW_Comma ::= enlister1_xName_KW_Comma
+private enlist1_CommaItem_KW_Comma ::= enlister1_CommaItem_KW_Comma
+private enlist1_Infixed_KW_Comma ::= enlister1_Infixed_KW_Comma
+private enlist1_InfixedExpr_KW_Comma ::= enlister1_InfixedExpr_KW_Comma
+private enlist1_Name_KW_Comma ::= enlister1_xName_KW_Comma
 
 //enlist2_E_Sep ::= enlister1_E_Sep
 
 //enlister1_E_Sep ::= E | enlister1_E_Sep Sep E
 //enlister1 ::= E (Sep E)*
-enlister1_CommaItem_KW_Comma ::= CommaItem (KW_Comma CommaItem)*
-enlister1_Infixed_KW_Comma ::= Infixed (KW_Comma CommaItem)*
-enlister1_InfixedExpr_KW_Comma ::= InfixedExpr (KW_Comma InfixedExpr)*
-enlister1_xName_KW_Comma ::= xName (KW_Comma xName)*
+private enlister1_CommaItem_KW_Comma ::= CommaItem (KW_Comma CommaItem)*
+private enlister1_Infixed_KW_Comma ::= Infixed (KW_Comma CommaItem)*
+private enlister1_InfixedExpr_KW_Comma ::= InfixedExpr (KW_Comma InfixedExpr)*
+private enlister1_xName_KW_Comma ::= xName (KW_Comma xName)*
 
 //enlist1a_E_Sep ::= enlister1a_E_Sep
 //enlister1a ::= E (Sep E)* Sep?
-enlist1a_Labelled_KW_SEMICOLON ::= Labelled (Semicolon Labelled)* Semicolon?
+private enlist1a_Labelled_KW_SEMICOLON ::= Labelled (Semicolon Labelled)* Semicolon?
 
 //Piled_E ::= KW_SetTab PileContents_E KW_BackTab
-Piled_Expression ::= <<parsePiledExpression>>
-//KW_SetTab PileContents_Expression KW_BackTab
+//Piled_Expression ::= <<parsePiledExpression>>
+Piled_Expression ::= KW_SetTab PileContents_Expression <<backTab>>
 
 //Curly_E ::= KW_OCurly CurlyContents_E KW_CCurly
 Curly_Labelled ::= KW_OCurly CurlyContents_Labelled KW_CCurly
 
-//PileContents_E ::= Doc_E | PileContents_E KW_BackSet Doc_E | error KW_BackSet Doc_E
-//PileContents_E ::= (Doc_E | error KW_BackSet Doc_E) (KW_BackSet Doc_E)*
-PileContents_Expression ::= (Doc_Expression | error KW_BackSet Doc_Expression) (KW_BackSet Doc_Expression)*
+//PileContents(E)<ablist>: Doc(E) | PileContents(E) KW_BackSet Doc(E) | error KW_BackSet Doc(E)
+//PileContents_E ::= Doc_E | PileContents_E KW_BackSet Doc(E) | error
+//PileContents_E := Doc_E (KW_BackSet Doc_E)*
+
+PileContents_Expression ::= Doc_Expression (<<backSet>> Doc_Expression)*
 
 //CurlyContents_E ::= CurlyContentsList_E
 CurlyContents_Labelled ::= CurlyContentsList_Labelled

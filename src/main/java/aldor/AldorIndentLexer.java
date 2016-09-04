@@ -1,54 +1,63 @@
 package aldor;
 
 import com.intellij.lexer.DelegateLexer;
-import com.intellij.lexer.Lexer;
+import com.intellij.lexer.LexerPosition;
+import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.Objects;
+
+import static aldor.AldorTokenTypes.KW_BackSet;
+import static aldor.AldorTokenTypes.KW_Indent;
+import static aldor.AldorTokenTypes.KW_SetTab;
 
 /**
  * Adds functionality to track indent width and pile mode.
  */
 public class AldorIndentLexer extends DelegateLexer {
     private final IndentWidthCalculator indentCalculator = new IndentWidthCalculator();
-    private final SortedMap<Integer, Integer> indentForPosition = new TreeMap<>();
-    private boolean pileMode = false;
+    private final Linearise lineariser = new Linearise();
 
-    public AldorIndentLexer(@NotNull Lexer delegate) {
+    public AldorIndentLexer(@NotNull AldorLexerAdapter delegate) {
         super(delegate);
     }
 
-    public boolean pileMode() {
-        return pileMode;
-    }
-
-    public int lastIndent() {
-        return indentForPosition.get(this.getTokenStart());
+    AldorLexerAdapter getAldorDelegate() {
+        return (AldorLexerAdapter) getDelegate();
     }
 
     @Override
     public void start(@NotNull CharSequence buffer, int startOffset, int endOffset, int initialState) {
         super.start(buffer, startOffset, endOffset, initialState);
-        this.pileMode = false;
-        this.indentForPosition.clear();
+        LexerPosition pos0 = getAldorDelegate().getCurrentPosition();
+        lineariser.linearise(getAldorDelegate());
+        getAldorDelegate().restore(pos0);
     }
 
     @Override
-    public void advance() {
-        super.advance();
-        //noinspection ObjectEquality
-        if (getTokenType() == AldorTokenTypes.KW_Indent) {
-            this.indentForPosition.put(getTokenStart(), indentCalculator.width(getTokenText()));
+    public IElementType getTokenType() {
+        IElementType tokType = super.getTokenType();
+        if ((Objects.equals(tokType, KW_Indent)) && isAtBlockStart()) {
+            return KW_SetTab;
+        } else if ((Objects.equals(tokType, KW_Indent)) && isAtBlockNewLine()) {
+            return KW_BackSet;
         }
-        //noinspection ObjectEquality
-        if (getTokenType() == AldorTokenTypes.KW_SysCmd) {
-            this.pileMode = true;
+        return tokType;
+    }
+
+    private boolean isAtBlockNewLine() {
+        if (Objects.equals(getAldorDelegate().getTokenType(), KW_Indent)) {
+            return lineariser.isAtBlockNewLine(getAldorDelegate().getTokenStart());
+        } else {
+            return false;
         }
     }
 
-    @SuppressWarnings("ReturnOfCollectionOrArrayField")
-    public SortedMap<Integer, Integer> indentMap() {
-        return indentForPosition;
+    private boolean isAtBlockStart() {
+        if (Objects.equals(getAldorDelegate().getTokenType(), KW_Indent)) {
+            return lineariser.isBlockStart(getAldorDelegate().getTokenStart());
+        } else {
+            return false;
+        }
     }
 }

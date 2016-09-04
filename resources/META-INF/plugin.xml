@@ -35,6 +35,10 @@
         <lang.syntaxHighlighterFactory language="Aldor" implementationClass="aldor.highlighter.AldorSyntaxHighlighterFactory"/>
         <lang.braceMatcher language="Aldor" implementationClass="aldor.highlighter.AldorBracketMatcher"/>
 
+        <lang.commenter language="Aldor" implementationClass="aldor.commenter.AldorCommenter"/>
+
+        <lang.foldingBuilder language="Aldor" implementationClass="aldor.folder.AldorFoldingBuilder"/>
+
     </extensions>
 
     <actions>
