@@ -19,8 +19,10 @@
   name("E[0-9].*")='InfixedExpr'
   extends("E[0-9].*")=InfixedExpr
 
-  name("Jx.*")='Application'
-  extends("Jx.*")='Application'
+  implements("Not_.*")='aldor.psi.NegationElement'
+  implements("Jxright_.*")='aldor.psi.JxrightElement'
+  implements("Jxleft_.*")='aldor.psi.JxrightElement'
+
 
   tokens = [
           TK_Id TK_Blank TK_Int TK_Float TK_String TK_PreDoc TK_PostDoc
@@ -360,7 +362,10 @@ OpQualTail ::= Molecule (KW_Dollar OpQualTail)?
 //| E14 KW_Throw E15
 
 //E14 ::= (KW_With | KW_Add | E15) ((KW_With DeclMolecule) | (KW_Add DeclMolecule) | (KW_Except E15) | (KW_Throw E15))*
-E14 ::= ((E15? (KW_With DeclMolecule | KW_Add DeclMolecule)) | (E15 (KW_Except E15 | KW_Throw E15| Nothing))) (KW_With | KW_Add DeclMolecule)*
+E14 ::= ((E15? (WithPart | AddPart)) | (E15 (KW_Except E15 | KW_Throw E15| Nothing))) (KW_With | KW_Add DeclMolecule)*
+
+WithPart ::= KW_With DeclMolecule
+AddPart ::= KW_Add DeclMolecule
 
 private E15 ::= Application
 
@@ -419,21 +424,20 @@ JxLeftJuxtaposed ::= Jxleft_Molecule
 
 //Jxright_H ::= Jxleft_H Jxright_Atom? | KW_Not Jxright_Atom
 
-Jxright_Molecule ::= Jxleft_Molecule Jxright_Atom? | KW_Not Jxright_Atom
+Jxright_Molecule ::= Jxleft_Molecule Jxright_Atom? | Not_Jxright_Atom
+Jxright_Atom ::= Jxleft_Atom Jxright_Atom? | Not_Jxright_Atom
 
-Jxright_Atom ::= Jxleft_Atom Jxright_Atom? | KW_Not Jxright_Atom
-/*
-Jleft_H::= H
-| KW_Not BlockEnclosure
-| Jleft_H BlockEnclosure
-| Jleft_H KW_Dot BlockMolecule
-*/
-
-//Jxleft_H ::= (H | KW_Not BlockEnclosure) (BlockEnclosure | KW_Dot BlockMolecule)*
+///Jleft_H::= H | KW_Not BlockEnclosure | Jleft_H BlockEnclosure| Jleft_H KW_Dot BlockMolecule
+// [Use:] Jxleft_H ::= (H | KW_Not BlockEnclosure) (BlockEnclosure | KW_Dot BlockMolecule)*
 
 
-Jxleft_Molecule::= (Molecule | KW_Not BlockEnclosure) (BlockEnclosure | KW_Dot BlockMolecule)*
-Jxleft_Atom::= (Atom | KW_Not BlockEnclosure) (BlockEnclosure | KW_Dot BlockMolecule)*
+Jxleft_Molecule::= (Molecule | Not_BlockEnclosure) (BlockEnclosure | Dot_BlockMolecule)*
+Jxleft_Atom::= (Atom | Not_BlockEnclosure) (BlockEnclosure | Dot_BlockMolecule)*
+
+Not_Jxright_Atom ::= KW_Not Jxright_Atom
+Not_BlockEnclosure ::= KW_Not BlockEnclosure
+
+Dot_BlockMolecule ::= KW_Dot BlockMolecule
 
 Molecule ::= Atom | BlockEnclosure
 
@@ -466,9 +470,9 @@ private Atom ::= Id | Literal
 
 xName ::= Id | NakedOp
 
-private Id ::= TK_Id | KW_Sharp | KW_Tilde
+Id ::= TK_Id | KW_Sharp | KW_Tilde
 
-private Literal ::= TK_Int | TK_Float | TK_String
+Literal ::= TK_Int | TK_Float | TK_String
 
 Nothing ::=
 

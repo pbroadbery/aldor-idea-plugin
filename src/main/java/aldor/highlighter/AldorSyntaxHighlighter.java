@@ -46,6 +46,7 @@ public class AldorSyntaxHighlighter extends SyntaxHighlighterBase {
         if (textAttributesKey == null) {
             return EMPTY_ATTRIBUTES;
         }
-        return new TextAttributesKey[] {textAttributesKey};
+        return new TextAttributesKey[]{textAttributesKey};
     }
+
 }

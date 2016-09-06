@@ -61,12 +61,14 @@ public class AldorParserUtil extends GeneratedParserUtilBase {
         return elt;
     }
 
-    public static boolean backSet(@NotNull PsiBuilder builder, @SuppressWarnings("UnusedParameters") int level) {
-        return false;
+    @SuppressWarnings("UnusedParameters")
+    public static boolean backTab(@NotNull PsiBuilder builder, int level) {
+        return true;
     }
 
-    public static boolean backTab(@NotNull PsiBuilder builder, @SuppressWarnings("UnusedParameters") int level) {
-        return true;
+    @SuppressWarnings("UnusedParameters")
+    public static boolean backSet(@NotNull PsiBuilder builder, int level) {
+        return false;
     }
 
     /*

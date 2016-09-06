@@ -39,6 +39,8 @@
 
         <lang.foldingBuilder language="Aldor" implementationClass="aldor.folder.AldorFoldingBuilder"/>
 
+        <annotator language="Aldor" implementationClass="aldor.annotator.AldorAnnotator"/>
+        
     </extensions>
 
     <actions>

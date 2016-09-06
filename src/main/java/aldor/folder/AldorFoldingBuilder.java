@@ -12,7 +12,6 @@ import org.jetbrains.annotations.Nullable;
  * Folding aldor for fun and profit
  */
 public class AldorFoldingBuilder extends FoldingBuilderEx {
-    private static final FoldingDescriptor[] EMPTY = new FoldingDescriptor[0];
     /*
     TODO: Single line functions
     TODO: Types
@@ -22,7 +21,7 @@ public class AldorFoldingBuilder extends FoldingBuilderEx {
     @NotNull
     @Override
     public FoldingDescriptor[] buildFoldRegions(@NotNull PsiElement root, @NotNull Document document, boolean quick) {
-        return EMPTY;
+        return FoldingDescriptor.EMPTY;
     }
 
     @Nullable
