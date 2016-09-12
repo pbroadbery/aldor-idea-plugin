@@ -1,0 +1,6 @@
+/out
+/gen
+*.ao
+*~
+.idea/workspace.xml
+.idea/tasks.xml
