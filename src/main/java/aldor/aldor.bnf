@@ -19,11 +19,15 @@
   name("E[0-9].*")='InfixedExpr'
   extends("E[0-9].*")=InfixedExpr
 
+  name("[^_]*Tok")='InfixedTok'
+  extends("[^_]*Tok")=InfixedTok
+
   implements("Not_.*")='aldor.psi.NegationElement'
   implements("Jxright_.*")='aldor.psi.JxrightElement'
   implements("Jxleft_.*")='aldor.psi.JxrightElement'
 
-
+  implements("InfixedTok")="aldor.psi.AldorIdentifier"
+  implements("Id")="aldor.psi.AldorIdentifier"
   tokens = [
           TK_Id TK_Blank TK_Int TK_Float TK_String TK_PreDoc TK_PostDoc
           TK_Comment TK_SysCmd TK_Error
@@ -80,7 +84,7 @@
 
 Goal ::= CurlyContents_Labelled
 //Expression ::= enlist1a(Labelled, KW_SEMICOLON)
-Expression ::= enlist1a_Labelled_KW_SEMICOLON
+Expression ::= enlist1a_Labelled_SEMICOLON
 
 private Labelled ::= Declaration | KW_At Atom opt_Labelled | Comma
 
@@ -97,9 +101,7 @@ Declaration ::=
         | KW_Import opt_Sig opt_FromPart
         | ExportDecl
 
-ExportDecl ::= KW_Export opt_Sig
-               | KW_Export opt_Sig ToPart
-               | KW_Export opt_Sig FromPart
+ExportDecl ::= KW_Export opt_Sig (ToPart | FromPart)?
 
 ToPart ::= KW_To Infixed
 
@@ -191,8 +193,9 @@ BindingR_InfixedExprsDecl_AnyStatement ::= InfixedExprsDecl (KW_Assign Binding_A
                                                              | KW_MapsToStar Binding_AnyStatement)?
 
 //no_semicolon ::= ! KW_Semicolon
+//AnyStatement ::= KW_If CommaItem KW_Then Binding_AnyStatement | Flow_AnyStatement
 
-AnyStatement ::= KW_If CommaItem KW_Then Binding_AnyStatement | Flow_AnyStatement
+AnyStatement ::= Flow_AnyStatement
 
 BalStatement ::= Flow_BalStatement
 
@@ -221,9 +224,9 @@ Flow_XX ::= Collection
 */
 
 Flow_AnyStatement ::=
-  IfStatement_BalStatement
-| IterRepeatStatement_BalStatement
-| RepeatStatement_BalStatement
+  IfStatement_AnyStatement
+| IterRepeatStatement_AnyStatement
+| RepeatStatement_AnyStatement
 | KW_Try Binding_AnyStatement KW_But ButExpr AlwaysPart_AnyStatement
 | KW_Try Binding_AnyStatement KW_Catch ButExpr AlwaysPart_AnyStatement
 | KW_Select Binding_AnyStatement KW_In Cases
@@ -234,7 +237,7 @@ Flow_AnyStatement ::=
 | KW_Assert Binding_AnyStatement
 | KW_Iterate opt_xName
 | KW_Break opt_xName
-| KW_Return opt_Collection
+| ReturnStatement
 | KW_Yield Binding_AnyStatement
 | KW_Except Binding_AnyStatement
 | KW_Throw Binding_AnyStatement
@@ -242,13 +245,8 @@ Flow_AnyStatement ::=
 | KW_Never
 | Collection (KW_Implies Binding_AnyStatement)?
 
-IfStatement_BalStatement ::=  KW_If CommaItem KW_Then Binding_BalStatement KW_Else Binding_AnyStatement
-
-IterRepeatStatement_BalStatement ::= Iterators KW_Repeat Binding_AnyStatement
-RepeatStatement_BalStatement ::= KW_Repeat Binding_AnyStatement
-
 Flow_BalStatement ::=
-  KW_If CommaItem KW_Then Binding_BalStatement KW_Else Binding_BalStatement
+  IfStatement_BalStatement
 | Iterators KW_Repeat Binding_BalStatement
 | KW_Repeat Binding_BalStatement
 | KW_Try Binding_BalStatement KW_But ButExpr AlwaysPart_BalStatement
@@ -261,7 +259,7 @@ Flow_BalStatement ::=
 | KW_Assert Binding_BalStatement
 | KW_Iterate opt_xName
 | KW_Break opt_xName
-| KW_Return opt_Collection
+| ReturnStatement
 | KW_Yield Binding_AnyStatement
 | KW_Except Binding_AnyStatement
 | KW_Throw Binding_AnyStatement
@@ -270,6 +268,14 @@ Flow_BalStatement ::=
 | Collection (KW_Implies Binding_BalStatement)?
 
 
+IfStatement_AnyStatement ::=  KW_If CommaItem KW_Then Binding_BalStatement (KW_Semicolon? KW_Else Binding_AnyStatement)?
+IfStatement_BalStatement ::=  KW_If CommaItem KW_Then Binding_BalStatement (KW_Semicolon? KW_Else Binding_BalStatement)?
+
+IterRepeatStatement_AnyStatement ::= Iterators KW_Repeat Binding_AnyStatement
+RepeatStatement_AnyStatement ::= KW_Repeat Binding_AnyStatement
+
+
+ReturnStatement ::= KW_Return opt_Collection
 
 GenBound ::= KW_To CommaItem KW_Of | Nothing
 
@@ -288,12 +294,12 @@ AlwaysPart_BalStatement ::= KW_Always Binding_BalStatement
                 | KW_Finally Binding_BalStatement
                 | Nothing
 
-Collection ::= Infixed Iterators?
+Collection ::= Infixed (Iterator* <<noRepeatHere>>)?
 
-Iterators ::= Iterators1
+Iterators ::= Iterator+
 
 //Iterators1 ::= Iterator | Iterators1 Iterator
-Iterators1 ::= Iterator+
+//Iterators1 ::= Iterator+
 Iterator ::= KW_For ForLhs KW_In Infixed opt_SuchthatPart
               | KW_While Infixed
 
@@ -313,7 +319,8 @@ InfixedExpr ::= E3 | E11_Op
 E3 ::= E4 ((KW_And | KW_Or | LatticeOp) E4)*
 
 //E4 ::= E5 | E4 KW_Has E5 | E4 RelationOp E5 | RelationOp E5
-E4 ::= (E5 | RelationOp E5) (KW_Has E5 | RelationOp E5)*
+E4 ::= (E5 | RelationOp E5) (HasPart | RelationOp E5)*
+HasPart ::= KW_Has E5
 
 //E5 ::= E6 | E5 SegOp | E5 SegOp E6
 E5 ::= E6 (SegOp E6?)*
@@ -345,8 +352,7 @@ E11_Op ::= Op ((KW_2Colon | KW_At | KW_Pretend) E12)*
 
 Type ::= E11_E12
 
-E12 ::= E13 (ArrowOp E12)?
-
+E12 ::= E13 (ArrowOp E12)*
 
 E13 ::= E14 (KW_Dollar QualTail)?
 
@@ -396,6 +402,7 @@ QuotientOp::=	 QualOp_QuotientTok
 TimesOp::= 	 QualOp_TimesTok
 PowerOp::= 	 QualOp_PowerTok
 
+fake InfixedTok ::=
 ArrowTok::=	 KW_RArrow | KW_LArrow | KW_MapStar
 LatticeTok::= KW_Vee    | KW_Wedge
 RelationTok::=KW_EQ     | KW_TildeE | KW_HatE |
@@ -448,7 +455,6 @@ DeclMolecule ::= Block | opt_Application
 BlockMolecule ::= Atom
             | Enclosure
             | Block
-
 
 BlockEnclosure ::= Enclosure | Block
 
@@ -525,7 +531,7 @@ private enlister1_xName_KW_Comma ::= xName (KW_Comma xName)*
 
 //enlist1a_E_Sep ::= enlister1a_E_Sep
 //enlister1a ::= E (Sep E)* Sep?
-private enlist1a_Labelled_KW_SEMICOLON ::= Labelled (Semicolon Labelled)* Semicolon?
+private enlist1a_Labelled_SEMICOLON ::= Labelled (Semicolon Labelled)* Semicolon?
 
 //Piled_E ::= KW_SetTab PileContents_E KW_BackTab
 //Piled_Expression ::= <<parsePiledExpression>>

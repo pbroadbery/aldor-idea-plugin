@@ -1,32 +1,43 @@
 package aldor;
 
+import aldor.psi.AldorArrowTok;
 import aldor.psi.AldorId;
+import aldor.psi.AldorIdentifier;
+import aldor.psi.AldorInfixedExpr;
+import aldor.psi.AldorInfixedTok;
 import aldor.psi.AldorJxleftAtom;
 import aldor.psi.AldorLiteral;
+import aldor.psi.AldorParened;
 import aldor.psi.AldorVisitor;
 import aldor.psi.JxrightElement;
 import aldor.psi.NegationElement;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
 
 public final class AldorPsiUtils {
+    private static final Logger LOG = Logger.getInstance(AldorPsiUtils.class);
 
+    @Nullable
     public static Syntax parse(PsiElement elt) {
-        //Jxright_Molecule ::= Jxleft_Molecule Jxright_Atom? | KW_Not Jxright_Atom
-        //Jxright_Atom ::= Jxleft_Atom Jxright_Atom? | KW_Not Jxright_Atom
-
-        final Deque<List<Syntax>> visitStack = new ArrayDeque<>();
-        visitStack.add(Lists.newArrayList());
-        elt.accept(new AldorPsiSyntaxVisitor(visitStack));
-
-        return visitStack.getFirst().get(0);
+        try {
+            final Deque<List<Syntax>> visitStack = new ArrayDeque<>();
+            visitStack.add(Lists.newArrayList());
+            elt.accept(new AldorPsiSyntaxVisitor(visitStack));
+            return visitStack.getFirst().get(0);
+        }
+        catch (RuntimeException e) {
+            LOG.error("Failed to parse " + elt.getText() + elt, e);
+            return null;
+        }
     }
 
     public static boolean containsElement(PsiElement element, IElementType eltType) {
@@ -108,6 +119,45 @@ public final class AldorPsiUtils {
         public void visitLiteral(@NotNull AldorLiteral o) {
             visitStack.peek().add(new Literal(o.getText(), o));
         }
+
+        @Override
+        public void visitParened(@NotNull AldorParened parened) {
+            List<Syntax> parenContent = Lists.newArrayList();
+            visitStack.push(parenContent);
+            parened.acceptChildren(this);
+            List<Syntax>  last = visitStack.pop();
+            //noinspection ObjectEquality
+            assert last == parenContent;
+            final Syntax next;
+            if (parenContent.size() == 1) {
+                next = parenContent.get(0);
+            } else {
+                next = new Comma(parenContent);
+            }
+            visitStack.peek().add(next);
+        }
+
+        @Override
+        public void visitInfixedExpr(@NotNull AldorInfixedExpr expr) {
+            List<Syntax> exprContent = Lists.newArrayList();
+            visitStack.push(exprContent);
+            expr.acceptChildren(this);
+            List<Syntax>  last = visitStack.pop();
+            //noinspection ObjectEquality
+            assert last == exprContent;
+            Syntax lhs = exprContent.get(0);
+            for (int i=1; i<exprContent.size(); i++) {
+                Syntax op = exprContent.get(i);
+                lhs = new InfixApply(op, lhs, exprContent.get(i+1));
+                i+=2;
+            }
+            visitStack.peek().add(lhs);
+        }
+
+        @Override
+        public void visitInfixedTok(@NotNull AldorInfixedTok tok) {
+            visitStack.peek().add(new Id(tok, tok.getText()));
+        }
     }
 
 
@@ -130,13 +180,37 @@ public final class AldorPsiUtils {
     }
 
     private static class Apply extends SyntaxNode {
-        Apply(List<Syntax> arguments) {
+        Apply(@NotNull List<Syntax> arguments) {
             super(arguments);
         }
 
         @Override
         String name() {
             return "Apply";
+        }
+    }
+
+
+    private static class InfixApply extends SyntaxNode {
+        InfixApply(@NotNull Syntax op, Syntax lhs, Syntax rhs) {
+            super(Lists.newArrayList(op, lhs, rhs));
+        }
+
+        @Override
+        String name() {
+            return "InfixApply";
+        }
+    }
+
+
+    private static class Comma extends SyntaxNode {
+        Comma(@NotNull  List<Syntax> arguments) {
+            super(arguments);
+        }
+
+        @Override
+        String name() {
+            return "Comma";
         }
     }
 
@@ -154,10 +228,10 @@ public final class AldorPsiUtils {
     }
 
     private static class Id extends Syntax {
-        private final AldorId id;
+        private final AldorIdentifier id;
         private final String text;
 
-        Id(AldorId id, String text) {
+        Id(AldorIdentifier id, String text) {
             this.id = id;
             this.text = text;
         }

@@ -16,15 +16,17 @@ import com.intellij.psi.TokenType;
 %eof}
 
 %state LINE_START
+%state IF_TEXT
 %state NORMAL
 
+ESC_CRLF=_(\n|\r|\r\n)
 CRLF=\n|\r|\r\n
 WHITE_SPACE=[\ \t\f]
 INDENT=[\ \t]+
 ID =([A-Za-z%?]|_.)([A-Za-z0-9%_?!]|_.)*
 INT=[0-9]+
 
-STRING=\"[^\"]*\"
+STRING=\"(_\"|[^\"])*\"
 
 COMMENT="-""-"[^\r\n]*
 PREDOC=\+\+\+[^\r\n]*
@@ -32,6 +34,9 @@ POSTDOC=\+\+[^+][^\r\n]*
 
 SYSCMD=#[^\n\r]*
 
+SYSCMD_IF=#if[ \t][^\r\n]*
+SYSCMD_ENDIF=#endif[^\r\n]*
+IF_LINE=[^\r\n]+
 %%
 /*
 "TK_Id" { yybegin(NORMAL); return AldorTokenTypes.TK_Id; }
@@ -165,14 +170,22 @@ SYSCMD=#[^\n\r]*
 }
 
 <LINE_START, YYINITIAL> {
+    { SYSCMD_IF } { yybegin(IF_TEXT); return AldorTokenTypes.TK_SysCmdIf;}
+    { SYSCMD_ENDIF } { yybegin(NORMAL); return AldorTokenTypes.TK_SysCmdEndIf;}
     { SYSCMD} { yybegin(NORMAL); return AldorTokenTypes.TK_SysCmd;}
     { INDENT } { yybegin(NORMAL); return AldorTokenTypes.KW_Indent; }
     [^] { yypushback(1); yybegin(NORMAL); }
 }
 
+<IF_TEXT> {
+    { SYSCMD_ENDIF } { yybegin(NORMAL); return AldorTokenTypes.TK_SysCmdEndIf;}
+    { CRLF } { yybegin(IF_TEXT); return AldorTokenTypes.KW_NewLine; }
+    { IF_LINE } { return AldorTokenTypes.TK_IfLine; }
+}
+
 <NORMAL> {
-"#" { return AldorTokenTypes.KW_Sharp; }
-{ WHITE_SPACE } { return TokenType.WHITE_SPACE; }
+    "#" { return AldorTokenTypes.KW_Sharp; }
+    { WHITE_SPACE } { return TokenType.WHITE_SPACE; }
 }
 //"#pile" { return AldorTokenTypes.KW_StartPile; }
 //"#endpile" { return AldorTokenTypes.KW_EndPile; }
@@ -182,15 +195,12 @@ SYSCMD=#[^\n\r]*
 //"KW_Juxtapose" { return AldorTokenTypes.KW_Juxtapose; }
 
 //"TK_LIMIT" { return AldorTokenTypes.TK_LIMIT; }
-<YYINITIAL,LINE_START, NORMAL> {
+<YYINITIAL, LINE_START, NORMAL> {
 
-{ ID } { yybegin(NORMAL); return AldorTokenTypes.TK_Id; }
-
-{ INT } { yybegin(NORMAL); return AldorTokenTypes.TK_Int; }
-
-{ CRLF } { yybegin(LINE_START); return AldorTokenTypes.KW_NewLine; }
-
-{ STRING } { yybegin(NORMAL); return AldorTokenTypes.TK_String; }
-
-. { System.out.println("Bad " + yytext()); return TokenType.BAD_CHARACTER; }
+    { ID } { yybegin(NORMAL); return AldorTokenTypes.TK_Id; }
+    { INT } { yybegin(NORMAL); return AldorTokenTypes.TK_Int; }
+    { ESC_CRLF } { yybegin(LINE_START); return TokenType.WHITE_SPACE; }
+    { CRLF } { yybegin(LINE_START); return AldorTokenTypes.KW_NewLine; }
+    { STRING } { yybegin(NORMAL); return AldorTokenTypes.TK_String; }
+    . { System.out.println("Bad token `" + yytext() + "'"); return TokenType.BAD_CHARACTER; }
 }

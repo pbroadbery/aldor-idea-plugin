@@ -36,8 +36,11 @@ public class AldorAnnotator implements Annotator {
         }
         TextRange range = element.getTextRange();
         Annotation typeAnnotation = holder.createInfoAnnotation(range, "");
-        typeAnnotation.setTextAttributes(JavaHighlightingColors.ANNOTATION_NAME_ATTRIBUTES);
-        typeAnnotation.setTooltip(AldorPsiUtils.parse(element).toString());
+        typeAnnotation.setTextAttributes(JavaHighlightingColors.ANNOTATION_NAME_ATTRIBUTES); //FIXME: Not Java
+        AldorPsiUtils.Syntax syntax = AldorPsiUtils.parse(element);
+        if (syntax != null) {
+            typeAnnotation.setTooltip(syntax.toString());
+        }
     }
 
 }

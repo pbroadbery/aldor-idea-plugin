@@ -37,7 +37,11 @@ public final class AldorTokenTypes {
     public static final AldorTokenType TK_PostDoc   = createTokenType("TK_PostDoc", 0, "TK_PostDoc",    1, 1, 0, 0, 0, 0, 1, 0, 170, 0);
     public static final AldorTokenType TK_Comment   = createTokenType("TK_Comment", 0, "TK_Comment",    1, 1, 0, 0, 0, 0, 1, 0, 170, 0);
     public static final AldorTokenType TK_SysCmd    = createTokenType("TK_SysCmd",  0, "TK_SysCmd",     1, 1, 0, 0, 0, 0, 1, 0, 170, 0);
+    public static final AldorTokenType TK_SysCmdIf  = createTokenType("TK_SysCmdIf",0,  "TK_SysCmdIf",   1, 1, 0, 0, 0, 0, 1, 0, 170, 0);
+    public static final AldorTokenType TK_SysCmdEndIf  = createTokenType("TK_SysCmdEndIf",0, "TK_SysCmdEndIf",1, 1, 0, 0, 0, 0, 1, 0, 170, 0);
+    public static final AldorTokenType TK_SysCmdIncude = createTokenType("TK_SysCmdInclude",0, "TK_SysCmdInclude",1, 1, 0, 0, 0, 0, 1, 0, 170, 0);
     public static final AldorTokenType TK_Error     = createTokenType("TK_Error",   0, "TK_Error",      1, 0, 0, 0, 0, 0, 1, 0, 0, 0);
+    public static final AldorTokenType TK_IfLine = createTokenType("TK_IfLine",   0, "TK_IfLine",      1, 0, 0, 0, 0, 0, 1, 0, 0, 0);
 
     public static final AldorTokenType KW_Add       = createTokenType("KW_Add",     0, "add",           0, 0, 0, 0, 0, 1, 1, 0, 0, 0);
     public static final AldorTokenType KW_And       = createTokenType("KW_And",     0, "and",           0, 0, 0, 0, 1, 1, 1, 1, 40, 0);

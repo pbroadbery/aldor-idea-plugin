@@ -2,6 +2,8 @@ package pab.aldor;
 
 import aldor.AldorParserDefinition;
 import aldor.AldorTypes;
+import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.ParserDefinition;
 import com.intellij.lang.PsiBuilder;
@@ -9,6 +11,7 @@ import com.intellij.lang.PsiBuilderFactory;
 import com.intellij.lang.PsiParser;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.PsiRecursiveElementVisitor;
 import com.intellij.psi.tree.IElementType;
@@ -16,15 +19,32 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 public final class ParserFunctions {
+
+
+    public static void logPsi(PsiElement psi) {
+        logPsi(psi, 0);
+    }
+
+    // TODO: Remove most uses of this method
     static void logPsi(PsiElement psi, int i) {
-        String text = (psi.getChildren().length == 0) ? psi.getText(): "";
-        System.out.println("(psi: " + psi + " " + text);
-        for (PsiElement elt: psi.getChildren()) {
-            logPsi(elt, i+1);
+        logPsi(psi, i, "");
+    }
+    static void logPsi(PsiElement psi, int depth, String lastStuff) {
+        PsiElement[] children = psi.getChildren();
+        String text = (children.length == 0) ? psi.getText(): "";
+        String spaces = Strings.repeat(" ", Math.min(depth, 20));
+        if (children.length == 0) {
+            System.out.println(spaces + "(psi: " + psi + " " + text + ")" + lastStuff);
+            return;
         }
-        System.out.println(")");
+        System.out.println(spaces + "(psi: " + psi + " " + text);
+        for (int i = 0; i< children.length -1; i++) {
+            logPsi(children[i], depth+1, "");
+        }
+        logPsi(children[children.length-1], depth+1, ")" + lastStuff);
     }
 
     public static PsiElement parseText(Project project, CharSequence text) {
@@ -58,6 +78,17 @@ public final class ParserFunctions {
         return errors;
     }
 
-
-
+    public static List<PsiElement> find(PsiElement elt, Predicate<PsiElement> pred) {
+        List<PsiElement> subElements = Lists.newArrayList();
+        elt.accept(new PsiElementVisitor() {
+            @Override
+            public void visitElement(PsiElement element) {
+                if (pred.test(element)) {
+                    subElements.add(element);
+                }
+                element.acceptChildren(this);
+            }
+        });
+        return subElements;
+    }
 }

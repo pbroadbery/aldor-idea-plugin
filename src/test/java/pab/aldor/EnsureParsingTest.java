@@ -3,6 +3,7 @@ package pab.aldor;
 import aldor.AldorParserDefinition;
 import aldor.AldorTypes;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.ParserDefinition;
 import com.intellij.lang.PsiBuilder;
@@ -22,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.List;
+import java.util.Set;
 
 import static pab.aldor.ParserFunctions.getPsiErrorElements;
 import static pab.aldor.ParserFunctions.logPsi;
@@ -221,6 +223,23 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
         assertEquals(0, errors.size());
     }
 
+    public void testGenerator() {
+        String text = "f(x for x in 1..10)";
+        PsiElement psi = parseText(text);
+        logPsi(psi, 0);
+        final List<PsiErrorElement> errors = getPsiErrorElements(psi);
+        assertEquals(0, errors.size());
+    }
+
+    public void testGenerator2() {
+        String text = "x for x in 1..10";
+        PsiElement psi = parseText(text);
+        logPsi(psi, 0);
+        final List<PsiErrorElement> errors = getPsiErrorElements(psi);
+        assertEquals(0, errors.size());
+    }
+
+
     public void testWithSysCmd() {
         String text = "foo\n#Wibble\nbar";
         PsiElement psi = parseText(text);
@@ -229,6 +248,14 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
         assertEquals(0, errors.size());
     }
 
+
+    public void testWithIfBlock() {
+        String text = "a;\n#if X\nstuff\n#endif\nb\n";
+        PsiElement psi = parseText(text);
+        logPsi(psi, 0);
+        final List<PsiErrorElement> errors = getPsiErrorElements(psi);
+        assertEquals(0, errors.size());
+    }
 
     public void testEmpty() {
         ParserDefinition aldorParserDefinition = new AldorParserDefinition();
@@ -251,7 +278,6 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
         assertEquals(0, errors.size());
     }
 
-
     public void testParseITools() {
         assertNotNull(getProject());
 
@@ -260,6 +286,45 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
         final List<PsiErrorElement> errors = parseFile(project, file);
         assertEquals(0, errors.size());
     }
+
+
+    public void testParseFold() {
+        assertNotNull(getProject());
+
+        Project project = getProject();
+        File file = new File("/home/pab/Work/aldorgit/aldor/aldor/lib/aldor/src/datastruc/sal_fold.as");
+        final List<PsiErrorElement> errors = parseFile(project, file);
+        assertEquals(0, errors.size());
+    }
+
+    public void testTmpBs() {
+        assertNotNull(getProject());
+
+        Project project = getProject();
+        File file = new File("/tmp/bs.as");
+        final List<PsiErrorElement> errors = parseFile(project, file);
+        assertEquals(0, errors.size());
+    }
+
+    public void testParseBSearch() {
+        assertNotNull(getProject());
+
+        Project project = getProject();
+        File file = new File("/home/pab/Work/aldorgit/aldor/aldor/lib/aldor/src/arith/sal_bsearch.as");
+        final List<PsiErrorElement> errors = parseFile(project, file);
+        assertEquals(0, errors.size());
+    }
+
+
+    public void testParseUPMod() {
+        assertNotNull(getProject());
+
+        Project project = getProject();
+        File file = new File("/home/pab/Work/aldorgit/aldor/aldor/lib/algebra/src/algext/sit_upmod.as");
+        final List<PsiErrorElement> errors = parseFile(project, file);
+        assertEquals(0, errors.size());
+    }
+
 
 
     @NotNull
@@ -290,12 +355,37 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
     public void testAldorLibrary() {
         assertNotNull(getProject());
 
-        Project project = getProject();
         File base = new File("/home/pab/Work/aldorgit/aldor/aldor/lib/aldor/src");
+        Set<String> blackList = Sets.newHashSet("sal_sexpr.as");
+        List<File> badFiles = parseLibrary(base, blackList);
+
+        System.out.println("Bad files: " + badFiles);
+        assertTrue(badFiles.isEmpty());
+    }
+
+
+    public void testAlgebraLibrary() {
+        assertNotNull(getProject());
+
+        File base = new File("/home/pab/Work/aldorgit/aldor/aldor/lib/algebra/src");
+        Set<String> blackList = Sets.newHashSet("tst_dup.as", "tst_fold.as",
+                "sit_upolc0.as", "sit_upolc.as");
+        List<File> badFiles = parseLibrary(base, blackList);
+
+        System.out.println("Bad files: " + badFiles);
+        assertTrue(badFiles.isEmpty());
+    }
+
+    @NotNull
+    private List<File> parseLibrary(File base, Set<String> blackList) {
+        Project project = getProject();
         List<File> files = findAllSource(base);
         List<File> badFiles = Lists.newArrayList();
         for (File file: files) {
+            long start = System.currentTimeMillis();
             System.out.println("Reading: " + file);
+            if (blackList.contains(file.getName()))
+                continue;
             VirtualFile vf = LocalFileSystem.getInstance().findFileByIoFile(file);
             assertNotNull(vf);
             PsiFile psiFile = PsiManager.getInstance(project).findFile(vf);
@@ -305,14 +395,12 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
             PsiElement psi = parseText(text);
 
             final List<PsiErrorElement> errors = getPsiErrorElements(psi);
-
+            System.out.println("... File " + file + " took " + (System.currentTimeMillis() - start) + "ms");
             if (!errors.isEmpty()) {
                 badFiles.add(file);
             }
         }
-
-        System.out.println("Bad files: " + badFiles);
-        assertTrue(badFiles.isEmpty());
+        return badFiles;
     }
 
     private List<File> findAllSource(File base) {

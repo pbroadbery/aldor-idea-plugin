@@ -5,37 +5,39 @@ import com.intellij.psi.PsiElement;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 
+import static pab.aldor.ParserFunctions.logPsi;
+
 public class SyntaxTest extends LightPlatformCodeInsightFixtureTestCase {
 
     public void testId() {
-        String text = "f";
-        PsiElement psi = parseText(text);
-        ParserFunctions.logPsi(psi, 0);
+        PsiElement psi = parseText("f");
 
         AldorPsiUtils.Syntax syntax = AldorPsiUtils.parse(psi);
-
+        assertNotNull(syntax);
         assertEquals("f", syntax.toString());
     }
 
     public void testParseFunctionCall() {
-        String text = "f g x";
-        PsiElement psi = parseText(text);
-        ParserFunctions.logPsi(psi, 0);
+        PsiElement psi = parseText("f g x");
 
         AldorPsiUtils.Syntax syntax = AldorPsiUtils.parse(psi);
-
+        assertNotNull(syntax);
         assertEquals("(Apply f (Apply g x))", syntax.toString());
     }
 
-
     public void testParseDotFunctionCall() {
-        String text = "a.f g";
-        PsiElement psi = parseText(text);
-        ParserFunctions.logPsi(psi, 0);
+        PsiElement psi = parseText("a.f g");
 
         AldorPsiUtils.Syntax syntax = AldorPsiUtils.parse(psi);
-
+        assertNotNull(syntax);
         assertEquals("(Apply (Apply a f) g)", syntax.toString());
+    }
+
+    public void testParseFunctionMap() {
+        PsiElement psi = parseText("() -> (Int, String)");
+        AldorPsiUtils.Syntax syntax = AldorPsiUtils.parse(psi);
+        assertNotNull(syntax);
+        assertEquals("(InfixApply -> (Comma ) (Comma Int String))", syntax.toString());
     }
 
     private PsiElement parseText(CharSequence text) {
