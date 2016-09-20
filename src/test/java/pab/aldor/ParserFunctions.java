@@ -18,11 +18,14 @@ import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
 
 public final class ParserFunctions {
 
+
+    public static final int MAX_INDENT_DEPTH = 20;
 
     public static void logPsi(PsiElement psi) {
         logPsi(psi, 0);
@@ -35,7 +38,7 @@ public final class ParserFunctions {
     static void logPsi(PsiElement psi, int depth, String lastStuff) {
         PsiElement[] children = psi.getChildren();
         String text = (children.length == 0) ? psi.getText(): "";
-        String spaces = Strings.repeat(" ", Math.min(depth, 20));
+        String spaces = Strings.repeat(" ", Math.min(depth, MAX_INDENT_DEPTH));
         if (children.length == 0) {
             System.out.println(spaces + "(psi: " + psi + " " + text + ")" + lastStuff);
             return;
@@ -78,7 +81,7 @@ public final class ParserFunctions {
         return errors;
     }
 
-    public static List<PsiElement> find(PsiElement elt, Predicate<PsiElement> pred) {
+    public static Collection<PsiElement> find(PsiElement elt, Predicate<PsiElement> pred) {
         List<PsiElement> subElements = Lists.newArrayList();
         elt.accept(new PsiElementVisitor() {
             @Override

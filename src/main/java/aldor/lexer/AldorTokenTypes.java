@@ -177,9 +177,9 @@ public final class AldorTokenTypes {
     public static final AldorTokenType KW_NewLine = createTokenType("KW_NewLine", 0, "\n", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0);
     public static final AldorTokenType KW_StartPile = createTokenType("KW_StartPile", 0, "#pile", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0);
     public static final AldorTokenType KW_EndPile = createTokenType("KW_EndPile", 0, "#endpile", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0);
-    public static final AldorTokenType KW_SetTab = createTokenType("KW_SetTab", 0, "KW_SetTab", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0);
-    public static final AldorTokenType KW_BackSet = createTokenType("KW_BackSet", 0, "KW_BackSet", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0);
-    public static final AldorTokenType KW_BackTab = createTokenType("KW_BackTab", 0, "KW_BackTab", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0);
+    public static final AldorTokenType KW_BlkStart = createTokenType("KW_BlkStart", 0, "KW_BlkStart", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0);
+    public static final AldorTokenType KW_BlkNext = createTokenType("KW_BlkNext", 0, "KW_BlkNext", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0);
+    public static final AldorTokenType KW_BlkEnd = createTokenType("KW_BlkEnd", 0, "KW_BlkEnd", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0);
     public static final AldorTokenType KW_Juxtapose = createTokenType("KW_Juxtapose", 0, "KW_Juxtapose", 0, 0, 0, 0, 0, 0, 0, 0, 170, 0);
     public static final AldorTokenType KW_Indent = createTokenType("KW_Indent", 0, "KW_Indent", 0, 0, 0, 0, 0, 0, 0, 0, 170, 0);
 

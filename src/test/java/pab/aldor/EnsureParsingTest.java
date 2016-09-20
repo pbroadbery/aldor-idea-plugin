@@ -22,6 +22,7 @@ import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCa
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -325,6 +326,14 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
         assertEquals(0, errors.size());
     }
 
+    public void testParseSExpr() {
+        assertNotNull(getProject());
+
+        Project project = getProject();
+        File file = new File("/home/pab/Work/aldorgit/aldor/aldor/lib/aldor/src/lisp/sal_sexpr.as");
+        final List<PsiErrorElement> errors = parseFile(project, file);
+        assertEquals(0, errors.size());
+    }
 
 
     @NotNull
@@ -377,15 +386,16 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
     }
 
     @NotNull
-    private List<File> parseLibrary(File base, Set<String> blackList) {
+    private List<File> parseLibrary(File base, Collection<String> blackList) {
         Project project = getProject();
         List<File> files = findAllSource(base);
         List<File> badFiles = Lists.newArrayList();
         for (File file: files) {
             long start = System.currentTimeMillis();
             System.out.println("Reading: " + file);
-            if (blackList.contains(file.getName()))
+            if (blackList.contains(file.getName())) {
                 continue;
+            }
             VirtualFile vf = LocalFileSystem.getInstance().findFileByIoFile(file);
             assertNotNull(vf);
             PsiFile psiFile = PsiManager.getInstance(project).findFile(vf);
@@ -395,6 +405,7 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
             PsiElement psi = parseText(text);
 
             final List<PsiErrorElement> errors = getPsiErrorElements(psi);
+            //noinspection StringConcatenationMissingWhitespace
             System.out.println("... File " + file + " took " + (System.currentTimeMillis() - start) + "ms");
             if (!errors.isEmpty()) {
                 badFiles.add(file);

@@ -17,37 +17,37 @@ public class ParseStatementsTest extends LightPlatformCodeInsightFixtureTestCase
     public void testNormalStatementSequence() {
         PsiElement psi = parseText("a;b;c");
         assertTrue(getPsiErrorElements(psi).isEmpty());
-        ParserFunctions.logPsi(psi);
-        assertTrue(ParserFunctions.find(psi, elt -> elt instanceof AldorId && elt.getText().equals("a")).size() == 1);
-        assertTrue(ParserFunctions.find(psi, elt -> elt instanceof AldorId && elt.getText().equals("b")).size() == 1);
-        assertTrue(ParserFunctions.find(psi, elt -> elt instanceof AldorId && elt.getText().equals("c")).size() == 1);
+        logPsi(psi);
+        assertTrue(ParserFunctions.find(psi, elt -> (elt instanceof AldorId) && "a".equals(elt.getText())).size() == 1);
+        assertTrue(ParserFunctions.find(psi, elt -> (elt instanceof AldorId) && "b".equals(elt.getText())).size() == 1);
+        assertTrue(ParserFunctions.find(psi, elt -> (elt instanceof AldorId) && "c".equals(elt.getText())).size() == 1);
     }
 
     public void testNormalSubStatementSequence() {
         PsiElement psi = parseText("return {a;b;c}");
         assertTrue(getPsiErrorElements(psi).isEmpty());
-        ParserFunctions.logPsi(psi);
-        assertTrue(ParserFunctions.find(psi, elt -> elt instanceof AldorId && elt.getText().equals("a")).size() == 1);
-        assertTrue(ParserFunctions.find(psi, elt -> elt instanceof AldorId && elt.getText().equals("b")).size() == 1);
-        assertTrue(ParserFunctions.find(psi, elt -> elt instanceof AldorId && elt.getText().equals("c")).size() == 1);
+        logPsi(psi);
+        assertTrue(ParserFunctions.find(psi, elt -> (elt instanceof AldorId) && "a".equals(elt.getText())).size() == 1);
+        assertTrue(ParserFunctions.find(psi, elt -> (elt instanceof AldorId) && "b".equals(elt.getText())).size() == 1);
+        assertTrue(ParserFunctions.find(psi, elt -> (elt instanceof AldorId) && "c".equals(elt.getText())).size() == 1);
     }
 
     public void testReturnSubStatementSequence() {
         PsiElement psi = parseText("x + {a;b;c}");
         assertTrue(getPsiErrorElements(psi).isEmpty());
-        ParserFunctions.logPsi(psi);
-        assertTrue(ParserFunctions.find(psi, elt -> elt instanceof AldorId && elt.getText().equals("a")).size() == 1);
-        assertTrue(ParserFunctions.find(psi, elt -> elt instanceof AldorId && elt.getText().equals("b")).size() == 1);
-        assertTrue(ParserFunctions.find(psi, elt -> elt instanceof AldorId && elt.getText().equals("c")).size() == 1);
+        logPsi(psi);
+        assertTrue(ParserFunctions.find(psi, elt -> (elt instanceof AldorId) && "a".equals(elt.getText())).size() == 1);
+        assertTrue(ParserFunctions.find(psi, elt -> (elt instanceof AldorId) && "b".equals(elt.getText())).size() == 1);
+        assertTrue(ParserFunctions.find(psi, elt -> (elt instanceof AldorId) && "c".equals(elt.getText())).size() == 1);
     }
 
 
     public void testImplicitSemicolon() {
         PsiElement psi = parseText("x == {x} y == 2");
         assertTrue(getPsiErrorElements(psi).isEmpty());
-        ParserFunctions.logPsi(psi);
-        assertTrue(ParserFunctions.find(psi, elt -> elt instanceof AldorId && elt.getText().equals("x")).size() == 2);
-        assertTrue(ParserFunctions.find(psi, elt -> elt instanceof AldorId && elt.getText().equals("y")).size() == 1);
+        logPsi(psi);
+        assertTrue(ParserFunctions.find(psi, elt -> (elt instanceof AldorId) && "x".equals(elt.getText())).size() == 2);
+        assertTrue(ParserFunctions.find(psi, elt -> (elt instanceof AldorId) && "y".equals(elt.getText())).size() == 1);
     }
 
     public void testEmptyStatementFails() {

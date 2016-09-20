@@ -75,14 +75,15 @@
 
           KW_Bar KW_CBBrack KW_CBCurly KW_CBParen KW_2Bar
 
-          KW_NewLine KW_StartPile KW_EndPile KW_SetTab KW_BackSet KW_BackTab KW_Juxtapose
+          KW_NewLine KW_StartPile KW_EndPile KW_BlkStart KW_BlkNext KW_BlkEnd KW_Juxtapose KW_SysCmd
 
           TK_LIMIT
    ]
 
 }
 
-Goal ::= CurlyContents_Labelled
+Goal ::= TopLevel
+//Goal ::= TopLevel
 //Expression ::= enlist1a(Labelled, KW_SEMICOLON)
 Expression ::= enlist1a_Labelled_SEMICOLON
 
@@ -347,8 +348,13 @@ X ((KW_2Colon | KW_At | KW_Pretend) E12)*
 
 */
 
-E11_E12 ::= E12 ((KW_2Colon | KW_At | KW_Pretend) E12)*
-E11_Op ::= Op ((KW_2Colon | KW_At | KW_Pretend) E12)*
+E11_E12 ::= E12 TypeQualifier*
+E11_Op ::= Op TypeQualifier*
+
+TypeQualifier ::= TQual_2Colon | TQual_At | TQual_Pretend
+TQual_2Colon ::= KW_2Colon E12
+TQual_At ::= KW_2Colon E12
+TQual_Pretend ::= KW_2Colon E12
 
 Type ::= E11_E12
 
@@ -533,18 +539,22 @@ private enlister1_xName_KW_Comma ::= xName (KW_Comma xName)*
 //enlister1a ::= E (Sep E)* Sep?
 private enlist1a_Labelled_SEMICOLON ::= Labelled (Semicolon Labelled)* Semicolon?
 
-//Piled_E ::= KW_SetTab PileContents_E KW_BackTab
-//Piled_Expression ::= <<parsePiledExpression>>
-Piled_Expression ::= KW_SetTab PileContents_Expression <<backTab>>
+TopLevel ::= CurlyContents_Labelled KW_StartPile Piled_Content
+
+//Piled_E ::= KW_BlkStart PileContents_E KW_BlkEnd
+Piled_Expression ::= <<parsePiledExpression>>
+Piled_Content ::= <<parsePiledContent>>
+//Piled_Expression ::= KW_BlkStart PileContents_Expression <<backTab>>
+//Piled_Expression ::= KW_BlkStart Doc_Expression (KW_BlkNext Doc_Expression)* KW_BlkNext? <<backTab>>
 
 //Curly_E ::= KW_OCurly CurlyContents_E KW_CCurly
 Curly_Labelled ::= KW_OCurly CurlyContents_Labelled KW_CCurly
 
-//PileContents(E)<ablist>: Doc(E) | PileContents(E) KW_BackSet Doc(E) | error KW_BackSet Doc(E)
-//PileContents_E ::= Doc_E | PileContents_E KW_BackSet Doc(E) | error
-//PileContents_E := Doc_E (KW_BackSet Doc_E)*
+//PileContents(E)<ablist>: Doc(E) | PileContents(E) KW_BlkNext Doc(E) | error KW_BlkNext Doc(E)
+//PileContents_E ::= Doc_E | PileContents_E KW_BlkNext Doc(E) | error
+//PileContents_E := Doc_E (KW_BlkNext Doc_E)*
 
-PileContents_Expression ::= Doc_Expression (<<backSet>> Doc_Expression)*
+//PileContents_Expression ::= Doc_Expression (KW_BlkNext Doc_Expression)* KW_BlkNext?
 
 //CurlyContents_E ::= CurlyContentsList_E
 CurlyContents_Labelled ::= CurlyContentsList_Labelled

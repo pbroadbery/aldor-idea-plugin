@@ -1,6 +1,8 @@
 package pab.aldor;
 
 import aldor.AldorTypes;
+import aldor.lexer.AldorIndentLexer;
+import aldor.lexer.AldorLexerAdapter;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.tree.IElementType;
@@ -15,8 +17,7 @@ public class PileModeParsingTest extends LightPlatformCodeInsightTestCase{
 
 
     public void testPileMode() {
-        String text = "#pile\nrepeat\n  foo\n  bar";
-        PsiElement psi = parseText(text, AldorTypes.BAL_STATEMENT);
+        PsiElement psi = parseText("#pile\nrepeat\n  foo\n  bar");
         logPsi(psi, 0);
         final List<PsiErrorElement> errors = getPsiErrorElements(psi);
         assertEquals(0, errors.size());
@@ -24,11 +25,39 @@ public class PileModeParsingTest extends LightPlatformCodeInsightTestCase{
 
 
     public void testPileAfter2Eq() {
-        String text = "#pile\nfoo: X == \n 1\n 2";
-        PsiElement psi = parseText(text, AldorTypes.COMMA);
+        PsiElement psi = parseText("#pile\nfoo: X == \n 1\n 2");
         logPsi(psi, 0);
         final List<PsiErrorElement> errors = getPsiErrorElements(psi);
         assertEquals(0, errors.size());
+    }
+
+    public void testTwoStatements() {
+        PsiElement psi = parseText("#pile\nA\nB\n");
+        logPsi(psi, 0);
+        final List<PsiErrorElement> errors = getPsiErrorElements(psi);
+        assertEquals(0, errors.size());
+    }
+
+    public void testComplexThenSimple() {
+        PsiElement psi = parseText("#pile\nrepeat\n Foo\nA := 1");
+        logPsi(psi, 0);
+        final List<PsiErrorElement> errors = getPsiErrorElements(psi);
+
+        AldorIndentLexer unit = new AldorIndentLexer(new AldorLexerAdapter());
+        unit.start("#pile\nrepeat\n Foo\nA := 1");
+        assertEquals(0, errors.size());
+    }
+
+    public void testComplexThenComplex() {
+        PsiElement psi = parseText("#pile\nrepeat\n Foo\nrepeat\n a");
+        logPsi(psi, 0);
+        final List<PsiErrorElement> errors = getPsiErrorElements(psi);
+        assertEquals(0, errors.size());
+    }
+
+    // NB: Comma is probably wrong...
+    private PsiElement parseText(CharSequence text) {
+        return parseText(text, AldorTypes.TOP_LEVEL);
     }
 
     private PsiElement parseText(CharSequence text, IElementType elementType) {

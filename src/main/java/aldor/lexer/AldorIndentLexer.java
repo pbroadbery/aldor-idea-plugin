@@ -7,9 +7,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-import static aldor.lexer.AldorTokenTypes.KW_BackSet;
-import static aldor.lexer.AldorTokenTypes.KW_Indent;
-import static aldor.lexer.AldorTokenTypes.KW_SetTab;
+import static aldor.lexer.AldorTokenTypes.KW_BlkEnd;
+import static aldor.lexer.AldorTokenTypes.KW_BlkNext;
+import static aldor.lexer.AldorTokenTypes.KW_BlkStart;
+import static aldor.lexer.AldorTokenTypes.KW_EndPile;
+import static aldor.lexer.AldorTokenTypes.KW_NewLine;
+import static aldor.lexer.AldorTokenTypes.TK_SysCmd;
 
 /**
  * Adds functionality to track indent width and pile mode.
@@ -37,27 +40,54 @@ public class AldorIndentLexer extends DelegateLexer {
     @Override
     public IElementType getTokenType() {
         IElementType tokType = super.getTokenType();
-        if ((Objects.equals(tokType, KW_Indent)) && isAtBlockStart()) {
-            return KW_SetTab;
-        } else if ((Objects.equals(tokType, KW_Indent)) && isAtBlockNewLine()) {
-            return KW_BackSet;
+        if ((Objects.equals(tokType, KW_NewLine)) && isAtBlockStart()) {
+            return KW_BlkStart;
+        }
+        else if ((Objects.equals(tokType, KW_NewLine)) && isAtBlockEnd()) {
+            return KW_BlkEnd;
+        }
+        else if ((Objects.equals(tokType, KW_NewLine)) && isAtBlockNewLine()) {
+            return KW_BlkNext;
+        }
+        else if (Objects.equals(tokType, TK_SysCmd)) {
+            if ("#pile".equals(getTokenText())) {
+                return AldorTokenTypes.KW_StartPile;
+            }
+            else if ("#unpile".equals(getTokenText())) {
+                return KW_EndPile;
+            }
         }
         return tokType;
     }
 
     private boolean isAtBlockNewLine() {
-        if (Objects.equals(getAldorDelegate().getTokenType(), KW_Indent)) {
-            return lineariser.isAtBlockNewLine(getAldorDelegate().getTokenStart());
+        if (Objects.equals(getAldorDelegate().getTokenType(), KW_NewLine)
+                && lineariser.isPileMode(getAldorDelegate().getTokenStart())) {
+            return lineariser.isAtBlockNewLine(getAldorDelegate().getTokenEnd());
         } else {
             return false;
         }
     }
 
     private boolean isAtBlockStart() {
-        if (Objects.equals(getAldorDelegate().getTokenType(), KW_Indent)) {
-            return lineariser.isBlockStart(getAldorDelegate().getTokenStart());
+        if (Objects.equals(getAldorDelegate().getTokenType(), KW_NewLine)
+                && lineariser.isPileMode(getAldorDelegate().getTokenStart())) {
+            return lineariser.isBlockStart(getAldorDelegate().getTokenEnd());
         } else {
             return false;
         }
+    }
+
+    private boolean isAtBlockEnd() {
+        if (Objects.equals(getAldorDelegate().getTokenType(), KW_NewLine)
+                && lineariser.isPileMode(getAldorDelegate().getTokenStart())) {
+            return lineariser.isBlockEnd(getAldorDelegate().getTokenEnd());
+        } else {
+            return false;
+        }
+    }
+
+    public int indentLevel(int c) {
+        return lineariser.indentLevel(c);
     }
 }

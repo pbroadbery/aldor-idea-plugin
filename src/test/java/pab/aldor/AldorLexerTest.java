@@ -1,7 +1,6 @@
 package pab.aldor;
 
 import aldor.lexer.AldorLexerAdapter;
-import aldor.lexer.AldorTokenTypes;
 import com.google.common.collect.Lists;
 import com.intellij.psi.tree.IElementType;
 import org.junit.Test;

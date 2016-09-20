@@ -1,17 +1,16 @@
 package aldor;
 
+import aldor.lexer.AldorIndentLexer;
 import aldor.lexer.AldorTokenTypes;
-import com.google.common.collect.Lists;
 import com.intellij.lang.PsiBuilder;
-import com.intellij.lang.impl.PsiBuilderAdapter;
 import com.intellij.lang.parser.GeneratedParserUtilBase;
 import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
-import static aldor.lexer.AldorTokenTypes.KW_BackSet;
+import static aldor.AldorTypes.PILED_EXPRESSION;
+import static aldor.lexer.AldorTokenTypes.KW_BlkEnd;
+import static aldor.lexer.AldorTokenTypes.KW_BlkNext;
+import static aldor.lexer.AldorTokenTypes.KW_BlkStart;
 import static aldor.lexer.AldorTokenTypes.KW_Repeat;
 import static aldor.lexer.AldorTokenTypes.KW_Semicolon;
 
@@ -20,13 +19,10 @@ public class AldorParserUtil extends GeneratedParserUtilBase {
 
     /*
     public static PsiBuilder adapt_builder_(IElementType root, PsiBuilder builder, PsiParser parser, TokenSet[] extendsSets) {
-        builder = GeneratedParserUtilBase.adapt_builder_(root, builder, parser, extendsSets);
-        builder = new AldorPsiBuilderAdapter(builder);
-        return builder;
+        return adapted;
     }
 
     static class AldorPsiBuilderAdapter extends PsiBuilderAdapter {
-        private boolean lastWasSemicolon;
 
         public AldorPsiBuilderAdapter(PsiBuilder delegate) {
             super(delegate);
@@ -34,6 +30,7 @@ public class AldorParserUtil extends GeneratedParserUtilBase {
 
     }
     */
+
     // Return true if last token was a close brace, or looking at a semicolon
     // Used to determine if there is a logical semicolon - ie. statement terminator
     // at the current position.
@@ -46,8 +43,8 @@ public class AldorParserUtil extends GeneratedParserUtilBase {
         if (prevElt == AldorTokenTypes.KW_CCurly) {
             return true;
         }
-        if (builder.getTokenType() == KW_BackSet) {
-            return consumeToken(builder, KW_BackSet);
+        if (builder.eof()) {
+            return true;
         }
         return false;
     }
@@ -72,18 +69,88 @@ public class AldorParserUtil extends GeneratedParserUtilBase {
 
     @SuppressWarnings("UnusedParameters")
     public static boolean noRepeatHere(@NotNull PsiBuilder builder, int level) {
-        if (builder.getTokenType() == KW_Repeat)
+        if (builder.getTokenType() == KW_Repeat) {
             return false;
+        }
         return true;
     }
 
     @SuppressWarnings("UnusedParameters")
-    public static boolean backTab(@NotNull PsiBuilder builder, int level) {
+    public static boolean backSet(@NotNull PsiBuilder builder, int level) {
+        if (consumeToken(builder, KW_BlkNext)) {
+            return true;
+        }
         return false;
     }
 
-    @SuppressWarnings("UnusedParameters")
-    public static boolean backSet(@NotNull PsiBuilder builder, int level) {
-        return false;
+
+    public static boolean parsePiledExpression(@NotNull  PsiBuilder b, int l) {
+        if (!recursion_guard_(b, l, "Piled_Expression")) {
+            return false;
+        }
+        if (!nextTokenIs(b, KW_BlkStart)) {
+            return false;
+        }
+        PsiBuilder.Marker m = enter_section_(b);
+        boolean r = consumeToken(b, KW_BlkStart);
+        r = r && parsePiledContent(b, l);
+        System.out.println("Current token is " + b.getTokenType() + " offs: " + b.getCurrentOffset());
+        r = r && blockEnd(b);
+        exit_section_(b, m, PILED_EXPRESSION, r);
+        return r;
     }
+
+    private static boolean blockEnd(@NotNull PsiBuilder builder) {
+
+        boolean r = consumeToken(builder, KW_BlkEnd);
+        if (!r) {
+            r = builder.eof();
+        }
+        if (!r) {
+            IElementType elt = skipDocsAndComments(builder);
+            r = (elt == KW_BlkEnd);
+        }
+
+        return r;
+    }
+
+    public static boolean parsePiledContent(@NotNull PsiBuilder b, int l) {
+        int indentLevel = currentIndentLevel(b);
+        System.out.println("Parsing piled expression.. offset " + b.getCurrentOffset() + " indent: " + indentLevel);
+        boolean r = AldorParser.Doc_Expression(b, l + 1);
+        System.out.println("Read expression 1: " + b.getCurrentOffset() + " indent: " + indentLevel);
+        int c = current_position_(b);
+        while (true) {
+            PsiBuilder.Marker m1 = enter_section_(b);
+            boolean r1 = consumeToken(b, KW_BlkNext);
+            if (!r1) {
+                r1 = checkCurrentIndent(b, indentLevel);
+            } else {
+                System.out.println("Moving to next line " + b.getCurrentOffset());
+            }
+            r1 = r1 && AldorParser.Doc_Expression(b, l + 1);
+            exit_section_(b, m1, null, r1);
+            if (!r1) {
+                break;
+            }
+            if (!empty_element_parsed_guard_(b, "Piled_Expression", c)) {
+                break;
+            }
+            c = current_position_(b);
+        }
+        consumeToken(b, KW_BlkNext);
+        return r;
+    }
+
+    static boolean checkCurrentIndent(@NotNull PsiBuilder builder, int indentLevel) {
+        int currentIndentLevel = currentIndentLevel(builder);
+        System.out.println("Current indent: " + currentIndentLevel + " block indent: " + indentLevel);
+        return currentIndentLevel == indentLevel;
+    }
+
+    public static int currentIndentLevel(@NotNull PsiBuilder builder) {
+        AldorIndentLexer lexer = (AldorIndentLexer) ((Builder) builder).getLexer();
+        return lexer.indentLevel(builder.getCurrentOffset());
+    }
+
 }

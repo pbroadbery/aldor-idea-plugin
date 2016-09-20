@@ -189,9 +189,9 @@ IF_LINE=[^\r\n]+
 }
 //"#pile" { return AldorTokenTypes.KW_StartPile; }
 //"#endpile" { return AldorTokenTypes.KW_EndPile; }
-//"KW_SetTab" { return AldorTokenTypes.KW_SetTab; }
-//"KW_BackSet" { return AldorTokenTypes.KW_BackSet; }
-//"KW_BackTab" { return AldorTokenTypes.KW_BackTab; }
+//"KW_BlkStart" { return AldorTokenTypes.KW_BlkStart; }
+//"KW_BlkNext" { return AldorTokenTypes.KW_BlkNext; }
+//"KW_BlkEnd" { return AldorTokenTypes.KW_BlkEnd; }
 //"KW_Juxtapose" { return AldorTokenTypes.KW_Juxtapose; }
 
 //"TK_LIMIT" { return AldorTokenTypes.TK_LIMIT; }

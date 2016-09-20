@@ -5,8 +5,6 @@ import com.intellij.psi.PsiElement;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 
-import static pab.aldor.ParserFunctions.logPsi;
-
 public class SyntaxTest extends LightPlatformCodeInsightFixtureTestCase {
 
     public void testId() {

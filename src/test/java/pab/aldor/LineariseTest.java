@@ -8,6 +8,7 @@ import java.util.List;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 
 public class LineariseTest {
@@ -18,15 +19,47 @@ public class LineariseTest {
         AldorLexerAdapter lla = AldorLexerAdapter.createAndStart(text);
         Linearise lineariser = new Linearise();
         List<Linearise.PiledSection> pp = lineariser.scanForPiledSections(lla);
-        for (Linearise.PiledSection ps: pp) {
-            ps.showIndents();
-        }
 
-        lineariser.blockMarkers(pp.get(0));
-        System.out.println("Blocks: " + pp.get(0).blockMarkers());
         assertEquals(1, pp.size());
-        assertEquals(4, pp.get(0).lines().size());
+        Linearise.PiledSection section = pp.get(0);
+        section.showIndents();
+        assertEquals(4, section.lines().size());
+        lineariser.blockMarkers(section);
+        System.out.println("Blocks: " + section.blockMarkers());
+        //assertEquals(4, (int) section.blockMarkers().get(0));
+        assertEquals(3, (int) section.blockMarkers().get(1));
     }
+
+    @Test
+    public void testNestedSection() {
+        String text = "#pile\nfoo() == \n x := \n  3\n  4\n x+1\nBar == add";
+        AldorLexerAdapter lla = AldorLexerAdapter.createAndStart(text);
+        Linearise lineariser = new Linearise();
+        List<Linearise.PiledSection> pp = lineariser.scanForPiledSections(lla);
+        pp.get(0).showIndents();
+        assertEquals(1, pp.size());
+        Linearise.PiledSection section = pp.get(0);
+        assertEquals(6, section.lines().size());
+        lineariser.blockMarkers(section);
+        System.out.println("Blocks: " + section.blockMarkers());
+        assertEquals(2, section.blockMarkers().size());
+        //assertEquals(6, (int) section.blockMarkers().get(0));
+        assertEquals(5, (int) section.blockMarkers().get(1));
+        assertEquals(4, (int) section.blockMarkers().get(2));
+    }
+
+
+    @Test
+    public void testBlankLines() {
+        AldorLexerAdapter lla = AldorLexerAdapter.createAndStart("#pile\nrepeat\n Statement1\n\n Statement2\n");
+        Linearise lineariser = new Linearise();
+        List<Linearise.PiledSection> pp = lineariser.scanForPiledSections(lla);
+        pp.get(0).showIndents();
+        assertEquals(1, pp.size());
+        Linearise.PiledSection section = pp.get(0);
+        System.out.println("Blocks: " + section.blockMarkers());
+    }
+
 
     @Test
     public void testPileNone() {
@@ -62,10 +95,7 @@ public class LineariseTest {
         AldorLexerAdapter lla = AldorLexerAdapter.createAndStart("#pile\n#endpile\n");
         Linearise lineariser = new Linearise();
         List<Linearise.PiledSection> pp = lineariser.scanForPiledSections(lla);
-        for (Linearise.PiledSection ps: pp) {
-            System.out.println("PS: " + ps);
-            ps.showIndents();
-        }
-        assertTrue(pp.isEmpty());
+        assertFalse(pp.isEmpty());
     }
+
 }

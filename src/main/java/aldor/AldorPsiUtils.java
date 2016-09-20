@@ -1,6 +1,5 @@
 package aldor;
 
-import aldor.psi.AldorArrowTok;
 import aldor.psi.AldorId;
 import aldor.psi.AldorIdentifier;
 import aldor.psi.AldorInfixedExpr;
@@ -35,7 +34,7 @@ public final class AldorPsiUtils {
             return visitStack.getFirst().get(0);
         }
         catch (RuntimeException e) {
-            LOG.error("Failed to parse " + elt.getText() + elt, e);
+            LOG.error("Failed to parse " + elt.getText() + " " + elt, e);
             return null;
         }
     }
@@ -76,7 +75,7 @@ public final class AldorPsiUtils {
             o.acceptChildren(this);
             visitStack.pop();
             if (fnOrAtom.isEmpty()) {
-                throw new IllegalStateException("Expecting something");
+                throw new IllegalStateException("Expecting something from " + o.getText());
             }
 
             if (fnOrAtom.size() == 1) {
@@ -146,10 +145,9 @@ public final class AldorPsiUtils {
             //noinspection ObjectEquality
             assert last == exprContent;
             Syntax lhs = exprContent.get(0);
-            for (int i=1; i<exprContent.size(); i++) {
+            for (int i=1; i<exprContent.size(); i+=2) {
                 Syntax op = exprContent.get(i);
                 lhs = new InfixApply(op, lhs, exprContent.get(i+1));
-                i+=2;
             }
             visitStack.peek().add(lhs);
         }

@@ -9,9 +9,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
+import java.util.Map;
+import java.util.NavigableMap;
 import java.util.Objects;
-import java.util.SortedMap;
+import java.util.SortedSet;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import static aldor.lexer.AldorTokenTypes.KW_Indent;
 import static aldor.lexer.AldorTokenTypes.KW_NewLine;
@@ -74,17 +77,36 @@ public class Linearise {
     }
 
     private int scanBlock(Deque<Integer> indents, PiledSection section, final int startIndex) {
-        indents.push(section.indentForLine(startIndex));
+        int thisIndent = section.indentForLine(startIndex);
+        indents.push(thisIndent);
         int index = startIndex+1;
         while (index < section.lines().size()) {
-            if (isBackSetRequired(section, index - 1)) {
+            SrcLine prevLine = section.lines().get(index-1);
+            SrcLine thisLine = section.lines().get(index);
+            boolean backSetRequired = isBackSetRequired(section, index);
+            System.out.println("Looking at: " + index + " ... " + prevLine.indent()
+                    + " .. " + thisLine.indent() + " " + backSetRequired);
+            if (prevLine.indent() < thisLine.indent()) {
+                System.out.println(" - New block");
                 index = scanBlock(indents, section, index);
+            }
+            if (prevLine.indent() > thisLine.indent()) {
+                System.out.println(" - End block");
+                break;
+            }
+            else if (!backSetRequired) {
+                // Something like 'don't mark with BlkContinue'
+                index++;
             }
             else {
                 index++;
             }
         }
-        section.addBlock(startIndex, index);
+        indents.pop();
+        if (startIndex > 0) {
+            System.out.println("Adding block: " + startIndex + " --> " + index);
+            section.addBlock(startIndex, index);
+        }
         return index;
     }
 
@@ -122,6 +144,7 @@ public class Linearise {
 
         SrcLine thisLine = section.lines().get(index);
         SrcLine nextLine = section.lines().get(index + 1);
+
         if (thisLine.indent() >= nextLine.indent()) {
             return false;
         }
@@ -146,7 +169,7 @@ public class Linearise {
     private PiledSection parsePiledSection(AldorLexerAdapter lexer) {
 
         if (lexer.getTokenType() == null) {
-            return new PiledSection(Collections.emptyList());
+            return new PiledSection(lexer.getCurrentPosition().getOffset(), Collections.emptyList());
         }
 
         SrcLine currentLine = new SrcLine(currentIndent(lexer), lexer.getTokenStart());
@@ -155,6 +178,7 @@ public class Linearise {
         }
 
         List<SrcLine> lines = new ArrayList<>();
+        int lastIndent = 0;
         while (lexer.getTokenStart() < lexer.getBufferEnd()) {
             IElementType eltType = lexer.getTokenType();
             if (isSysCommand(SysCommandType.EndPile, lexer)) {
@@ -163,24 +187,31 @@ public class Linearise {
             }
 
             if (eltType.equals(KW_NewLine)) {
-                if (!currentLine.tokens().isEmpty()) {
-                    lines.add(currentLine);
+                if (currentLine.tokens().isEmpty()) {
+                    currentLine.indent(lastIndent);
                 }
+                else {
+                    lastIndent = currentLine.indent();
+                }
+                lines.add(currentLine);
                 lexer.advance();
                 currentLine = new SrcLine(currentIndent(lexer), lexer.getTokenStart());
-                if (!Objects.equals(lexer.getTokenType(), KW_Indent)) {
+                /*if (!Objects.equals(lexer.getTokenType(), KW_Indent)) {
                     currentLine.add(lexer.getTokenType());
-                }
-            } else if (!eltType.equals(WHITE_SPACE)) {
-                currentLine.add(eltType);
+                }*/
             }
-            lexer.advance();
+            else {
+                if (!eltType.equals(WHITE_SPACE)
+                        && !eltType.equals(KW_Indent)
+                        && !eltType.equals(KW_NewLine)) {
+                    currentLine.add(eltType);
+                }
+                lexer.advance();
+            }
         }
-        if (!currentLine.tokens().isEmpty()) {
-            lines.add(currentLine);
-        }
+        lines.add(currentLine);
 
-        return new PiledSection(lines);
+        return new PiledSection(lexer.getCurrentPosition().getOffset(), lines);
     }
 
     private int currentIndent(AldorLexerAdapter lexer) {
@@ -215,14 +246,61 @@ public class Linearise {
         return false;
     }
 
+    public boolean isPileMode(int tokenStart) {
+        for (PiledSection section: sections) {
+            if (section.start() > tokenStart) {
+                return false;
+            }
+            if (section.start() < tokenStart) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isBlockEnd(int tokenStart) {
+        for (PiledSection section : sections) {
+            if (section.start() > tokenStart) {
+                return false;
+            }
+            if (section.isBlockEnd(tokenStart)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public int indentLevel(int c) {
+        for (PiledSection section: sections) {
+            if (section.start() > c) {
+                return -1;
+            }
+            if (section.endOffset() > c) {
+                return section.indentLevel(c);
+            }
+        }
+        return -1;
+    }
+
 
     public static class PiledSection {
+        private final NavigableMap<Integer, Integer> lineIndexForOffset;
+        private final NavigableMap<Integer, Integer> lineEndForLineStart;
+        private final SortedSet<Integer> blockEnds;
         private final List<SrcLine> lines;
-        private final SortedMap<Integer, Integer> blocks;
+        private final int endOffset;
 
-        public PiledSection(List<SrcLine> lines) {
-            this.blocks = new TreeMap<>();
+        public PiledSection(int offset, List<SrcLine> lines) {
+            this.lineIndexForOffset = new TreeMap<>();
+            this.lineEndForLineStart = new TreeMap<>();
+            this.blockEnds = new TreeSet<>();
             this.lines = lines;
+            int i = 0;
+            for (SrcLine line: lines) {
+                lineIndexForOffset.put(line.startPosition(), i);
+                i++;
+            }
+            endOffset = offset;
         }
 
         @Override
@@ -244,44 +322,72 @@ public class Linearise {
             }
         }
 
+        public int endOffset() {
+            return endOffset;
+        }
+
         public List<SrcLine> lines() {
             return lines;
         }
 
         public void addBlock(int startIndex, int endIndex) {
-            blocks.put(lines.get(startIndex).startPosition(), endIndex);
+            lineEndForLineStart.put(startIndex, endIndex);
+            blockEnds.add(endIndex);
         }
 
-        public SortedMap<Integer, Integer> blockMarkers() {
-            return blocks;
+        public NavigableMap<Integer, Integer> blockMarkers() {
+            return lineEndForLineStart;
         }
 
         public int start() {
-            return lines.get(0).startPosition();
+            return lineIndexForOffset.firstKey();
         }
 
         public boolean isBlockStart(int tokenStart) {
-            return blocks.containsKey(tokenStart);
+            int idx = lineIndexForOffset.floorEntry(tokenStart).getValue();
+            return lineEndForLineStart.containsKey(idx);
+        }
+
+        public boolean isBlockEnd(int tokenStart) {
+            if (tokenStart >= endOffset) {
+                return false;
+            }
+            int idx = lineIndexForOffset.floorEntry(tokenStart).getValue();
+            return blockEnds.contains(idx);
         }
 
         public boolean isBlockNewline(int tokenStart) {
-            for (SrcLine line : lines()) {
-                if (tokenStart == line.startPosition()) {
-                    return true;
-                }
+            if (!lineIndexForOffset.containsKey(tokenStart)) {
+                return false;
             }
-            return false;
+            SrcLine line = lines.get(lineIndexForOffset.get(tokenStart));
+            if (line.tokens().isEmpty()) {
+                return false;
+            }
+            else {
+                return true;
+            }
         }
 
         public Integer indentForLine(int startIndex) {
             return lines.get(startIndex).indent();
+        }
+
+        public int indentLevel(int c) {
+            Map.Entry<Integer, Integer> ent = lineIndexForOffset.floorEntry(c);
+            if (ent == null) {
+                System.out.println("No line for offset " + c + " " + lineIndexForOffset);
+                throw new RuntimeException("Missing line offset for " + c);
+            }
+            assert ent != null;
+            return lines.get(ent.getValue()).indent();
         }
     }
 
 
     private static class SrcLine {
         private final List<IElementType> tokens = new ArrayList<>();
-        private final int indent;
+        private int indent;
         private final int startPosition;
 
         SrcLine(int indent, int startPosition) {
@@ -310,7 +416,10 @@ public class Linearise {
         }
 
         public boolean isBlank() {
-            return (tokens.size() == 1) && AldorTokenTypes.DOC_TOKENS.contains(firstToken());
+            if (tokens.isEmpty()) {
+                return true;
+            }
+            return (tokens.size()  == 1) && AldorTokenTypes.DOC_TOKENS.contains(firstToken());
         }
 
         public IElementType firstToken() {
@@ -321,6 +430,10 @@ public class Linearise {
         public String toString() {
             //noinspection StringConcatenationMissingWhitespace
             return "{SL: " + startPosition + " indent: " + indent + " " + tokens.get(0) + (tokens.size() ==  1 ? "" : " .. " + lastToken()) + "}";
+        }
+
+        public void indent(int lastIndent) {
+            this.indent = lastIndent;
         }
     }
 
