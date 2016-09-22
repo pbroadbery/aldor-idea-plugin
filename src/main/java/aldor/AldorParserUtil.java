@@ -7,6 +7,8 @@ import com.intellij.lang.parser.GeneratedParserUtilBase;
 import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 import static aldor.AldorTypes.PILED_EXPRESSION;
 import static aldor.lexer.AldorTokenTypes.KW_BlkEnd;
 import static aldor.lexer.AldorTokenTypes.KW_BlkNext;
@@ -69,7 +71,7 @@ public class AldorParserUtil extends GeneratedParserUtilBase {
 
     @SuppressWarnings("UnusedParameters")
     public static boolean noRepeatHere(@NotNull PsiBuilder builder, int level) {
-        if (builder.getTokenType() == KW_Repeat) {
+        if (Objects.equals(builder.getTokenType(), KW_Repeat)) {
             return false;
         }
         return true;
@@ -108,7 +110,7 @@ public class AldorParserUtil extends GeneratedParserUtilBase {
         }
         if (!r) {
             IElementType elt = skipDocsAndComments(builder);
-            r = (elt == KW_BlkEnd);
+            r = (Objects.equals(elt, KW_BlkEnd));
         }
 
         return r;

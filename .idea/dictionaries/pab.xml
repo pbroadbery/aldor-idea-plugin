@@ -2,6 +2,11 @@
   <dictionary name="pab">
     <words>
       <w>aldor</w>
+      <w>defns</w>
+      <w>linearise</w>
+      <w>lineariser</w>
+      <w>lispish</w>
+      <w>spad</w>
     </words>
   </dictionary>
 </component>

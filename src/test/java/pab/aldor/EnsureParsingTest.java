@@ -298,15 +298,6 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
         assertEquals(0, errors.size());
     }
 
-    public void testTmpBs() {
-        assertNotNull(getProject());
-
-        Project project = getProject();
-        File file = new File("/tmp/bs.as");
-        final List<PsiErrorElement> errors = parseFile(project, file);
-        assertEquals(0, errors.size());
-    }
-
     public void testParseBSearch() {
         assertNotNull(getProject());
 
@@ -315,7 +306,6 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
         final List<PsiErrorElement> errors = parseFile(project, file);
         assertEquals(0, errors.size());
     }
-
 
     public void testParseUPMod() {
         assertNotNull(getProject());
@@ -335,6 +325,14 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
         assertEquals(0, errors.size());
     }
 
+    public void testParseAxiomPrime() {
+        assertNotNull(getProject());
+
+        Project project = getProject();
+        File file = new File("/home/pab/Work/aldorgit/aldor/aldor/lib/algebra/src/categories/sit_axiomprime.as");
+        final List<PsiErrorElement> errors = parseFile(project, file);
+        assertEquals(0, errors.size());
+    }
 
     @NotNull
     private List<PsiErrorElement> parseFile(Project project, File file) {
@@ -352,10 +350,11 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
     }
 
     private PsiElement parseText(CharSequence text) {
-        return ParserFunctions.parseText(getProject(), text);
+        return ParserFunctions.parseText(getProject(), text, AldorTypes.TOP_LEVEL);
     }
 
 
+    @SuppressWarnings("SameParameterValue")
     private PsiElement parseText(CharSequence text, IElementType eltType) {
         return ParserFunctions.parseText(getProject(), text, eltType);
     }
@@ -365,8 +364,7 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
         assertNotNull(getProject());
 
         File base = new File("/home/pab/Work/aldorgit/aldor/aldor/lib/aldor/src");
-        Set<String> blackList = Sets.newHashSet("sal_sexpr.as");
-        List<File> badFiles = parseLibrary(base, blackList);
+        List<File> badFiles = parseLibrary(base, Sets.newHashSet());
 
         System.out.println("Bad files: " + badFiles);
         assertTrue(badFiles.isEmpty());

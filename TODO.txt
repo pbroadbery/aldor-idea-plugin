@@ -3,17 +3,35 @@ Lexer:
 Floating Point
 
 Extensions:
-Bracket matching
 "Goto definition"
+
+Definition Trees & structure
 
 Module building:
 
 Grammar:
 Error recovery
-Tests
 
+PileMode
+   -- continuation lines
+   
 -----------------------------
 Lexer:
 DONE Comments
 DONE Pre/Post Doc
+DONE Bracket matching
+
+
+--------------------
+SPAD differences:
+
+++ instead of +++ (which will be annoying...)
+')' system commands
+
+select: Not a keyword(!)
+
+Quotes have lispish semantics/tokeniser rules
+
+-----
+
 

@@ -4,10 +4,8 @@ import aldor.SysCmd;
 import aldor.SysCmd.SysCommandType;
 import com.intellij.psi.tree.IElementType;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Deque;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
@@ -16,8 +14,17 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import static aldor.lexer.AldorTokenTypes.KW_Add;
+import static aldor.lexer.AldorTokenTypes.KW_Always;
+import static aldor.lexer.AldorTokenTypes.KW_But;
+import static aldor.lexer.AldorTokenTypes.KW_Catch;
+import static aldor.lexer.AldorTokenTypes.KW_Else;
+import static aldor.lexer.AldorTokenTypes.KW_Finally;
 import static aldor.lexer.AldorTokenTypes.KW_Indent;
 import static aldor.lexer.AldorTokenTypes.KW_NewLine;
+import static aldor.lexer.AldorTokenTypes.KW_Then;
+import static aldor.lexer.AldorTokenTypes.KW_Try;
+import static aldor.lexer.AldorTokenTypes.KW_With;
 import static aldor.lexer.AldorTokenTypes.TK_SysCmd;
 import static aldor.lexer.AldorTokenTypes.WHITE_SPACE;
 
@@ -32,7 +39,6 @@ public class Linearise {
         sections = scanForPiledSections(lexer);
         for (PiledSection section : sections) {
             blockMarkers(section);
-            section.showIndents();
         }
     }
 
@@ -51,6 +57,11 @@ public class Linearise {
             }
         }
         return piles;
+    }
+
+    @Override
+    public String toString() {
+        return sections.toString();
     }
 
     private void advanceLexerToLineStart(AldorLexerAdapter lexer) {
@@ -72,99 +83,42 @@ public class Linearise {
     }
 
     public void blockMarkers(PiledSection section) {
-        Deque<Integer> indents = new ArrayDeque<>();
-        scanBlock(indents, section, 0);
+        (new BlockScanner()).scan(section);
     }
 
-    private int scanBlock(Deque<Integer> indents, PiledSection section, final int startIndex) {
-        int thisIndent = section.indentForLine(startIndex);
-        indents.push(thisIndent);
-        int index = startIndex+1;
-        while (index < section.lines().size()) {
-            SrcLine prevLine = section.lines().get(index-1);
-            SrcLine thisLine = section.lines().get(index);
-            boolean backSetRequired = isBackSetRequired(section, index);
-            System.out.println("Looking at: " + index + " ... " + prevLine.indent()
-                    + " .. " + thisLine.indent() + " " + backSetRequired);
-            if (prevLine.indent() < thisLine.indent()) {
-                System.out.println(" - New block");
-                index = scanBlock(indents, section, index);
-            }
-            if (prevLine.indent() > thisLine.indent()) {
-                System.out.println(" - End block");
-                break;
-            }
-            else if (!backSetRequired) {
-                // Something like 'don't mark with BlkContinue'
-                index++;
-            }
-            else {
-                index++;
-            }
+    private class BlockScanner {
+
+        private void scan(PiledSection section) {
+            scan(section, 0);
         }
-        indents.pop();
-        if (startIndex > 0) {
-            System.out.println("Adding block: " + startIndex + " --> " + index);
-            section.addBlock(startIndex, index);
+
+        private int scan(PiledSection section, final int startIndex) {
+            int thisIndent = section.indentForLine(startIndex);
+            int index = startIndex + 1;
+            while (index < section.lines().size()) {
+                SrcLine prevLine = section.lines().get(index - 1);
+                SrcLine thisLine = section.lines().get(index);
+                if (prevLine.indent() < thisLine.indent()) {
+                    System.out.println(" - New block");
+                    index = scan(section, index);
+                } else if (section.isPileRequired(prevLine)) {
+                    System.out.println(" - New block (forced)");
+                    index = scan(section, index);
+                }
+                if (prevLine.indent() > thisLine.indent()) {
+                    System.out.println(" - End block");
+                    break;
+                } else {
+                    index++;
+                }
+            }
+            if (startIndex > 0) {
+                System.out.println("Adding block: " + startIndex + " --> " + index);
+                section.addBlock(startIndex, index);
+            }
+            return index;
         }
-        return index;
     }
-
-
-    /* Typically, we want a block boundary here, except:
-    *  "isBackSetRequired" decides whether a BackSet is needed between tl1 and tl2.
-    *  Normally a BackSet is needed.   The exceptions are:
-    *
-    * 1. tl1 contains only ++ comments (-- comments already deleted)
-    *    This allows
-    *
-    *	++ xxx
-    *	f: T -> Y
-    *
-    * 2. tl1 ends with "," or an opener ("(" "[" etc).
-    *    This allows
-    *
-    *	f(x,		  a := [
-    *	  y,		     1, 2, 3,
-    *	  z)		     4, 5, 6 ]
-    *
-    * 3. tl2 begins with "in", "then", "else" or a closer (")" "]" "}" etc)
-    *    (i.e. words which CANNOT start an expression).
-    *    This allows
-    *
-    *	if aaa		  let		     f(x,	  a := [1, 2, 3,
-    *	then bbb	     f == 1	       y		4, 5, 6
-    *	else ccc	  in x := f+f	     )		       ]
-    *
-    */
-    private boolean isBackSetRequired(PiledSection section, int index) {
-        if (section.lines().size() == (index + 1)) {
-            return false;
-        }
-
-        SrcLine thisLine = section.lines().get(index);
-        SrcLine nextLine = section.lines().get(index + 1);
-
-        if (thisLine.indent() >= nextLine.indent()) {
-            return false;
-        }
-        /* 1. */
-        if (thisLine.isBlank() || nextLine.isBlank()) {
-            return false;
-        }
-
-        /* 2. */
-        if (AldorTokenTypes.isOpener(thisLine.lastToken()) || AldorTokenTypes.KW_Comma.equals(thisLine.lastToken())) {
-            return false;
-        }
-
-        /* 3. */
-        if (AldorTokenTypes.isFollower(nextLine.firstToken()) || AldorTokenTypes.isCloser(nextLine.firstToken())) {
-            return false;
-        }
-        return true;
-    }
-
 
     private PiledSection parsePiledSection(AldorLexerAdapter lexer) {
 
@@ -178,7 +132,6 @@ public class Linearise {
         }
 
         List<SrcLine> lines = new ArrayList<>();
-        int lastIndent = 0;
         while (lexer.getTokenStart() < lexer.getBufferEnd()) {
             IElementType eltType = lexer.getTokenType();
             if (isSysCommand(SysCommandType.EndPile, lexer)) {
@@ -187,24 +140,17 @@ public class Linearise {
             }
 
             if (eltType.equals(KW_NewLine)) {
-                if (currentLine.tokens().isEmpty()) {
-                    currentLine.indent(lastIndent);
-                }
-                else {
-                    lastIndent = currentLine.indent();
-                }
+                currentLine.lastPosition(lexer.getTokenEnd());
                 lines.add(currentLine);
                 lexer.advance();
                 currentLine = new SrcLine(currentIndent(lexer), lexer.getTokenStart());
-                /*if (!Objects.equals(lexer.getTokenType(), KW_Indent)) {
-                    currentLine.add(lexer.getTokenType());
-                }*/
-            }
-            else {
-                if (!eltType.equals(WHITE_SPACE)
-                        && !eltType.equals(KW_Indent)
-                        && !eltType.equals(KW_NewLine)) {
-                    currentLine.add(eltType);
+            } else {
+                if (eltType.equals(WHITE_SPACE)
+                        || eltType.equals(KW_Indent)) {
+                            currentLine.lastPosition(lexer.getTokenEnd());
+                }
+                else {
+                    currentLine.add(eltType, lexer.getTokenEnd());
                 }
                 lexer.advance();
             }
@@ -246,18 +192,6 @@ public class Linearise {
         return false;
     }
 
-    public boolean isPileMode(int tokenStart) {
-        for (PiledSection section: sections) {
-            if (section.start() > tokenStart) {
-                return false;
-            }
-            if (section.start() < tokenStart) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public boolean isBlockEnd(int tokenStart) {
         for (PiledSection section : sections) {
             if (section.start() > tokenStart) {
@@ -270,8 +204,20 @@ public class Linearise {
         return false;
     }
 
+    public boolean isPileMode(int tokenStart) {
+        for (PiledSection section : sections) {
+            if (section.start() > tokenStart) {
+                return false;
+            }
+            if (section.start() < tokenStart) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public int indentLevel(int c) {
-        for (PiledSection section: sections) {
+        for (PiledSection section : sections) {
             if (section.start() > c) {
                 return -1;
             }
@@ -294,38 +240,59 @@ public class Linearise {
             this.lineIndexForOffset = new TreeMap<>();
             this.lineEndForLineStart = new TreeMap<>();
             this.blockEnds = new TreeSet<>();
-            this.lines = lines;
+            this.lines = joinContinuationLines(lines);
             int i = 0;
-            for (SrcLine line: lines) {
+            for (SrcLine line : this.lines) {
                 lineIndexForOffset.put(line.startPosition(), i);
                 i++;
             }
             endOffset = offset;
         }
 
-        @Override
-        public String toString() {
-            return "{PS: " + lines.size() + "}";
-        }
+        private List<SrcLine> joinContinuationLines(@SuppressWarnings("TypeMayBeWeakened") List<SrcLine> lines) {
+            List<SrcLine> joinedLines = new ArrayList<>(lines.size());
+            SrcLine lastLine = null;
+            int braceCount = 0;
 
-        public void showIndents() {
-            for (SrcLine line : lines) {
-                if (line.tokens().isEmpty()) {
-                    System.out.format("%3d .. blank\n", line.indent());
+            for (SrcLine line: lines) {
+                //noinspection StatementWithEmptyBody
+                if (line.isBlank() && (lastLine == null)) {
+                    // Skip it.
                 }
-                if (line.tokens().size() == 1) {
-                    System.out.format("%3d %s\n", line.indent(), line.tokens().get(0));
+                else if (line.isBlank() && (lastLine != null)) {
+                    lastLine.join(line);
                 }
-                if (line.tokens().size() > 1) {
-                    System.out.format("%3d %s...%s\n", line.indent(), line.tokens().get(0), line.lastToken());
+                else if (lastLine == null) {
+                    joinedLines.add(line);
+                    // NB: Avoid having count fall below zero, as it's most likely a typo
+                    braceCount = line.bracketDelta(braceCount);
+                    lastLine = line;
+                }
+                else if (braceCount > 0){
+                    lastLine.joinTokens(line);
+                }
+                else if (!isBackSetRequired(lastLine, line)){
+                    lastLine.joinTokens(line);
+                }
+                else {
+                    joinedLines.add(line);
+                    lastLine = line;
                 }
             }
+            return joinedLines;
+        }
+
+
+        @Override
+        public String toString() {
+            return "{PS: " + lines + "}";
         }
 
         public int endOffset() {
             return endOffset;
         }
 
+        @SuppressWarnings("ReturnOfCollectionOrArrayField")
         public List<SrcLine> lines() {
             return lines;
         }
@@ -335,6 +302,7 @@ public class Linearise {
             blockEnds.add(endIndex);
         }
 
+        @SuppressWarnings("ReturnOfCollectionOrArrayField")
         public NavigableMap<Integer, Integer> blockMarkers() {
             return lineEndForLineStart;
         }
@@ -344,30 +312,41 @@ public class Linearise {
         }
 
         public boolean isBlockStart(int tokenStart) {
-            int idx = lineIndexForOffset.floorEntry(tokenStart).getValue();
-            return lineEndForLineStart.containsKey(idx);
-        }
-
-        public boolean isBlockEnd(int tokenStart) {
-            if (tokenStart >= endOffset) {
-                return false;
-            }
-            int idx = lineIndexForOffset.floorEntry(tokenStart).getValue();
-            return blockEnds.contains(idx);
-        }
-
-        public boolean isBlockNewline(int tokenStart) {
             if (!lineIndexForOffset.containsKey(tokenStart)) {
                 return false;
             }
-            SrcLine line = lines.get(lineIndexForOffset.get(tokenStart));
-            if (line.tokens().isEmpty()) {
+            int idx = lineIndexForOffset.get(tokenStart);
+            return lineEndForLineStart.containsKey(idx);
+        }
+
+        public boolean isBlockEnd(int tokenEnd) {
+            if (tokenEnd >= endOffset) {
                 return false;
             }
-            else {
+            int idx = lineIndexForOffset.floorEntry(tokenEnd-1).getValue();
+            SrcLine line = lines.get(idx);
+            if (line.lastPosition() != tokenEnd) {
+                return false;
+            }
+            // block ends are the start of the following line.
+            return blockEnds.contains(idx+1);
+        }
+
+        public boolean isBlockNewline(int tokenEnd) {
+            if (tokenEnd >= endOffset) {
+                return false;
+            }
+            int idx = lineIndexForOffset.floorEntry(tokenEnd-1).getValue();
+            SrcLine line = lines.get(idx);
+            if ((line.lastPosition() == tokenEnd) && AldorTokenTypes.isFollower(lines.get(idx).lastToken())) {
                 return true;
             }
-        }
+            if ((line.lastPosition() == tokenEnd) && (idx < (lines.size() - 1))
+                    && !AldorTokenTypes.isFollower(lines.get(idx + 1).firstToken())) {
+                return true;
+            }
+            return false;
+      }
 
         public Integer indentForLine(int startIndex) {
             return lines.get(startIndex).indent();
@@ -377,34 +356,110 @@ public class Linearise {
             Map.Entry<Integer, Integer> ent = lineIndexForOffset.floorEntry(c);
             if (ent == null) {
                 System.out.println("No line for offset " + c + " " + lineIndexForOffset);
-                throw new RuntimeException("Missing line offset for " + c);
+                throw new IllegalStateException("Missing line offset for " + c);
             }
-            assert ent != null;
             return lines.get(ent.getValue()).indent();
         }
-    }
+
+
+
+        /*
+         * "isPileRequired" decides whether a SetTab/BackTab empiling is needed
+         *  for the line which is to be joined to *pcontext.
+         *
+         *  A single line pile is formed whenever the previous word is an alphabetic
+         *  language keyword, e.g.  "return", "then", "else", etc.
+         *  (Note, this does not include user-definable operators such as "quo".)
+         */
+        private boolean isPileRequired(SrcLine lastLine) {
+            IElementType tok = lastLine.lastToken();
+            // TODO: Use a set!
+            return	Objects.equals(tok, KW_Then)    || Objects.equals(tok, KW_Else)    ||
+                    Objects.equals(tok, KW_With)    || Objects.equals(tok, KW_Add)     ||
+                    Objects.equals(tok, KW_Try)     || Objects.equals(tok, KW_But)     ||
+                    Objects.equals(tok, KW_Catch)   || Objects.equals(tok, KW_Finally) ||
+                    Objects.equals(tok, KW_Always);
+        }
+
+
+        /* Typically, we want a block boundary here, except:
+    *  "isBackSetRequired" decides whether a BackSet is needed between tl1 and tl2.
+    *  Normally a BackSet is needed.   The exceptions are:
+    *
+    * 1. tl1 contains only ++ comments (-- comments already deleted)
+    *    This allows
+    *
+    *	++ xxx
+    *	f: T -> Y
+    *
+    * 2. tl1 ends with "," or an opener ("(" "[" etc).
+    *    This allows
+    *
+    *	f(x,		  a := [
+    *	  y,		     1, 2, 3,
+    *	  z)		     4, 5, 6 ]
+    *
+    * 3. tl2 begins with "in", "then", "else" or a closer (")" "]" "}" etc)
+    *    (i.e. words which CANNOT start an expression).
+    *    This allows
+    *
+    *	if aaa		  let		     f(x,	  a := [1, 2, 3,
+    *	then bbb	     f == 1	       y		4, 5, 6
+    *	else ccc	  in x := f+f	     )		       ]
+    *
+    */
+        private boolean isBackSetRequired(SrcLine thisLine, SrcLine nextLine) {
+        /* 1. */
+            if (thisLine.isBlank() || nextLine.isBlank()) {
+                return false;
+            }
+
+        /* 2. */
+            if (AldorTokenTypes.isOpener(thisLine.lastToken()) || AldorTokenTypes.KW_Comma.equals(thisLine.lastToken())) {
+                return false;
+            }
+
+        /* 3. *//*
+            if (AldorTokenTypes.isFollower(nextLine.firstToken()) || AldorTokenTypes.isCloser(nextLine.firstToken())) {
+                return false;
+            }
+            */
+            return true;
+        }
+   }
 
 
     private static class SrcLine {
         private final List<IElementType> tokens = new ArrayList<>();
+        private final List<IElementType> allTokens = new ArrayList<>(); // Probably don't need this.
         private int indent;
         private final int startPosition;
+        private int lastPosition;
 
         SrcLine(int indent, int startPosition) {
             this.indent = indent;
             this.startPosition = startPosition;
+            this.lastPosition = startPosition;
         }
 
-        public void add(IElementType eltType) {
+        public void add(IElementType eltType, int lastPosition) {
             tokens.add(eltType);
+            allTokens.add(eltType);
+            this.lastPosition = lastPosition;
         }
 
         public int indent() {
             return indent;
         }
 
+        @SuppressWarnings("ReturnOfCollectionOrArrayField")
         public List<IElementType> tokens() {
             return tokens;
+        }
+
+        @SuppressWarnings("ReturnOfCollectionOrArrayField")
+        public List<IElementType> allTokens() {
+            return allTokens;
         }
 
         public IElementType lastToken() {
@@ -415,11 +470,15 @@ public class Linearise {
             return startPosition;
         }
 
+        public int lastPosition() {
+            return lastPosition;
+        }
+
         public boolean isBlank() {
             if (tokens.isEmpty()) {
                 return true;
             }
-            return (tokens.size()  == 1) && AldorTokenTypes.DOC_TOKENS.contains(firstToken());
+            return (tokens.size() == 1) && AldorTokenTypes.WHITESPACE_TOKENS.contains(firstToken());
         }
 
         public IElementType firstToken() {
@@ -428,12 +487,45 @@ public class Linearise {
 
         @Override
         public String toString() {
-            //noinspection StringConcatenationMissingWhitespace
-            return "{SL: " + startPosition + " indent: " + indent + " " + tokens.get(0) + (tokens.size() ==  1 ? "" : " .. " + lastToken()) + "}";
+            if (isBlank()) {
+                //noinspection StringConcatenationMissingWhitespace
+                return "{SL: " + startPosition + " indent: " + indent + "}";
+            }
+            else {
+                //noinspection StringConcatenationMissingWhitespace
+                return "{SL: " + startPosition + " indent: " + indent + " " + tokens.get(0) + (tokens.size() == 1 ? "" : " .. " + lastToken()) + "}";
+            }
         }
 
         public void indent(int lastIndent) {
             this.indent = lastIndent;
+        }
+
+        public void join(SrcLine line) {
+            this.allTokens.addAll(line.allTokens());
+        }
+
+        public void joinTokens(SrcLine line) {
+            this.tokens.addAll(line.tokens());
+            this.allTokens.addAll(line.allTokens());
+            this.lastPosition = line.lastPosition();
+        }
+
+        public void lastPosition(int lastPosition) {
+            this.lastPosition = lastPosition;
+        }
+
+        public int bracketDelta(final int oldCount) {
+            int count = oldCount;
+            for (IElementType type: tokens()) {
+                if (Objects.equals(type, AldorTokenTypes.KW_OCurly)) {
+                    count++;
+                }
+                if ((Objects.equals(type, AldorTokenTypes.KW_CCurly)) && (count > 0)) {
+                    count--;
+                }
+            }
+            return count;
         }
     }
 

@@ -15,9 +15,15 @@ public class ExpressionParseTest extends LightPlatformCodeInsightFixtureTestCase
         ParserFunctions.logPsi(psi, 0);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
         assertEquals(0, errors.size());
-
     }
 
+    public void testParseEnum() {
+        String text = "Record(type: 'sym,number,str,ws,oparen,cparen,dot,error', txt: String)";
+        PsiElement psi = ParserFunctions.parseText(getProject(), text);
+        ParserFunctions.logPsi(psi, 0);
+        final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
+        assertEquals(0, errors.size());
+    }
 
     @Override
     protected LightProjectDescriptor getProjectDescriptor() {

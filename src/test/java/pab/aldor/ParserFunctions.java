@@ -32,22 +32,24 @@ public final class ParserFunctions {
     }
 
     // TODO: Remove most uses of this method
+    @SuppressWarnings("SameParameterValue")
     static void logPsi(PsiElement psi, int i) {
         logPsi(psi, i, "");
     }
     static void logPsi(PsiElement psi, int depth, String lastStuff) {
         PsiElement[] children = psi.getChildren();
-        String text = (children.length == 0) ? psi.getText(): "";
+        int childCount = children.length;
+        String text = (childCount == 0) ? psi.getText(): "";
         String spaces = Strings.repeat(" ", Math.min(depth, MAX_INDENT_DEPTH));
-        if (children.length == 0) {
+        if (childCount == 0) {
             System.out.println(spaces + "(psi: " + psi + " " + text + ")" + lastStuff);
             return;
         }
         System.out.println(spaces + "(psi: " + psi + " " + text);
-        for (int i = 0; i< children.length -1; i++) {
+        for (int i = 0; i < (childCount - 1); i++) {
             logPsi(children[i], depth+1, "");
         }
-        logPsi(children[children.length-1], depth+1, ")" + lastStuff);
+        logPsi(children[childCount -1], depth+1, ")" + lastStuff);
     }
 
     public static PsiElement parseText(Project project, CharSequence text) {
@@ -81,12 +83,12 @@ public final class ParserFunctions {
         return errors;
     }
 
-    public static Collection<PsiElement> find(PsiElement elt, Predicate<PsiElement> pred) {
+    public static Collection<PsiElement> find(PsiElement elt, Predicate<PsiElement> predicate) {
         List<PsiElement> subElements = Lists.newArrayList();
         elt.accept(new PsiElementVisitor() {
             @Override
             public void visitElement(PsiElement element) {
-                if (pred.test(element)) {
+                if (predicate.test(element)) {
                     subElements.add(element);
                 }
                 element.acceptChildren(this);

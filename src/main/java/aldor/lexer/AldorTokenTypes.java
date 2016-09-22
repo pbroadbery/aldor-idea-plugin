@@ -187,7 +187,7 @@ public final class AldorTokenTypes {
 
     public static final AldorTokenType TK_LIMIT = createTokenType("TK_LIMIT", 0, "TK_LIMIT", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0);
 
-    public static final TokenSet DOC_TOKENS = TokenSet.create(TK_PreDoc, TK_PostDoc);
+    public static final TokenSet WHITESPACE_TOKENS = TokenSet.create(TK_PreDoc, TK_PostDoc, TK_Comment, TK_SysCmdEndIf, TK_SysCmdIf, TK_IfLine);
 
     @SuppressWarnings("SameParameterValue")
     private static AldorTokenType createTokenType(String name, int i, String text, int hasString, int isComment, int isOpener, int isCloser, int isFollower, int isLangword, int isLeftAssoc, int isMaybeInfix, int precedence, int isDisabled) {

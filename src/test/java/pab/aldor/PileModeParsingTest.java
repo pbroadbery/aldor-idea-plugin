@@ -13,7 +13,7 @@ import java.util.List;
 import static pab.aldor.ParserFunctions.getPsiErrorElements;
 import static pab.aldor.ParserFunctions.logPsi;
 
-public class PileModeParsingTest extends LightPlatformCodeInsightTestCase{
+public class PileModeParsingTest extends LightPlatformCodeInsightTestCase {
 
 
     public void testPileMode() {
@@ -55,11 +55,57 @@ public class PileModeParsingTest extends LightPlatformCodeInsightTestCase{
         assertEquals(0, errors.size());
     }
 
-    // NB: Comma is probably wrong...
+    public void testContinuationLine() {
+        PsiElement psi = parseText("#pile\nfoo := [a,\nb]\nb\n");
+        logPsi(psi, 0);
+        final List<PsiErrorElement> errors = getPsiErrorElements(psi);
+        assertEquals(0, errors.size());
+    }
+
+    public void testMultipleStatements() {
+        PsiElement psi = parseText("#pile\nf == \n repeat\n  L1\n return X\n\nQ:=2\n");
+        logPsi(psi, 0);
+        final List<PsiErrorElement> errors = getPsiErrorElements(psi);
+        assertEquals(0, errors.size());
+    }
+
+    public void testIfExpression() {
+        PsiElement psi = parseText("" +
+                "#pile\n" +
+                "if X then\n" +
+                "    done := true\n" +
+                "else\n" +
+                "    next := read()");
+        logPsi(psi, 0);
+        final List<PsiErrorElement> errors = getPsiErrorElements(psi);
+        assertEquals(0, errors.size());
+    }
+
+    public void testIfElseExpression() {
+        PsiElement psi = parseText("" +
+                "#pile\n" +
+                "if X then A\n" +
+                "else if Y then B\n" +
+                "else C");
+        logPsi(psi, 0);
+        final List<PsiErrorElement> errors = getPsiErrorElements(psi);
+        assertEquals(0, errors.size());
+    }
+
+    public void testPiledDeclaration() {
+        PsiElement psi = parseText("" +
+                "#pile\n" +
+                "Foo:\n  Category == with\n  aa: () -> ()\nBar(X: String): with == add\n");
+        logPsi(psi, 0);
+        final List<PsiErrorElement> errors = getPsiErrorElements(psi);
+        assertEquals(0, errors.size());
+    }
+
     private PsiElement parseText(CharSequence text) {
         return parseText(text, AldorTypes.TOP_LEVEL);
     }
 
+    @SuppressWarnings("SameParameterValue")
     private PsiElement parseText(CharSequence text, IElementType elementType) {
         return ParserFunctions.parseText(getProject(), text, elementType);
     }

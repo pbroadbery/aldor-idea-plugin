@@ -1,5 +1,6 @@
 package aldor.lexer;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.intellij.lexer.DelegateLexer;
 import com.intellij.lexer.LexerPosition;
 import com.intellij.psi.tree.IElementType;
@@ -27,6 +28,11 @@ public class AldorIndentLexer extends DelegateLexer {
 
     AldorLexerAdapter getAldorDelegate() {
         return (AldorLexerAdapter) getDelegate();
+    }
+
+    @VisibleForTesting
+    public Linearise lineariser() {
+        return lineariser;
     }
 
     @Override
