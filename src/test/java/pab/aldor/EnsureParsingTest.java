@@ -2,7 +2,9 @@ package pab.aldor;
 
 import aldor.AldorParserDefinition;
 import aldor.AldorTypes;
+import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.ParserDefinition;
@@ -24,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static pab.aldor.ParserFunctions.getPsiErrorElements;
@@ -288,6 +291,16 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
         assertEquals(0, errors.size());
     }
 
+    public void testParseSalSSet() {
+        assertNotNull(getProject());
+
+        Project project = getProject();
+        for (int i=0; i<100; i++) {
+            File file = new File("/home/pab/Work/aldorgit/aldor/aldor/lib/aldor/src/datastruc/sal_sset.as");
+            final List<PsiErrorElement> errors = parseFile(project, file);
+            assertEquals(0, errors.size());
+        }
+    }
 
     public void testParseFold() {
         assertNotNull(getProject());
@@ -359,14 +372,19 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
         return ParserFunctions.parseText(getProject(), text, eltType);
     }
 
+    private static enum FailReason {
+        Slow, NoCompile;
+    }
 
     public void testAldorLibrary() {
         assertNotNull(getProject());
 
         File base = new File("/home/pab/Work/aldorgit/aldor/aldor/lib/aldor/src");
-        List<File> badFiles = parseLibrary(base, Sets.newHashSet());
+        Multimap<FailReason, File> badFiles = parseLibrary(base, Sets.newHashSet());
 
-        System.out.println("Bad files: " + badFiles);
+        for (Map.Entry ent: badFiles.entries()) {
+            System.out.println("Failed: " + ent.getKey() + " --> " + ent.getValue());
+        }
         assertTrue(badFiles.isEmpty());
     }
 
@@ -377,17 +395,19 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
         File base = new File("/home/pab/Work/aldorgit/aldor/aldor/lib/algebra/src");
         Set<String> blackList = Sets.newHashSet("tst_dup.as", "tst_fold.as",
                 "sit_upolc0.as", "sit_upolc.as");
-        List<File> badFiles = parseLibrary(base, blackList);
+        Multimap<FailReason, File> badFiles = parseLibrary(base, blackList);
 
-        System.out.println("Bad files: " + badFiles);
+        for (Map.Entry<FailReason, File> ent: badFiles.entries()) {
+            System.out.println("Failed: " + ent.getKey() + " --> " + ent.getValue());
+        }
         assertTrue(badFiles.isEmpty());
     }
 
     @NotNull
-    private List<File> parseLibrary(File base, Collection<String> blackList) {
+    private Multimap<FailReason, File> parseLibrary(File base, Collection<String> blackList) {
         Project project = getProject();
         List<File> files = findAllSource(base);
-        List<File> badFiles = Lists.newArrayList();
+        Multimap<FailReason, File> badFiles = ArrayListMultimap.create();
         for (File file: files) {
             long start = System.currentTimeMillis();
             System.out.println("Reading: " + file);
@@ -403,10 +423,14 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
             PsiElement psi = parseText(text);
 
             final List<PsiErrorElement> errors = getPsiErrorElements(psi);
+            long duration = System.currentTimeMillis() - start;
             //noinspection StringConcatenationMissingWhitespace
-            System.out.println("... File " + file + " took " + (System.currentTimeMillis() - start) + "ms");
+            System.out.println("... File " + file + " took " + duration + "ms");
             if (!errors.isEmpty()) {
-                badFiles.add(file);
+                badFiles.put(FailReason.NoCompile, file);
+            }
+            if (duration > 2000) {
+                badFiles.put(FailReason.Slow, file);
             }
         }
         return badFiles;

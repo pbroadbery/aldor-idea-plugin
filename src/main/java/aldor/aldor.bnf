@@ -436,15 +436,19 @@ JxRightJuxtaposed ::= Jxright_Molecule
 JxLeftJuxtaposed ::= Jxleft_Molecule
 
 //Jxright_H ::= Jxleft_H Jxright_Atom? | KW_Not Jxright_Atom
-
 Jxright_Molecule ::= Jxleft_Molecule Jxright_Atom? | Not_Jxright_Atom
+
 Jxright_Atom ::= Jxleft_Atom Jxright_Atom? | Not_Jxright_Atom
 
 ///Jleft_H::= H | KW_Not BlockEnclosure | Jleft_H BlockEnclosure| Jleft_H KW_Dot BlockMolecule
 // [Use:] Jxleft_H ::= (H | KW_Not BlockEnclosure) (BlockEnclosure | KW_Dot BlockMolecule)*
 
 
-Jxleft_Molecule::= (Molecule | Not_BlockEnclosure) (BlockEnclosure | Dot_BlockMolecule)*
+//Jxleft_Molecule::= (Molecule | Not_BlockEnclosure) (BlockEnclosure | Dot_BlockMolecule)*
+//Jxleft_Molecule::= (Atom | BlockEnclosure | Not_BlockEnclosure) (BlockEnclosure | Dot_BlockMolecule)*
+//Jxleft_Molecule::= (BlockEnclosure | Atom | Not_BlockEnclosure) (BlockEnclosure | Dot_BlockMolecule)*
+Jxleft_Molecule::= (BlockEnclosure (BlockEnclosure | Dot_BlockMolecule)*) | (Atom | Not_BlockEnclosure) (BlockEnclosure | Dot_BlockMolecule)*
+
 Jxleft_Atom::= (Atom | Not_BlockEnclosure) (BlockEnclosure | Dot_BlockMolecule)*
 
 Not_Jxright_Atom ::= KW_Not Jxright_Atom
@@ -458,14 +462,12 @@ Enclosure ::= Parened | Bracketed | QuotedIds
 
 DeclMolecule ::= Block | opt_Application
 
-BlockMolecule ::= Atom
-            | Enclosure
-            | Block
+BlockMolecule ::= Atom | BlockEnclosure
 
 BlockEnclosure ::= Enclosure | Block
 
-Block ::= Piled_Expression
-        | Curly_Labelled
+Block ::= Curly_Labelled | Piled_Expression
+
 
 Parened ::= KW_OParen KW_CParen
 | KW_OParen Expression KW_CParen
@@ -500,14 +502,15 @@ UnqualOp_PowerTok ::= PowerTok
 
 
 //QualOp_op ::= op | op KW_Dollar OpQualTail
-QualOp_ArrowTok ::= ArrowTok KW_Dollar OpQualTail | ArrowTok
-QualOp_LatticeTok ::= LatticeTok KW_Dollar OpQualTail | LatticeTok
-QualOp_RelationTok ::=  RelationTok KW_Dollar OpQualTail | RelationTok
-QualOp_SegTok ::= SegTok KW_Dollar OpQualTail | SegTok
-QualOp_PlusTok ::= PlusTok KW_Dollar OpQualTail | PlusTok
-QualOp_QuotientTok ::= QuotientTok KW_Dollar OpQualTail | QuotientTok
-QualOp_TimesTok ::= TimesTok KW_Dollar OpQualTail | TimesTok
-QualOp_PowerTok ::= PowerTok KW_Dollar OpQualTail | PowerTok
+//QualOp_op ::= op (KW_Dollar OpQualTail)?
+QualOp_ArrowTok ::= ArrowTok (KW_Dollar OpQualTail)?
+QualOp_LatticeTok ::= LatticeTok (KW_Dollar OpQualTail)?
+QualOp_RelationTok ::= RelationTok (KW_Dollar OpQualTail)?
+QualOp_SegTok ::= SegTok (KW_Dollar OpQualTail)?
+QualOp_PlusTok ::= PlusTok (KW_Dollar OpQualTail)?
+QualOp_QuotientTok ::= QuotientTok (KW_Dollar OpQualTail)?
+QualOp_TimesTok ::= TimesTok (KW_Dollar OpQualTail)?
+QualOp_PowerTok ::= PowerTok (KW_Dollar OpQualTail)?
 
 //opt_E ::= E?
 private opt_Application ::= Application?
