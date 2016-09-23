@@ -2,7 +2,6 @@ package pab.aldor;
 
 import aldor.AldorParserDefinition;
 import aldor.AldorTypes;
-import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.ParserDefinition;
@@ -23,34 +22,6 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public final class ParserFunctions {
-
-
-    public static final int MAX_INDENT_DEPTH = 20;
-
-    public static void logPsi(PsiElement psi) {
-        logPsi(psi, 0);
-    }
-
-    // TODO: Remove most uses of this method
-    @SuppressWarnings("SameParameterValue")
-    static void logPsi(PsiElement psi, int i) {
-        logPsi(psi, i, "");
-    }
-    static void logPsi(PsiElement psi, int depth, String lastStuff) {
-        PsiElement[] children = psi.getChildren();
-        int childCount = children.length;
-        String text = (childCount == 0) ? psi.getText(): "";
-        String spaces = Strings.repeat(" ", Math.min(depth, MAX_INDENT_DEPTH));
-        if (childCount == 0) {
-            System.out.println(spaces + "(psi: " + psi + " " + text + ")" + lastStuff);
-            return;
-        }
-        System.out.println(spaces + "(psi: " + psi + " " + text);
-        for (int i = 0; i < (childCount - 1); i++) {
-            logPsi(children[i], depth+1, "");
-        }
-        logPsi(children[childCount -1], depth+1, ")" + lastStuff);
-    }
 
     public static PsiElement parseText(Project project, CharSequence text) {
         return parseText(project, text, AldorTypes.CURLY_CONTENTS_LABELLED);

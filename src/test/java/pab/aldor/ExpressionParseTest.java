@@ -7,12 +7,14 @@ import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCa
 
 import java.util.List;
 
+import static aldor.AldorPsiUtils.logPsi;
+
 public class ExpressionParseTest extends LightPlatformCodeInsightFixtureTestCase {
 
     public void testParseFunctionCall() {
         String text = "f g x";
         PsiElement psi = ParserFunctions.parseText(getProject(), text);
-        ParserFunctions.logPsi(psi, 0);
+        logPsi(psi);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
         assertEquals(0, errors.size());
     }
@@ -20,7 +22,7 @@ public class ExpressionParseTest extends LightPlatformCodeInsightFixtureTestCase
     public void testParseEnum() {
         String text = "Record(type: 'sym,number,str,ws,oparen,cparen,dot,error', txt: String)";
         PsiElement psi = ParserFunctions.parseText(getProject(), text);
-        ParserFunctions.logPsi(psi, 0);
+        logPsi(psi);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
         assertEquals(0, errors.size());
     }

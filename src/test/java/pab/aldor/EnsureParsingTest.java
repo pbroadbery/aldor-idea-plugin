@@ -29,14 +29,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static aldor.AldorPsiUtils.logPsi;
 import static pab.aldor.ParserFunctions.getPsiErrorElements;
-import static pab.aldor.ParserFunctions.logPsi;
 
 /**
  * Lexer Test. Created by pab on 30/08/16.
  */
 @SuppressWarnings({"HardCodedStringLiteral", "ClassWithTooManyMethods"})
 public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
+
+    public static final int NOT_INTERACTIVE_MILLIS = 1000;
 
     @Override
     protected LightProjectDescriptor getProjectDescriptor() {
@@ -46,7 +48,7 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
     public void testParseCatDefinition() {
         String text = "X: with == add";
         PsiElement psi = parseText(text);
-        logPsi(psi, 0);
+        logPsi(psi);
         final List<PsiErrorElement> errors = getPsiErrorElements(psi);
         assertEquals(0, errors.size());
     }
@@ -54,7 +56,7 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
     public void testParseCommentDefinitions() {
         String text = "X: with == add; Y: with == add";
         PsiElement psi = parseText(text);
-        logPsi(psi, 0);
+        logPsi(psi);
         final List<PsiErrorElement> errors = getPsiErrorElements(psi);
         assertEquals(0, errors.size());
     }
@@ -62,7 +64,7 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
     public void testParseMap() {
         String text = "((A: Tuple Type) -> (R: Tuple Type)): with == add;";
         PsiElement psi = parseText(text);
-        logPsi(psi, 0);
+        logPsi(psi);
         final List<PsiErrorElement> errors = getPsiErrorElements(psi);
         assertEquals(0, errors.size());
     }
@@ -71,7 +73,7 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
     public void testParseWithBlock() {
         String text = "QQ: with { f: % } == add";
         PsiElement psi = parseText(text);
-        logPsi(psi, 0);
+        logPsi(psi);
         final List<PsiErrorElement> errors = getPsiErrorElements(psi);
         assertEquals(0, errors.size());
     }
@@ -80,7 +82,7 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
     public void testParseAddBlock() {
         String text = "QQ: with { f: % } == add { f: % == 23 }";
         PsiElement psi = parseText(text);
-        logPsi(psi, 0);
+        logPsi(psi);
         final List<PsiErrorElement> errors = getPsiErrorElements(psi);
         assertEquals(0, errors.size());
     }
@@ -88,7 +90,7 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
     public void testParseError() {
         String text = ":= 2";
         PsiElement psi = parseText(text);
-        logPsi(psi, 0);
+        logPsi(psi);
         final List<PsiErrorElement> errors = getPsiErrorElements(psi);
         assertEquals(1, errors.size());
     }
@@ -97,7 +99,7 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
     public void testParseAddBlock2() {
         String text = "QQ: with { f: % } == XX add { f: % == 23 }";
         PsiElement psi = parseText(text);
-        logPsi(psi, 0);
+        logPsi(psi);
         final List<PsiErrorElement> errors = getPsiErrorElements(psi);
         System.out.println("Errors: " + errors);
         assertEquals(0, errors.size());
@@ -107,7 +109,7 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
     public void testParseDefn() {
         String text = "f(x: Z): Z == never";
         PsiElement psi = parseText(text);
-        logPsi(psi, 0);
+        logPsi(psi);
         final List<PsiErrorElement> errors = getPsiErrorElements(psi);
         System.out.println("Errors: " + errors);
         assertEquals(0, errors.size());
@@ -117,7 +119,7 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
     public void testParseFnDefn() {
         String text = "f(x: Z): Z == 1";
         PsiElement psi = parseText(text);
-        logPsi(psi, 0);
+        logPsi(psi);
         final List<PsiErrorElement> errors = getPsiErrorElements(psi);
         System.out.println("Errors: " + errors);
         assertEquals(0, errors.size());
@@ -126,7 +128,7 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
     public void testNegateFnDefn() {
         String text = "-(x: Z): Z == 1";
         PsiElement psi = parseText(text);
-        logPsi(psi, 0);
+        logPsi(psi);
         final List<PsiErrorElement> errors = getPsiErrorElements(psi);
         System.out.println("Errors: " + errors);
         assertEquals(0, errors.size());
@@ -135,7 +137,7 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
     public void testFn() {
         String text = "f x";
         PsiElement psi = parseText(text);
-        logPsi(psi, 0);
+        logPsi(psi);
         final List<PsiErrorElement> errors = getPsiErrorElements(psi);
         System.out.println("Errors: " + errors);
         assertEquals(0, errors.size());
@@ -144,7 +146,7 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
     public void testNegate() {
         String text = "-1";
         PsiElement psi = parseText(text);
-        logPsi(psi, 0);
+        logPsi(psi);
         final List<PsiErrorElement> errors = getPsiErrorElements(psi);
         System.out.println("Errors: " + errors);
         assertEquals(0, errors.size());
@@ -153,7 +155,7 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
     public void testParseNothing() {
         String text = "with { f: () -> () }";
         PsiElement psi = parseText(text);
-        logPsi(psi, 0);
+        logPsi(psi);
         final List<PsiErrorElement> errors = getPsiErrorElements(psi);
         assertEquals(0, errors.size());
     }
@@ -162,7 +164,7 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
     public void testParseApplication() {
         String text = "f x";
         PsiElement psi = parseText(text);
-        logPsi(psi, 0);
+        logPsi(psi);
         final List<PsiErrorElement> errors = getPsiErrorElements(psi);
         assertEquals(0, errors.size());
     }
@@ -170,7 +172,7 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
     public void testParseApplication2() {
         String text = "f g x";
         PsiElement psi = parseText(text);
-        logPsi(psi, 0);
+        logPsi(psi);
         final List<PsiErrorElement> errors = getPsiErrorElements(psi);
         assertEquals(0, errors.size());
     }
@@ -179,7 +181,7 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
     public void testParseSequence() {
         String text = "with { f: X; g: Y }";
         PsiElement psi = parseText(text);
-        logPsi(psi, 0);
+        logPsi(psi);
         final List<PsiErrorElement> errors = getPsiErrorElements(psi);
         assertEquals(0, errors.size());
     }
@@ -188,7 +190,7 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
     public void testParseDomain() {
         String text = "A: with { f: X; g: BInt -> () } == add { dispose!(x: %): () == never }";
         PsiElement psi = parseText(text);
-        logPsi(psi, 0);
+        logPsi(psi);
         final List<PsiErrorElement> errors = getPsiErrorElements(psi);
         assertEquals(0, errors.size());
     }
@@ -197,7 +199,7 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
     public void testDeclInfix() {
         String text = "+: %";
         PsiElement psi = parseText(text);
-        logPsi(psi, 0);
+        logPsi(psi);
         final List<PsiErrorElement> errors = getPsiErrorElements(psi);
         assertEquals(0, errors.size());
     }
@@ -205,7 +207,7 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
     public void testDefSeq() {
         String text = "a == add {} b == add {}";
         PsiElement psi = parseText(text);
-        logPsi(psi, 0);
+        logPsi(psi);
         final List<PsiErrorElement> errors = getPsiErrorElements(psi);
         assertEquals(0, errors.size());
     }
@@ -214,7 +216,7 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
     public void testIf() {
         String text = "if foo then 1 else 2";
         PsiElement psi = parseText(text, AldorTypes.IF_STATEMENT_BAL_STATEMENT);
-        logPsi(psi, 0);
+        logPsi(psi);
         final List<PsiErrorElement> errors = getPsiErrorElements(psi);
         assertEquals(0, errors.size());
     }
@@ -222,7 +224,7 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
     public void testDefine() {
         String text = "foo: X == 2";
         PsiElement psi = parseText(text);
-        logPsi(psi, 0);
+        logPsi(psi);
         final List<PsiErrorElement> errors = getPsiErrorElements(psi);
         assertEquals(0, errors.size());
     }
@@ -230,7 +232,7 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
     public void testGenerator() {
         String text = "f(x for x in 1..10)";
         PsiElement psi = parseText(text);
-        logPsi(psi, 0);
+        logPsi(psi);
         final List<PsiErrorElement> errors = getPsiErrorElements(psi);
         assertEquals(0, errors.size());
     }
@@ -238,7 +240,7 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
     public void testGenerator2() {
         String text = "x for x in 1..10";
         PsiElement psi = parseText(text);
-        logPsi(psi, 0);
+        logPsi(psi);
         final List<PsiErrorElement> errors = getPsiErrorElements(psi);
         assertEquals(0, errors.size());
     }
@@ -247,7 +249,7 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
     public void testWithSysCmd() {
         String text = "foo\n#Wibble\nbar";
         PsiElement psi = parseText(text);
-        logPsi(psi, 0);
+        logPsi(psi);
         final List<PsiErrorElement> errors = getPsiErrorElements(psi);
         assertEquals(0, errors.size());
     }
@@ -256,7 +258,7 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
     public void testWithIfBlock() {
         String text = "a;\n#if X\nstuff\n#endif\nb\n";
         PsiElement psi = parseText(text);
-        logPsi(psi, 0);
+        logPsi(psi);
         final List<PsiErrorElement> errors = getPsiErrorElements(psi);
         assertEquals(0, errors.size());
     }
@@ -269,7 +271,7 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
         PsiParser parser = aldorParserDefinition.createParser(getProject());
         ASTNode parsed = parser.parse(AldorTypes.PRE_DOCUMENT, psiBuilder);
 
-        logPsi(parsed.getPsi(), 0);
+        logPsi(parsed.getPsi());
         assertTrue(getPsiErrorElements(parsed.getPsi()).isEmpty());
     }
 
@@ -358,7 +360,7 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
 
         PsiElement psi = parseText(text);
 
-        logPsi(psi, 0);
+        logPsi(psi);
         return getPsiErrorElements(psi);
     }
 
@@ -382,7 +384,7 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
         File base = new File("/home/pab/Work/aldorgit/aldor/aldor/lib/aldor/src");
         Multimap<FailReason, File> badFiles = parseLibrary(base, Sets.newHashSet());
 
-        for (Map.Entry ent: badFiles.entries()) {
+        for (Map.Entry<FailReason, File> ent: badFiles.entries()) {
             System.out.println("Failed: " + ent.getKey() + " --> " + ent.getValue());
         }
         assertTrue(badFiles.isEmpty());
@@ -429,7 +431,7 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
             if (!errors.isEmpty()) {
                 badFiles.put(FailReason.NoCompile, file);
             }
-            if (duration > 2000) {
+            if (duration > NOT_INTERACTIVE_MILLIS) {
                 badFiles.put(FailReason.Slow, file);
             }
         }

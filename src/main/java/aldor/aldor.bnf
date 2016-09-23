@@ -28,12 +28,26 @@
 
   implements("InfixedTok")="aldor.psi.AldorIdentifier"
   implements("Id")="aldor.psi.AldorIdentifier"
+  implements("IterRepeatStatement.*")="aldor.psi.AldorIterRepeatStatement";
+  implements("Collection") = "aldor.psi.AldorAnyCollection"
+  implements("AnyStatement_Collection") = "aldor.psi.AldorAnyCollection"
+
+  mixin("Id")="aldor.psi.impl.AldorIdentifierMixin"
+  mixin("InfixedTok")="aldor.psi.impl.AldorIdentifierMixin"
+  mixin("DeclPart")="aldor.psi.impl.AldorDeclMixin"
+  mixin(".*_Define")="aldor.psi.impl.AldorDefineMixin"
+  mixin("IterRepeatStatement.*")="aldor.psi.impl.AldorIterStatementMixin"
+  mixin("Iterator")="aldor.psi.impl.AldorIteratorMixin"
+  mixin("Collection")="aldor.psi.impl.AldorCollectionMixin"
+  mixin("AnyStatement_Collection")="aldor.psi.impl.AldorCollectionMixin"
+
   tokens = [
           TK_Id TK_Blank TK_Int TK_Float TK_String TK_PreDoc TK_PostDoc
           TK_Comment TK_SysCmd TK_Error
 
           KW_Add KW_And KW_Always KW_Assert KW_Break KW_But KW_By
           KW_Case KW_Catch KW_Default KW_Define KW_Delay KW_Do KW_Else
+          KW_Except KW_Export KW_Exquo KW_Extend KW_Finally KW_Fix
           KW_Except KW_Export KW_Exquo KW_Extend KW_Finally KW_Fix
           KW_For KW_Fluid KW_Free KW_From KW_Generate KW_Goto KW_Has
           KW_If KW_Import KW_In KW_Inline KW_Is KW_Isnt KW_Iterate
@@ -112,7 +126,7 @@ MacroBody ::= Sig | ExportDecl | KW_Import Sig opt_FromPart
 
 Sig ::= DeclBinding | Block
 
-DeclPart ::= KW_Colon Type | KW_ColonStar Type
+left DeclPart ::= KW_Colon Type | KW_ColonStar Type
 
 Comma ::= enlist1_CommaItem_KW_Comma
 private CommaItem ::= Binding_AnyStatement (KW_Where CommaItem)?
@@ -124,10 +138,10 @@ InfixedExprsDecl ::= InfixedExprs DeclPart?
 InfixedExprs ::= enlist1_InfixedExpr_KW_Comma
 
 //Binding_E ::= BindingL_Infixed_E
-private Binding_AnyStatement ::= BindingL_Infixed_AnyStatement
-private Binding_Collection ::= BindingL_Infixed_Collection
+Binding_AnyStatement ::= BindingL_Infixed_AnyStatement
+Binding_Collection ::= BindingL_Infixed_Collection
 //Binding_InfixedExprsDecl ::= BindingL_Infixed_InfixedExprsDecl
-private Binding_BalStatement ::= BindingL_Infixed_BalStatement
+Binding_BalStatement ::= BindingL_Infixed_BalStatement
 //BindingL_R_L ::=
 //               | R KW_Assign_BindingL_R_L
 //               | R KW_2EQ BindingL_R_L
@@ -136,15 +150,24 @@ private Binding_BalStatement ::= BindingL_Infixed_BalStatement
 //               | R KW_MapsToStar BindingL_R_L
 //               | L
 
-BindingL_Infixed_AnyStatement ::=
+// Heavy left factoring here from the original grammar.
+// AnyStatement now excludes "Infixed", and we deal with it here instead.
+// TODO: Remove recursive call.
+private BindingL_Infixed_AnyStatement ::=
                  Infixed (KW_Assign BindingL_Infixed_AnyStatement
-                          | KW_2EQ BindingL_Infixed_AnyStatement
+                          | BindingL_Infixed_AnyStatement_Define
                           | KW_MArrow BindingL_Infixed_AnyStatement
                           | KW_MapsTo BindingL_Infixed_AnyStatement
-                          | KW_MapsToStar BindingL_Infixed_AnyStatement)
+                          | KW_MapsToStar BindingL_Infixed_AnyStatement
+                          | AnyStatement_Collection (KW_Implies Binding_AnyStatement)?
+                          | KW_Implies Binding_AnyStatement)?
                | AnyStatement
 
-BindingL_Infixed_BalStatement ::=
+left BindingL_Infixed_AnyStatement_Define ::= KW_2EQ BindingL_Infixed_AnyStatement
+left AnyStatement_Collection ::= (Iterator+ <<noRepeatHere>>)
+
+// TODO: Similar left factoring as above.
+private BindingL_Infixed_BalStatement ::=
                  Infixed (KW_Assign BindingL_Infixed_BalStatement
                           | KW_2EQ BindingL_Infixed_BalStatement
                           | KW_MArrow BindingL_Infixed_BalStatement
@@ -152,7 +175,8 @@ BindingL_Infixed_BalStatement ::=
                           | KW_MapsToStar BindingL_Infixed_BalStatement)
                | BalStatement
 
-BindingL_Infixed_Collection ::=
+// TODO: Similar left factoring as above.
+private BindingL_Infixed_Collection ::=
                  Infixed (KW_Assign BindingL_Infixed_Collection
                           | KW_2EQ BindingL_Infixed_Collection
                           | KW_MArrow BindingL_Infixed_Collection
@@ -187,7 +211,7 @@ BindingR_InfixedExprsDecl_InfixedExprsDecl ::=
                                | KW_MapsToStar Binding_InfixedExprsDecl)?
 */
 
-BindingR_InfixedExprsDecl_AnyStatement ::= InfixedExprsDecl (KW_Assign Binding_AnyStatement
+private BindingR_InfixedExprsDecl_AnyStatement ::= InfixedExprsDecl (KW_Assign Binding_AnyStatement
                                                              | KW_2EQ Binding_AnyStatement
                                                              | KW_MArrow Binding_AnyStatement
                                                              | KW_MapsTo Binding_AnyStatement
@@ -244,11 +268,10 @@ Flow_AnyStatement ::=
 | KW_Throw Binding_AnyStatement
 | KW_Goto Id
 | KW_Never
-| Collection (KW_Implies Binding_AnyStatement)?
 
 Flow_BalStatement ::=
   IfStatement_BalStatement
-| Iterators KW_Repeat Binding_BalStatement
+| IterRepeatStatement_BalStatement
 | KW_Repeat Binding_BalStatement
 | KW_Try Binding_BalStatement KW_But ButExpr AlwaysPart_BalStatement
 | KW_Try Binding_BalStatement KW_Catch ButExpr AlwaysPart_BalStatement
@@ -273,6 +296,8 @@ IfStatement_AnyStatement ::=  KW_If CommaItem KW_Then Binding_BalStatement (KW_S
 IfStatement_BalStatement ::=  KW_If CommaItem KW_Then Binding_BalStatement (KW_Semicolon? KW_Else Binding_BalStatement)?
 
 IterRepeatStatement_AnyStatement ::= Iterators KW_Repeat Binding_AnyStatement
+IterRepeatStatement_BalStatement ::= Iterators KW_Repeat Binding_BalStatement
+
 RepeatStatement_AnyStatement ::= KW_Repeat Binding_AnyStatement
 
 

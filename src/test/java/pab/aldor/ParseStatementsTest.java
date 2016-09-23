@@ -6,8 +6,8 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 
+import static aldor.AldorPsiUtils.logPsi;
 import static pab.aldor.ParserFunctions.getPsiErrorElements;
-import static pab.aldor.ParserFunctions.logPsi;
 
 /**
  * Statements have lots of special cases.. Let's try to catch some of them.
@@ -179,6 +179,27 @@ public class ParseStatementsTest extends LightPlatformCodeInsightFixtureTestCase
         logPsi(psi);
         assertTrue(getPsiErrorElements(psi).isEmpty());
     }
+
+
+    public void testDefinitions() {
+        PsiElement psi = parseText("Foo(R: Ring): with { a: Y; b: Z } == add {}");
+        logPsi(psi);
+        assertTrue(getPsiErrorElements(psi).isEmpty());
+    }
+
+    public void testSimpleDefinition() {
+        PsiElement psi = parseText("f(n: Integer): Integer == n+1");
+        logPsi(psi);
+        assertTrue(getPsiErrorElements(psi).isEmpty());
+    }
+
+
+    public void testSimpleDefinition2() {
+        PsiElement psi = parseText("A == B == C");
+        logPsi(psi);
+        assertTrue(getPsiErrorElements(psi).isEmpty());
+    }
+
 
     private PsiElement parseText(CharSequence text) {
         return ParserFunctions.parseText(getProject(), text);

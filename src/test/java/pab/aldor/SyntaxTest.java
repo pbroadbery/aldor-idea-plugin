@@ -38,6 +38,28 @@ public class SyntaxTest extends LightPlatformCodeInsightFixtureTestCase {
         assertEquals("(InfixApply -> (Comma ) (Comma Int String))", syntax.toString());
     }
 
+    public void testParseDeclare() {
+        PsiElement psi = parseText("(n: X) -> F n");
+        AldorPsiUtils.Syntax syntax = AldorPsiUtils.parse(psi);
+        assertNotNull(syntax);
+        assertEquals("(InfixApply -> (Decl n X) (Apply F n))", syntax.toString());
+    }
+
+    public void testParseInfixDeclare() {
+        PsiElement psi = parseText("(a: A) + (b: B)");
+        AldorPsiUtils.Syntax syntax = AldorPsiUtils.parse(psi);
+        assertNotNull(syntax);
+        assertEquals("(InfixApply + (Decl a A) (Decl b B))", syntax.toString());
+    }
+
+    public void testParseCurriedDeclare() {
+        PsiElement psi = parseText("f(x: String)(y: Integer): String");
+        AldorPsiUtils.Syntax syntax = AldorPsiUtils.parse(psi);
+        assertNotNull(syntax);
+        assertEquals("????", syntax.toString());
+    }
+
+
     private PsiElement parseText(CharSequence text) {
         return ParserFunctions.parseText(getProject(), text);
     }

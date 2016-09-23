@@ -8,14 +8,21 @@ Extensions:
 Definition Trees & structure
 
 Module building:
+-- Idea here is that "initially", we'll support one type of module,
+   the checked out git repository.
 
 Grammar:
 Error recovery
 
 PileMode
    -- continuation lines
-   
+
+Use intellij log faciities
+
+Clean up pretend, @, $ highlighting
+
 -----------------------------
+Completed items:
 Lexer:
 DONE Comments
 DONE Pre/Post Doc
@@ -34,4 +41,15 @@ Quotes have lispish semantics/tokeniser rules
 
 -----
 
+
+Things that create scopes:
+
+- Blocks (variables, etc)
+- Piles (constants, some variables)
+
+Places where a scope contains extra identifiers:
+- Function definitions
+- Lambdas
+- Comma (scope creeps right)
+- import statements (later)
 

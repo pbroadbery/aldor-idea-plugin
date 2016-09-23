@@ -5,6 +5,7 @@ import aldor.SysCmd.SysCommandType;
 import com.intellij.psi.tree.IElementType;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -93,7 +94,6 @@ public class Linearise {
         }
 
         private int scan(PiledSection section, final int startIndex) {
-            int thisIndent = section.indentForLine(startIndex);
             int index = startIndex + 1;
             while (index < section.lines().size()) {
                 SrcLine prevLine = section.lines().get(index - 1);
@@ -453,12 +453,12 @@ public class Linearise {
         }
 
         @SuppressWarnings("ReturnOfCollectionOrArrayField")
-        public List<IElementType> tokens() {
+        public Collection<IElementType> tokens() {
             return tokens;
         }
 
         @SuppressWarnings("ReturnOfCollectionOrArrayField")
-        public List<IElementType> allTokens() {
+        public Collection<IElementType> allTokens() {
             return allTokens;
         }
 

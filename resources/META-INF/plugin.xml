@@ -40,7 +40,9 @@
         <lang.foldingBuilder language="Aldor" implementationClass="aldor.folder.AldorFoldingBuilder"/>
 
         <annotator language="Aldor" implementationClass="aldor.annotator.AldorAnnotator"/>
-        
+
+        <lang.refactoringSupport language="Aldor" implementationClass="aldor.references.AldorRefactoringSupportProvider"/>
+
     </extensions>
 
     <actions>

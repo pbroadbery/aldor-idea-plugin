@@ -1,5 +1,6 @@
 package aldor;
 
+import aldor.psi.AldorDeclPart;
 import aldor.psi.AldorId;
 import aldor.psi.AldorIdentifier;
 import aldor.psi.AldorInfixedExpr;
@@ -7,10 +8,11 @@ import aldor.psi.AldorInfixedTok;
 import aldor.psi.AldorJxleftAtom;
 import aldor.psi.AldorLiteral;
 import aldor.psi.AldorParened;
-import aldor.psi.AldorVisitor;
+import aldor.psi.AldorRecursiveVisitor;
 import aldor.psi.JxrightElement;
 import aldor.psi.NegationElement;
 import com.google.common.base.Joiner;
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiElement;
@@ -19,11 +21,42 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
 
 public final class AldorPsiUtils {
     private static final Logger LOG = Logger.getInstance(AldorPsiUtils.class);
+
+
+
+    public static final int MAX_INDENT_DEPTH = 20;
+
+    public static void logPsi(PsiElement psi) {
+        logPsi(psi, 0);
+    }
+
+    // TODO: Remove most uses of this method
+    @SuppressWarnings("SameParameterValue")
+    static void logPsi(PsiElement psi, int i) {
+        logPsi(psi, i, "");
+    }
+    static void logPsi(PsiElement psi, int depth, String lastStuff) {
+        PsiElement[] children = psi.getChildren();
+        int childCount = children.length;
+        String text = (childCount == 0) ? psi.getText(): "";
+        String spaces = Strings.repeat(" ", Math.min(depth, MAX_INDENT_DEPTH));
+        if (childCount == 0) {
+            System.out.println(spaces + "(psi: " + psi + " " + text + ")" + lastStuff);
+            return;
+        }
+        System.out.println(spaces + "(psi: " + psi + " " + text);
+        for (int i = 0; i < (childCount - 1); i++) {
+            logPsi(children[i], depth+1, "");
+        }
+        logPsi(children[childCount -1], depth+1, ")" + lastStuff);
+    }
 
     @Nullable
     public static Syntax parse(PsiElement elt) {
@@ -51,7 +84,7 @@ public final class AldorPsiUtils {
         return false;
     }
 
-    private static final class AldorPsiSyntaxVisitor extends AldorVisitor {
+    private static final class AldorPsiSyntaxVisitor extends AldorRecursiveVisitor {
         private final Deque<List<Syntax>> visitStack;
 
         private AldorPsiSyntaxVisitor(Deque<List<Syntax>> visitStack) {
@@ -59,8 +92,9 @@ public final class AldorPsiUtils {
         }
 
         @Override
-        public void visitElement(PsiElement element) {
-            element.acceptChildren(this);
+        public void visitPsiElement(@NotNull PsiElement o) {
+            System.out.println("Visit: " + o);
+            super.visitPsiElement(o);
         }
 
         @Override
@@ -81,7 +115,7 @@ public final class AldorPsiUtils {
             if (fnOrAtom.size() == 1) {
                 visitStack.peek().add(fnOrAtom.get(0));
             } else {
-                Syntax syntax = new Apply(fnOrAtom);
+                Syntax syntax = new Apply(o, fnOrAtom);
                 visitStack.peek().add(syntax);
             }
         }
@@ -103,7 +137,7 @@ public final class AldorPsiUtils {
             } else {
                 Syntax all = opsAndArgs.get(opsAndArgs.size() - 1);
                 for (Syntax syntax : Lists.reverse(opsAndArgs).subList(1, opsAndArgs.size() - 2)) {
-                    all = new Apply(Lists.newArrayList(syntax, all));
+                    all = new Apply(null, Lists.newArrayList(syntax, all));
                 }
                 visitStack.peek().add(all);
             }
@@ -131,9 +165,19 @@ public final class AldorPsiUtils {
             if (parenContent.size() == 1) {
                 next = parenContent.get(0);
             } else {
-                next = new Comma(parenContent);
+                next = new Comma(parened, parenContent);
             }
             visitStack.peek().add(next);
+        }
+
+        @Override
+        public void visitDeclPart(@NotNull AldorDeclPart decl) {
+            List<Syntax> parenContent = Lists.newArrayList();
+            visitStack.push(parenContent);
+            decl.acceptChildren(this);
+            List<Syntax> last = visitStack.pop();
+            Syntax result = new Declaration(decl, last);
+            visitStack.peek().add(result);
         }
 
         @Override
@@ -147,7 +191,7 @@ public final class AldorPsiUtils {
             Syntax lhs = exprContent.get(0);
             for (int i=1; i<exprContent.size(); i+=2) {
                 Syntax op = exprContent.get(i);
-                lhs = new InfixApply(op, lhs, exprContent.get(i+1));
+                lhs = new InfixApply(expr, op, lhs, exprContent.get(i+1));
             }
             visitStack.peek().add(lhs);
         }
@@ -162,53 +206,134 @@ public final class AldorPsiUtils {
     @SuppressWarnings("AbstractClassNamingConvention")
     public abstract static class Syntax {
         abstract String name();
+
+        public abstract PsiElement psiElement();
+
+        public abstract Iterable<Syntax> children();
+
+        @Nullable
+        public <T extends Syntax> T as(@NotNull  Class<T> clzz) {
+            if (clzz.isAssignableFrom(this.getClass())) {
+                return clzz.cast(this);
+            }
+            return null;
+        }
+
+        public <T extends Syntax> boolean is(@NotNull  Class<T> clzz) {
+            return clzz.isAssignableFrom(this.getClass());
+        }
     }
 
-    public abstract static class SyntaxNode extends Syntax {
-        private final List<Syntax> arguments;
+    public abstract static class SyntaxNode<SyntaxPsiElement extends PsiElement> extends Syntax {
+        protected final List<Syntax> arguments;
+        private final SyntaxPsiElement element;
 
-        protected SyntaxNode(List<Syntax> arguments) {
-            this.arguments = arguments;
+        protected SyntaxNode(SyntaxPsiElement element, List<Syntax> arguments) {
+            this.element = element;
+            this.arguments = new ArrayList<>(arguments);
         }
 
         @Override
         public String toString() {
             return "(" + name() + " " + Joiner.on(" ").join(arguments) + ")";
         }
+
+        @Override
+        public SyntaxPsiElement psiElement() {
+            return element;
+        }
+
+        @Override
+        public Iterable<Syntax> children() {
+            return arguments;
+        }
+
+        public Syntax child(int n) {
+            return arguments.get(n);
+        }
     }
 
-    private static class Apply extends SyntaxNode {
-        Apply(@NotNull List<Syntax> arguments) {
-            super(arguments);
+    public abstract static class AnyApply<T extends PsiElement> extends SyntaxNode<T> {
+
+        protected AnyApply(T element, List<Syntax> arguments) {
+            super(element, arguments);
+        }
+
+        public abstract Syntax operator();
+        public abstract List<Syntax> arguments();
+    }
+
+    public static class Apply extends AnyApply<JxrightElement> {
+        Apply(JxrightElement element, @NotNull List<Syntax> arguments) {
+            super(element, arguments);
+        }
+
+        @Override
+        public Syntax operator() {
+            return arguments.get(0);
         }
 
         @Override
         String name() {
             return "Apply";
         }
+
+        @Override
+        public List<Syntax> arguments() {
+            return arguments.subList(1, arguments.size());
+        }
     }
 
 
-    private static class InfixApply extends SyntaxNode {
-        InfixApply(@NotNull Syntax op, Syntax lhs, Syntax rhs) {
-            super(Lists.newArrayList(op, lhs, rhs));
+    private static class InfixApply extends AnyApply<PsiElement> {
+        InfixApply(PsiElement element, @NotNull Syntax op, Syntax lhs, Syntax rhs) {
+            super(element, Lists.newArrayList(op, lhs, rhs));
         }
 
         @Override
         String name() {
             return "InfixApply";
         }
+
+        @Override
+        public Syntax operator() {
+            return arguments.get(0);
+        }
+
+        @Override
+        public List<Syntax> arguments() {
+            return arguments.subList(1, arguments.size());
+        }
     }
 
 
-    private static class Comma extends SyntaxNode {
-        Comma(@NotNull  List<Syntax> arguments) {
-            super(arguments);
+    public static class Comma extends SyntaxNode<AldorParened> {
+        Comma(AldorParened element, @NotNull List<Syntax> arguments) {
+            super(element, arguments);
         }
 
         @Override
         String name() {
             return "Comma";
+        }
+    }
+
+    public static class Declaration extends SyntaxNode<AldorDeclPart> {
+        Declaration(AldorDeclPart element, @NotNull List<Syntax> arguments) {
+            super(element, arguments);
+        }
+
+        public Syntax lhs() {
+            return child(0);
+        }
+
+        public Syntax rhs() {
+            return child(1);
+        }
+
+        @Override
+        String name() {
+            return "Decl";
         }
     }
 
@@ -223,9 +348,19 @@ public final class AldorPsiUtils {
         String name() {
             return "Other";
         }
+
+        @Override
+        public PsiElement psiElement() {
+            return other;
+        }
+
+        @Override
+        public Iterable<Syntax> children() {
+            return Collections.emptyList();
+        }
     }
 
-    private static class Id extends Syntax {
+    public static class Id extends Syntax {
         private final AldorIdentifier id;
         private final String text;
 
@@ -237,6 +372,16 @@ public final class AldorPsiUtils {
         @Override
         String name() {
             return "Id";
+        }
+
+        @Override
+        public PsiElement psiElement() {
+            return id;
+        }
+
+        @Override
+        public Iterable<Syntax> children() {
+            return Collections.emptyList();
         }
 
         @Override
@@ -258,6 +403,16 @@ public final class AldorPsiUtils {
         @Override
         String name() {
             return "Literal";
+        }
+
+        @Override
+        public PsiElement psiElement() {
+            return literal;
+        }
+
+        @Override
+        public Iterable<Syntax> children() {
+            return Collections.emptyList();
         }
 
         @Override

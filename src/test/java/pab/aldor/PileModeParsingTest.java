@@ -10,15 +10,15 @@ import com.intellij.testFramework.LightPlatformCodeInsightTestCase;
 
 import java.util.List;
 
+import static aldor.AldorPsiUtils.logPsi;
 import static pab.aldor.ParserFunctions.getPsiErrorElements;
-import static pab.aldor.ParserFunctions.logPsi;
 
 public class PileModeParsingTest extends LightPlatformCodeInsightTestCase {
 
 
     public void testPileMode() {
         PsiElement psi = parseText("#pile\nrepeat\n  foo\n  bar");
-        logPsi(psi, 0);
+        logPsi(psi);
         final List<PsiErrorElement> errors = getPsiErrorElements(psi);
         assertEquals(0, errors.size());
     }
@@ -26,21 +26,21 @@ public class PileModeParsingTest extends LightPlatformCodeInsightTestCase {
 
     public void testPileAfter2Eq() {
         PsiElement psi = parseText("#pile\nfoo: X == \n 1\n 2");
-        logPsi(psi, 0);
+        logPsi(psi);
         final List<PsiErrorElement> errors = getPsiErrorElements(psi);
         assertEquals(0, errors.size());
     }
 
     public void testTwoStatements() {
         PsiElement psi = parseText("#pile\nA\nB\n");
-        logPsi(psi, 0);
+        logPsi(psi);
         final List<PsiErrorElement> errors = getPsiErrorElements(psi);
         assertEquals(0, errors.size());
     }
 
     public void testComplexThenSimple() {
         PsiElement psi = parseText("#pile\nrepeat\n Foo\nA := 1");
-        logPsi(psi, 0);
+        logPsi(psi);
         final List<PsiErrorElement> errors = getPsiErrorElements(psi);
 
         AldorIndentLexer unit = new AldorIndentLexer(new AldorLexerAdapter());
@@ -50,21 +50,21 @@ public class PileModeParsingTest extends LightPlatformCodeInsightTestCase {
 
     public void testComplexThenComplex() {
         PsiElement psi = parseText("#pile\nrepeat\n Foo\nrepeat\n a");
-        logPsi(psi, 0);
+        logPsi(psi);
         final List<PsiErrorElement> errors = getPsiErrorElements(psi);
         assertEquals(0, errors.size());
     }
 
     public void testContinuationLine() {
         PsiElement psi = parseText("#pile\nfoo := [a,\nb]\nb\n");
-        logPsi(psi, 0);
+        logPsi(psi);
         final List<PsiErrorElement> errors = getPsiErrorElements(psi);
         assertEquals(0, errors.size());
     }
 
     public void testMultipleStatements() {
         PsiElement psi = parseText("#pile\nf == \n repeat\n  L1\n return X\n\nQ:=2\n");
-        logPsi(psi, 0);
+        logPsi(psi);
         final List<PsiErrorElement> errors = getPsiErrorElements(psi);
         assertEquals(0, errors.size());
     }
@@ -76,7 +76,7 @@ public class PileModeParsingTest extends LightPlatformCodeInsightTestCase {
                 "    done := true\n" +
                 "else\n" +
                 "    next := read()");
-        logPsi(psi, 0);
+        logPsi(psi);
         final List<PsiErrorElement> errors = getPsiErrorElements(psi);
         assertEquals(0, errors.size());
     }
@@ -87,7 +87,7 @@ public class PileModeParsingTest extends LightPlatformCodeInsightTestCase {
                 "if X then A\n" +
                 "else if Y then B\n" +
                 "else C");
-        logPsi(psi, 0);
+        logPsi(psi);
         final List<PsiErrorElement> errors = getPsiErrorElements(psi);
         assertEquals(0, errors.size());
     }
@@ -96,7 +96,7 @@ public class PileModeParsingTest extends LightPlatformCodeInsightTestCase {
         PsiElement psi = parseText("" +
                 "#pile\n" +
                 "Foo:\n  Category == with\n  aa: () -> ()\nBar(X: String): with == add\n");
-        logPsi(psi, 0);
+        logPsi(psi);
         final List<PsiErrorElement> errors = getPsiErrorElements(psi);
         assertEquals(0, errors.size());
     }
