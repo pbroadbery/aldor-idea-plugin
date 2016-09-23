@@ -36,12 +36,6 @@ public abstract class AldorIdentifierMixin extends ASTWrapperPsiElement implemen
         return new AldorNameReference(this);
     }
 
-    @Override
-    public PsiReference findReferenceAt(int offset) {
-        System.out.println("Looking for reference at: " + offset);
-        return super.findReferenceAt(offset);
-    }
-
     @NotNull
     @Override
     public PsiReference[] getReferences() {

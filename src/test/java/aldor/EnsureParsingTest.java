@@ -357,7 +357,6 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
 
         PsiElement psi = parseText(text);
 
-        logPsi(psi);
         return ParserFunctions.getPsiErrorElements(psi);
     }
 

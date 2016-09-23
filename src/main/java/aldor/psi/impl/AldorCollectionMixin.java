@@ -26,7 +26,9 @@ public abstract class AldorCollectionMixin extends ASTWrapperPsiElement implemen
             if (!processor.execute(iter, state)) {
                 return false;
             }
-            iter.processDeclarations(processor, state, lastParent, place);
+            if (!iter.processDeclarations(processor, state, lastParent, place)) {
+                return false;
+            }
         }
         return true;
     }

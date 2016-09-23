@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Function;
 
 import static aldor.AldorPsiUtils.Comma;
 import static aldor.AldorPsiUtils.Declaration;
@@ -80,18 +79,6 @@ public abstract class AldorDefineMixin extends ASTWrapperPsiElement implements P
         }
         System.out.println("Scopes are: " + scopes);
         return scopes;
-    }
-
-
-    boolean processLhsSyntax(Syntax syntax, Function<PsiElement, Boolean> fn) {
-        System.out.println("Process lhs: " + syntax);
-        fn.apply(syntax.psiElement());
-        for (Syntax child : syntax.children()) {
-            if (!processLhsSyntax(child, fn)) {
-                return false;
-            }
-        }
-        return true;
     }
 
 }

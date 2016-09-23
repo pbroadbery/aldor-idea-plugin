@@ -59,6 +59,17 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
         assertEquals(text.indexOf("n:"), resolved.getTextOffset());
     }
 
+    public void testLookupNotPresent() {
+        String text = "f(n: Integer): Integer == foo";
+        PsiFile file = createAldorFile(text);
+
+        PsiReference ref = file.findReferenceAt(text.indexOf("foo"));
+        assertNotNull(ref);
+        PsiElement resolved = ref.resolve();
+        assertNull(resolved);
+    }
+
+
     public void testLookupInfix2Arg() {
         String text = "(n: Integer) + (m: Integer): Integer == n+m";
         PsiFile file = createAldorFile(text);
