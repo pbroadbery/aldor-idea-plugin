@@ -1,4 +1,4 @@
-package pab.aldor;
+package aldor;
 
 import aldor.lexer.AldorIndentLexer;
 import aldor.lexer.AldorLexerAdapter;

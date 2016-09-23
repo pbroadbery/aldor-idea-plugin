@@ -1,6 +1,7 @@
-package pab.aldor.references;
+package aldor.references;
 
 import aldor.AldorLanguage;
+import aldor.EnsureParsingTest;
 import aldor.psi.AldorE6;
 import aldor.psi.AldorIdentifier;
 import com.intellij.psi.PsiElement;
@@ -9,7 +10,6 @@ import com.intellij.psi.PsiReference;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
-import pab.aldor.EnsureParsingTest;
 
 import static aldor.AldorPsiUtils.logPsi;
 

@@ -1,6 +1,5 @@
-package pab.aldor;
+package aldor;
 
-import aldor.AldorTypes;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.tree.IElementType;
@@ -10,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 import static aldor.AldorPsiUtils.logPsi;
-import static pab.aldor.ParserFunctions.getPsiErrorElements;
 
 public class PileModeParsingTests2 extends LightPlatformTestCase {
 
@@ -152,7 +150,7 @@ public class PileModeParsingTests2 extends LightPlatformTestCase {
         System.out.println("Tokens are: " + LexerFunctions.tokens(text));
         PsiElement psi = parseText(text, type);
         logPsi(psi);
-        return getPsiErrorElements(psi);
+        return ParserFunctions.getPsiErrorElements(psi);
     }
 
 

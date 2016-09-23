@@ -1,4 +1,4 @@
-package pab.aldor;
+package aldor;
 
 import aldor.list.ListLexerAdapter;
 import org.junit.Test;

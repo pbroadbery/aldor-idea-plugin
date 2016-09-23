@@ -1,6 +1,5 @@
-package pab.aldor;
+package aldor;
 
-import aldor.AldorPsiUtils;
 import com.intellij.psi.PsiElement;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;

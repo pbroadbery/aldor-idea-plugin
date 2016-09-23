@@ -1,6 +1,5 @@
-package pab.aldor;
+package aldor;
 
-import aldor.SysCmd;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
