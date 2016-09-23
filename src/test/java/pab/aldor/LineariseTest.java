@@ -8,7 +8,6 @@ import java.util.List;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertFalse;
 
 
 public class LineariseTest {
@@ -89,7 +88,7 @@ public class LineariseTest {
         AldorLexerAdapter lla = AldorLexerAdapter.createAndStart("#pile\n#endpile\n");
         Linearise lineariser = new Linearise();
         List<Linearise.PiledSection> pp = lineariser.scanForPiledSections(lla);
-        assertFalse(pp.isEmpty());
+        assertTrue(pp.isEmpty());
     }
 
 }

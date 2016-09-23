@@ -374,8 +374,8 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
         return ParserFunctions.parseText(getProject(), text, eltType);
     }
 
-    private static enum FailReason {
-        Slow, NoCompile;
+    private enum FailReason {
+        Slow, NoCompile
     }
 
     public void testAldorLibrary() {

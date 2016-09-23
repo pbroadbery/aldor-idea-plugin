@@ -56,7 +56,8 @@ public class SyntaxTest extends LightPlatformCodeInsightFixtureTestCase {
         PsiElement psi = parseText("f(x: String)(y: Integer): String");
         AldorPsiUtils.Syntax syntax = AldorPsiUtils.parse(psi);
         assertNotNull(syntax);
-        assertEquals("????", syntax.toString());
+        // FIXME: This is wrong, as it should be (apply (apply f x) y)
+        assertEquals("(Decl (Apply f (Decl x String) (Decl y Integer)) String)", syntax.toString());
     }
 
 

@@ -106,7 +106,7 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
         String text = "[x for x in 1..10]";
         PsiFile file = createAldorFile(text);
         logPsi(file);
-        PsiReference ref = file.findReferenceAt(text.indexOf("x")); // First index in this case
+        PsiReference ref = file.findReferenceAt(text.indexOf('x')); // First index in this case
         assertNotNull(ref);
         PsiElement resolved = ref.resolve();
         assertNotNull(resolved);

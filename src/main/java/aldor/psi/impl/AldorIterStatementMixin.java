@@ -51,10 +51,10 @@ public abstract class AldorIterStatementMixin extends ASTWrapperPsiElement imple
             return Collections.singleton(syntax);
         }
         Declaration decl = syntax.as(Declaration.class);
-        Collection<Syntax> scopes = new ArrayList<>();
         // TODO: The var being defined here should not be included in this pass as it's
         //       really being added to the parent scope.
         assert decl != null;
+        Collection<Syntax> scopes = new ArrayList<>();
         if (decl.lhs().is(Apply.class)) {
             Apply apply = decl.lhs().as(Apply.class);
 
@@ -67,7 +67,6 @@ public abstract class AldorIterStatementMixin extends ASTWrapperPsiElement imple
                 }
             }
         }
-        System.out.println("Scopes are: " + scopes);
         return scopes;
     }
 

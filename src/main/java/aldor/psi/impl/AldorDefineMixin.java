@@ -46,11 +46,6 @@ public abstract class AldorDefineMixin extends ASTWrapperPsiElement implements P
             this.putUserDataIfAbsent(cachedLhsSyntax, syntax);
         }
 
-        // OK, definition here, but could be a whole lotta things.
-        // foo(x: A): Y == ...
-        // foo(x: A)(b: B)x: Y == ...
-        // aaa: Int == ...
-
         for (Syntax childScope: childScopesForDefineLhs(syntax)) {
             System.out.println("Scope: " + childScope);
             if (!childScope.psiElement().processDeclarations(processor, state, lastParent, place)) {
@@ -65,8 +60,8 @@ public abstract class AldorDefineMixin extends ASTWrapperPsiElement implements P
             return Collections.singleton(syntax);
         }
         Declaration decl = syntax.as(Declaration.class);
-        Collection<Syntax> scopes = new ArrayList<>();
         assert decl != null;
+        Collection<Syntax> scopes = new ArrayList<>();
         if (decl.lhs().is(AnyApply.class)) {
             AnyApply<?> apply = decl.lhs().as(AnyApply.class);
             assert apply != null;
