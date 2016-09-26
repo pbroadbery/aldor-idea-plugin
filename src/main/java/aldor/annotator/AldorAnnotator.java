@@ -3,7 +3,7 @@ package aldor.annotator;
 import aldor.AldorPsiUtils;
 import aldor.AldorTypes;
 import aldor.psi.AldorType;
-import aldor.psi.AldorTypeQualifier;
+import aldor.psi.AldorTypeE12;
 import com.intellij.ide.highlighter.JavaHighlightingColors;
 import com.intellij.lang.annotation.Annotation;
 import com.intellij.lang.annotation.AnnotationHolder;
@@ -29,7 +29,7 @@ public class AldorAnnotator implements Annotator {
         if (element instanceof AldorType) {
             annotateType(element, holder);
         }
-        else if (element instanceof AldorTypeQualifier) {
+        else if (element instanceof AldorTypeE12) {
             annotateType(element, holder);
         }
     }

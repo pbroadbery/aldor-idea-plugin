@@ -23,12 +23,10 @@ public class AldorScopeProcessor implements PsiScopeProcessor {
     // Return false to stop processing..
     @Override
     public boolean execute(@NotNull PsiElement element, @NotNull ResolveState state) {
-        System.out.println("Looking for " + name + " in " + element);
         if (!(element instanceof AldorIdentifier)) {
             return true;
         }
         AldorIdentifier id = (AldorIdentifier) element;
-        System.out.println("Looking for " + name + " in " + element);
         if (this.name.equals(id.getText())) {
             this.myResultList.add(id);
             return false;

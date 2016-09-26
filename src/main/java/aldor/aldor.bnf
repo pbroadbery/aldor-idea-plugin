@@ -377,9 +377,11 @@ E11_E12 ::= E12 TypeQualifier*
 E11_Op ::= Op TypeQualifier*
 
 TypeQualifier ::= TQual_2Colon | TQual_At | TQual_Pretend
-TQual_2Colon ::= KW_2Colon E12
-TQual_At ::= KW_At E12
-TQual_Pretend ::= KW_Pretend E12
+TQual_2Colon ::= KW_2Colon Type_E12
+TQual_At ::= KW_At Type_E12
+TQual_Pretend ::= KW_Pretend Type_E12
+
+Type_E12 ::= E12
 
 Type ::= E11_E12
 
@@ -399,7 +401,7 @@ OpQualTail ::= Molecule (KW_Dollar OpQualTail)?
 //| E14 KW_Throw E15
 
 //E14 ::= (KW_With | KW_Add | E15) ((KW_With DeclMolecule) | (KW_Add DeclMolecule) | (KW_Except E15) | (KW_Throw E15))*
-E14 ::= ((E15? (WithPart | AddPart)) | (E15 (KW_Except E15 | KW_Throw E15| Nothing))) (KW_With | KW_Add DeclMolecule)*
+E14 ::= ((E15? (WithPart | AddPart)) | (E15 (KW_Except E15 | KW_Throw E15| Nothing))) (WithPart | AddPart)*
 
 WithPart ::= KW_With DeclMolecule
 AddPart ::= KW_Add DeclMolecule

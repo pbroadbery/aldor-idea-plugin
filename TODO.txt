@@ -7,6 +7,9 @@ Extensions:
 
 Definition Trees & structure
 
+References:
+- Use PsiPolyVariantReference for declaration/implementation stuff	
+
 Module building:
 -- Idea here is that "initially", we'll support one type of module,
    the checked out git repository.
@@ -19,7 +22,8 @@ PileMode
 
 Use intellij log faciities
 
-Clean up pretend, @, $ highlighting
+tests for rename: CodeInsightTestUtil.doInlineRename(new VariableInplaceRenameHandler(), newName, getEditor(), element);
+
 
 -----------------------------
 Completed items:
@@ -52,4 +56,11 @@ Places where a scope contains extra identifiers:
 - Lambdas
 - Comma (scope creeps right)
 - import statements (later)
+
+
+-----------------------------
+
+Analysed file format:
+
+types, names, defns, srcoffset
 

@@ -49,12 +49,6 @@ public abstract class AldorIteratorMixin extends ASTWrapperPsiElement implements
             // This is a bit wrong, as it might be possible to put decls and similar in for loops..
 
             @Override
-            public void visitElement(PsiElement element) {
-                System.out.println("Visit: " + element);
-                super.visitElement(element);
-            }
-
-            @Override
             public void visitId(@NotNull AldorId o) {
                 vars.add(o);
             }

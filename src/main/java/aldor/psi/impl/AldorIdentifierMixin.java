@@ -1,9 +1,12 @@
 package aldor.psi.impl;
 
+import aldor.lexer.AldorTokenTypes;
+import aldor.psi.AldorElementFactory;
 import aldor.psi.AldorIdentifier;
 import aldor.references.AldorNameReference;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.ResolveState;
@@ -13,9 +16,11 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("AbstractClassExtendsConcreteClass")
 public abstract class AldorIdentifierMixin extends ASTWrapperPsiElement implements AldorIdentifier {
+    private static final Logger LOG = Logger.getInstance(AldorIdentifierMixin.class);
 
     protected AldorIdentifierMixin(@NotNull ASTNode node) {
         super(node);
@@ -24,27 +29,45 @@ public abstract class AldorIdentifierMixin extends ASTWrapperPsiElement implemen
 
     @SuppressWarnings("ThrowsRuntimeException")
     @Override
-    public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException {
-        //final AldorElementGenerator generator = new AldorElementGenerator(getProject());
-        // Strip only both quotes in case user wants some exotic name like key'
-        //getNameElement().replace(generator.createStringLiteral(StringUtil.unquoteString(name)));
+    public PsiElement setName(@NonNls @NotNull String newName) throws IncorrectOperationException {
+        AldorIdentifier newIdentifier = AldorElementFactory.createIdentifier(getProject(), newName);
+        ASTNode ref = getNode().findChildByType(AldorTokenTypes.TK_Id);
+        ASTNode newRef = newIdentifier.getNode().findChildByType(AldorTokenTypes.TK_Id);
+        if ((ref != null) && (newRef != null)) {
+            getNode().replaceChild(ref, newRef);
+        }
         return this;
     }
 
     @Override
+    public String getName() {
+        return getText();
+    }
+
+    @Nullable
+    @Override
     public PsiReference getReference() {
-        return new AldorNameReference(this);
+        PsiReference[] arr = getReferences();
+        return (arr.length == 1) ? arr[0] : null;
     }
 
     @NotNull
     @Override
     public PsiReference[] getReferences() {
         final PsiReference[] fromProviders = ReferenceProvidersRegistry.getReferencesFromProviders(this);
-        return ArrayUtil.prepend(new AldorNameReference(this), fromProviders);
+
+        PsiReference ref = new AldorNameReference(this);
+        return ArrayUtil.prepend(ref, fromProviders);
     }
 
     @Override
     public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement place) {
         return processor.execute(this, state);
+    }
+
+    @Nullable
+    @Override
+    public PsiElement getNameIdentifier() {
+        return this.findChildByType(AldorTokenTypes.TK_Id);
     }
 }

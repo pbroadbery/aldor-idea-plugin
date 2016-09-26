@@ -96,7 +96,6 @@ public class AldorParserUtil extends GeneratedParserUtilBase {
         PsiBuilder.Marker m = enter_section_(b);
         boolean r = consumeToken(b, KW_BlkStart);
         r = r && parsePiledContent(b, l);
-        System.out.println("Current token is " + b.getTokenType() + " offs: " + b.getCurrentOffset());
         r = r && blockEnd(b);
         exit_section_(b, m, PILED_EXPRESSION, r);
         return r;
@@ -118,9 +117,7 @@ public class AldorParserUtil extends GeneratedParserUtilBase {
 
     public static boolean parsePiledContent(@NotNull PsiBuilder b, int l) {
         int indentLevel = currentIndentLevel(b);
-        System.out.println("Parsing piled expression.. offset " + b.getCurrentOffset() + " indent: " + indentLevel);
         boolean r = AldorParser.Doc_Expression(b, l + 1);
-        System.out.println("Read expression 1: " + b.getCurrentOffset() + " indent: " + indentLevel);
         int c = current_position_(b);
         while (true) {
             PsiBuilder.Marker m1 = enter_section_(b);
@@ -128,7 +125,7 @@ public class AldorParserUtil extends GeneratedParserUtilBase {
             if (!r1) {
                 r1 = checkCurrentIndent(b, indentLevel);
             } else {
-                System.out.println("Moving to next line " + b.getCurrentOffset());
+                //System.out.println("Moving to next line " + b.getCurrentOffset());
             }
             r1 = r1 && AldorParser.Doc_Expression(b, l + 1);
             exit_section_(b, m1, null, r1);
@@ -146,7 +143,6 @@ public class AldorParserUtil extends GeneratedParserUtilBase {
 
     static boolean checkCurrentIndent(@NotNull PsiBuilder builder, int indentLevel) {
         int currentIndentLevel = currentIndentLevel(builder);
-        System.out.println("Current indent: " + currentIndentLevel + " block indent: " + indentLevel);
         return currentIndentLevel == indentLevel;
     }
 

@@ -9,8 +9,6 @@ import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import org.jetbrains.annotations.NotNull;
 
-import static aldor.AldorPsiUtils.logPsi;
-
 @SuppressWarnings({"AbstractClassExtendsConcreteClass", "AbstractClassWithOnlyOneDirectInheritor"})
 public abstract class AldorDeclMixin extends ASTWrapperPsiElement implements AldorDeclPart {
 
@@ -21,8 +19,6 @@ public abstract class AldorDeclMixin extends ASTWrapperPsiElement implements Ald
     @Override
     public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state,
                                        PsiElement lastParent, @NotNull PsiElement place) {
-        System.out.println("Decl " + this);
-        logPsi(this);
         if (!processor.execute(this, state)) {
             return false;
         }

@@ -5,6 +5,7 @@ import aldor.psi.AldorIterator;
 import aldor.psi.AldorIterators;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
@@ -15,6 +16,7 @@ import static aldor.AldorPsiUtils.Syntax;
 
 @SuppressWarnings("AbstractClassExtendsConcreteClass")
 public abstract class AldorIterStatementMixin extends ASTWrapperPsiElement implements AldorIterRepeatStatement {
+    private static final Logger LOG = Logger.getInstance(AldorIterStatementMixin.class);
     private static final Key<Syntax> cachedLhsSyntax = new Key<>("LhsSyntax");
 
     protected AldorIterStatementMixin(@NotNull ASTNode node) {

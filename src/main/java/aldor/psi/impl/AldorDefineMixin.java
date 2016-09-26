@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static aldor.AldorPsiUtils.Comma;
 import static aldor.AldorPsiUtils.Declaration;
@@ -20,8 +21,8 @@ import static aldor.AldorPsiUtils.Syntax;
 import static aldor.AldorPsiUtils.parse;
 
 @SuppressWarnings({"AbstractClassExtendsConcreteClass", "AbstractClassWithOnlyOneDirectInheritor"})
-public abstract class AldorDefineMixin extends ASTWrapperPsiElement implements PsiElement {
-    private static final Key<Syntax> cachedLhsSyntax = new Key<>("LhsSyntax");
+public abstract class AldorDefineMixin extends ASTWrapperPsiElement {
+    private static final Key<Optional<Syntax>> cachedLhsSyntax = new Key<>("LhsSyntax");
 
     protected AldorDefineMixin(@NotNull ASTNode node) {
         super(node);
@@ -39,23 +40,26 @@ public abstract class AldorDefineMixin extends ASTWrapperPsiElement implements P
         if (lastParent == lhs) {
             return true;
         }
-        Syntax syntax = this.getUserData(cachedLhsSyntax);
+        Optional<Syntax> syntax = this.getUserData(cachedLhsSyntax);
         if (syntax == null) {
-            syntax = parse(lhs);
+            Syntax calculatedSyntax = parse(lhs);
+            syntax = Optional.ofNullable(calculatedSyntax);
             this.putUserDataIfAbsent(cachedLhsSyntax, syntax);
+
         }
 
-        for (Syntax childScope: childScopesForDefineLhs(syntax)) {
-            System.out.println("Scope: " + childScope);
-            if (!childScope.psiElement().processDeclarations(processor, state, lastParent, place)) {
-                return false;
+        if (syntax.isPresent()) {
+            for (Syntax childScope: childScopesForDefineLhs(syntax.get())) {
+                if (!childScope.psiElement().processDeclarations(processor, state, lastParent, place)) {
+                    return false;
+                }
             }
         }
         return true;
     }
 
     Iterable<Syntax> childScopesForDefineLhs(Syntax syntax) {
-        if (!syntax.is(Declaration.class)) {
+        if ((syntax == null) || !syntax.is(Declaration.class)) {
             return Collections.singleton(syntax);
         }
         Declaration decl = syntax.as(Declaration.class);
@@ -77,7 +81,6 @@ public abstract class AldorDefineMixin extends ASTWrapperPsiElement implements P
 
             }
         }
-        System.out.println("Scopes are: " + scopes);
         return scopes;
     }
 

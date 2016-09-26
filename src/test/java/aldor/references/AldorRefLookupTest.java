@@ -81,11 +81,6 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
         assertEquals(text.indexOf("n:"), resolved.getTextOffset());
     }
 
-    private PsiFile createAldorFile(String text) {
-        return createLightFile("foo.as", AldorLanguage.INSTANCE, text);
-    }
-
-
     public void testLookupCurriedArg() {
         String text = "f(n: Integer)(m: Integer): Integer == n+m+1";
         PsiFile file = createAldorFile(text);
@@ -122,6 +117,11 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
         PsiElement resolved = ref.resolve();
         assertNotNull(resolved);
         assertEquals(text.indexOf("x in"), resolved.getTextOffset());
+    }
+
+
+    private PsiFile createAldorFile(String text) {
+        return createLightFile("foo.as", AldorLanguage.INSTANCE, text);
     }
 
     @Override

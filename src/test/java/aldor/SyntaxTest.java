@@ -60,6 +60,14 @@ public class SyntaxTest extends LightPlatformCodeInsightFixtureTestCase {
     }
 
 
+    public void testWithExpression() {
+        PsiElement psi = parseText("Join(R, X) with { this: X; that: Y }");
+        AldorPsiUtils.Syntax syntax = AldorPsiUtils.parse(psi);
+        assertNotNull(syntax);
+        // FIXME: This is wrong - ought to show full type
+        assertEquals("(Other)", syntax.toString());
+    }
+
     private PsiElement parseText(CharSequence text) {
         return ParserFunctions.parseText(getProject(), text);
     }

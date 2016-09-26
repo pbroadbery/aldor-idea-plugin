@@ -1,6 +1,8 @@
 package aldor;
 
+import aldor.psi.AldorAddPart;
 import aldor.psi.AldorDeclPart;
+import aldor.psi.AldorE14;
 import aldor.psi.AldorId;
 import aldor.psi.AldorIdentifier;
 import aldor.psi.AldorInfixedExpr;
@@ -9,6 +11,7 @@ import aldor.psi.AldorJxleftAtom;
 import aldor.psi.AldorLiteral;
 import aldor.psi.AldorParened;
 import aldor.psi.AldorRecursiveVisitor;
+import aldor.psi.AldorWithPart;
 import aldor.psi.JxrightElement;
 import aldor.psi.NegationElement;
 import com.google.common.base.Joiner;
@@ -92,14 +95,23 @@ public final class AldorPsiUtils {
         }
 
         @Override
-        public void visitPsiElement(@NotNull PsiElement o) {
-            System.out.println("Visit: " + o);
-            super.visitPsiElement(o);
+        public void visitNegationElement(@NotNull NegationElement o) {
+            visitStack.peek().add(new Other(o.getLastChild()));
         }
 
         @Override
-        public void visitNegationElement(@NotNull NegationElement o) {
-            visitStack.peek().add(new Other(o.getLastChild()));
+        public void visitE14(@NotNull AldorE14 o) {
+            List<Syntax> fnOrAtom = Lists.newArrayList();
+            visitStack.push(fnOrAtom);
+            o.acceptChildren(this);
+            visitStack.pop();
+            if (fnOrAtom.size() == 1) {
+                visitStack.peek().add(fnOrAtom.get(0));
+            }
+            else {
+                // FIXME: Obviously wrong(!)
+                visitStack.peek().add(new Other(o));
+            }
         }
 
         @Override
@@ -181,6 +193,19 @@ public final class AldorPsiUtils {
         }
 
         @Override
+        public void visitWithPart(@NotNull AldorWithPart o) {
+            // This isn't ideal, and we can parse the underlying stuff, but
+            // leave for the moment
+            visitStack.peek().add(new With(o));
+        }
+
+        @Override
+        public void visitAddPart(@NotNull AldorAddPart o) {
+            visitStack.peek().add(new Add(o));
+        }
+
+
+        @Override
         public void visitInfixedExpr(@NotNull AldorInfixedExpr expr) {
             List<Syntax> exprContent = Lists.newArrayList();
             visitStack.push(exprContent);
@@ -189,6 +214,9 @@ public final class AldorPsiUtils {
             //noinspection ObjectEquality
             assert last == exprContent;
             Syntax lhs = exprContent.get(0);
+            if (exprContent.size() > 1) {
+                System.out.println("Exprs are: " + exprContent);
+            }
             for (int i=1; i<exprContent.size(); i+=2) {
                 Syntax op = exprContent.get(i);
                 lhs = new InfixApply(expr, op, lhs, exprContent.get(i+1));
@@ -245,7 +273,7 @@ public final class AldorPsiUtils {
 
         @Override
         public Iterable<Syntax> children() {
-            return arguments;
+            return Collections.unmodifiableList(arguments);
         }
 
         public Syntax child(int n) {
@@ -358,7 +386,39 @@ public final class AldorPsiUtils {
         public Iterable<Syntax> children() {
             return Collections.emptyList();
         }
+
+        @Override
+        public String toString() {
+            return "(" + name() + ")";
+        }
+
     }
+
+    public static class With extends Other {
+
+        With(PsiElement other) {
+            super(other);
+        }
+
+        @Override
+        String name() {
+            return "With";
+        }
+    }
+
+
+    public static class Add extends Other {
+
+        Add(PsiElement other) {
+            super(other);
+        }
+        @Override
+        String name() {
+            return "Add";
+        }
+
+    }
+
 
     public static class Id extends Syntax {
         private final AldorIdentifier id;
