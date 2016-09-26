@@ -1,7 +1,7 @@
 package aldor.psi;
 
-import aldor.AldorFile;
-import aldor.AldorFileType;
+import aldor.file.AldorFile;
+import aldor.file.AldorFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.util.PsiTreeUtil;

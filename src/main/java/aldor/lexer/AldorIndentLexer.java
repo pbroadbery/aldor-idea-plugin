@@ -1,5 +1,6 @@
 package aldor.lexer;
 
+import aldor.lexer.AldorLexerAdapter.LexMode;
 import com.google.common.annotations.VisibleForTesting;
 import com.intellij.lexer.DelegateLexer;
 import com.intellij.lexer.LexerPosition;
@@ -96,4 +97,13 @@ public class AldorIndentLexer extends DelegateLexer {
     public int indentLevel(int c) {
         return lineariser.indentLevel(c);
     }
+
+    public boolean isSpadMode() {
+        return getAldorDelegate().mode() == LexMode.Spad;
+    }
+
+    public boolean isAldorMode() {
+        return getAldorDelegate().mode() == LexMode.Aldor;
+    }
+
 }

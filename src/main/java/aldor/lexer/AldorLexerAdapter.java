@@ -5,14 +5,28 @@ import com.intellij.lexer.FlexAdapter;
 import java.io.Reader;
 import java.util.Arrays;
 
+import static aldor.lexer.AldorLexerAdapter.LexMode.Aldor;
+
 public class AldorLexerAdapter extends FlexAdapter {
+
+    public enum LexMode {
+        Aldor, Spad
+    }
+    private final LexMode mode;
+
     public AldorLexerAdapter() {
-        super(new AldorLexer(null));
+        this(Aldor, null);
     }
 
     public AldorLexerAdapter(Reader reader) {
-        super(new AldorLexer(reader));
+        this(Aldor, reader);
     }
+
+    public AldorLexerAdapter(LexMode mode, Reader reader) {
+        super(new AldorLexer(reader));
+        this.mode = mode;
+    }
+
 
     @Override
     public void advance() {
@@ -44,4 +58,9 @@ public class AldorLexerAdapter extends FlexAdapter {
         lla.start(text);
         return lla;
     }
+
+    public LexMode mode() {
+        return mode;
+    }
+
 }

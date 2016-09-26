@@ -1,7 +1,7 @@
 package aldor.annotator;
 
-import aldor.AldorLanguage;
 import aldor.EnsureParsingTest;
+import aldor.language.AldorLanguage;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiFile;
 import com.intellij.testFramework.LightProjectDescriptor;

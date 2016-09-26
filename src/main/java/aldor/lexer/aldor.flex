@@ -37,6 +37,7 @@ SYSCMD=#[^\n\r]*
 SYSCMD_IF=#if[ \t][^\r\n]*
 SYSCMD_ENDIF=#endif[^\r\n]*
 IF_LINE=[^\r\n]+
+SPAD_SYSCMD=\)[^\r\n]*
 %%
 /*
 "TK_Id" { yybegin(NORMAL); return AldorTokenTypes.TK_Id; }
@@ -173,6 +174,7 @@ IF_LINE=[^\r\n]+
     { SYSCMD_IF } { yybegin(IF_TEXT); return AldorTokenTypes.TK_SysCmdIf;}
     { SYSCMD_ENDIF } { yybegin(NORMAL); return AldorTokenTypes.TK_SysCmdEndIf;}
     { SYSCMD} { yybegin(NORMAL); return AldorTokenTypes.TK_SysCmd;}
+    { SPAD_SYSCMD} { yybegin(NORMAL); return AldorTokenTypes.TK_SysCmd;}
     { INDENT } { yybegin(NORMAL); return AldorTokenTypes.KW_Indent; }
     [^] { yypushback(1); yybegin(NORMAL); }
 }

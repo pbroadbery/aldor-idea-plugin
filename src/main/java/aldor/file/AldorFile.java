@@ -1,5 +1,6 @@
-package aldor;
+package aldor.file;
 
+import aldor.language.AldorLanguage;
 import com.intellij.extapi.psi.PsiFileBase;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.psi.FileViewProvider;

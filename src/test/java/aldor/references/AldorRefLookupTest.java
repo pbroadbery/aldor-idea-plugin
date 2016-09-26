@@ -1,7 +1,7 @@
 package aldor.references;
 
-import aldor.AldorLanguage;
 import aldor.EnsureParsingTest;
+import aldor.language.AldorLanguage;
 import aldor.psi.AldorE6;
 import aldor.psi.AldorIdentifier;
 import com.intellij.psi.PsiElement;
@@ -10,8 +10,6 @@ import com.intellij.psi.PsiReference;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
-
-import static aldor.AldorPsiUtils.logPsi;
 
 public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase {
 
@@ -48,16 +46,29 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
         assertEquals(text.indexOf("n:"), resolved.getTextOffset());
     }
 
+    public void testLookupNegationDefinition() {
+        String text = "-(x: X): Integer == -x";
+        PsiFile file = createAldorFile(text);
+
+        PsiReference ref = file.findReferenceAt(text.lastIndexOf('x'));
+        assertNotNull(ref);
+        PsiElement resolved = ref.resolve();
+        assertNotNull(resolved);
+        assertEquals(text.indexOf('x'), resolved.getTextOffset());
+    }
+
+
     public void testLookupInfixArg() {
         String text = "(+)(n: Integer, m: Integer): Integer == n+m";
         PsiFile file = createAldorFile(text);
-
         PsiReference ref = file.findReferenceAt(text.indexOf("n+m"));
         assertNotNull(ref);
         PsiElement resolved = ref.resolve();
         assertNotNull(resolved);
         assertEquals(text.indexOf("n:"), resolved.getTextOffset());
     }
+
+
 
     public void testLookupNotPresent() {
         String text = "f(n: Integer): Integer == foo";
@@ -111,7 +122,7 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
     public void testLookupCollectionVar() {
         String text = "[x for x in 1..10]";
         PsiFile file = createAldorFile(text);
-        logPsi(file);
+
         PsiReference ref = file.findReferenceAt(text.indexOf('x')); // First index in this case
         assertNotNull(ref);
         PsiElement resolved = ref.resolve();

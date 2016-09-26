@@ -1,7 +1,7 @@
 package aldor.parser;
 
-import aldor.AldorFile;
-import aldor.AldorLanguage;
+import aldor.file.AldorFile;
+import aldor.language.AldorLanguage;
 import aldor.lexer.AldorIndentLexer;
 import aldor.lexer.AldorLexerAdapter;
 import aldor.lexer.AldorTokenTypes;

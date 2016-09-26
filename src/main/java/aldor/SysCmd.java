@@ -41,8 +41,8 @@ public class SysCmd {
 
     @NotNull
     public static SysCmd parse(@NotNull String text) {
-        if (text.charAt(0) != '#') {
-            throw new IllegalArgumentException("Text must start with # " + text);
+        if ((text.charAt(0) != '#') && (text.charAt(0) != ')')) {
+            throw new IllegalArgumentException("Text must start with '#' or ')'" + text);
         }
         String[] words = text.substring(1).split(" ");
         SysCommandType type = SysCommandType.lookup(words[0]);

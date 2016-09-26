@@ -1,6 +1,6 @@
 package aldor.parser;
 
-import aldor.AldorLanguage;
+import aldor.language.AldorLanguage;
 import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.NonNls;
 

@@ -1,4 +1,4 @@
-package aldor;
+package aldor.language;
 
 import com.intellij.lang.Language;
 

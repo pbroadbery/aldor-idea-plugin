@@ -11,10 +11,8 @@ import java.util.Objects;
 
 import static aldor.lexer.AldorTokenTypes.KW_BlkEnd;
 import static aldor.lexer.AldorTokenTypes.KW_BlkNext;
-import static aldor.lexer.AldorTokenTypes.KW_BlkStart;
 import static aldor.lexer.AldorTokenTypes.KW_Repeat;
 import static aldor.lexer.AldorTokenTypes.KW_Semicolon;
-import static aldor.parser.AldorTypes.PILED_EXPRESSION;
 
 @SuppressWarnings({"ExtendsUtilityClass", "StaticMethodOnlyUsedInOneClass"})
 public class AldorParserUtil extends GeneratedParserUtilBase {
@@ -85,7 +83,7 @@ public class AldorParserUtil extends GeneratedParserUtilBase {
         return false;
     }
 
-
+/*
     public static boolean parsePiledExpression(@NotNull  PsiBuilder b, int l) {
         if (!recursion_guard_(b, l, "Piled_Expression")) {
             return false;
@@ -100,7 +98,7 @@ public class AldorParserUtil extends GeneratedParserUtilBase {
         exit_section_(b, m, PILED_EXPRESSION, r);
         return r;
     }
-
+*/
     private static boolean blockEnd(@NotNull PsiBuilder builder) {
 
         boolean r = consumeToken(builder, KW_BlkEnd);
@@ -115,9 +113,9 @@ public class AldorParserUtil extends GeneratedParserUtilBase {
         return r;
     }
 
-    public static boolean parsePiledContent(@NotNull PsiBuilder b, int l) {
+    public static boolean parsePiledContent(@NotNull PsiBuilder b, int l, String type) {
         int indentLevel = currentIndentLevel(b);
-        boolean r = AldorParser.Doc_Expression(b, l + 1);
+        boolean r = parseOneExpression(b, l + 1, type);
         int c = current_position_(b);
         while (true) {
             PsiBuilder.Marker m1 = enter_section_(b);
@@ -127,7 +125,7 @@ public class AldorParserUtil extends GeneratedParserUtilBase {
             } else {
                 //System.out.println("Moving to next line " + b.getCurrentOffset());
             }
-            r1 = r1 && AldorParser.Doc_Expression(b, l + 1);
+            r1 = r1 && parseOneExpression(b, l + 1, type);
             exit_section_(b, m1, null, r1);
             if (!r1) {
                 break;
@@ -141,6 +139,29 @@ public class AldorParserUtil extends GeneratedParserUtilBase {
         return r;
     }
 
+    @SuppressWarnings("InnerClassTooDeeplyNested")
+    private enum ExprParser {
+        Pile {
+            @Override
+            public boolean parse(@NotNull PsiBuilder b, int l) {
+                return AldorParser.Doc_Expression(b, l);
+            }
+        },
+        SpadTopLevel {
+            @Override
+            public boolean parse(@NotNull PsiBuilder b, int l) {
+                return AldorParser.SpadTopLevelExpression(b, l);
+            }
+        };
+
+        public abstract boolean parse(@NotNull PsiBuilder b, int l);
+    }
+
+    private static boolean parseOneExpression(@NotNull PsiBuilder b, int l, String type) {
+        return ExprParser.valueOf(type).parse(b, l);
+    }
+
+
     static boolean checkCurrentIndent(@NotNull PsiBuilder builder, int indentLevel) {
         int currentIndentLevel = currentIndentLevel(builder);
         return currentIndentLevel == indentLevel;
@@ -149,6 +170,16 @@ public class AldorParserUtil extends GeneratedParserUtilBase {
     public static int currentIndentLevel(@NotNull PsiBuilder builder) {
         AldorIndentLexer lexer = (AldorIndentLexer) ((Builder) builder).getLexer();
         return lexer.indentLevel(builder.getCurrentOffset());
+    }
+
+    static boolean isSpadMode(@NotNull PsiBuilder builder, int indentLevel) {
+        AldorIndentLexer lexer = (AldorIndentLexer) ((Builder) builder).getLexer();
+        return lexer.isSpadMode();
+    }
+
+    static boolean isAldorMode(@NotNull PsiBuilder builder, int indentLevel) {
+        AldorIndentLexer lexer = (AldorIndentLexer) ((Builder) builder).getLexer();
+        return lexer.isAldorMode();
     }
 
 }

@@ -1,5 +1,6 @@
-package aldor;
+package aldor.file;
 
+import aldor.language.AldorLanguage;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import org.jetbrains.annotations.NotNull;

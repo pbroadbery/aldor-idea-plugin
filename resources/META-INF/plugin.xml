@@ -25,8 +25,7 @@
     -->
 
     <extensions defaultExtensionNs="com.intellij">
-        <fileTypeFactory implementation="aldor.AldorFileTypeFactory"/>
-        <lang.parserDefinition language="Aldor" implementationClass="aldor.parser.AldorParserDefinition"/>
+        <!-- Common-->
 
         <lang.syntaxHighlighterFactory language="Aldor" implementationClass="aldor.highlighter.AldorSyntaxHighlighterFactory"/>
         <lang.braceMatcher language="Aldor" implementationClass="aldor.highlighter.AldorBracketMatcher"/>
@@ -38,6 +37,14 @@
         <annotator language="Aldor" implementationClass="aldor.annotator.AldorAnnotator"/>
 
         <lang.refactoringSupport language="Aldor" implementationClass="aldor.references.AldorRefactoringSupportProvider"/>
+
+        <!-- Aldor extras -->
+        <fileTypeFactory implementation="aldor.file.AldorFileTypeFactory"/>
+        <lang.parserDefinition language="Aldor" implementationClass="aldor.parser.AldorParserDefinition"/>
+
+        <!-- Spad extras -->
+        <fileTypeFactory implementation="aldor.file.SpadFileTypeFactory"/>
+        <lang.parserDefinition language="Spad" implementationClass="aldor.parser.SpadParserDefinition"/>
 
     </extensions>
 

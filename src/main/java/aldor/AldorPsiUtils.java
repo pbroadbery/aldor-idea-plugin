@@ -213,11 +213,17 @@ public final class AldorPsiUtils {
             List<Syntax>  last = visitStack.pop();
             //noinspection ObjectEquality
             assert last == exprContent;
-            Syntax lhs = exprContent.get(0);
-            if (exprContent.size() > 1) {
-                System.out.println("Exprs are: " + exprContent);
+            Syntax lhs;
+            int i=1;
+            if ((exprContent.size() % 2) == 0) {
+                lhs = new Apply(expr, exprContent.subList(0, 2));
+                i++;
             }
-            for (int i=1; i<exprContent.size(); i+=2) {
+            else {
+                lhs = exprContent.get(0);
+            }
+
+            for (; i<exprContent.size(); i+=2) {
                 Syntax op = exprContent.get(i);
                 lhs = new InfixApply(expr, op, lhs, exprContent.get(i+1));
             }
@@ -291,8 +297,8 @@ public final class AldorPsiUtils {
         public abstract List<Syntax> arguments();
     }
 
-    public static class Apply extends AnyApply<JxrightElement> {
-        Apply(JxrightElement element, @NotNull List<Syntax> arguments) {
+    public static class Apply extends AnyApply<PsiElement> {
+        Apply(PsiElement element, @NotNull List<Syntax> arguments) {
             super(element, arguments);
         }
 
