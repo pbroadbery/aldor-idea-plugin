@@ -25,10 +25,6 @@
     -->
 
     <extensions defaultExtensionNs="com.intellij">
-        <!-- Add your extensions here -->
-        <fileTypeFactory implementation="aldor.list.ListFileTypeFactory"/>
-        <lang.parserDefinition language="List" implementationClass="aldor.list.ListParserDefinition"/>
-
         <fileTypeFactory implementation="aldor.AldorFileTypeFactory"/>
         <lang.parserDefinition language="Aldor" implementationClass="aldor.AldorParserDefinition"/>
 

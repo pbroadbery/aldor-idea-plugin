@@ -1,12 +1,12 @@
 {
-  parserUtilClass="aldor.AldorParserUtil"
+  parserUtilClass="aldor.parser.AldorParserUtil"
 
-  parserClass="aldor.AldorParser"
+  parserClass="aldor.parser.AldorParser"
 
   extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
 
-  elementTypeHolderClass="aldor.AldorTypes"
-  elementTypeClass="aldor.AldorElementType"
+  elementTypeHolderClass="aldor.parser.AldorTypes"
+  elementTypeClass="aldor.parser.AldorElementType"
 
   tokenTypeClass="aldor.lexer.AldorTokenType"
   tokenTypeFactory = "aldor.lexer.AldorTokenTypes.createToken"

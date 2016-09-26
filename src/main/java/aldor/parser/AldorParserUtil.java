@@ -1,5 +1,6 @@
-package aldor;
+package aldor.parser;
 
+import aldor.AldorParserDefinition;
 import aldor.lexer.AldorIndentLexer;
 import aldor.lexer.AldorTokenTypes;
 import com.intellij.lang.PsiBuilder;
@@ -9,12 +10,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-import static aldor.AldorTypes.PILED_EXPRESSION;
 import static aldor.lexer.AldorTokenTypes.KW_BlkEnd;
 import static aldor.lexer.AldorTokenTypes.KW_BlkNext;
 import static aldor.lexer.AldorTokenTypes.KW_BlkStart;
 import static aldor.lexer.AldorTokenTypes.KW_Repeat;
 import static aldor.lexer.AldorTokenTypes.KW_Semicolon;
+import static aldor.parser.AldorTypes.PILED_EXPRESSION;
 
 @SuppressWarnings({"ExtendsUtilityClass", "StaticMethodOnlyUsedInOneClass"})
 public class AldorParserUtil extends GeneratedParserUtilBase {

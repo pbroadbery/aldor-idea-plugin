@@ -3,6 +3,8 @@ package aldor;
 import aldor.lexer.AldorIndentLexer;
 import aldor.lexer.AldorLexerAdapter;
 import aldor.lexer.AldorTokenTypes;
+import aldor.parser.AldorParser;
+import aldor.parser.AldorTypes;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import com.intellij.lang.ParserDefinition;

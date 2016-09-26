@@ -1,5 +1,6 @@
 package aldor;
 
+import aldor.parser.AldorTypes;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.tree.IElementType;

@@ -2,6 +2,7 @@ package aldor;
 
 import aldor.lexer.AldorIndentLexer;
 import aldor.lexer.AldorLexerAdapter;
+import aldor.parser.AldorTypes;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.tree.IElementType;
