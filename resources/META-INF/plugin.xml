@@ -26,7 +26,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <fileTypeFactory implementation="aldor.AldorFileTypeFactory"/>
-        <lang.parserDefinition language="Aldor" implementationClass="aldor.AldorParserDefinition"/>
+        <lang.parserDefinition language="Aldor" implementationClass="aldor.parser.AldorParserDefinition"/>
 
         <lang.syntaxHighlighterFactory language="Aldor" implementationClass="aldor.highlighter.AldorSyntaxHighlighterFactory"/>
         <lang.braceMatcher language="Aldor" implementationClass="aldor.highlighter.AldorBracketMatcher"/>

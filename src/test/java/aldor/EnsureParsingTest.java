@@ -1,5 +1,6 @@
 package aldor;
 
+import aldor.parser.AldorParserDefinition;
 import aldor.parser.AldorTypes;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Lists;

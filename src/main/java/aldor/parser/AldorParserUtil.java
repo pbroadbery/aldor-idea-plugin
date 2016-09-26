@@ -1,6 +1,5 @@
 package aldor.parser;
 
-import aldor.AldorParserDefinition;
 import aldor.lexer.AldorIndentLexer;
 import aldor.lexer.AldorTokenTypes;
 import com.intellij.lang.PsiBuilder;
