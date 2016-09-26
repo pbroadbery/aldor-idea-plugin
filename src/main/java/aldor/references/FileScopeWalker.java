@@ -6,7 +6,7 @@ import com.intellij.psi.scope.PsiScopeProcessor;
 
 public class FileScopeWalker {
 
-    public void resolveAndWalk(PsiScopeProcessor scopeProcessor, PsiElement initial) {
+    public static void resolveAndWalk(PsiScopeProcessor scopeProcessor, PsiElement initial) {
         PsiElement thisScope = initial.getParent();
         PsiElement lastScope = initial;
         ResolveState state = ResolveState.initial();

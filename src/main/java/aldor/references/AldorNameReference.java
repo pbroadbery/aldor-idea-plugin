@@ -1,6 +1,5 @@
 package aldor.references;
 
-import aldor.AldorLanguage;
 import aldor.psi.AldorIdentifier;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
@@ -10,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import static aldor.AldorPsiUtils.logPsi;
+import static aldor.references.FileScopeWalker.resolveAndWalk;
 
 public class AldorNameReference extends PsiReferenceBase<AldorIdentifier> {
     public static final Object[] NO_VARIANTS = new Object[0];
@@ -23,7 +23,7 @@ public class AldorNameReference extends PsiReferenceBase<AldorIdentifier> {
     public PsiElement resolve() {
 
         AldorScopeProcessor scopeProcessor = new AldorScopeProcessor(getElement().getText());
-        AldorLanguage.INSTANCE.scopeWalker().resolveAndWalk(scopeProcessor, getElement());
+        resolveAndWalk(scopeProcessor, getElement());
 
         return scopeProcessor.getResult();
     }
