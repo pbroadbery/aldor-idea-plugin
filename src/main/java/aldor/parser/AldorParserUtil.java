@@ -99,7 +99,8 @@ public class AldorParserUtil extends GeneratedParserUtilBase {
         return r;
     }
 */
-    private static boolean blockEnd(@NotNull PsiBuilder builder) {
+    @SuppressWarnings("UnusedParameters")
+    public static boolean blockEnd(@NotNull PsiBuilder builder, int l) {
 
         boolean r = consumeToken(builder, KW_BlkEnd);
         if (!r) {
@@ -118,6 +119,9 @@ public class AldorParserUtil extends GeneratedParserUtilBase {
         boolean r = parseOneExpression(b, l + 1, type);
         int c = current_position_(b);
         while (true) {
+            if (b.eof()) {
+                break;
+            }
             PsiBuilder.Marker m1 = enter_section_(b);
             boolean r1 = consumeToken(b, KW_BlkNext);
             if (!r1) {

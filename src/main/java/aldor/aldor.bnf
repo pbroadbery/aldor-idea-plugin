@@ -574,7 +574,7 @@ private enlist1a_Labelled_SEMICOLON ::= Labelled (Semicolon Labelled)* Semicolon
 TopLevel ::= CurlyContents_Labelled (KW_StartPile Piled_Content KW_EndPile?)?
 
 //Piled_E ::= KW_BlkStart PileContents_E KW_BlkEnd
-Piled_Expression ::= KW_BlkStart Piled_Content KW_BlkEnd
+Piled_Expression ::= KW_BlkStart Piled_Content <<blockEnd>>
 Piled_Content ::= <<parsePiledContent "Pile">>
 //Piled_Expression ::= KW_BlkStart PileContents_Expression <<backTab>>
 //Piled_Expression ::= KW_BlkStart Doc_Expression (KW_BlkNext Doc_Expression)* KW_BlkNext? <<backTab>>

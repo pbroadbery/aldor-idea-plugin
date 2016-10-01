@@ -2,6 +2,7 @@ package aldor.parser;
 
 import aldor.lexer.AldorIndentLexer;
 import aldor.lexer.AldorLexerAdapter;
+import aldor.lexer.LexerFunctions;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.tree.IElementType;
@@ -106,6 +107,7 @@ public class PileModeParsingTest extends LightPlatformCodeInsightTestCase {
 
     @SuppressWarnings("SameParameterValue")
     private PsiElement parseText(CharSequence text, IElementType elementType) {
+        System.out.println(LexerFunctions.tokens(text));
         return ParserFunctions.parseText(getProject(), text, elementType);
     }
 
