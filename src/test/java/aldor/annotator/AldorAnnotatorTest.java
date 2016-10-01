@@ -1,8 +1,7 @@
 package aldor.annotator;
 
-import aldor.EnsureParsingTest;
 import aldor.language.AldorLanguage;
-import com.intellij.psi.FileViewProvider;
+import aldor.parser.EnsureParsingTest;
 import com.intellij.psi.PsiFile;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
@@ -17,7 +16,7 @@ public class AldorAnnotatorTest extends LightPlatformCodeInsightFixtureTestCase 
         PsiFile file = createAldorFile(text);
         logPsi(file);
 
-        FileViewProvider vp = getPsiManager().findViewProvider(file.getVirtualFile());
+        //FileViewProvider vp = getPsiManager().findViewProvider(file.getVirtualFile());
 
     }
 

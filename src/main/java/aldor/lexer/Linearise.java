@@ -1,7 +1,6 @@
 package aldor.lexer;
 
-import aldor.SysCmd;
-import aldor.SysCmd.SysCommandType;
+import aldor.lexer.SysCmd.SysCommandType;
 import com.intellij.psi.tree.IElementType;
 
 import java.util.ArrayList;

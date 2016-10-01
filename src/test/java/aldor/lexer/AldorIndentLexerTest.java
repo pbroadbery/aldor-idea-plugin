@@ -1,9 +1,8 @@
-package aldor;
+package aldor.lexer;
 
-import aldor.lexer.AldorIndentLexer;
-import aldor.lexer.AldorLexerAdapter;
 import com.google.common.collect.Lists;
 import com.intellij.psi.tree.IElementType;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.List;
@@ -41,7 +40,7 @@ public class AldorIndentLexerTest {
 
         unit.start("\nWords\n");
 
-        assertEquals(Lists.newArrayList(KW_NewLine, TK_Id, KW_NewLine), LexerFunctions.readTokens(unit));
+        Assert.assertEquals(Lists.newArrayList(KW_NewLine, TK_Id, KW_NewLine), LexerFunctions.readTokens(unit));
     }
 
 
@@ -393,7 +392,7 @@ public class AldorIndentLexerTest {
     @Test
     public void testPiledDeclaration() {
         AldorIndentLexer unit = new AldorIndentLexer(new AldorLexerAdapter());
-
+        // Currently a bit broken.. needs to be fixed somehow.
         unit.start("#pile\nFoo:\n  Category == with");
 
         List<IElementType> tokens = LexerFunctions.readTokens(unit);

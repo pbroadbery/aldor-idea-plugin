@@ -1,4 +1,4 @@
-package aldor;
+package aldor.lexer;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

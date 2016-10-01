@@ -1,6 +1,6 @@
-package aldor;
+package aldor.parser;
 
-import aldor.parser.AldorTypes;
+import aldor.lexer.LexerFunctions;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.tree.IElementType;

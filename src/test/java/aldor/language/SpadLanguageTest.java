@@ -1,8 +1,7 @@
-package aldor.spad;
+package aldor.language;
 
-import aldor.EnsureParsingTest;
-import aldor.ParserFunctions;
-import aldor.language.SpadLanguage;
+import aldor.parser.EnsureParsingTest;
+import aldor.parser.ParserFunctions;
 import com.intellij.psi.PsiFile;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;

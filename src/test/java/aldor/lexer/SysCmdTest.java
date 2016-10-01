@@ -1,4 +1,4 @@
-package aldor;
+package aldor.lexer;
 
 import org.junit.Test;
 

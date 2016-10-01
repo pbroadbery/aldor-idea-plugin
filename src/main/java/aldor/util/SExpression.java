@@ -2,7 +2,6 @@ package aldor.util;
 
 import aldor.util.sexpr.SExpressionReader;
 import aldor.util.sexpr.SExpressionTypes;
-import aldor.util.sexpr.SxType;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -13,6 +12,7 @@ import java.util.AbstractSequentialList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 import static aldor.util.SymbolPolicy.NORMAL;
@@ -141,7 +141,23 @@ public abstract class SExpression {
 		return new SExpressionList(this);
 	}
 
-	/**
+	public Map<SExpression, SExpression> asAssociationList() {
+        return new AssociationList(this);
+    }
+
+    public SExpression nth(int i) {
+        SExpression result = this;
+        if (i < 0) {
+            throw new IllegalArgumentException("i must be non-negative");
+        }
+        while (i>0) {
+            i = i - 1;
+            result = result.cdr();
+        }
+        return result.car();
+    }
+
+    /**
 	 * Just enough to turn SExpression into a list.
 	 * Don't expect it to be efficient, especially with random access queries.
 	 * @author pab

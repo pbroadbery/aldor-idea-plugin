@@ -1,8 +1,7 @@
-package aldor;
+package aldor.parser;
 
 import aldor.lexer.AldorIndentLexer;
 import aldor.lexer.AldorLexerAdapter;
-import aldor.parser.AldorTypes;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.tree.IElementType;
@@ -92,6 +91,7 @@ public class PileModeParsingTest extends LightPlatformCodeInsightTestCase {
     }
 
     public void testPiledDeclaration() {
+        // Currently broken, needs fixing
         PsiElement psi = parseText("" +
                 "#pile\n" +
                 "Foo:\n  Category == with\n  aa: () -> ()\nBar(X: String): with == add\n");

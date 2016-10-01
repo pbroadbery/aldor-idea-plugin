@@ -1,7 +1,7 @@
 package aldor.references;
 
-import aldor.EnsureParsingTest;
 import aldor.language.AldorLanguage;
+import aldor.parser.EnsureParsingTest;
 import aldor.psi.AldorE6;
 import aldor.psi.AldorIdentifier;
 import com.intellij.psi.PsiElement;

@@ -1,0 +1,83 @@
+package aldor.symbolfile;
+
+import aldor.util.SExpression;
+
+import static aldor.util.SExpression.symbol;
+
+public class SymbolFileSymbols {
+    public static final SExpression Id = symbol("Id");
+    public static final SExpression IdSy = symbol("IdSy");
+    public static final SExpression Blank = symbol("Blank");
+    public static final SExpression DocText = symbol("DocText");
+    public static final SExpression LitInteger = symbol("LitInteger");
+    public static final SExpression LitFloat = symbol("LitFloat");
+    public static final SExpression LitString = symbol("LitString");
+    public static final SExpression Add = symbol("Add");
+    public static final SExpression And = symbol("And");
+    public static final SExpression Apply = symbol("Apply");
+    public static final SExpression Assert = symbol("Assert");
+    public static final SExpression Assign = symbol("Assign");
+    public static final SExpression Break = symbol("Break");
+    public static final SExpression Builtin = symbol("Builtin");
+    public static final SExpression CoerceTo = symbol("CoerceTo");
+    public static final SExpression Collect = symbol("Collect");
+    public static final SExpression Comma = symbol("Comma");
+    public static final SExpression Declare = symbol("Declare");
+    public static final SExpression Default = symbol("Default");
+    public static final SExpression Define = symbol("Define");
+    public static final SExpression DDefine = symbol("DDefine");
+    public static final SExpression Delay = symbol("Delay");
+    public static final SExpression Do = symbol("Do");
+    public static final SExpression Documented = symbol("Documented");
+    public static final SExpression Except = symbol("Except");
+    public static final SExpression Exit = symbol("Exit");
+    public static final SExpression Export = symbol("Export");
+    public static final SExpression Extend = symbol("Extend");
+    public static final SExpression Fix = symbol("Fix");
+    public static final SExpression Fluid = symbol("Fluid");
+    public static final SExpression For = symbol("For");
+    public static final SExpression Foreign = symbol("Foreign");
+    public static final SExpression Free = symbol("Free");
+    public static final SExpression Generate = symbol("Generate");
+    public static final SExpression Goto = symbol("Goto");
+    public static final SExpression Has = symbol("Has");
+    public static final SExpression Hide = symbol("Hide");
+    public static final SExpression If = symbol("If");
+    public static final SExpression Import = symbol("Import");
+    public static final SExpression Inline = symbol("Inline");
+    public static final SExpression Iterate = symbol("Iterate");
+    public static final SExpression Label = symbol("Label");
+    public static final SExpression Lambda = symbol("Lambda");
+    public static final SExpression Let = symbol("Let");
+    public static final SExpression Local = symbol("Local");
+    public static final SExpression Macro = symbol("Macro");
+    public static final SExpression MDefine = symbol("MDefine");
+    public static final SExpression MLambda = symbol("MLambda");
+    public static final SExpression Never = symbol("Never");
+    public static final SExpression Not = symbol("Not");
+    public static final SExpression Nothing = symbol("Nothing");
+    public static final SExpression Or = symbol("Or");
+    public static final SExpression Paren = symbol("Paren");
+    public static final SExpression PLambda = symbol("PLambda");
+    public static final SExpression PretendTo = symbol("PretendTo");
+    public static final SExpression Qualify = symbol("Qualify");
+    public static final SExpression Quote = symbol("Quote");
+    public static final SExpression Raise = symbol("Raise");
+    public static final SExpression Reference = symbol("Reference");
+    public static final SExpression Repeat = symbol("Repeat");
+    public static final SExpression RestrictTo = symbol("RestrictTo");
+    public static final SExpression Return = symbol("Return");
+    public static final SExpression Select = symbol("Select");
+    public static final SExpression Sequence = symbol("Sequence");
+    public static final SExpression Test = symbol("Test");
+    public static final SExpression Try = symbol("Try");
+    public static final SExpression Unit = symbol("Unit");
+    public static final SExpression Where = symbol("Where");
+    public static final SExpression While = symbol("While");
+    public static final SExpression With = symbol("With");
+    public static final SExpression Yield = symbol("Yield");
+
+    public static final SExpression MapsTo = symbol("->");
+    public static final SExpression SrcPos = symbol("srcpos");
+
+}

@@ -1,7 +1,5 @@
-package aldor;
+package aldor.lexer;
 
-import aldor.lexer.AldorIndentLexer;
-import aldor.lexer.AldorLexerAdapter;
 import com.google.common.collect.Lists;
 import com.intellij.lexer.Lexer;
 import com.intellij.psi.tree.IElementType;

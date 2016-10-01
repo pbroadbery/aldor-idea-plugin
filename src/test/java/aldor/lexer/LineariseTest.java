@@ -1,7 +1,5 @@
-package aldor;
+package aldor.lexer;
 
-import aldor.lexer.AldorLexerAdapter;
-import aldor.lexer.Linearise;
 import org.junit.Test;
 
 import java.util.List;

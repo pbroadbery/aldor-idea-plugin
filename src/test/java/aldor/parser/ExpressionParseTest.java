@@ -1,4 +1,4 @@
-package aldor;
+package aldor.parser;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;

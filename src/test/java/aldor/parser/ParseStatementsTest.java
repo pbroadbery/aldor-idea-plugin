@@ -1,4 +1,4 @@
-package aldor;
+package aldor.parser;
 
 import aldor.psi.AldorId;
 import com.intellij.psi.PsiElement;

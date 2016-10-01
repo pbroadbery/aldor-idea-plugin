@@ -1,7 +1,5 @@
-package aldor;
+package aldor.parser;
 
-import aldor.parser.AldorParserDefinition;
-import aldor.parser.AldorTypes;
 import com.google.common.collect.Lists;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.ParserDefinition;

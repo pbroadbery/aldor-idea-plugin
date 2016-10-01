@@ -1,5 +1,7 @@
 package aldor;
 
+import aldor.parser.EnsureParsingTest;
+import aldor.parser.ParserFunctions;
 import aldor.psi.AldorPsiUtils;
 import com.intellij.psi.PsiElement;
 import com.intellij.testFramework.LightProjectDescriptor;
