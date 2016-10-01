@@ -12,7 +12,7 @@ import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import org.jetbrains.annotations.NotNull;
 
-import static aldor.AldorPsiUtils.Syntax;
+import static aldor.psi.AldorPsiUtils.Syntax;
 
 @SuppressWarnings("AbstractClassExtendsConcreteClass")
 public abstract class AldorIterStatementMixin extends ASTWrapperPsiElement implements AldorIterRepeatStatement {

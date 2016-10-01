@@ -1,5 +1,6 @@
 package aldor;
 
+import aldor.psi.AldorPsiUtils;
 import com.intellij.psi.PsiElement;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
@@ -66,6 +67,14 @@ public class SyntaxTest extends LightPlatformCodeInsightFixtureTestCase {
         assertNotNull(syntax);
         // FIXME: This is wrong - ought to show full type
         assertEquals("(Other)", syntax.toString());
+    }
+
+    public void testTupleCross() {
+        PsiElement psi = parseText("Tuple Cross(K, V) -> %");
+        AldorPsiUtils.Syntax syntax = AldorPsiUtils.parse(psi);
+        assertNotNull(syntax);
+        // FIXME: This is wrong - ought to show full type
+        assertEquals("(InfixApply -> (Apply Tuple (Apply Cross (Comma K V))) %)", syntax.toString());
     }
 
     private PsiElement parseText(CharSequence text) {

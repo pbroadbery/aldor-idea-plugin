@@ -7,7 +7,7 @@ import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCa
 
 import java.util.List;
 
-import static aldor.AldorPsiUtils.logPsi;
+import static aldor.psi.AldorPsiUtils.logPsi;
 
 public class ExpressionParseTest extends LightPlatformCodeInsightFixtureTestCase {
 

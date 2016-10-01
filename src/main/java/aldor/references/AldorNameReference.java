@@ -8,7 +8,7 @@ import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static aldor.AldorPsiUtils.logPsi;
+import static aldor.psi.AldorPsiUtils.logPsi;
 import static aldor.references.FileScopeWalker.resolveAndWalk;
 
 public class AldorNameReference extends PsiReferenceBase<AldorIdentifier> {
@@ -29,6 +29,7 @@ public class AldorNameReference extends PsiReferenceBase<AldorIdentifier> {
     }
 
 
+    @SuppressWarnings("ThrowsRuntimeException")
     @Override
     public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
         logPsi(this.getElement());

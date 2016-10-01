@@ -1,19 +1,5 @@
-package aldor;
+package aldor.psi;
 
-import aldor.psi.AldorAddPart;
-import aldor.psi.AldorDeclPart;
-import aldor.psi.AldorE14;
-import aldor.psi.AldorId;
-import aldor.psi.AldorIdentifier;
-import aldor.psi.AldorInfixedExpr;
-import aldor.psi.AldorInfixedTok;
-import aldor.psi.AldorJxleftAtom;
-import aldor.psi.AldorLiteral;
-import aldor.psi.AldorParened;
-import aldor.psi.AldorRecursiveVisitor;
-import aldor.psi.AldorWithPart;
-import aldor.psi.JxrightElement;
-import aldor.psi.NegationElement;
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -31,8 +17,6 @@ import java.util.List;
 
 public final class AldorPsiUtils {
     private static final Logger LOG = Logger.getInstance(AldorPsiUtils.class);
-
-
 
     public static final int MAX_INDENT_DEPTH = 20;
 
@@ -87,6 +71,7 @@ public final class AldorPsiUtils {
         return false;
     }
 
+    @SuppressWarnings("OverlyCoupledClass")
     private static final class AldorPsiSyntaxVisitor extends AldorRecursiveVisitor {
         private final Deque<List<Syntax>> visitStack;
 
@@ -142,11 +127,15 @@ public final class AldorPsiUtils {
             assert last == opsAndArgs;
 
             if (opsAndArgs.isEmpty()) {
-                throw new IllegalStateException("oops");
+                // We're almost surely throwing something away here...
+                visitStack.peek().add(new Other(o));
             }
-            if (opsAndArgs.size() == 1) {
+            else if (opsAndArgs.size() == 1) {
                 visitStack.peek().add(opsAndArgs.get(0));
-            } else {
+            } else if (opsAndArgs.size() == 2) {
+                visitStack.peek().add(new Apply(o, opsAndArgs));
+            }
+            else {
                 Syntax all = opsAndArgs.get(opsAndArgs.size() - 1);
                 for (Syntax syntax : Lists.reverse(opsAndArgs).subList(1, opsAndArgs.size() - 2)) {
                     all = new Apply(null, Lists.newArrayList(syntax, all));
@@ -223,6 +212,7 @@ public final class AldorPsiUtils {
                 lhs = exprContent.get(0);
             }
 
+            //noinspection ForLoopWithMissingComponent
             for (; i<exprContent.size(); i+=2) {
                 Syntax op = exprContent.get(i);
                 lhs = new InfixApply(expr, op, lhs, exprContent.get(i+1));

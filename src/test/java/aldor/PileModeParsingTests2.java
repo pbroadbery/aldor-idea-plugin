@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static aldor.AldorPsiUtils.logPsi;
+import static aldor.psi.AldorPsiUtils.logPsi;
 
 public class PileModeParsingTests2 extends LightPlatformTestCase {
 

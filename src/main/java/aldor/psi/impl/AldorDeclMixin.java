@@ -1,7 +1,7 @@
 package aldor.psi.impl;
 
-import aldor.AldorPsiUtils;
 import aldor.psi.AldorDeclPart;
+import aldor.psi.AldorPsiUtils;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;

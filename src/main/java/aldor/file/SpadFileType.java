@@ -8,9 +8,6 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.Icon;
 
-/**
- * Created by pab on 26/09/16.
- */
 public final class SpadFileType extends LanguageFileType {
     @SuppressWarnings("TypeMayBeWeakened")
     public static final SpadFileType INSTANCE = new SpadFileType();

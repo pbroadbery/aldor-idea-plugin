@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static aldor.AldorPsiUtils.logPsi;
+import static aldor.psi.AldorPsiUtils.logPsi;
 
 /**
  * Lexer Test. Created by pab on 30/08/16.

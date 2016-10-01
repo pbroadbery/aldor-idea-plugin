@@ -26,6 +26,12 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Common-->
+        <compileServer.plugin classpath="aldor-jps-plugin.jar"/>
+        <compiler.buildTargetScopeProvider implementation="aldor.build.builders.AldorBuildTargetScopeProvider" />
+        <facetType implementation="aldor.build.facet.AldorFacetType" />
+        <moduleType id="ALDOR-MODULE" classpathProvider="false"
+                    implementationClass="aldor.build.module.AldorModuleType"/>
+        <moduleConfigurationEditorProvider implementation="aldor.build.module.AldorModuleConfigEditor"/>
 
         <lang.syntaxHighlighterFactory language="Aldor" implementationClass="aldor.highlighter.AldorSyntaxHighlighterFactory"/>
         <lang.braceMatcher language="Aldor" implementationClass="aldor.highlighter.AldorBracketMatcher"/>

@@ -7,7 +7,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 
-import static aldor.AldorPsiUtils.logPsi;
+import static aldor.psi.AldorPsiUtils.logPsi;
 
 public class AldorAnnotatorTest extends LightPlatformCodeInsightFixtureTestCase {
 

@@ -431,7 +431,7 @@ public class Linearise {
 
     private static class SrcLine {
         private final List<IElementType> tokens = new ArrayList<>();
-        private final List<IElementType> allTokens = new ArrayList<>(); // Probably don't need this.
+        private final Collection<IElementType> allTokens = new ArrayList<>(); // Probably don't need this.
         private int indent;
         private final int startPosition;
         private int lastPosition;

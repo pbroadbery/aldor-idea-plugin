@@ -6,7 +6,7 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 
-import static aldor.AldorPsiUtils.logPsi;
+import static aldor.psi.AldorPsiUtils.logPsi;
 
 /**
  * Statements have lots of special cases.. Let's try to catch some of them.

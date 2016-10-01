@@ -12,9 +12,6 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IFileElementType;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * Created by pab on 26/09/16.
- */
 public class SpadParserDefinition extends AldorParserDefinition {
 
     private static final IFileElementType FILE =

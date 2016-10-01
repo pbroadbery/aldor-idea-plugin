@@ -1,6 +1,6 @@
 package aldor.psi.impl;
 
-import aldor.AldorPsiUtils.AnyApply;
+import aldor.psi.AldorPsiUtils.AnyApply;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.Key;
@@ -15,10 +15,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static aldor.AldorPsiUtils.Comma;
-import static aldor.AldorPsiUtils.Declaration;
-import static aldor.AldorPsiUtils.Syntax;
-import static aldor.AldorPsiUtils.parse;
+import static aldor.psi.AldorPsiUtils.Comma;
+import static aldor.psi.AldorPsiUtils.Declaration;
+import static aldor.psi.AldorPsiUtils.Syntax;
+import static aldor.psi.AldorPsiUtils.parse;
 
 @SuppressWarnings({"AbstractClassExtendsConcreteClass", "AbstractClassWithOnlyOneDirectInheritor"})
 public abstract class AldorDefineMixin extends ASTWrapperPsiElement {

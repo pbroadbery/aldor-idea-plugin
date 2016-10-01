@@ -4,7 +4,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 
-public class FileScopeWalker {
+public final class FileScopeWalker {
 
     public static void resolveAndWalk(PsiScopeProcessor scopeProcessor, PsiElement initial) {
         PsiElement thisScope = initial.getParent();
