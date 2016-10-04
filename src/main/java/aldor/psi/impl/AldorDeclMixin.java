@@ -1,7 +1,8 @@
 package aldor.psi.impl;
 
 import aldor.psi.AldorDeclPart;
-import aldor.psi.AldorPsiUtils;
+import aldor.syntax.Syntax;
+import aldor.syntax.SyntaxPsiParser;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
@@ -24,7 +25,7 @@ public abstract class AldorDeclMixin extends ASTWrapperPsiElement implements Ald
         }
         PsiElement lhs = this.getFirstChild();
         if (lastParent != lhs) {
-            AldorPsiUtils.Syntax lhsSyntax = AldorPsiUtils.parse(lhs);
+            Syntax lhsSyntax = SyntaxPsiParser.parse(lhs);
             if (lhsSyntax != null) {
                 lhsSyntax.psiElement().processDeclarations(processor, state, this, place);
             }

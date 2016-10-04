@@ -115,10 +115,12 @@ public class SExpressionReader {
 			if (token != null) {
                 return token;
             }
-			if (!stream.hasNext()) {
+
+            if (!stream.hasNext()) {
 				token = new Token(TokenType.EOF, "");
+			    return token;
 			}
-			char c = stream.peek();
+            char c = stream.peek();
             //noinspection IfStatementWithTooManyBranches
             if (c == '(') {
 				token = new Token(TokenType.OParen, "");
@@ -217,7 +219,8 @@ public class SExpressionReader {
 			if (Character.isDigit(c)
                     || Character.isAlphabetic(c)
                     || (c == '\\')
-                    || (c == '=')
+                    || (c == '?')
+					|| (c == '=')
                     || (c == '<')
                     || (c == '>')
                     || (c == '-')

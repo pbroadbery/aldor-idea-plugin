@@ -1,6 +1,10 @@
 package aldor.psi.impl;
 
-import aldor.psi.AldorPsiUtils.AnyApply;
+import aldor.syntax.Syntax;
+import aldor.syntax.SyntaxPsiParser;
+import aldor.syntax.components.Apply;
+import aldor.syntax.components.Comma;
+import aldor.syntax.components.Declaration;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.Key;
@@ -14,11 +18,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
-import static aldor.psi.AldorPsiUtils.Comma;
-import static aldor.psi.AldorPsiUtils.Declaration;
-import static aldor.psi.AldorPsiUtils.Syntax;
-import static aldor.psi.AldorPsiUtils.parse;
 
 @SuppressWarnings({"AbstractClassExtendsConcreteClass", "AbstractClassWithOnlyOneDirectInheritor"})
 public abstract class AldorDefineMixin extends ASTWrapperPsiElement {
@@ -42,10 +41,9 @@ public abstract class AldorDefineMixin extends ASTWrapperPsiElement {
         }
         Optional<Syntax> syntax = this.getUserData(cachedLhsSyntax);
         if (syntax == null) {
-            Syntax calculatedSyntax = parse(lhs);
+            Syntax calculatedSyntax = SyntaxPsiParser.parse(lhs);
             syntax = Optional.ofNullable(calculatedSyntax);
             this.putUserDataIfAbsent(cachedLhsSyntax, syntax);
-
         }
 
         if (syntax.isPresent()) {
@@ -65,8 +63,8 @@ public abstract class AldorDefineMixin extends ASTWrapperPsiElement {
         Declaration decl = syntax.as(Declaration.class);
         assert decl != null;
         Collection<Syntax> scopes = new ArrayList<>();
-        if (decl.lhs().is(AnyApply.class)) {
-            AnyApply<?> apply = decl.lhs().as(AnyApply.class);
+        if (decl.lhs().is(Apply.class)) {
+            Apply apply = decl.lhs().as(Apply.class);
             assert apply != null;
             List<Syntax> ll = apply.arguments();
             for (Syntax child : ll) {

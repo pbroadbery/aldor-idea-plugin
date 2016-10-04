@@ -79,5 +79,6 @@ public class SymbolFileSymbols {
 
     public static final SExpression MapsTo = symbol("->");
     public static final SExpression SrcPos = symbol("srcpos");
+    public static final SExpression Ref = symbol("ref");
 
 }

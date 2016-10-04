@@ -3,6 +3,7 @@ package aldor.psi.impl;
 import aldor.psi.AldorIterRepeatStatement;
 import aldor.psi.AldorIterator;
 import aldor.psi.AldorIterators;
+import aldor.syntax.Syntax;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.diagnostic.Logger;
@@ -11,8 +12,6 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import org.jetbrains.annotations.NotNull;
-
-import static aldor.psi.AldorPsiUtils.Syntax;
 
 @SuppressWarnings("AbstractClassExtendsConcreteClass")
 public abstract class AldorIterStatementMixin extends ASTWrapperPsiElement implements AldorIterRepeatStatement {

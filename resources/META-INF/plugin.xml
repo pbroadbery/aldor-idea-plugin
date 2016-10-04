@@ -41,8 +41,10 @@
         <lang.foldingBuilder language="Aldor" implementationClass="aldor.folder.AldorFoldingBuilder"/>
 
         <annotator language="Aldor" implementationClass="aldor.annotator.AldorAnnotator"/>
+        <externalAnnotator language="Aldor" implementationClass="aldor.annotator.TypeAndRefAnnotator"/>
 
         <lang.refactoringSupport language="Aldor" implementationClass="aldor.references.AldorRefactoringSupportProvider"/>
+        <documentationProvider implementation="aldor.commenter.AldorDocumentationProvider"/>
 
         <!-- Aldor extras -->
         <fileTypeFactory implementation="aldor.file.AldorFileTypeFactory"/>

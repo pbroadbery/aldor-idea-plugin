@@ -4,6 +4,8 @@ import aldor.parser.AldorTypes;
 import aldor.psi.AldorPsiUtils;
 import aldor.psi.AldorType;
 import aldor.psi.AldorTypeE12;
+import aldor.syntax.Syntax;
+import aldor.syntax.SyntaxPsiParser;
 import com.intellij.ide.highlighter.JavaHighlightingColors;
 import com.intellij.lang.annotation.Annotation;
 import com.intellij.lang.annotation.AnnotationHolder;
@@ -41,7 +43,7 @@ public class AldorAnnotator implements Annotator {
         TextRange range = element.getTextRange();
         Annotation typeAnnotation = holder.createInfoAnnotation(range, "");
         typeAnnotation.setTextAttributes(JavaHighlightingColors.ANNOTATION_NAME_ATTRIBUTES); //FIXME: Not Java
-        AldorPsiUtils.Syntax syntax = AldorPsiUtils.parse(element);
+        Syntax syntax = SyntaxPsiParser.parse(element);
         if (syntax != null) {
             typeAnnotation.setTooltip(syntax.toString());
         }
