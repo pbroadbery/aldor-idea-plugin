@@ -7,7 +7,7 @@ import com.intellij.psi.PsiElement;
 import java.util.Collections;
 
 /**
- * Created by pab on 04/10/16.
+ * CAn identifier
  */
 public class Id extends Syntax {
     private final AldorIdentifier id;

@@ -7,9 +7,6 @@ import org.junit.Test;
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertFalse;
 
-/**
- * Created by pab on 29/09/16.
- */
 public class AldorBuilderServiceTest {
 
     @Test

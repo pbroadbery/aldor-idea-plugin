@@ -13,5 +13,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="TEST" name="org.mockito:mockito-all:1.10.19" level="project" />
     <orderEntry type="library" name="lib" level="project" />
+    <orderEntry type="module" module-name="jps-plugin" />
   </component>
 </module>

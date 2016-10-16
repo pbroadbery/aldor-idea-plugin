@@ -12,14 +12,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Created by pab on 29/09/16.
+ * Build target for aldor modules.
+ * Probably a little broken at the moment
  */
 public class AldorModuleBuildTargetType extends BuildTargetType<AldorModuleBuildTarget> {
 
     private static final Logger LOG = Logger.getInstance(AldorModuleBuildTargetType.class);
+    private final AldorBuilderService buildService;
 
-    protected AldorModuleBuildTargetType() {
+    protected AldorModuleBuildTargetType(AldorBuilderService buildService) {
         super(AldorBuildConstants.ALDOR_MODULE_TARGET);
+        this.buildService = buildService;
     }
 
     @NotNull
@@ -37,6 +40,6 @@ public class AldorModuleBuildTargetType extends BuildTargetType<AldorModuleBuild
     @NotNull
     @Override
     public BuildTargetLoader<AldorModuleBuildTarget> createLoader(@NotNull JpsModel model) {
-        return AldorBuildTargetTypes.instance.createLoader(this, model);
+        return buildService.targetTypes().createLoader(this, model);
     }
 }

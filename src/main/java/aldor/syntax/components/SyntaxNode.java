@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by pab on 04/10/16.
+ * Standard-ish abstract class for syntax.
  */
 public abstract class SyntaxNode<SyntaxPsiElement extends PsiElement> extends Syntax {
     protected final List<Syntax> arguments;
@@ -18,6 +18,9 @@ public abstract class SyntaxNode<SyntaxPsiElement extends PsiElement> extends Sy
     protected SyntaxNode(SyntaxPsiElement element, List<Syntax> arguments) {
         this.element = element;
         this.arguments = new ArrayList<>(arguments);
+        if (arguments.stream().filter(x->x == null).findAny().isPresent()) {
+            throw new IllegalArgumentException("Found a null: " + arguments);
+        }
     }
 
     @Override

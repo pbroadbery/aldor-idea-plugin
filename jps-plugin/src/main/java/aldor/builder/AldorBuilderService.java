@@ -9,18 +9,24 @@ import org.jetbrains.jps.incremental.TargetBuilder;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class AldorBuilderService extends BuilderService {
     private static final Logger LOG = Logger.getInstance(AldorBuilderService.class);
+    private final ExecutorService executorService = Executors.newCachedThreadPool();
+    private final AldorBuildTargetTypes targetTypes;
 
     public AldorBuilderService() {
+        //noinspection ThisEscapedInObjectConstruction
+        targetTypes = new AldorBuildTargetTypes(this);
     }
 
     /** Returns the list of build target types contributed by this plugin. */
     @Override
     @NotNull
     public List<? extends BuildTargetType<?>> getTargetTypes() {
-        return AldorBuildTargetTypes.instance.targetTypes();
+        return targetTypes.targetTypes();
     }
 
     /**
@@ -39,6 +45,14 @@ public class AldorBuilderService extends BuilderService {
     @NotNull
     public List<? extends TargetBuilder<?,?>> createBuilders() {
         LOG.info("Creating builders for aldor build service...");
-        return AldorBuildTargetTypes.instance.createBuilders();
+        return targetTypes.createBuilders();
+    }
+
+    public ExecutorService executorService() {
+        return executorService;
+    }
+
+    public AldorBuildTargetTypes targetTypes() {
+        return targetTypes;
     }
 }

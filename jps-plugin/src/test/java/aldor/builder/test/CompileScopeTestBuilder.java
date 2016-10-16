@@ -33,7 +33,7 @@ import java.util.LinkedHashMap;
 import java.util.Set;
 
 /**
- * @author nik
+ * @author pab
  */
 public final class CompileScopeTestBuilder {
     private static final Logger LOG = Logger.getInstance(CompileScopeTestBuilder.class);
@@ -73,7 +73,7 @@ public final class CompileScopeTestBuilder {
 
     public CompileScope build() {
         Collection<BuildTargetType<?>> typesToForceBuild = myForceBuild ? myTargetTypes : Collections.emptyList();
-        LOG.info("Creating compile scope: " + myTargetTypes + " " + myTargets + " " + myFiles);
+        LOG.info("Creating compile scope: types: " + myTargetTypes + " targets: " + myTargets + " files: " + myFiles);
         return new CompileScopeImpl(myTargetTypes, typesToForceBuild, myTargets, myFiles);
     }
 

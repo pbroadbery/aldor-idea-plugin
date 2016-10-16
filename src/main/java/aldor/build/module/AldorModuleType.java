@@ -10,12 +10,12 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.Icon;
 
 /**
- * Created by pab on 29/09/16.
+ * Represents an aldor module.
  */
 public class AldorModuleType extends ModuleType<ModuleBuilder> {
     public static final String NAME = "Aldor Module";
     public static final String ID = "ALDOR-MODULE";
-    public static final AldorModuleType instance = new AldorModuleType();
+    private static final AldorModuleType instance = new AldorModuleType();
 
     public AldorModuleType() {
         super(ID);
@@ -66,6 +66,7 @@ public class AldorModuleType extends ModuleType<ModuleBuilder> {
         public void setupRootModel(ModifiableRootModel modifiableRootModel) throws ConfigurationException {
             doAddContentEntry(modifiableRootModel);
         }
+
 
         @Override
         public ModuleType<?> getModuleType() {

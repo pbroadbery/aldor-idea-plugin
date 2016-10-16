@@ -7,14 +7,12 @@ import com.intellij.psi.PsiElement;
 import java.util.Collections;
 
 /**
- * Created by pab on 04/10/16.
+ * Literal (numbers, strings, ...)
  */
 public class Literal extends Syntax {
-    private final String text;
     private final AldorLiteral literal;
 
-    public Literal(String text, AldorLiteral literal) {
-        this.text = text;
+    public Literal(@SuppressWarnings("UnusedParameters") String text, AldorLiteral literal) {
         this.literal = literal;
     }
 

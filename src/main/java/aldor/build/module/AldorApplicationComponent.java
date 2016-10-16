@@ -1,0 +1,73 @@
+package aldor.build.module;
+
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.components.ApplicationComponent;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.fileEditor.FileDocumentManagerAdapter;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.psi.PsiDocumentManager;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiFileSystemItem;
+import com.intellij.util.messages.MessageBus;
+import com.intellij.util.messages.MessageBusConnection;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
+import static com.intellij.AppTopics.FILE_DOCUMENT_SYNC;
+
+/**
+ * Component that looks for aldor file updates, and if it spots them notifies the annotation manager.
+ */
+public class AldorApplicationComponent implements ApplicationComponent {
+    private static final String NAME = "AldorFileWatcher";
+
+    @Override
+    public void initComponent() {
+        MessageBus bus = ApplicationManager.getApplication().getMessageBus();
+        MessageBusConnection connection = bus.connect();
+        connection.subscribe(FILE_DOCUMENT_SYNC, new SaveActionProcessor());
+
+    }
+
+    @Override
+    public void disposeComponent() {
+
+    }
+
+    @NotNull
+    @Override
+    public String getComponentName() {
+        return NAME;
+    }
+
+    private class SaveActionProcessor extends FileDocumentManagerAdapter {
+        @Override
+        public void beforeDocumentSaving(@NotNull Document document) {
+            Collection<PsiFile> psiFiles = new ArrayList<>();
+            for (Project project : ProjectManager.getInstance().getOpenProjects()) {
+                PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document);
+                if (isPsiFileInProject(project, psiFile)) {
+                    psiFiles.add(psiFile);
+                }
+            }
+
+            for (PsiFile psiFile: psiFiles) {
+                Project project = psiFile.getProject();
+                for (Module module: AldorModuleManager.getInstance(project).aldorModules()) {
+                    AnnotationFileManager manager = AnnotationFileManager.getAnnotationFileManager(module);
+                    assert manager != null;
+                    manager.beforeDocumentSaving(psiFile);
+                }
+            }
+        }
+    }
+
+    public static boolean isPsiFileInProject(Project project, PsiFileSystemItem file) {
+        return ProjectRootManager.getInstance(project).getFileIndex().isInContent(file.getVirtualFile());
+    }
+}

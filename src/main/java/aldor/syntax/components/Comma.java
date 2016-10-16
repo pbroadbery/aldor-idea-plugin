@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 /**
- * Created by pab on 04/10/16.
+ * (1,2,3)
  */
 public class Comma extends SyntaxNode<AldorParened> {
     public Comma(AldorParened element, @NotNull List<Syntax> arguments) {

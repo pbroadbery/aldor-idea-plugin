@@ -27,8 +27,9 @@
     <extensions defaultExtensionNs="com.intellij">
         <!-- Common-->
         <compileServer.plugin classpath="aldor-jps-plugin.jar"/>
+
         <compiler.buildTargetScopeProvider implementation="aldor.build.builders.AldorBuildTargetScopeProvider" />
-        <facetType implementation="aldor.build.facet.AldorFacetType" />
+
         <moduleType id="ALDOR-MODULE" classpathProvider="false"
                     implementationClass="aldor.build.module.AldorModuleType"/>
         <moduleConfigurationEditorProvider implementation="aldor.build.module.AldorModuleConfigEditor"/>
@@ -41,7 +42,7 @@
         <lang.foldingBuilder language="Aldor" implementationClass="aldor.folder.AldorFoldingBuilder"/>
 
         <annotator language="Aldor" implementationClass="aldor.annotator.AldorAnnotator"/>
-        <externalAnnotator language="Aldor" implementationClass="aldor.annotator.TypeAndRefAnnotator"/>
+        <!-- <externalAnnotator language="Aldor" implementationClass="aldor.annotator.TypeAndRefAnnotator"/> -->
 
         <lang.refactoringSupport language="Aldor" implementationClass="aldor.references.AldorRefactoringSupportProvider"/>
         <documentationProvider implementation="aldor.commenter.AldorDocumentationProvider"/>
@@ -60,4 +61,9 @@
         <!-- Add your actions here -->
     </actions>
 
+    <application-components>
+        <component>
+            <implementation-class>aldor.build.module.AldorApplicationComponent</implementation-class>
+        </component>
+    </application-components>
 </idea-plugin>

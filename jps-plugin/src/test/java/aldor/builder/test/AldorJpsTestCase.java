@@ -16,10 +16,12 @@
 package aldor.builder.test;
 
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.util.io.FileSystemUtil;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.testFramework.TestLoggerFactory;
 import com.intellij.testFramework.UsefulTestCase;
+import com.intellij.util.TimeoutUtil;
 import org.apache.log4j.Appender;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.LogManager;
@@ -163,11 +165,17 @@ public abstract class AldorJpsTestCase extends UsefulTestCase {
         return result;
     }
 
-    protected void beforeBuildStarted(@NotNull ProjectDescriptor descriptor) {
+    /**
+     * Called as a build is starting
+     * @param descriptor The project
+     */
+    protected void beforeBuildStarted(@SuppressWarnings("UnusedParameters") @NotNull ProjectDescriptor descriptor) {
     }
 
-    protected void rebuildAll() {
-        doBuild(CompileScopeTestBuilder.rebuild().all()).assertSuccessful();
+    protected BuildResult rebuildAll() {
+        BuildResult res = doBuild(CompileScopeTestBuilder.rebuild().all());
+        res.assertSuccessful();
+        return res;
     }
 
     protected BuildResult makeAll() {
@@ -198,7 +206,7 @@ public abstract class AldorJpsTestCase extends UsefulTestCase {
     }
 
     protected String createDir(String relativePath) {
-        File dir = new File(getOrCreateProjectDir(), relativePath);
+        File dir = fileForProjectPath(relativePath);
         boolean created = dir.mkdirs();
         if (!created && !dir.isDirectory()) {
             fail("Cannot create " + dir.getAbsolutePath() + " directory");
@@ -208,7 +216,7 @@ public abstract class AldorJpsTestCase extends UsefulTestCase {
 
     public String createFile(String relativePath, final String text) {
         try {
-            File file = new File(getOrCreateProjectDir(), relativePath);
+            File file = fileForProjectPath(relativePath);
             FileUtil.writeToFile(file, text);
             return FileUtil.toSystemIndependentName(file.getAbsolutePath());
         }
@@ -218,5 +226,53 @@ public abstract class AldorJpsTestCase extends UsefulTestCase {
         }
     }
 
+    protected void change(String filePath) {
+        change(filePath, null);
+    }
+
+    protected void change(String relativePath, @Nullable final String newContent) {
+        try {
+            File file = fileForProjectPath(relativePath);
+            assertTrue("File " + file.getAbsolutePath() + " doesn't exist", file.exists());
+            if (newContent != null) {
+                FileUtil.writeToFile(file, newContent);
+            }
+            long oldTimestamp = FileSystemUtil.lastModified(file);
+            long time = System.currentTimeMillis();
+            setLastModified(file, time);
+            if (FileSystemUtil.lastModified(file) <= oldTimestamp) {
+                setLastModified(file, time + 1);
+                long newTimeStamp = FileSystemUtil.lastModified(file);
+                if (newTimeStamp <= oldTimestamp) {
+                    //Mac OS and some versions of Linux truncates timestamp to nearest second
+                    setLastModified(file, time + 1000);
+                    newTimeStamp = FileSystemUtil.lastModified(file);
+                    assertTrue("Failed to change timestamp for " + file.getAbsolutePath(), newTimeStamp > oldTimestamp);
+                }
+                sleepUntil(newTimeStamp);
+            }
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected static void sleepUntil(long time) {
+        //we need this to ensure that the file won't be treated as changed by user during compilation and therefore marked for recompilation
+        long delta;
+        while ((delta = time - System.currentTimeMillis()) > 0) {
+            TimeoutUtil.sleep(delta);
+        }
+    }
+
+    private static void setLastModified(File file, long time) {
+        boolean updated = file.setLastModified(time);
+        assertTrue("Cannot modify timestamp for " + file.getAbsolutePath(), updated);
+    }
+
+
+    public File fileForProjectPath(String relativePath) {
+        return new File(getOrCreateProjectDir(), relativePath);
+    }
 
 }

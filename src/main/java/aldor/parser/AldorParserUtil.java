@@ -126,8 +126,6 @@ public class AldorParserUtil extends GeneratedParserUtilBase {
             boolean r1 = consumeToken(b, KW_BlkNext);
             if (!r1) {
                 r1 = checkCurrentIndent(b, indentLevel);
-            } else {
-                //System.out.println("Moving to next line " + b.getCurrentOffset());
             }
             r1 = r1 && parseOneExpression(b, l + 1, type);
             exit_section_(b, m1, null, r1);
@@ -176,12 +174,12 @@ public class AldorParserUtil extends GeneratedParserUtilBase {
         return lexer.indentLevel(builder.getCurrentOffset());
     }
 
-    static boolean isSpadMode(@NotNull PsiBuilder builder, int indentLevel) {
+    static boolean isSpadMode(@NotNull PsiBuilder builder, @SuppressWarnings("UnusedParameters") int indentLevel) {
         AldorIndentLexer lexer = (AldorIndentLexer) ((Builder) builder).getLexer();
         return lexer.isSpadMode();
     }
 
-    static boolean isAldorMode(@NotNull PsiBuilder builder, int indentLevel) {
+    static boolean isAldorMode(@NotNull PsiBuilder builder, @SuppressWarnings("UnusedParameters") int indentLevel) {
         AldorIndentLexer lexer = (AldorIndentLexer) ((Builder) builder).getLexer();
         return lexer.isAldorMode();
     }

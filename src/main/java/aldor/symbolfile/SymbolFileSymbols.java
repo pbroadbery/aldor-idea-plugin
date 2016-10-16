@@ -4,7 +4,7 @@ import aldor.util.SExpression;
 
 import static aldor.util.SExpression.symbol;
 
-public class SymbolFileSymbols {
+public final class SymbolFileSymbols {
     public static final SExpression Id = symbol("Id");
     public static final SExpression IdSy = symbol("IdSy");
     public static final SExpression Blank = symbol("Blank");
@@ -77,8 +77,11 @@ public class SymbolFileSymbols {
     public static final SExpression With = symbol("With");
     public static final SExpression Yield = symbol("Yield");
 
+    // Misc stuff (not language keywords).
     public static final SExpression MapsTo = symbol("->");
     public static final SExpression SrcPos = symbol("srcpos");
     public static final SExpression Ref = symbol("ref");
-
+    public static final SExpression Name = symbol("name");
+    public static final SExpression Syme = symbol("syme");
+    public static final SExpression Type = symbol("type");
 }

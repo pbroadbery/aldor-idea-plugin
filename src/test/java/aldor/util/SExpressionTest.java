@@ -21,11 +21,24 @@ public class SExpressionTest {
     @Test
     public void testReadIncomplete() throws FileNotFoundException {
         try {
-            SExpression sx = SExpression.read(new StringReader("(Hello there"));
+            //noinspection unused
+            @SuppressWarnings("UnusedAssignment") SExpression sx = SExpression.read(new StringReader("(Hello there"));
             fail("Expected an exception");
         }
         catch (SExpressionReadException ignored) {
 
         }
     }
+
+
+    @Test
+    public void testList() {
+        SExpression sx = SExpression.read(new StringReader("(1 2 3 4)"));
+        assertEquals(SExpression.integer(1), sx.asList().get(0));
+        assertEquals(SExpression.integer(2), sx.asList().get(1));
+        assertEquals(SExpression.integer(3), sx.asList().get(2));
+        assertEquals(SExpression.integer(4), sx.asList().get(3));
+        assertEquals(4, sx.asList().size());
+    }
+
 }

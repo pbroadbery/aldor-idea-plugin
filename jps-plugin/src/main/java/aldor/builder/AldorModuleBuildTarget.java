@@ -18,10 +18,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import static java.util.stream.Collectors.toList;
-
 /**
- * Created by pab on 29/09/16.
+ * Build target for aldor modules.
  */
 public class AldorModuleBuildTarget extends BuildTarget<AldorRootDescriptor> {
     private static final Logger LOG = Logger.getInstance(AldorModuleBuildTarget.class);
@@ -39,9 +37,11 @@ public class AldorModuleBuildTarget extends BuildTarget<AldorRootDescriptor> {
 
     @Override
     public Collection<BuildTarget<?>> computeDependencies(BuildTargetRegistry targetRegistry, TargetOutputIndex outputIndex) {
-        List<AldorSourceRootBuildTarget> sourceRootTargets = targetRegistry.getAllTargets(AldorBuildTargetTypes.instance.sourceRootTargetType);
+        /*List<AldorSourceRootBuildTarget> sourceRootTargets = targetRegistry.getAllTargets(AldorBuildTargetTypes.instance.sourceRootTargetType);
 
         return sourceRootTargets.stream().filter(rootTgt -> rootTgt.moduleName().equals(moduleName)).collect(toList());
+        */
+        return Collections.emptyList();
     }
 
     @NotNull

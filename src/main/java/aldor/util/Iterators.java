@@ -22,12 +22,12 @@ public final class Iterators {
 
 			@Override
 			public boolean hasPrevious() {
-				throw new UnsupportedOperationException();
+				throw new UnsupportedOperationException("Can't go back");
 			}
 
 			@Override
 			public T previous() {
-				throw new UnsupportedOperationException();
+				throw new UnsupportedOperationException("can't go back");
 			}
 
 			@Override
@@ -37,7 +37,7 @@ public final class Iterators {
 
 			@Override
 			public int previousIndex() {
-				throw new UnsupportedOperationException();
+				throw new UnsupportedOperationException("can't go back");
 			}
 
 			@Override
@@ -47,12 +47,12 @@ public final class Iterators {
 
 			@Override
 			public void set(T e) {
-				throw new UnsupportedOperationException();
+				throw new UnsupportedOperationException("Read only");
 			}
 
 			@Override
 			public void add(T e) {
-				throw new UnsupportedOperationException();
+				throw new UnsupportedOperationException("Read only");
 			}};
 
 	}

@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.JComponent;
 
 /**
- * Created by pab on 29/09/16.
+ * UI for editing module config.
  */
 public class AldorModuleConfigEditor implements ModuleConfigurationEditorProviderEx {
     @Override
@@ -36,7 +36,7 @@ public class AldorModuleConfigEditor implements ModuleConfigurationEditorProvide
 
         public OutputDirectoryEditor(ModuleConfigurationState state) {
             super(state);
-            outputEditor = new BuildElementsEditor(state) {};
+            outputEditor = new AldorBuildElementsEditor(state);
         }
 
         @Override
@@ -59,6 +59,13 @@ public class AldorModuleConfigEditor implements ModuleConfigurationEditorProvide
         @Override
         public String getHelpTopic() {
             return null;
+        }
+    }
+
+    private static class AldorBuildElementsEditor extends BuildElementsEditor {
+
+        protected AldorBuildElementsEditor(ModuleConfigurationState state) {
+            super(state);
         }
     }
 

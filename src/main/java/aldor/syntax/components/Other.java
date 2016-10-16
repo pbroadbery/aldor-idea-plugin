@@ -6,7 +6,7 @@ import com.intellij.psi.PsiElement;
 import java.util.Collections;
 
 /**
- * Created by pab on 04/10/16.
+ * Placeholder where we can't figure out what's going on.
  */
 public class Other extends Syntax {
     private final PsiElement other;

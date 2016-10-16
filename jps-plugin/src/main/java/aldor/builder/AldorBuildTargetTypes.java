@@ -1,6 +1,7 @@
 package aldor.builder;
 
 import aldor.builder.files.AldorFileBuildTargetType;
+import aldor.builder.files.AldorFileTargetBuilder;
 import com.google.common.collect.Lists;
 import com.intellij.openapi.diagnostic.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -18,7 +19,6 @@ import org.jetbrains.jps.model.JpsModel;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,11 +30,15 @@ import java.util.Map;
 public class AldorBuildTargetTypes {
     private static final Logger LOG = Logger.getInstance(AldorBuildTargetTypes.class);
 
-    public static final AldorBuildTargetTypes instance = new AldorBuildTargetTypes();
+    //public final AldorSourceRootBuildTargetType sourceRootTargetType;
+    //public final AldorModuleBuildTargetType moduleBuildTargetType;
+    public final AldorFileBuildTargetType fileBuildTargetType;
 
-    public final AldorSourceRootBuildTargetType sourceRootTargetType = new AldorSourceRootBuildTargetType();
-    public final AldorModuleBuildTargetType moduleBuildTargetType = new AldorModuleBuildTargetType();
-    public final AldorFileBuildTargetType fileBuildTargetType = new AldorFileBuildTargetType();
+    AldorBuildTargetTypes(AldorBuilderService service) {
+        this.fileBuildTargetType = new AldorFileBuildTargetType(service);
+        //this.sourceRootTargetType = new AldorSourceRootBuildTargetType(service);
+        //moduleBuildTargetType = new AldorModuleBuildTargetType(service);
+    }
 
     public <Target extends BuildTarget<?>> BuildTargetLoader<Target> createLoader(@NotNull final BuildTargetType<Target> type, @NotNull final JpsModel model) {
         final Map<String, Target> targetMap = new HashMap<>();
@@ -58,14 +62,14 @@ public class AldorBuildTargetTypes {
 
 
     public List<BuildTargetType<? extends BuildTarget<?>>> targetTypes() {
-        return Lists.newArrayList(sourceRootTargetType, moduleBuildTargetType, fileBuildTargetType);
+        return Lists.newArrayList(fileBuildTargetType);
     }
 
     public List<? extends TargetBuilder<?, ?>> createBuilders() {
         List<TargetBuilder<?, ?>> list = new ArrayList<>();
-        list.add(new AldorBuilder(sourceRootTargetType));
-        list.add(new EmptyBuilder(Collections.singletonList(moduleBuildTargetType)));
-        list.add(new AldorFileBuildTargetType.AldorFileTargetBuilder(fileBuildTargetType));
+        //list.add(new AldorBuilder(sourceRootTargetType));
+        //list.add(new EmptyBuilder(Collections.singletonList(moduleBuildTargetType)));
+        list.add(new AldorFileTargetBuilder(fileBuildTargetType));
         return list;
     }
 

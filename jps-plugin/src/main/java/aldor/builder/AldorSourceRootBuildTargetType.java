@@ -15,9 +15,11 @@ import java.util.stream.Collectors;
 
 public class AldorSourceRootBuildTargetType extends BuildTargetType<AldorSourceRootBuildTarget> {
     private static final Logger LOG = Logger.getInstance(AldorSourceRootBuildTargetType.class);
+    private final AldorBuilderService buildService;
 
-    protected AldorSourceRootBuildTargetType() {
+    protected AldorSourceRootBuildTargetType(AldorBuilderService buildService) {
         super(AldorBuildConstants.ALDOR_SOURCE_ROOT_TARGET);
+        this.buildService = buildService;
     }
 
     @NotNull
@@ -39,7 +41,7 @@ public class AldorSourceRootBuildTargetType extends BuildTargetType<AldorSourceR
     @NotNull
     @Override
     public BuildTargetLoader<AldorSourceRootBuildTarget> createLoader(@NotNull final JpsModel model) {
-        return AldorBuildTargetTypes.instance.createLoader(this, model);
+        return buildService.targetTypes().createLoader(this, model);
     }
 
     @Override

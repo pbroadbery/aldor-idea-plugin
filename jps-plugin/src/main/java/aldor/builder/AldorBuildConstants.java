@@ -1,7 +1,7 @@
 package aldor.builder;
 
 /**
- * Created by pab on 28/09/16.
+ * Constants for the build process.
  */
 public final class AldorBuildConstants {
     public static final String ALDOR_SOURCE_ROOT_TARGET = "ALDOR_SOURCE_ROOT_TARGET";

@@ -49,140 +49,140 @@ import static org.junit.Assert.fail;
  * @author nik
  */
 public class BuildResult implements MessageHandler {
-  private final List<BuildMessage> myErrorMessages;
-  private final List<BuildMessage> myWarnMessages;
-  private final List<BuildMessage> myInfoMessages;
-  private boolean myUpToDate = true;
-  private String myMappingsDump = null;
+    private final List<BuildMessage> myErrorMessages;
+    private final List<BuildMessage> myWarnMessages;
+    private final List<BuildMessage> myInfoMessages;
+    private boolean myUpToDate = true;
+    private String myMappingsDump = null;
 
-  public BuildResult() {
-    myErrorMessages = new ArrayList<>();
-    myWarnMessages = new ArrayList<>();
-    myInfoMessages = new ArrayList<>();
-  }
-
-  void storeMappingsDump(ProjectDescriptor pd) throws IOException {
-    final ByteArrayOutputStream dump = new ByteArrayOutputStream();
-
-    try (PrintStream stream = new PrintStream(dump)) {
-      pd.dataManager.getMappings().toStream(stream);
-      dumpSourceToOutputMappings(pd, stream);
+    public BuildResult() {
+        myErrorMessages = new ArrayList<>();
+        myWarnMessages = new ArrayList<>();
+        myInfoMessages = new ArrayList<>();
     }
 
-    dump.close();
-    myMappingsDump = dump.toString();
-  }
+    void storeMappingsDump(ProjectDescriptor pd) throws IOException {
+        final ByteArrayOutputStream dump = new ByteArrayOutputStream();
 
-  private static void dumpSourceToOutputMappings(ProjectDescriptor pd, PrintStream stream) throws IOException {
-    List<BuildTarget<?>> targets = new ArrayList<>(pd.getBuildTargetIndex().getAllTargets());
-    Collections.sort(targets, new Comparator<BuildTarget<?>>() {
-      @Override
-      public int compare(BuildTarget<?> o1, BuildTarget<?> o2) {
-        return StringUtil.comparePairs(o1.getTargetType().getTypeId(), o1.getId(), o2.getTargetType().getTypeId(), o2.getId(), false);
-      }
-    });
-    final TIntObjectHashMap<BuildTarget<?>> id2Target = new TIntObjectHashMap<>();
-    for (BuildTarget<?> target : targets) {
-      id2Target.put(pd.dataManager.getTargetsState().getBuildTargetId(target), target);
-    }
-    TIntObjectHashMap<String> hashCodeToOutputPath = new TIntObjectHashMap<>();
-    for (BuildTarget<?> target : targets) {
-      stream.println("Begin Of SourceToOutput (target " + getTargetIdWithTypeId(target) + ")");
-      SourceToOutputMapping map = pd.dataManager.getSourceToOutputMap(target);
-      List<String> sourcesList = new ArrayList<>(map.getSources());
-      Collections.sort(sourcesList);
-      for (String source : sourcesList) {
-        List<String> outputs = new ArrayList<>(ObjectUtils.notNull(map.getOutputs(source), Collections.emptySet()));
-        Collections.sort(outputs);
-        for (String output : outputs) {
-          hashCodeToOutputPath.put(FileUtil.pathHashCode(output), output);
+        try (PrintStream stream = new PrintStream(dump)) {
+            pd.dataManager.getMappings().toStream(stream);
+            dumpSourceToOutputMappings(pd, stream);
         }
-        String sourceToCompare = SystemInfo.isFileSystemCaseSensitive ? source : source.toLowerCase(Locale.US);
-        stream.println(" " + sourceToCompare + " -> " + StringUtil.join(outputs, ","));
-      }
-      stream.println("End Of SourceToOutput (target " + getTargetIdWithTypeId(target) + ")");
+
+        dump.close();
+        myMappingsDump = dump.toString();
     }
 
-
-    OutputToTargetRegistry registry = pd.dataManager.getOutputToTargetRegistry();
-    List<Integer> keys = new ArrayList<>(registry.getKeys());
-    Collections.sort(keys);
-    stream.println("Begin Of OutputToTarget");
-    for (Integer key : keys) {
-      TIntHashSet targetsIds = registry.getState(key);
-      if (targetsIds == null) {
-        continue;
-      }
-      final List<String> targetsNames = new ArrayList<>();
-      targetsIds.forEach(new TIntProcedure() {
-        @Override
-        public boolean execute(int value) {
-          BuildTarget<?> target = id2Target.get(value);
-          targetsNames.add((target != null) ? getTargetIdWithTypeId(target) : ("<unknown " + value + ">"));
-          return true;
+    private static void dumpSourceToOutputMappings(ProjectDescriptor pd, PrintStream stream) throws IOException {
+        List<BuildTarget<?>> targets = new ArrayList<>(pd.getBuildTargetIndex().getAllTargets());
+        Collections.sort(targets, new Comparator<BuildTarget<?>>() {
+            @Override
+            public int compare(BuildTarget<?> o1, BuildTarget<?> o2) {
+                return StringUtil.comparePairs(o1.getTargetType().getTypeId(), o1.getId(), o2.getTargetType().getTypeId(), o2.getId(), false);
+            }
+        });
+        final TIntObjectHashMap<BuildTarget<?>> id2Target = new TIntObjectHashMap<>();
+        for (BuildTarget<?> target : targets) {
+            id2Target.put(pd.dataManager.getTargetsState().getBuildTargetId(target), target);
         }
-      });
-      Collections.sort(targetsNames);
-      stream.println(hashCodeToOutputPath.get(key) + " -> " + targetsNames);
+        TIntObjectHashMap<String> hashCodeToOutputPath = new TIntObjectHashMap<>();
+        for (BuildTarget<?> target : targets) {
+            stream.println("Begin Of SourceToOutput (target " + getTargetIdWithTypeId(target) + ")");
+            SourceToOutputMapping map = pd.dataManager.getSourceToOutputMap(target);
+            List<String> sourcesList = new ArrayList<>(map.getSources());
+            Collections.sort(sourcesList);
+            for (String source : sourcesList) {
+                List<String> outputs = new ArrayList<>(ObjectUtils.notNull(map.getOutputs(source), Collections.emptySet()));
+                Collections.sort(outputs);
+                for (String output : outputs) {
+                    hashCodeToOutputPath.put(FileUtil.pathHashCode(output), output);
+                }
+                String sourceToCompare = SystemInfo.isFileSystemCaseSensitive ? source : source.toLowerCase(Locale.US);
+                stream.println(" " + sourceToCompare + " -> " + StringUtil.join(outputs, ","));
+            }
+            stream.println("End Of SourceToOutput (target " + getTargetIdWithTypeId(target) + ")");
+        }
+
+
+        OutputToTargetRegistry registry = pd.dataManager.getOutputToTargetRegistry();
+        List<Integer> keys = new ArrayList<>(registry.getKeys());
+        Collections.sort(keys);
+        stream.println("Begin Of OutputToTarget");
+        for (Integer key : keys) {
+            TIntHashSet targetsIds = registry.getState(key);
+            if (targetsIds == null) {
+                continue;
+            }
+            final List<String> targetsNames = new ArrayList<>();
+            targetsIds.forEach(new TIntProcedure() {
+                @Override
+                public boolean execute(int value) {
+                    BuildTarget<?> target = id2Target.get(value);
+                    targetsNames.add((target != null) ? getTargetIdWithTypeId(target) : ("<unknown " + value + ">"));
+                    return true;
+                }
+            });
+            Collections.sort(targetsNames);
+            stream.println(hashCodeToOutputPath.get(key) + " -> " + targetsNames);
+        }
+        stream.println("End Of OutputToTarget");
     }
-    stream.println("End Of OutputToTarget");
-  }
 
-  @NotNull
-  private static String getTargetIdWithTypeId(BuildTarget<?> target) {
-    return target.getTargetType().getTypeId() + ":" + target.getId();
-  }
-
-  @Override
-  public void processMessage(BuildMessage msg) {
-    if (msg.getKind() == BuildMessage.Kind.ERROR) {
-      myErrorMessages.add(msg);
-      myUpToDate = false;
+    @NotNull
+    private static String getTargetIdWithTypeId(BuildTarget<?> target) {
+        return target.getTargetType().getTypeId() + ":" + target.getId();
     }
-    else if (msg.getKind() == BuildMessage.Kind.WARNING) {
-      myWarnMessages.add(msg);
+
+    @Override
+    public void processMessage(BuildMessage msg) {
+        if (msg.getKind() == BuildMessage.Kind.ERROR) {
+            myErrorMessages.add(msg);
+            myUpToDate = false;
+        } else if (msg.getKind() == BuildMessage.Kind.WARNING) {
+            myWarnMessages.add(msg);
+        } else {
+            myInfoMessages.add(msg);
+        }
+        if (msg instanceof DoneSomethingNotification) {
+            myUpToDate = false;
+        }
     }
-    else {
-      myInfoMessages.add(msg);
+
+    public String getMappingsDump() {
+        return myMappingsDump;
     }
-    if (msg instanceof DoneSomethingNotification) {
-      myUpToDate = false;
+
+    public void assertUpToDate() {
+        assertTrue("Project sources weren't up to date", myUpToDate);
     }
-  }
 
-  public String getMappingsDump() {
-    return myMappingsDump;
-  }
-
-  public void assertUpToDate() {
-    assertTrue("Project sources weren't up to date", myUpToDate);
-  }
-
-  public void assertFailed() {
-    assertFalse("Build not failed as expected", isSuccessful());
-  }
-
-  public boolean isSuccessful() {
-    return myErrorMessages.isEmpty();
-  }
-
-  public void assertSuccessful() {
-    if (!isSuccessful()) {
-      Function<BuildMessage, String> toStringFunction = StringUtil.createToStringFunction(BuildMessage.class);
-      fail("Build failed.\n" +
-           "Errors:\n" + StringUtil.join(myErrorMessages, toStringFunction, "\n") + "\n" +
-           "Info messages:\n" + StringUtil.join(myInfoMessages, toStringFunction, "\n"));
+    public void assertFailed() {
+        assertFalse("Build not failed as expected", isSuccessful());
     }
-  }
 
-  @NotNull
-  public List<BuildMessage> getMessages(@NotNull BuildMessage.Kind kind) {
-    if (kind == BuildMessage.Kind.ERROR) {
-      return myErrorMessages;
-    } else if (kind == BuildMessage.Kind.WARNING) {
-      return myWarnMessages;
-    } else {
-      return myInfoMessages;
+    public boolean isSuccessful() {
+        return myErrorMessages.isEmpty();
     }
-  }
+
+    public BuildResult assertSuccessful() {
+        if (!isSuccessful()) {
+            Function<BuildMessage, String> toStringFunction = StringUtil.createToStringFunction(BuildMessage.class);
+            fail("TEST RESULT: Build failed.\n" +
+                    " -- Errors:\n" + StringUtil.join(myErrorMessages, toStringFunction, "\n") + "\n" +
+                    " -- Warnings:\n" + StringUtil.join(myWarnMessages, toStringFunction, "\n") + "\n" +
+                    " -- Info messages:\n" + StringUtil.join(myInfoMessages, toStringFunction, "\n"));
+        }
+        return this;
+    }
+
+    @NotNull
+    public List<BuildMessage> getMessages(@NotNull BuildMessage.Kind kind) {
+        if (kind == BuildMessage.Kind.ERROR) {
+            return Collections.unmodifiableList(myErrorMessages);
+        } else if (kind == BuildMessage.Kind.WARNING) {
+            return Collections.unmodifiableList(myWarnMessages);
+        } else {
+            return Collections.unmodifiableList(myInfoMessages);
+        }
+    }
 }

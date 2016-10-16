@@ -7,6 +7,6 @@ import org.jetbrains.annotations.NotNull;
 public class AldorFileTypeFactory extends FileTypeFactory {
   @Override
   public void createFileTypes(@NotNull FileTypeConsumer fileTypeConsumer) {
-    fileTypeConsumer.consume(AldorFileType.INSTANCE, "aldor");
+    fileTypeConsumer.consume(AldorFileType.INSTANCE, "as");
   }
 }

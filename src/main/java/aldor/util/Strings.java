@@ -101,8 +101,8 @@ public final class Strings {
 	 */
 	@SuppressWarnings({"InterfaceNamingConvention", "InterfaceWithOnlyOneDirectInheritor"})
 	public interface Codec<From, To> {
-		public To encode(From from);
-		public From decode(To to);
+		To encode(From from);
+		From decode(To to);
 	}
 
 	private abstract static class StringCodec<T> implements Codec<T, String> {

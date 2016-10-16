@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 /**
- * Created by pab on 04/10/16.
+ * a: B
  */
 public class Declaration extends SyntaxNode<AldorDeclPart> {
     public Declaration(AldorDeclPart element, @NotNull List<Syntax> arguments) {

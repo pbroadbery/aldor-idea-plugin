@@ -2,7 +2,6 @@ package aldor.lexer;
 
 import com.google.common.collect.Lists;
 import com.intellij.psi.tree.IElementType;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.List;
@@ -40,7 +39,7 @@ public class AldorIndentLexerTest {
 
         unit.start("\nWords\n");
 
-        Assert.assertEquals(Lists.newArrayList(KW_NewLine, TK_Id, KW_NewLine), LexerFunctions.readTokens(unit));
+        assertEquals(Lists.newArrayList(KW_NewLine, TK_Id, KW_NewLine), LexerFunctions.readTokens(unit));
     }
 
 

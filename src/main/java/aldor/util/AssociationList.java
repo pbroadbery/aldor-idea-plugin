@@ -1,24 +1,26 @@
 package aldor.util;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.AbstractMap;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * Created by pab on 01/10/16.
+ * SExpression turned into a mapping..
  */
 public class AssociationList extends AbstractMap<SExpression, SExpression> {
-    SExpression sexpr;
+    private final SExpression sexpr;
 
     public AssociationList(SExpression sexpr) {
         this.sexpr = sexpr;
     }
 
+    @NotNull
     @Override
     public Set<Entry<SExpression, SExpression>> entrySet() {
-
         return sexpr.asList().stream()
-                .map(x -> new SimpleEntry<SExpression, SExpression>(x.car(), x.cdr()))
+                .map(x -> new SimpleEntry<>(x.car(), x.cdr()))
                 .collect(Collectors.toSet());
     }
 }

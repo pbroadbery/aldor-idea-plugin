@@ -1,6 +1,5 @@
 package aldor.syntax;
 
-import aldor.build.builders.AldorBuildTargetScopeProvider;
 import aldor.psi.AldorAddPart;
 import aldor.psi.AldorDeclPart;
 import aldor.psi.AldorE14;
@@ -35,8 +34,8 @@ import java.util.List;
 /**
  * Turns Psi into syntax
  */
-public class SyntaxPsiParser {
-    private static final Logger LOG = Logger.getInstance(AldorBuildTargetScopeProvider.class);
+public final class SyntaxPsiParser {
+    private static final Logger LOG = Logger.getInstance(SyntaxPsiParser.class);
 
     @Nullable
     public static Syntax parse(PsiElement elt) {
@@ -65,6 +64,11 @@ public class SyntaxPsiParser {
             visitStack.peek().add(new Other(o.getLastChild()));
         }
 
+        /**
+         * Scan the following:
+         * E14 ::= ((E15? (WithPart | AddPart)) | (E15 (KW_Except E15 | KW_Throw E15| Nothing))) (WithPart | AddPart)*
+         * Nothing to do with the canary wharf tourist department.
+         */
         @Override
         public void visitE14(@NotNull AldorE14 o) {
             List<Syntax> fnOrAtom = Lists.newArrayList();
@@ -93,7 +97,7 @@ public class SyntaxPsiParser {
             if (fnOrAtom.size() == 1) {
                 visitStack.peek().add(fnOrAtom.get(0));
             } else {
-                Syntax syntax = new Apply(o, Apply.ApplyFormat.Normal, fnOrAtom);
+                Syntax syntax = new Apply(o, fnOrAtom);
                 visitStack.peek().add(syntax);
             }
         }
@@ -114,12 +118,12 @@ public class SyntaxPsiParser {
             else if (opsAndArgs.size() == 1) {
                 visitStack.peek().add(opsAndArgs.get(0));
             } else if (opsAndArgs.size() == 2) {
-                visitStack.peek().add(new Apply(o, Apply.ApplyFormat.Normal, opsAndArgs));
+                visitStack.peek().add(new Apply(o, opsAndArgs));
             }
             else {
                 Syntax all = opsAndArgs.get(opsAndArgs.size() - 1);
                 for (Syntax syntax : Lists.reverse(opsAndArgs).subList(1, opsAndArgs.size() - 2)) {
-                    all = new Apply(null, Apply.ApplyFormat.Normal, Lists.newArrayList(syntax, all));
+                    all = new Apply(null, Lists.newArrayList(syntax, all));
                 }
                 visitStack.peek().add(all);
             }
@@ -186,7 +190,7 @@ public class SyntaxPsiParser {
             Syntax lhs;
             int i=1;
             if ((exprContent.size() % 2) == 0) {
-                lhs = new Apply(expr, Apply.ApplyFormat.Normal, exprContent.subList(0, 2));
+                lhs = new Apply(expr, exprContent.subList(0, 2));
                 i++;
             }
             else {
@@ -196,7 +200,7 @@ public class SyntaxPsiParser {
             //noinspection ForLoopWithMissingComponent
             for (; i<exprContent.size(); i+=2) {
                 Syntax op = exprContent.get(i);
-                lhs = new Apply(expr, Apply.ApplyFormat.Infix, Lists.newArrayList(op, lhs, exprContent.get(i+1)));
+                lhs = new Apply(expr, Lists.newArrayList(op, lhs, exprContent.get(i+1)));
             }
             visitStack.peek().add(lhs);
         }
@@ -207,5 +211,9 @@ public class SyntaxPsiParser {
         }
     }
 
+    public static String prettyPrint(Syntax syntax) {
+        // FIXME: Temporary
+        return "{pretty: " + syntax + "}";
+    }
 
 }

@@ -1,6 +1,5 @@
 package aldor.build.builders;
 
-import aldor.build.facet.AldorFacet;
 import aldor.build.module.AldorModuleType;
 import aldor.builder.AldorTargetIds;
 import aldor.file.AldorFileType;
@@ -24,7 +23,7 @@ import java.util.List;
 import static aldor.builder.AldorBuildConstants.ALDOR_FILE_TARGET;
 
 /**
- * Created by pab on 26/09/16.
+ * Maps a change list into a bunch of stuff to do for the compiler
  */
 public class AldorBuildTargetScopeProvider extends BuildTargetScopeProvider {
     private static final Logger LOG = Logger.getInstance(AldorBuildTargetScopeProvider.class);
@@ -43,9 +42,6 @@ public class AldorBuildTargetScopeProvider extends BuildTargetScopeProvider {
         final Collection<String> targetIds = new ArrayList<>();
         for (final Module module : baseScope.getAffectedModules()) {
             if (ModuleType.get(module).equals(AldorModuleType.instance())) {
-                targetIds.add(module.getName());
-            }
-            else if (AldorFacet.getInstance(module) != null) {
                 targetIds.add(module.getName());
             }
         }

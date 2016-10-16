@@ -13,9 +13,6 @@ import org.jetbrains.jps.incremental.messages.CompilerMessage;
 import java.io.IOException;
 import java.util.Collections;
 
-/**
- * Created by pab on 26/09/16.
- */
 public class AldorBuilder extends TargetBuilder<AldorRootDescriptor, AldorSourceRootBuildTarget> {
     private static final Logger LOG = Logger.getInstance(AldorBuilder.class);
 
