@@ -131,7 +131,7 @@ public final class SyntaxPsiParser {
 
         @Override
         public void visitId(@NotNull AldorId o) {
-            visitStack.peek().add(new Id(o, o.getText()));
+            visitStack.peek().add(new Id(o));
         }
 
         @Override
@@ -207,7 +207,7 @@ public final class SyntaxPsiParser {
 
         @Override
         public void visitInfixedTok(@NotNull AldorInfixedTok tok) {
-            visitStack.peek().add(new Id(tok, tok.getText()));
+            visitStack.peek().add(new Id(tok));
         }
     }
 

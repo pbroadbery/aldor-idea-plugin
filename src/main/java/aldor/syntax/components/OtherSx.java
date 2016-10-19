@@ -2,7 +2,6 @@ package aldor.syntax.components;
 
 import aldor.syntax.Syntax;
 import aldor.util.SExpression;
-import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
@@ -10,24 +9,17 @@ import java.util.Collections;
 /**
  * Placeholder where we can't figure out what's going on.
  */
-public class OtherSx extends Syntax {
-    @Nullable
-    private final PsiElement other;
+public class OtherSx extends Other {
     private final SExpression sx;
 
     public OtherSx(SExpression sx) {
-        this.other = null;
+        super(null);
         this.sx = sx;
     }
 
     @Override
     public String name() {
         return "Other";
-    }
-
-    @Override
-    public PsiElement psiElement() {
-        return other;
     }
 
     @Override
@@ -38,7 +30,7 @@ public class OtherSx extends Syntax {
 
     @Override
     public String toString() {
-        return "(" + name() + ": " + sx + ")";
+        return "{?:" + name() + ": " + sx + "}";
     }
 
 }

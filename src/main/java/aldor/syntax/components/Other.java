@@ -1,7 +1,9 @@
 package aldor.syntax.components;
 
+import aldor.lexer.AldorTokenType;
 import aldor.syntax.Syntax;
 import com.intellij.psi.PsiElement;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 
@@ -30,9 +32,15 @@ public class Other extends Syntax {
         return Collections.emptyList();
     }
 
+    @Nullable
+    @Override
+    public AldorTokenType tokenType() {
+        return null;
+    }
+
     @Override
     public String toString() {
-        return "(" + name() + ")";
+        return "{?:" + name() + "}";
     }
 
 }

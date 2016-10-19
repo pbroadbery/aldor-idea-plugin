@@ -5,6 +5,7 @@ import aldor.symbolfile.AnnotationFile;
 import aldor.symbolfile.PopulatedAnnotationFile;
 import aldor.symbolfile.SrcPos;
 import aldor.util.SExpression;
+import aldor.util.sexpr.SExpressionReadException;
 import com.google.common.collect.Maps;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
@@ -21,9 +22,9 @@ import com.intellij.psi.PsiFileSystemItem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.LineNumberReader;
 import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.Map;
@@ -107,8 +108,15 @@ public class AnnotationFileManager implements Disposable {
             if (buildFile == null) {
                 return new MissingAnnotationFile(virtualFile, "Missing .abn file: "+ buildFilePath);
             }
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(buildFile.getInputStream(), StandardCharsets.US_ASCII))) {
-                return new PopulatedAnnotationFile(virtualFile.getPath(), SExpression.read(reader));
+            try (LineNumberReader reader = new LineNumberReader(new InputStreamReader(buildFile.getInputStream(), StandardCharsets.US_ASCII))) {
+
+                try {
+                    return new PopulatedAnnotationFile(virtualFile.getPath(), SExpression.read(reader));
+                }
+                catch (SExpressionReadException e) {
+                    LOG.error("When reading file: " + buildFilePath + ": " + reader.getLineNumber(), e);
+                    return new MissingAnnotationFile(virtualFile, e.getMessage());
+                }
             } catch (IOException e) {
                 LOG.error("When creating annotation file " + buildFilePath, e);
                 return new MissingAnnotationFile(virtualFile, e.getMessage());

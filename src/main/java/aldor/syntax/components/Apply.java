@@ -1,6 +1,7 @@
 package aldor.syntax.components;
 
 import aldor.syntax.Syntax;
+import aldor.syntax.SyntaxVisitor;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,5 +27,10 @@ public class Apply extends SyntaxNode<PsiElement> {
 
     public List<Syntax> arguments() {
         return arguments.subList(1, arguments.size());
+    }
+
+    @Override
+    public <T> T accept(SyntaxVisitor<T> syntaxVisitor) {
+        return syntaxVisitor.visitApply(this);
     }
 }

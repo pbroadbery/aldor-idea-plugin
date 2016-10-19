@@ -1,8 +1,10 @@
 package aldor.syntax.components;
 
+import aldor.lexer.AldorTokenType;
 import aldor.syntax.Syntax;
 import com.google.common.base.Joiner;
 import com.intellij.psi.PsiElement;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,10 +15,10 @@ import java.util.List;
  */
 public abstract class SyntaxNode<SyntaxPsiElement extends PsiElement> extends Syntax {
     protected final List<Syntax> arguments;
-    private final SyntaxPsiElement element;
+    private final SyntaxRepresentation<SyntaxPsiElement> representation;
 
     protected SyntaxNode(SyntaxPsiElement element, List<Syntax> arguments) {
-        this.element = element;
+        this.representation = SyntaxRepresentation.create(element);
         this.arguments = new ArrayList<>(arguments);
         if (arguments.stream().filter(x->x == null).findAny().isPresent()) {
             throw new IllegalArgumentException("Found a null: " + arguments);
@@ -30,15 +32,21 @@ public abstract class SyntaxNode<SyntaxPsiElement extends PsiElement> extends Sy
 
     @Override
     public SyntaxPsiElement psiElement() {
-        return element;
+        return representation.element();
     }
 
     @Override
-    public Iterable<Syntax> children() {
+    public List<Syntax> children() {
         return Collections.unmodifiableList(arguments);
     }
 
     public Syntax child(int n) {
         return arguments.get(n);
+    }
+
+    @Nullable
+    @Override
+    public AldorTokenType tokenType() {
+        return null;
     }
 }

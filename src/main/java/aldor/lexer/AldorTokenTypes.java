@@ -9,6 +9,7 @@ import java.util.Map;
 
 public final class AldorTokenTypes {
     private static final Map<String, AldorTokenType> tokenTypeForString = Maps.newHashMap();
+    private static final Map<String, AldorTokenType> tokenTypeForName = Maps.newHashMap();
     public static final IElementType WHITE_SPACE = TokenType.WHITE_SPACE;
     public static final IElementType BAD_CHARACTER = TokenType.BAD_CHARACTER;
     /*
@@ -193,6 +194,7 @@ public final class AldorTokenTypes {
     private static AldorTokenType createTokenType(String name, int i, String text, int hasString, int isComment, int isOpener, int isCloser, int isFollower, int isLangword, int isLeftAssoc, int isMaybeInfix, int precedence, int isDisabled) {
         AldorTokenType tokenType = new AldorTokenType(name, i, text, hasString, isComment, isOpener, isCloser, isFollower, isLangword, isLeftAssoc, isMaybeInfix, precedence, isDisabled);
         tokenTypeForString.put(name, tokenType);
+        tokenTypeForName.put(text, tokenType);
         return tokenType;
     }
 
@@ -220,5 +222,9 @@ public final class AldorTokenTypes {
 
     public static boolean isFollower(IElementType eltType) {
         return ((eltType instanceof AldorTokenType) && ((AldorTokenType) eltType).isFollower());
+    }
+
+    public static AldorTokenType forText(String text) {
+        return tokenTypeForName.get(text);
     }
 }

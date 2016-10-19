@@ -7,6 +7,7 @@ import aldor.symbolfile.AnnotationFile;
 import aldor.symbolfile.SrcPos;
 import aldor.symbolfile.Syme;
 import aldor.syntax.Syntax;
+import aldor.syntax.SyntaxPrinter;
 import com.intellij.lang.documentation.DocumentationProviderEx;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
@@ -58,10 +59,11 @@ public class AldorDocumentationProvider extends DocumentationProviderEx {
             return "no information";
         }
 
+        SyntaxPrinter printer = SyntaxPrinter.instance();
         Syntax exporter = syme.exporter();
         Syntax type = syme.type();
 
-        return "<p><b>exporter:</b> " + exporter + "</b></p>" + "\n<p><b>type:</b> " + type + "</p>";
+        return "<p><b>exporter:</b> " + printer.toString(exporter) + "</b></p>" + "\n<p><b>type:</b> " + printer.toString(type) + "</p>";
     }
 
     private boolean isInterestingElement(PsiElement element) {

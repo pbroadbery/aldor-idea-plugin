@@ -1,5 +1,6 @@
 package aldor.syntax;
 
+import aldor.lexer.AldorTokenType;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -27,4 +28,11 @@ public abstract class Syntax {
     public <T extends Syntax> boolean is(@NotNull Class<T> clzz) {
         return clzz.isAssignableFrom(this.getClass());
     }
+
+    public <T> T accept(SyntaxVisitor<T> syntaxVisitor) {
+        return syntaxVisitor.visitSyntax(this);
+    }
+
+    @Nullable
+    public abstract AldorTokenType tokenType();
 }

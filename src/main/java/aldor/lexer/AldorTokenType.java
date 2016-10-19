@@ -12,9 +12,11 @@ public class AldorTokenType extends IElementType {
     private final String name;
     private final String text;
     private final boolean isLangWord;
+    private final boolean isMaybeInfix;
     private final boolean isOpener;
     private final boolean isCloser;
     private final boolean isFollower;
+    private final int precedence;
 
     @SuppressWarnings("UnusedParameters")
     public AldorTokenType(@NotNull String name, int i, @NotNull  String text, int hasString, int isComment, int isOpener, int isCloser,
@@ -26,6 +28,8 @@ public class AldorTokenType extends IElementType {
         this.isOpener = isOpener != 0;
         this.isCloser = isCloser != 0;
         this.isFollower = isFollower != 0;
+        this.isMaybeInfix = isMaybeInfix != 0;
+        this.precedence = precedence;
     }
 
     @NotNull
@@ -60,4 +64,11 @@ public class AldorTokenType extends IElementType {
         return isFollower;
     }
 
+    public boolean isInfix() {
+        return isMaybeInfix;
+    }
+
+    public int precendence() {
+        return precedence;
+    }
 }

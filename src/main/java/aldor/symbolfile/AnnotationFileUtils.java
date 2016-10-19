@@ -6,6 +6,7 @@ import aldor.syntax.components.Comma;
 import aldor.syntax.components.Declaration;
 import aldor.syntax.components.Id;
 import aldor.syntax.components.OtherSx;
+import aldor.syntax.components.SxSyntaxRepresentation;
 import aldor.util.SExpression;
 import aldor.util.SxType;
 import org.jetbrains.annotations.NotNull;
@@ -21,7 +22,7 @@ public final class AnnotationFileUtils {
     @NotNull
     public static Syntax parseSx(AnnotationLookup lookup, SExpression sx) {
         if (sx.isOfType(SxType.Symbol)) {
-            return new Id(null, sx.symbol());
+            return new Id(new SxSyntaxRepresentation<>(sx, sx.symbol()));
         }
         else if (sx.isOfType(SxType.Cons)) {
             if (sx.car().equals(SymbolFileSymbols.Ref)) {
@@ -36,7 +37,16 @@ public final class AnnotationFileUtils {
                 if (symeSx != null) {
                     Syme syme = lookup.syme(symeSx.cdr().integer());
                     String name = syme.name();
-                    return new Id(null, name);
+                    return new Id(new SxSyntaxRepresentation<>(sx, name));
+                }
+                else {
+                    SExpression name = sx.cdr().asAssociationList().get(SymbolFileSymbols.Name);
+                    if (name != null) {
+                        return new Id(new SxSyntaxRepresentation<>(sx, name.symbol()));
+                    }
+                    else {
+                        return new OtherSx(sx);
+                    }
                 }
             }
             else if (sx.car().equals(SymbolFileSymbols.Comma)) {

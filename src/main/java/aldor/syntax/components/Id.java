@@ -1,8 +1,12 @@
 package aldor.syntax.components;
 
+import aldor.lexer.AldorTokenType;
 import aldor.psi.AldorIdentifier;
 import aldor.syntax.Syntax;
+import aldor.syntax.SyntaxVisitor;
 import com.intellij.psi.PsiElement;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 
@@ -10,12 +14,14 @@ import java.util.Collections;
  * CAn identifier
  */
 public class Id extends Syntax {
-    private final AldorIdentifier id;
-    private final String text;
+    private final SyntaxRepresentation<AldorIdentifier> rep;
 
-    public Id(AldorIdentifier id, String text) {
-        this.id = id;
-        this.text = text;
+    public Id(AldorIdentifier id) {
+        this.rep = SyntaxRepresentation.create(id);
+    }
+
+    public Id(SxSyntaxRepresentation<AldorIdentifier> sxSyntaxRepresentation) {
+        this.rep = sxSyntaxRepresentation;
     }
 
     @Override
@@ -23,9 +29,14 @@ public class Id extends Syntax {
         return "Id";
     }
 
+    @NotNull
+    public String symbol() {
+        return rep.text();
+    }
+
     @Override
     public PsiElement psiElement() {
-        return id;
+        return rep.element();
     }
 
     @Override
@@ -33,9 +44,14 @@ public class Id extends Syntax {
         return Collections.emptyList();
     }
 
+    @Nullable
     @Override
-    public String toString() {
-        return text;
+    public AldorTokenType tokenType() {
+        return rep.tokenType();
     }
 
+    @Override
+    public <T> T accept(SyntaxVisitor<T> syntaxVisitor) {
+        return syntaxVisitor.visitId(this);
+    }
 }

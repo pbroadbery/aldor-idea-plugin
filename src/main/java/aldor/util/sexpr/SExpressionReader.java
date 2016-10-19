@@ -11,7 +11,6 @@ import java.io.Reader;
 import java.util.Locale;
 
 import static aldor.util.SymbolPolicy.ALLCAPS;
-import static aldor.util.SymbolPolicy.NORMAL;
 
 public class SExpressionReader {
 
@@ -19,10 +18,6 @@ public class SExpressionReader {
 
     public SExpressionReader(Reader reader, SymbolPolicy symbolPolicy) {
         tokeniser = new WhitespaceFilter(new Tokeniser(reader, symbolPolicy));
-    }
-
-    public SExpressionReader(Reader reader) {
-        this(reader, NORMAL);
     }
 
     public SExpression read() {
@@ -153,12 +148,33 @@ public class SExpressionReader {
             sb.append(stream.peek());
             stream.next();
             while (!stringTerminal(stream.peek())) {
-                sb.append(stream.peek());
-                stream.next();
+                char c = stream.peek();
+                if (c == '\\') {
+                    stream.next();
+                    sb.append(escapeCharacter(stream.peek()));
+                    stream.next();
+                }
+                else {
+                    sb.append(stream.peek());
+                    stream.next();
+                }
             }
             sb.append(stream.peek());
             stream.next();
             return sb.toString();
+        }
+
+        private char escapeCharacter(Character c) {
+            switch (c) {
+                case 'n':
+                    return '\n';
+                case 't':
+                    return 't';
+                case '"':
+                    return '\"';
+                default:
+                    throw new SExpressionReadException("Unknown escape character [" + c + "]");
+            }
         }
 
         private String readInteger() {
@@ -212,6 +228,7 @@ public class SExpressionReader {
                     || (c == '>')
                     || (c == '-')
                     || (c == '+')
+                    || (c == '!')
                     || (c == '*')
                     || (c == '/')
                     || (c == '^')

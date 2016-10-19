@@ -1,8 +1,11 @@
 package aldor.syntax.components;
 
+import aldor.lexer.AldorTokenType;
+import aldor.lexer.AldorTokenTypes;
 import aldor.psi.AldorLiteral;
 import aldor.syntax.Syntax;
 import com.intellij.psi.PsiElement;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 
@@ -34,5 +37,20 @@ public class Literal extends Syntax {
     @Override
     public String toString() {
         return name();
+    }
+
+    @Nullable
+    @Override
+    public AldorTokenType tokenType() {
+        if (literal.getTKInt() != null) {
+            return AldorTokenTypes.TK_Int;
+        }
+        if (literal.getTKFloat() != null) {
+            return AldorTokenTypes.TK_Float;
+        }
+        if (literal.getTKString() != null) {
+            return AldorTokenTypes.TK_String;
+        }
+        return null;
     }
 }
