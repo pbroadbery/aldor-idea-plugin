@@ -45,7 +45,7 @@ public final class Strings {
 			}});
 	}
 
-	@SuppressWarnings({"unchecked", "ReturnOfInnerClass"})
+	@SuppressWarnings({"unchecked"})
 	public <X> Codec<X, String> stringCodecFor(Class<X> clss) {
 		if (Enum.class.isAssignableFrom(clss)) {
 			@SuppressWarnings("rawtypes")

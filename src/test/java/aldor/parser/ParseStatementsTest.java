@@ -201,12 +201,12 @@ public class ParseStatementsTest extends LightPlatformCodeInsightFixtureTestCase
 
 
     private PsiElement parseText(CharSequence text) {
-        return ParserFunctions.parseText(getProject(), text);
+        return ParserFunctions.parseAldorText(getProject(), text);
     }
 
 
     private PsiElement parseText(CharSequence text, IElementType type) {
-        return ParserFunctions.parseText(getProject(), text, type);
+        return ParserFunctions.parseAldorText(getProject(), text, type);
     }
 
     @Override

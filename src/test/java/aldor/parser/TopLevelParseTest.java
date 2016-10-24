@@ -15,14 +15,12 @@ public class TopLevelParseTest extends LightPlatformCodeInsightTestCase {
         assertEquals(0, errors.size());
     }
 
-    @SuppressWarnings("SameParameterValue")
     private PsiElement parseText(CharSequence text) {
         return parseText(text, AldorTypes.TOP_LEVEL);
     }
 
-    @SuppressWarnings("SameParameterValue")
     private PsiElement parseText(CharSequence text, IElementType elementType) {
-        return ParserFunctions.parseText(getProject(), text, elementType);
+        return ParserFunctions.parseAldorText(getProject(), text, elementType);
     }
 
 

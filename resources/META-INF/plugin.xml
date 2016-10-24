@@ -55,6 +55,7 @@
         <fileTypeFactory implementation="aldor.file.SpadFileTypeFactory"/>
         <lang.parserDefinition language="Spad" implementationClass="aldor.parser.SpadParserDefinition"/>
 
+        <lang.parserDefinition language="Expression" implementationClass="aldor.expression.ExpressionParserDefinition"/>
     </extensions>
 
     <actions>

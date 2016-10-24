@@ -7,7 +7,7 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.Icon;
+import javax.swing.*;
 
 /**
  * Represents an aldor module.
@@ -49,7 +49,6 @@ public class AldorModuleType extends ModuleType<ModuleBuilder> {
         return AllIcons.FileTypes.Custom;
     }
 
-    @SuppressWarnings("SameReturnValue")
     public static ModuleType<ModuleBuilder> instance() {
         return instance;
     }

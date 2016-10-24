@@ -24,7 +24,8 @@ public class AldorParserDefinition implements ParserDefinition {
     private static final TokenSet COMMENT_TOKENS = TokenSet.create(AldorTokenTypes.TK_Comment);
     public static final TokenSet WHITE_SPACES = TokenSet.create(TokenType.WHITE_SPACE, AldorTokenTypes.KW_NewLine,
                                                                 AldorTokenTypes.TK_Comment,
-                                                                AldorTokenTypes.TK_SysCmdIf, AldorTokenTypes.TK_SysCmdEndIf, AldorTokenTypes.TK_IfLine,
+                                                                AldorTokenTypes.TK_SysCmdIf, AldorTokenTypes.TK_SysCmdEndIf,
+                                                                AldorTokenTypes.TK_IfLine,
                                                                 AldorTokenTypes.KW_Indent, AldorTokenTypes.TK_SysCmd);
 
     private static final IFileElementType FILE =

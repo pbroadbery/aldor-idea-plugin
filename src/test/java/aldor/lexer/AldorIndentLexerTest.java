@@ -6,13 +6,17 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static aldor.lexer.AldorLexerAdapter.LexMode.Spad;
 import static aldor.lexer.AldorTokenTypes.KW_2EQ;
+import static aldor.lexer.AldorTokenTypes.KW_Add;
 import static aldor.lexer.AldorTokenTypes.KW_Assign;
 import static aldor.lexer.AldorTokenTypes.KW_BlkEnd;
 import static aldor.lexer.AldorTokenTypes.KW_BlkNext;
 import static aldor.lexer.AldorTokenTypes.KW_BlkStart;
 import static aldor.lexer.AldorTokenTypes.KW_CBrack;
+import static aldor.lexer.AldorTokenTypes.KW_Colon;
 import static aldor.lexer.AldorTokenTypes.KW_Comma;
+import static aldor.lexer.AldorTokenTypes.KW_Dollar;
 import static aldor.lexer.AldorTokenTypes.KW_Else;
 import static aldor.lexer.AldorTokenTypes.KW_If;
 import static aldor.lexer.AldorTokenTypes.KW_Indent;
@@ -22,10 +26,13 @@ import static aldor.lexer.AldorTokenTypes.KW_Repeat;
 import static aldor.lexer.AldorTokenTypes.KW_Return;
 import static aldor.lexer.AldorTokenTypes.KW_StartPile;
 import static aldor.lexer.AldorTokenTypes.KW_Then;
+import static aldor.lexer.AldorTokenTypes.KW_With;
 import static aldor.lexer.AldorTokenTypes.TK_Comment;
 import static aldor.lexer.AldorTokenTypes.TK_Id;
 import static aldor.lexer.AldorTokenTypes.TK_IfLine;
 import static aldor.lexer.AldorTokenTypes.TK_Int;
+import static aldor.lexer.AldorTokenTypes.TK_PostDoc;
+import static aldor.lexer.AldorTokenTypes.TK_PreDoc;
 import static aldor.lexer.AldorTokenTypes.TK_SysCmdEndIf;
 import static aldor.lexer.AldorTokenTypes.TK_SysCmdIf;
 import static aldor.lexer.AldorTokenTypes.WHITE_SPACE;
@@ -396,6 +403,95 @@ public class AldorIndentLexerTest {
 
         List<IElementType> tokens = LexerFunctions.readTokens(unit);
         assertEquals(Lists.newArrayList(KW_StartPile, KW_NewLine
+        ), tokens);
+    }
+
+
+    @Test
+    public void spadLexerWith() {
+        AldorIndentLexer unit = new AldorIndentLexer(new AldorLexerAdapter(Spad, null));
+        String text = "with\n  foo: %\n  ++ foo\n";
+        unit.start(text);
+        List<IElementType> tokens = LexerFunctions.readTokens(unit);
+        assertEquals(Lists.newArrayList(KW_With, KW_BlkStart, KW_Indent, TK_Id, KW_Colon, WHITE_SPACE, TK_Id, KW_NewLine, KW_Indent, TK_PostDoc, KW_NewLine), tokens);
+    }
+
+    @Test
+    public void spadLexerWith2() {
+        AldorIndentLexer unit = new AldorIndentLexer(new AldorLexerAdapter(Spad, null));
+        String text = "with\n  foo: %\n  ++ foo\n  bar: %\n";
+        unit.start(text);
+        List<IElementType> tokens = LexerFunctions.readTokens(unit);
+        assertEquals(Lists.newArrayList(KW_With, KW_BlkStart,
+                KW_Indent, TK_Id, KW_Colon, WHITE_SPACE, TK_Id, KW_NewLine,
+                KW_Indent, TK_PostDoc, KW_BlkNext,
+                KW_Indent, TK_Id, KW_Colon, WHITE_SPACE, TK_Id, KW_NewLine), tokens);
+    }
+
+    @Test
+    public void spadLexerDecl() {
+        AldorIndentLexer unit = new AldorIndentLexer(new AldorLexerAdapter(Spad, null));
+        String text = "++ foo\nFoo: X == Y\n++bar\nBar: A == B\n";
+        unit.start(text);
+        List<IElementType> tokens = LexerFunctions.readTokens(unit);
+        assertEquals(Lists.newArrayList(TK_PreDoc, KW_NewLine,
+                TK_Id, KW_Colon, WHITE_SPACE, TK_Id, WHITE_SPACE, KW_2EQ, WHITE_SPACE, TK_Id, KW_BlkNext,
+                TK_PreDoc, KW_NewLine,
+                TK_Id, KW_Colon, WHITE_SPACE, TK_Id, WHITE_SPACE, KW_2EQ, WHITE_SPACE, TK_Id, KW_NewLine), tokens);
+    }
+
+    @Test
+    public void spadLexerDecl2() {
+        AldorIndentLexer unit = new AldorIndentLexer(new AldorLexerAdapter(Spad, null));
+        String text = "++ foo\nFoo: X == add\n++bar\nBar: A == add\n";
+        unit.start(text);
+        List<IElementType> tokens = LexerFunctions.readTokens(unit);
+        assertEquals(Lists.newArrayList(TK_PreDoc, KW_NewLine,
+                TK_Id, KW_Colon, WHITE_SPACE, TK_Id, WHITE_SPACE, KW_2EQ, WHITE_SPACE, KW_Add, KW_BlkNext,
+                TK_PreDoc, KW_NewLine,
+                TK_Id, KW_Colon, WHITE_SPACE, TK_Id, WHITE_SPACE, KW_2EQ, WHITE_SPACE, KW_Add, KW_NewLine), tokens);
+    }
+
+
+    @Test
+    public void spadLexerDecl3() {
+        AldorIndentLexer unit = new AldorIndentLexer(new AldorLexerAdapter(Spad, null));
+        String text = "++ Foo\n++More\nFoo: with == add\n++ Bar\n++ More Bar\nBar: with == add\n";
+        unit.start(text);
+        List<IElementType> tokens = LexerFunctions.readTokens(unit);
+        assertEquals(Lists.newArrayList(
+                TK_PreDoc, KW_NewLine,
+                TK_PreDoc, KW_NewLine,
+                TK_Id, KW_Colon, WHITE_SPACE, KW_With, WHITE_SPACE, KW_2EQ, WHITE_SPACE, KW_Add, KW_BlkNext,
+                TK_PreDoc, KW_NewLine,
+                TK_PreDoc, KW_NewLine,
+                TK_Id, KW_Colon, WHITE_SPACE, KW_With, WHITE_SPACE, KW_2EQ, WHITE_SPACE, KW_Add, KW_NewLine), tokens);
+    }
+
+    @Test
+    public void spadLexerLongExpr() {
+        AldorIndentLexer unit = new AldorIndentLexer(new AldorLexerAdapter(Spad, null));
+        String text = "add\n  x := [foo\n   ]$List\n";
+        unit.start(text);
+        List<IElementType> tokens = LexerFunctions.readTokens(unit);
+        assertEquals(Lists.newArrayList(
+                KW_Add, KW_BlkStart,
+                KW_Indent, TK_Id, WHITE_SPACE, KW_Assign, WHITE_SPACE, KW_OBrack, TK_Id, KW_NewLine,
+                KW_Indent, KW_CBrack, KW_Dollar, TK_Id, KW_NewLine
+                ), tokens);
+    }
+
+
+    @Test
+    public void spadLexerIfLayout() {
+        AldorIndentLexer unit = new AldorIndentLexer(new AldorLexerAdapter(Spad, null));
+        String text = "if X\n then\n  foo\n else\n bar\nZZZ\n";
+        unit.start(text);
+        List<IElementType> tokens = LexerFunctions.readTokens(unit);
+        assertEquals(Lists.newArrayList(
+                KW_Add, KW_BlkStart,
+                KW_Indent, TK_Id, WHITE_SPACE, KW_Assign, WHITE_SPACE, KW_OBrack, TK_Id, KW_NewLine,
+                KW_Indent, KW_CBrack, KW_Dollar, TK_Id, KW_NewLine
         ), tokens);
     }
 

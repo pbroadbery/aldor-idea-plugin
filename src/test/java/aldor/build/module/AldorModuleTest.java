@@ -39,7 +39,6 @@ public class AldorModuleTest extends UsefulTestCase {
         project = fixture.getProject();
     }
 
-    @SuppressWarnings("StringConcatenationMissingWhitespace")
     public void testModule() throws IOException {
 
         AldorModuleManager manager = AldorModuleManager.getInstance(project);

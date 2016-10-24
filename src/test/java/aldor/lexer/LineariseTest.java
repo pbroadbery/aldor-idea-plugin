@@ -54,7 +54,6 @@ public class LineariseTest {
         System.out.println("Blocks: " + section.blockMarkers());
     }
 
-
     @Test
     public void testPileNone() {
         String text = "Foo == with {\n a = 1; \n b = \"2\"}\nBar == X";

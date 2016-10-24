@@ -38,7 +38,7 @@ public class SyntaxPrintTest extends LightPlatformCodeInsightFixtureTestCase {
 
 
     private PsiElement parseText(CharSequence text) {
-        return ParserFunctions.parseText(getProject(), text);
+        return ParserFunctions.parseAldorText(getProject(), text);
     }
 
     @Override

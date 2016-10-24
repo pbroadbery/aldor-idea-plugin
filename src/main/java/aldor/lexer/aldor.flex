@@ -38,6 +38,10 @@ SYSCMD_IF=#if[ \t][^\r\n]*
 SYSCMD_ENDIF=#endif[^\r\n]*
 IF_LINE=[^\r\n]+
 SPAD_SYSCMD=\)[^\r\n]*
+
+SPAD_SYSCMD_IF=\)if[ \t][^\r\n]*
+SPAD_SYSCMD_ENDIF=\)endif[^\r\n]*
+
 %%
 /*
 "TK_Id" { yybegin(NORMAL); return AldorTokenTypes.TK_Id; }
@@ -173,6 +177,10 @@ SPAD_SYSCMD=\)[^\r\n]*
 <LINE_START, YYINITIAL> {
     { SYSCMD_IF } { yybegin(IF_TEXT); return AldorTokenTypes.TK_SysCmdIf;}
     { SYSCMD_ENDIF } { yybegin(NORMAL); return AldorTokenTypes.TK_SysCmdEndIf;}
+
+    { SPAD_SYSCMD_IF } { yybegin(IF_TEXT); return AldorTokenTypes.TK_SysCmdIf;}
+    { SPAD_SYSCMD_ENDIF } { yybegin(NORMAL); return AldorTokenTypes.TK_SysCmdEndIf;}
+
     { SYSCMD} { yybegin(NORMAL); return AldorTokenTypes.TK_SysCmd;}
     { SPAD_SYSCMD} { yybegin(NORMAL); return AldorTokenTypes.TK_SysCmd;}
     { INDENT } { yybegin(NORMAL); return AldorTokenTypes.KW_Indent; }
@@ -181,6 +189,7 @@ SPAD_SYSCMD=\)[^\r\n]*
 
 <IF_TEXT> {
     { SYSCMD_ENDIF } { yybegin(NORMAL); return AldorTokenTypes.TK_SysCmdEndIf;}
+    { SPAD_SYSCMD_ENDIF } { yybegin(NORMAL); return AldorTokenTypes.TK_SysCmdEndIf;}
     { CRLF } { yybegin(IF_TEXT); return AldorTokenTypes.KW_NewLine; }
     { IF_LINE } { return AldorTokenTypes.TK_IfLine; }
 }

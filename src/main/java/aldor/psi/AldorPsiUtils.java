@@ -15,7 +15,6 @@ public final class AldorPsiUtils {
     }
 
     // TODO: Remove most uses of this method
-    @SuppressWarnings("SameParameterValue")
     static void logPsi(PsiElement psi, int i) {
         logPsi(psi, i, "");
     }

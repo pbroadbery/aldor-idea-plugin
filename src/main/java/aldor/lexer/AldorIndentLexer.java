@@ -9,11 +9,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
+import static aldor.lexer.AldorLexerAdapter.LexMode.Spad;
 import static aldor.lexer.AldorTokenTypes.KW_BlkEnd;
 import static aldor.lexer.AldorTokenTypes.KW_BlkNext;
 import static aldor.lexer.AldorTokenTypes.KW_BlkStart;
 import static aldor.lexer.AldorTokenTypes.KW_EndPile;
 import static aldor.lexer.AldorTokenTypes.KW_NewLine;
+import static aldor.lexer.AldorTokenTypes.TK_PostDoc;
+import static aldor.lexer.AldorTokenTypes.TK_PreDoc;
 import static aldor.lexer.AldorTokenTypes.TK_SysCmd;
 
 /**
@@ -64,7 +67,14 @@ public class AldorIndentLexer extends DelegateLexer {
                 return KW_EndPile;
             }
         }
+        else if (getAldorDelegate().mode() == Spad && Objects.equals(tokType, TK_PostDoc)) {
+            return isSpadPreDocument() ? TK_PreDoc : TK_PostDoc;
+        }
         return tokType;
+    }
+
+    private boolean isSpadPreDocument() {
+        return lineariser.indentLevel(getAldorDelegate().getCurrentPosition().getOffset()) <= 0;
     }
 
     private boolean isAtBlockNewLine() {
@@ -99,7 +109,7 @@ public class AldorIndentLexer extends DelegateLexer {
     }
 
     public boolean isSpadMode() {
-        return getAldorDelegate().mode() == LexMode.Spad;
+        return getAldorDelegate().mode() == Spad;
     }
 
     public boolean isAldorMode() {

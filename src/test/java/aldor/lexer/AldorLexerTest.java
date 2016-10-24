@@ -7,6 +7,7 @@ import org.junit.Test;
 import java.io.StringReader;
 import java.util.List;
 
+import static aldor.lexer.AldorLexerAdapter.LexMode.Spad;
 import static aldor.lexer.AldorTokenTypes.KW_2EQ;
 import static aldor.lexer.AldorTokenTypes.KW_Add;
 import static aldor.lexer.AldorTokenTypes.KW_Colon;
@@ -14,9 +15,11 @@ import static aldor.lexer.AldorTokenTypes.KW_Define;
 import static aldor.lexer.AldorTokenTypes.KW_Indent;
 import static aldor.lexer.AldorTokenTypes.KW_NewLine;
 import static aldor.lexer.AldorTokenTypes.KW_Repeat;
+import static aldor.lexer.AldorTokenTypes.KW_With;
 import static aldor.lexer.AldorTokenTypes.TK_Id;
 import static aldor.lexer.AldorTokenTypes.TK_IfLine;
 import static aldor.lexer.AldorTokenTypes.TK_Int;
+import static aldor.lexer.AldorTokenTypes.TK_PostDoc;
 import static aldor.lexer.AldorTokenTypes.TK_String;
 import static aldor.lexer.AldorTokenTypes.TK_SysCmd;
 import static aldor.lexer.AldorTokenTypes.TK_SysCmdEndIf;
@@ -115,5 +118,22 @@ public class AldorLexerTest {
         assertEquals(Lists.newArrayList(TK_Id, KW_NewLine, TK_SysCmdIf, KW_NewLine, TK_IfLine, KW_NewLine, TK_SysCmdEndIf, KW_NewLine, TK_Id, KW_NewLine), tokens);
     }
 
+    @Test
+    public void spadLexerTest() {
+        AldorLexerAdapter lla = new AldorLexerAdapter(Spad, null);
+        String text = ")abbrev Foo bar\nA: with == add\n";
+        lla.start(text);
+        List<IElementType> tokens = LexerFunctions.readTokens(lla);
+        assertEquals(Lists.newArrayList(TK_SysCmd, KW_NewLine, TK_Id, KW_Colon, WHITE_SPACE, KW_With, WHITE_SPACE, KW_2EQ, WHITE_SPACE, KW_Add, KW_NewLine), tokens);
+    }
+
+    @Test
+    public void spadLexerTest2() {
+        AldorLexerAdapter lla = new AldorLexerAdapter(Spad, null);
+        String text = ")abbrev Foo bar\n++ Foo\nA: with == add\n";
+        lla.start(text);
+        List<IElementType> tokens = LexerFunctions.readTokens(lla);
+        assertEquals(Lists.newArrayList(TK_SysCmd, KW_NewLine, TK_PostDoc, KW_NewLine, TK_Id, KW_Colon, WHITE_SPACE, KW_With, WHITE_SPACE, KW_2EQ, WHITE_SPACE, KW_Add, KW_NewLine), tokens);
+    }
 
 }

@@ -105,10 +105,9 @@ public class PileModeParsingTest extends LightPlatformCodeInsightTestCase {
         return parseText(text, AldorTypes.TOP_LEVEL);
     }
 
-    @SuppressWarnings("SameParameterValue")
     private PsiElement parseText(CharSequence text, IElementType elementType) {
         System.out.println(LexerFunctions.tokens(text));
-        return ParserFunctions.parseText(getProject(), text, elementType);
+        return ParserFunctions.parseAldorText(getProject(), text, elementType);
     }
 
 }

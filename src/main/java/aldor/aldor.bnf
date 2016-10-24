@@ -2,7 +2,6 @@
   parserUtilClass="aldor.parser.AldorParserUtil"
 
   parserClass="aldor.parser.AldorParser"
-
   extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
 
   elementTypeHolderClass="aldor.parser.AldorTypes"
@@ -40,6 +39,9 @@
   mixin("Iterator")="aldor.psi.impl.AldorIteratorMixin"
   mixin("Collection")="aldor.psi.impl.AldorCollectionMixin"
   mixin("AnyStatement_Collection")="aldor.psi.impl.AldorCollectionMixin"
+
+  extends(".*Expr")=Expr
+
 
   tokens = [
           TK_Id TK_Blank TK_Int TK_Float TK_String TK_PreDoc TK_PostDoc
@@ -337,7 +339,8 @@ ForLhs ::= Infixed
 
 SuchThatPart ::= KW_Bar Infixed
 
-Infixed ::= Block | InfixedExpr DeclPart?
+Infixed ::= <<isAldorMode>> AldorInfixed | <<isSpadMode>> SpadInfixed
+private AldorInfixed ::= Block | InfixedExpr DeclPart?
 
 InfixedExpr ::= E3 | E11_Op
 
@@ -488,23 +491,21 @@ Molecule ::= Atom | BlockEnclosure
 
 Enclosure ::= Parened | Bracketed | QuotedIds
 
-DeclMolecule ::= Block | opt_Application
+DeclMolecule ::= DeclBlock | opt_Application
 
 BlockMolecule ::= Atom | BlockEnclosure
 
 BlockEnclosure ::= Enclosure | Block
 
+DeclBlock ::= Curly_Labelled | DeclPiled_Expression
 Block ::= Curly_Labelled | Piled_Expression
 
 
-Parened ::= KW_OParen KW_CParen
-| KW_OParen Expression KW_CParen
+Parened ::= KW_OParen (KW_CParen | Expression KW_CParen) { pin="KW_OParen"}
 
-Bracketed ::= KW_OBrack KW_CBrack
-| KW_OBrack Expression KW_CBrack
+Bracketed ::= KW_OBrack (KW_CBrack | Expression KW_CBrack) { pin="KW_OBrack"}
 
-QuotedIds ::= KW_Quote KW_Quote
-| KW_Quote Names KW_Quote
+QuotedIds ::= KW_Quote (KW_Quote | Names KW_Quote) { pin=1}
 
 Names::= enlist1_Name_KW_Comma
 
@@ -575,7 +576,9 @@ TopLevel ::= CurlyContents_Labelled (KW_StartPile Piled_Content KW_EndPile?)?
 
 //Piled_E ::= KW_BlkStart PileContents_E KW_BlkEnd
 Piled_Expression ::= KW_BlkStart Piled_Content <<blockEnd>>
+DeclPiled_Expression ::= KW_BlkStart DeclPiled_Content <<blockEnd>>
 Piled_Content ::= <<parsePiledContent "Pile">>
+DeclPiled_Content ::= <<parsePiledContent "Pile">>
 //Piled_Expression ::= KW_BlkStart PileContents_Expression <<backTab>>
 //Piled_Expression ::= KW_BlkStart Doc_Expression (KW_BlkNext Doc_Expression)* KW_BlkNext? <<backTab>>
 
@@ -610,9 +613,7 @@ Semicolon ::= <<semicolonOrCloseBraceNearby>>
 //CurlyContentB_E ::= PreDocument E PostDocument
 CurlyContentB_Labelled ::= PreDocument Labelled PostDocument
 
-// For the moment
-//Doc_E ::= E
-Doc_Expression ::= Expression
+Doc_Expression ::= Expression PostDocument
 
 PostDocument ::= TK_PostDoc*
 PreDocument ::= TK_PreDoc*
@@ -623,4 +624,94 @@ PreDocument ::= TK_PreDoc*
 
 SpadTopLevel ::= <<parsePiledContent "SpadTopLevel">>
 // NB: All spad comments are '++'.  Guess that top level is pre - anything else is post.
-SpadTopLevelExpression ::= PostDocument Expression
+SpadTopLevelExpression ::= PreDocument Expression //{pin=PreDocument} {recoverWhile="TopLevel_Recover"}
+SpadDocument ::= TK_PostDoc*
+
+//private TopLevel_Recover ::= !(TK_PreDoc)
+
+SpadInfixed ::= Block | ReduceExpr | Expr
+
+// Not sure where this fits..
+ReduceExpr ::= (KW_Plus | KW_Star) KW_Slash Block
+
+Expr ::=
+         Colon_194_Expr |
+         Or_200_Group |
+         And_250_Group |
+         Not_260_Group |
+         Rel_400_Group |
+         Add_700_Group |
+         Mult_800_Group |
+         Exp_901_Group |
+         Misc_995_Group |
+         Decl_996_Group |
+         Misc_999_Group |
+         LeftArrow_1001_Expr |
+         RightArrow_1002_Expr |
+         Type_2000_Group |
+         Qual_2050_Expr |
+         PrimaryExpr
+
+LeftArrow_1001_Expr ::= Expr KW_LArrow Expr
+RightArrow_1002_Expr ::= Expr KW_RArrow Expr
+
+Qual_2050_Expr ::= Expr KW_Dollar Expr
+private Type_2000_Group ::= UnaryWithExpr | BinaryWithExpr | UnaryAddExpr | BinaryAddExpr
+private Misc_999_Group ::= SharpExpr | QuoteExpr
+private Decl_996_Group ::= ColonExpr | DoubleColonExpr | RestrictExpr
+private Misc_995_Group ::= PretendExpr | MapsToExpr
+private Exp_901_Group ::= ExpExpr | DoubleStarExpr
+private Mult_800_Group ::= TimesExpr | DivideExpr | RemExpr | QuoExpr | ExquoExpr
+private Add_700_Group ::= PlusExpr | MinusExpr | NegateExpr
+private Rel_400_Group ::= RelExpr | SegExpr
+private Not_260_Group ::= NotExpr | TildeExpr
+private And_250_Group ::= AndExpr | WedgeExpr
+private Or_200_Group ::= OrExpr | VeeExpr
+
+Colon_194_Expr ::= KW_Colon Expr
+
+//private PrimaryGroup ::= PrimaryExpr
+PrimaryExpr ::= Application
+
+UnaryWithExpr ::= KW_With BlockEnclosure?
+BinaryWithExpr ::= Expr KW_With BlockEnclosure?
+UnaryAddExpr ::= KW_Add BlockEnclosure?
+BinaryAddExpr ::= Expr KW_Add BlockEnclosure?
+
+SharpExpr ::= KW_Sharp Expr
+QuoteExpr ::= KW_Quote Expr
+
+ColonExpr ::= Expr KW_Colon Expr
+DoubleColonExpr ::= Expr KW_2Colon Expr
+RestrictExpr ::= Expr KW_At Expr
+
+PretendExpr ::= Expr KW_Pretend Expr
+MapsToExpr ::= Expr KW_MapsTo Expr
+
+ExpExpr ::= Expr KW_Hat Qual Expr
+DoubleStarExpr ::= Expr KW_2Star Qual Expr
+
+TimesExpr ::= Expr KW_Star Qual Expr
+DivideExpr ::= Expr KW_Slash Qual Expr
+RemExpr ::= Expr KW_Rem Qual Expr
+QuoExpr ::= Expr KW_Quo Qual Expr
+ExquoExpr ::= Expr KW_Exquo Qual Expr
+
+PlusExpr ::= Expr KW_Plus Qual Expr
+MinusExpr ::= Expr KW_Minus Qual Expr
+NegateExpr ::= KW_Minus Qual Expr
+
+RelExpr ::= Expr (KW_LT  | KW_GT | KW_2LT | KW_2GT | KW_LE | KW_GE | KW_EQ |
+                  KW_HatE | KW_TildeE | KW_Case | KW_Has | KW_Is | KW_Isnt)
+                  Qual Expr
+
+private Qual ::= (KW_Dollar Molecule)?
+SegExpr ::= Expr KW_2Dot Expr?
+
+NotExpr ::= KW_Not Expr
+TildeExpr ::= KW_Tilde Expr
+AndExpr ::= Expr KW_And Expr
+WedgeExpr ::= Expr KW_Wedge Expr
+OrExpr ::= Expr KW_Or Expr
+VeeExpr ::= Expr KW_Vee Expr
+

@@ -145,7 +145,6 @@ public class PileModeParsingTests2 extends LightPlatformTestCase {
     }
 
 
-    @SuppressWarnings("SameParameterValue")
     @NotNull
     private List<PsiErrorElement> parseForErrors(IElementType type, CharSequence text) {
         System.out.println("Tokens are: " + LexerFunctions.tokens(text));
@@ -156,7 +155,7 @@ public class PileModeParsingTests2 extends LightPlatformTestCase {
 
 
     private PsiElement parseText(CharSequence text, IElementType elementType) {
-        return ParserFunctions.parseText(getProject(), text, elementType);
+        return ParserFunctions.parseAldorText(getProject(), text, elementType);
     }
 
 

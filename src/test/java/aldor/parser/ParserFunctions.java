@@ -1,31 +1,41 @@
 package aldor.parser;
 
+import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Multimap;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.ParserDefinition;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiBuilderFactory;
 import com.intellij.lang.PsiParser;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiErrorElement;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiRecursiveElementVisitor;
 import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
 
-public final class ParserFunctions {
+import static org.junit.Assert.assertNotNull;
 
-    public static PsiElement parseText(Project project, CharSequence text) {
-        return parseText(project, text, AldorTypes.CURLY_CONTENTS_LABELLED);
+public final class ParserFunctions {
+    public static final int NOT_INTERACTIVE_MILLIS = 1000;
+
+    public static PsiElement parseAldorText(Project project, CharSequence text) {
+        return parseAldorText(project, text, AldorTypes.CURLY_CONTENTS_LABELLED);
     }
 
-    public static PsiElement parseText(Project project, CharSequence text, IElementType elementType) {
+    public static PsiElement parseAldorText(Project project, CharSequence text, IElementType elementType) {
         ParserDefinition aldorParserDefinition = new AldorParserDefinition();
         PsiBuilder psiBuilder = PsiBuilderFactory.getInstance().createBuilder(aldorParserDefinition, aldorParserDefinition.createLexer(null),
                 text);
@@ -36,6 +46,20 @@ public final class ParserFunctions {
         return parsed.getPsi();
     }
 
+    public static PsiElement parseSpadText(Project project, CharSequence text) {
+        return parseSpadText(project, text, AldorTypes.SPAD_TOP_LEVEL);
+    }
+
+    public static PsiElement parseSpadText(Project project, CharSequence text, IElementType elementType) {
+        ParserDefinition spadParserDefinition = new SpadParserDefinition();
+        PsiBuilder psiBuilder = PsiBuilderFactory.getInstance().createBuilder(spadParserDefinition, spadParserDefinition.createLexer(null),
+                text);
+
+        PsiParser parser = spadParserDefinition.createParser(project);
+        ASTNode parsed = parser.parse(elementType, psiBuilder);
+
+        return parsed.getPsi();
+    }
 
     @NotNull
     public static List<PsiErrorElement> getPsiErrorElements(PsiElement psi) {
@@ -65,4 +89,68 @@ public final class ParserFunctions {
         });
         return subElements;
     }
+
+
+    @NotNull
+    public static Multimap<FailReason, File> parseLibrary(Project project, File base, Collection<String> blackList) {
+        List<File> files = findAllSource(base);
+        Multimap<FailReason, File> badFiles = ArrayListMultimap.create();
+        for (File file: files) {
+            long start = System.currentTimeMillis();
+            System.out.println("Reading: " + file);
+            if (blackList.contains(file.getName())) {
+                continue;
+            }
+            VirtualFile vf = LocalFileSystem.getInstance().findFileByIoFile(file);
+            assertNotNull(vf);
+            PsiFile psiFile = PsiManager.getInstance(project).findFile(vf);
+            assertNotNull(psiFile);
+            String text = psiFile.getText();
+
+            final PsiElement psi;
+            if (file.getName().endsWith(".spad")) {
+                psi = parseSpadText(project, text);
+            }
+            else {
+                psi = parseAldorText(project, text);
+            }
+
+            final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
+            long duration = System.currentTimeMillis() - start;
+            //noinspection StringConcatenationMissingWhitespace
+            System.out.println("... File " + file + " took " + duration + "ms");
+            if (!errors.isEmpty()) {
+                badFiles.put(FailReason.NoCompile, file);
+            }
+            if (duration > NOT_INTERACTIVE_MILLIS) {
+                badFiles.put(FailReason.Slow, file);
+            }
+        }
+        System.out.println("Compiled: " + files.size() + " " + badFiles.size() + " failed");
+        return badFiles;
+    }
+
+    private static List<File> findAllSource(File base) {
+        List<File> files = Lists.newArrayList();
+        //noinspection ConstantConditions // list files => NPE?
+        for (File file: base.listFiles()) {
+            if (file.isDirectory()) {
+                files.addAll(findAllSource(file));
+            }
+            if (file.getName().endsWith(".as")) {
+                files.add(file);
+            }
+            if (file.getName().endsWith(".spad")) {
+                files.add(file);
+            }
+        }
+        return files;
+    }
+
+
+    public enum FailReason {
+        Slow, NoCompile
+    }
+
+
 }
