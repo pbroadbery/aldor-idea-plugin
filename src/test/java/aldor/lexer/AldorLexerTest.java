@@ -7,7 +7,6 @@ import org.junit.Test;
 import java.io.StringReader;
 import java.util.List;
 
-import static aldor.lexer.AldorLexerAdapter.LexMode.Spad;
 import static aldor.lexer.AldorTokenTypes.KW_2EQ;
 import static aldor.lexer.AldorTokenTypes.KW_Add;
 import static aldor.lexer.AldorTokenTypes.KW_Colon;
@@ -25,6 +24,7 @@ import static aldor.lexer.AldorTokenTypes.TK_SysCmd;
 import static aldor.lexer.AldorTokenTypes.TK_SysCmdEndIf;
 import static aldor.lexer.AldorTokenTypes.TK_SysCmdIf;
 import static aldor.lexer.AldorTokenTypes.WHITE_SPACE;
+import static aldor.lexer.LexMode.Spad;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -36,10 +36,8 @@ public class AldorLexerTest {
     public void canParseKeyword() {
         AldorLexerAdapter lla = new AldorLexerAdapter(new StringReader("["));
         lla.start("add");
-        System.out.println("Pos: " + lla.getCurrentPosition().getState() + " " + lla.getBufferEnd() + " " + lla.getTokenType());
         assertEquals(KW_Add, lla.getTokenType());
         lla.advance();
-        System.out.println(lla.getTokenType());
         assertNull(lla.getTokenType());
     }
 
@@ -47,10 +45,8 @@ public class AldorLexerTest {
     public void canParseNumber() {
         AldorLexerAdapter lla = new AldorLexerAdapter(new StringReader("12"));
         lla.start("12");
-        System.out.println("Pos: " + lla.getCurrentPosition().getState() + " " + lla.getBufferEnd() + " " + lla.getTokenType());
         assertEquals(TK_Int, lla.getTokenType());
         lla.advance();
-        System.out.println(lla.getTokenType());
         assertNull(lla.getTokenType());
     }
 
@@ -67,9 +63,29 @@ public class AldorLexerTest {
     @Test
     public void canParseEscapedString() {
         AldorLexerAdapter lla = new AldorLexerAdapter(new StringReader("12"));
-        lla.start("\"_\"\"");
+        lla.start("\"_\" \"");
         assertEquals(TK_String, lla.getTokenType());
-        assertEquals("\"_\"\"", lla.getTokenText());
+        assertEquals("\"_\" \"", lla.getTokenText());
+        lla.advance();
+        assertNull(lla.getTokenType());
+    }
+
+    @Test
+    public void canParseEscapedEscapedString() {
+        AldorLexerAdapter lla = new AldorLexerAdapter(new StringReader("12"));
+        lla.start("\"__|__\"");
+        assertEquals(TK_String, lla.getTokenType());
+        assertEquals("\"__|__\"", lla.getTokenText());
+        lla.advance();
+        assertNull(lla.getTokenType());
+    }
+
+    @Test
+    public void canParseEscapedNewlineString() {
+        AldorLexerAdapter lla = new AldorLexerAdapter(new StringReader("12"));
+        lla.start("\"foo _\nbar\"");
+        assertEquals(TK_String, lla.getTokenType());
+        assertEquals("\"foo _\nbar\"", lla.getTokenText());
         lla.advance();
         assertNull(lla.getTokenType());
     }

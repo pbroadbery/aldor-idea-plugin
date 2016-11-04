@@ -33,6 +33,7 @@
 
   mixin("Id")="aldor.psi.impl.AldorIdentifierMixin"
   mixin("InfixedTok")="aldor.psi.impl.AldorIdentifierMixin"
+  mixin("Declaration")="aldor.psi.impl.AldorDeclarationMixin"
   mixin("DeclPart")="aldor.psi.impl.AldorDeclMixin"
   mixin(".*_Define")="aldor.psi.impl.AldorDefineMixin"
   mixin("IterRepeatStatement.*")="aldor.psi.impl.AldorIterStatementMixin"
@@ -132,7 +133,9 @@ Sig ::= DeclBinding | Block
 left DeclPart ::= KW_Colon Type | KW_ColonStar Type
 
 Comma ::= enlist1_CommaItem_KW_Comma
-private CommaItem ::= Binding_AnyStatement (KW_Where CommaItem)?
+private CommaItem ::= Binding_AnyStatement (KW_Where (<<isSpadMode>> SpadPredocWhere) CommaItem)?
+
+SpadPredocWhere ::= PreDocument
 
 DeclBinding ::= BindingR_InfixedExprsDecl_AnyStatement
 
@@ -255,8 +258,8 @@ Flow_AnyStatement ::=
   IfStatement_AnyStatement
 | IterRepeatStatement_AnyStatement
 | RepeatStatement_AnyStatement
-| KW_Try Binding_AnyStatement KW_But ButExpr AlwaysPart_AnyStatement
-| KW_Try Binding_AnyStatement KW_Catch ButExpr AlwaysPart_AnyStatement
+| KW_Try Binding_AnyStatement (KW_But ButExpr)? AlwaysPart_AnyStatement
+| KW_Try Binding_AnyStatement (KW_Catch ButExpr)? AlwaysPart_AnyStatement
 | KW_Select Binding_AnyStatement KW_In Cases
 | KW_Do Binding_AnyStatement
 | KW_Delay Binding_AnyStatement
@@ -276,8 +279,8 @@ Flow_BalStatement ::=
   IfStatement_BalStatement
 | IterRepeatStatement_BalStatement
 | KW_Repeat Binding_BalStatement
-| KW_Try Binding_BalStatement KW_But ButExpr AlwaysPart_BalStatement
-| KW_Try Binding_BalStatement KW_Catch ButExpr AlwaysPart_BalStatement
+| KW_Try Binding_BalStatement (KW_But ButExpr)? AlwaysPart_BalStatement
+| KW_Try Binding_BalStatement (KW_Catch ButExpr)? AlwaysPart_BalStatement
 | KW_Select Binding_BalStatement KW_In Cases
 | KW_Do Binding_BalStatement
 | KW_Delay Binding_BalStatement
@@ -629,10 +632,9 @@ SpadDocument ::= TK_PostDoc*
 
 //private TopLevel_Recover ::= !(TK_PreDoc)
 
-SpadInfixed ::= Block | ReduceExpr | Expr
+SpadInfixed ::= Block | Expr
 
 // Not sure where this fits..
-ReduceExpr ::= (KW_Plus | KW_Star) KW_Slash Block
 
 Expr ::=
          Colon_194_Expr |
@@ -647,6 +649,7 @@ Expr ::=
          Decl_996_Group |
          Misc_999_Group |
          LeftArrow_1001_Expr |
+         UnaryRighArrow_1002_Expr |
          RightArrow_1002_Expr |
          Type_2000_Group |
          Qual_2050_Expr |
@@ -654,6 +657,7 @@ Expr ::=
 
 LeftArrow_1001_Expr ::= Expr KW_LArrow Expr
 RightArrow_1002_Expr ::= Expr KW_RArrow Expr
+UnaryRighArrow_1002_Expr ::= KW_RArrow Expr
 
 Qual_2050_Expr ::= Expr KW_Dollar Expr
 private Type_2000_Group ::= UnaryWithExpr | BinaryWithExpr | UnaryAddExpr | BinaryAddExpr
@@ -661,10 +665,10 @@ private Misc_999_Group ::= SharpExpr | QuoteExpr
 private Decl_996_Group ::= ColonExpr | DoubleColonExpr | RestrictExpr
 private Misc_995_Group ::= PretendExpr | MapsToExpr
 private Exp_901_Group ::= ExpExpr | DoubleStarExpr
-private Mult_800_Group ::= TimesExpr | DivideExpr | RemExpr | QuoExpr | ExquoExpr
+private Mult_800_Group ::= TimesExpr | DivideExpr | RemExpr | QuoExpr | ExquoExpr | ReduceExpr
 private Add_700_Group ::= PlusExpr | MinusExpr | NegateExpr
 private Rel_400_Group ::= RelExpr | SegExpr
-private Not_260_Group ::= NotExpr | TildeExpr
+private Not_260_Group ::= /*NotExpr | */TildeExpr
 private And_250_Group ::= AndExpr | WedgeExpr
 private Or_200_Group ::= OrExpr | VeeExpr
 
@@ -673,13 +677,13 @@ Colon_194_Expr ::= KW_Colon Expr
 //private PrimaryGroup ::= PrimaryExpr
 PrimaryExpr ::= Application
 
-UnaryWithExpr ::= KW_With BlockEnclosure?
-BinaryWithExpr ::= Expr KW_With BlockEnclosure?
-UnaryAddExpr ::= KW_Add BlockEnclosure?
-BinaryAddExpr ::= Expr KW_Add BlockEnclosure?
+UnaryWithExpr ::= KW_With (Expr PostDocument)?
+BinaryWithExpr ::= Expr KW_With (Expr PostDocument)?
+UnaryAddExpr ::= KW_Add Expr?
+BinaryAddExpr ::= Expr KW_Add Expr?
 
-SharpExpr ::= KW_Sharp Expr
-QuoteExpr ::= KW_Quote Expr
+SharpExpr ::= KW_Sharp Qual Expr
+QuoteExpr ::= KW_Quote <<spadAnySym>>
 
 ColonExpr ::= Expr KW_Colon Expr
 DoubleColonExpr ::= Expr KW_2Colon Expr
@@ -696,6 +700,7 @@ DivideExpr ::= Expr KW_Slash Qual Expr
 RemExpr ::= Expr KW_Rem Qual Expr
 QuoExpr ::= Expr KW_Quo Qual Expr
 ExquoExpr ::= Expr KW_Exquo Qual Expr
+ReduceExpr ::= (KW_Plus | KW_Star | KW_And | KW_Or) KW_Slash Expr
 
 PlusExpr ::= Expr KW_Plus Qual Expr
 MinusExpr ::= Expr KW_Minus Qual Expr
@@ -706,9 +711,9 @@ RelExpr ::= Expr (KW_LT  | KW_GT | KW_2LT | KW_2GT | KW_LE | KW_GE | KW_EQ |
                   Qual Expr
 
 private Qual ::= (KW_Dollar Molecule)?
-SegExpr ::= Expr KW_2Dot Expr?
+SegExpr ::= Expr (KW_2Dot | KW_By) Qual Expr?
 
-NotExpr ::= KW_Not Expr
+//NotExpr ::= KW_Not Expr
 TildeExpr ::= KW_Tilde Expr
 AndExpr ::= Expr KW_And Expr
 WedgeExpr ::= Expr KW_Wedge Expr

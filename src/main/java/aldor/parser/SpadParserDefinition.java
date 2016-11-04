@@ -4,6 +4,7 @@ import aldor.file.SpadFile;
 import aldor.language.SpadLanguage;
 import aldor.lexer.AldorIndentLexer;
 import aldor.lexer.AldorLexerAdapter;
+import aldor.lexer.LexMode;
 import com.intellij.lang.Language;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.project.Project;
@@ -25,7 +26,7 @@ public class SpadParserDefinition extends AldorParserDefinition {
     @NotNull
     @Override
     public Lexer createLexer(Project project) {
-        return new AldorIndentLexer(new AldorLexerAdapter(AldorLexerAdapter.LexMode.Spad, null));
+        return new AldorIndentLexer(new AldorLexerAdapter(LexMode.Spad, null));
     }
 
     @Override

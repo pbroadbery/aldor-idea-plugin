@@ -115,7 +115,7 @@ public final class ParserFunctions {
                 psi = parseAldorText(project, text);
             }
 
-            final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
+            final List<PsiErrorElement> errors = getPsiErrorElements(psi);
             long duration = System.currentTimeMillis() - start;
             //noinspection StringConcatenationMissingWhitespace
             System.out.println("... File " + file + " took " + duration + "ms");

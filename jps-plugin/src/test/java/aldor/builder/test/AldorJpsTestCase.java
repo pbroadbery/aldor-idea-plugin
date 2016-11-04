@@ -169,6 +169,7 @@ public abstract class AldorJpsTestCase extends UsefulTestCase {
      * Called as a build is starting
      * @param descriptor The project
      */
+    @SuppressWarnings({"EmptyMethod", "UnusedParameters"})
     protected void beforeBuildStarted(@NotNull ProjectDescriptor descriptor) {
     }
 

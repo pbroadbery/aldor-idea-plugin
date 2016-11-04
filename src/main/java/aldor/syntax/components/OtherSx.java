@@ -19,7 +19,7 @@ public class OtherSx extends Other {
 
     @Override
     public String name() {
-        return "Other";
+        return "OtherSx";
     }
 
     @Override

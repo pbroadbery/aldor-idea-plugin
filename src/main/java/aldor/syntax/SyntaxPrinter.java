@@ -10,7 +10,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.List;
 
 public class SyntaxPrinter {
     private static final SyntaxPrinter instance = new SyntaxPrinter();
@@ -118,7 +117,8 @@ public class SyntaxPrinter {
     }
 
     boolean isBracket(Syntax operator) {
-        return operator.is(Id.class) && operator.as(Id.class).symbol().equals("bracket");
+        //noinspection ConstantConditions
+        return operator.is(Id.class) && "bracket".equals(operator.as(Id.class).symbol());
     }
 
     private void printWithParens(SyntaxPrintVisitor visitor, Syntax outer, Syntax argument) {
@@ -147,7 +147,7 @@ public class SyntaxPrinter {
         }
     }
 
-    private void printCommaSeq(SyntaxPrintVisitor visitor, Syntax outer, List<Syntax> children) {
+    private void printCommaSeq(SyntaxPrintVisitor visitor, Syntax outer, Iterable<Syntax> children) {
         String sep = "";
         for (Syntax syntax: children) {
             visitor.write(sep);
@@ -160,7 +160,7 @@ public class SyntaxPrinter {
         return outer.accept(new NeedParenVisitor(inner));
     }
 
-    private class NeedParenVisitor extends SyntaxVisitor<Boolean> {
+    private final class NeedParenVisitor extends SyntaxVisitor<Boolean> {
         private final Syntax inner;
 
         private NeedParenVisitor(Syntax inner) {

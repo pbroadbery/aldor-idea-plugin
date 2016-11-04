@@ -17,9 +17,8 @@ import java.util.List;
 import static aldor.psi.AldorPsiUtils.logPsi;
 
 public class ExpressionTest extends LightPlatformCodeInsightTestCase {
-    {
-        //setLogToDebug();
-    }
+
+    //{setLogToDebug();}
 
     public void testOne() {
         PsiElement element = parseExpressionText(getProject(), "a * b + c * d");

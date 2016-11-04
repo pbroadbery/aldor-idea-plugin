@@ -27,6 +27,7 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
     public void testLookupSingleArg() {
         String text = "f(n: Integer): Integer == n+1";
         PsiFile file = createAldorFile(text);
+
         PsiReference ref = file.findReferenceAt(text.indexOf("n+1"));
         assertNotNull(ref);
         PsiElement resolved = ref.resolve();

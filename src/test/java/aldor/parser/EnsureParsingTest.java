@@ -328,7 +328,6 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
         Project project = getProject();
         File file = new File("/home/pab/Work/aldorgit/aldor/aldor/lib/aldor/src/lisp/sal_sexpr.as");
         final List<PsiErrorElement> errors = parseFile(project, file);
-        logPsi(errors.get(0));
         assertEquals(0, errors.size());
     }
 

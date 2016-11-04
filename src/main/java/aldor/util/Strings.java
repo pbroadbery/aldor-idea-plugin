@@ -81,7 +81,7 @@ public final class Strings {
 	}
 
 	@Nullable
-	@Contract("_, null -> null")
+	@Contract("_, null -> null; _, !null -> !null")
 	public <S> S decode(@NotNull Class<S> clss, @Nullable String txt) {
 		return (txt == null) ? null : stringCodecFor(clss).decode(txt);
 	}

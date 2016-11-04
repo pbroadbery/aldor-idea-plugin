@@ -20,6 +20,7 @@ public abstract class AldorCollectionMixin extends ASTWrapperPsiElement implemen
     public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state,
                                        PsiElement lastParent, @NotNull PsiElement place) {
         for (AldorIterator iter: this.getIteratorList()) {
+            //noinspection ObjectEquality
             if (lastParent == iter) {
                 continue;
             }

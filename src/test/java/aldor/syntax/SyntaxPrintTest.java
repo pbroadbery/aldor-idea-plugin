@@ -25,7 +25,7 @@ public class SyntaxPrintTest extends LightPlatformCodeInsightFixtureTestCase {
         assertEquals("A -> B", parseAndPrint("A -> B"));
     }
 
-    private String parseAndPrint(String text) {
+    private String parseAndPrint(CharSequence text) {
         PsiElement psi = parseText(text);
         Syntax syntax = parse(psi);
         assertNotNull(syntax);

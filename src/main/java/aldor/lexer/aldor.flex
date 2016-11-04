@@ -12,6 +12,21 @@ import com.intellij.psi.TokenType;
 %unicode
 %function advance
 %type IElementType
+
+%{
+    private LexMode mode = LexMode.Aldor;
+    void lexMode(LexMode mode) {
+        this.mode = mode;
+    }
+    LexMode lexMode() {
+        return mode;
+    }
+
+    IElementType aldorModeKeyword(IElementType type) {
+        return this.mode == LexMode.Aldor ? type : AldorTokenTypes.TK_Id;
+    }
+%}
+
 %eof{  return null;
 %eof}
 
@@ -23,14 +38,15 @@ ESC_CRLF=_(\n|\r|\r\n)
 CRLF=\n|\r|\r\n
 WHITE_SPACE=[\ \t\f]
 INDENT=[\ \t]+
-ID =([A-Za-z%?]|_.)([A-Za-z0-9%_?!]|_.)*
+ID =([A-Za-z%?]|_.)([A-Za-z0-9%_?!']|_.)*
 INT=[0-9]+
+ESCID=_[^\n\t ]([A-Za-z0-9%_?!]|_.)*
 
-STRING=\"(_\"|[^\"])*\"
+STRING=\"(_(.|[\r\n])|[^_\"])*\"
 
 COMMENT="-""-"[^\r\n]*
 PREDOC=\+\+\+[^\r\n]*
-POSTDOC=\+\+[^+][^\r\n]*
+POSTDOC=\+\+[^\r\n]*
 
 SYSCMD=#[^\n\r]*
 
@@ -76,7 +92,7 @@ SPAD_SYSCMD_ENDIF=\)endif[^\r\n]*
 "except" { yybegin(NORMAL); return AldorTokenTypes.KW_Except; }
 "export" { yybegin(NORMAL); return AldorTokenTypes.KW_Export; }
 "exquo" { yybegin(NORMAL); return AldorTokenTypes.KW_Exquo; }
-"extend" { yybegin(NORMAL); return AldorTokenTypes.KW_Extend; }
+"extend" { yybegin(NORMAL); return aldorModeKeyword(AldorTokenTypes.KW_Extend); }
 "finally" { yybegin(NORMAL); return AldorTokenTypes.KW_Finally; }
 "fix" { yybegin(NORMAL); return AldorTokenTypes.KW_Fix; }
 "for" { yybegin(NORMAL); return AldorTokenTypes.KW_For; }
@@ -99,7 +115,7 @@ SPAD_SYSCMD_ENDIF=\)endif[^\r\n]*
 "mod" { yybegin(NORMAL); return AldorTokenTypes.KW_Mod; }
 "never" { yybegin(NORMAL); return AldorTokenTypes.KW_Never; }
 "not" { yybegin(NORMAL); return AldorTokenTypes.KW_Not; }
-"of" { yybegin(NORMAL); return AldorTokenTypes.KW_Of; }
+"of" { yybegin(NORMAL); return aldorModeKeyword(AldorTokenTypes.KW_Of); }
 "or" { yybegin(NORMAL); return AldorTokenTypes.KW_Or; }
 "pretend" { yybegin(NORMAL); return AldorTokenTypes.KW_Pretend; }
 "quo" { yybegin(NORMAL); return AldorTokenTypes.KW_Quo; }
@@ -107,8 +123,8 @@ SPAD_SYSCMD_ENDIF=\)endif[^\r\n]*
 "rem" { yybegin(NORMAL); return AldorTokenTypes.KW_Rem; }
 "repeat" { yybegin(NORMAL); return AldorTokenTypes.KW_Repeat; }
 "return" { yybegin(NORMAL); return AldorTokenTypes.KW_Return; }
-"rule" { yybegin(NORMAL); return AldorTokenTypes.KW_Rule; }
-"select" { yybegin(NORMAL); return AldorTokenTypes.KW_Select; }
+//"rule" { yybegin(NORMAL); return AldorTokenTypes.KW_Rule; }
+"select" { yybegin(NORMAL); return aldorModeKeyword(AldorTokenTypes.KW_Select); }
 "then" { yybegin(NORMAL); return AldorTokenTypes.KW_Then; }
 "throw" { yybegin(NORMAL); return AldorTokenTypes.KW_Throw; }
 "to" { yybegin(NORMAL); return AldorTokenTypes.KW_To; }
@@ -209,6 +225,7 @@ SPAD_SYSCMD_ENDIF=\)endif[^\r\n]*
 <YYINITIAL, LINE_START, NORMAL> {
 
     { ID } { yybegin(NORMAL); return AldorTokenTypes.TK_Id; }
+    { ESCID } { yybegin(NORMAL); return AldorTokenTypes.TK_Id; }
     { INT } { yybegin(NORMAL); return AldorTokenTypes.TK_Int; }
     { ESC_CRLF } { yybegin(LINE_START); return TokenType.WHITE_SPACE; }
     { CRLF } { yybegin(LINE_START); return AldorTokenTypes.KW_NewLine; }

@@ -27,6 +27,7 @@ public class SExpressionReader {
             case CParen:
                 throw new SExpressionReadException("Parse error");
             case Integer:
+                assert tok.text() != null;
                 return SExpression.integer(Strings.instance().decode(Integer.class, tok.text()));
             case String:
                 return SExpression.string(tok.text().substring(1, tok.text().length() - 1));

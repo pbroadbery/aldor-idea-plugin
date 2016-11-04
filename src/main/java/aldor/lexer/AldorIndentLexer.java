@@ -1,6 +1,5 @@
 package aldor.lexer;
 
-import aldor.lexer.AldorLexerAdapter.LexMode;
 import com.google.common.annotations.VisibleForTesting;
 import com.intellij.lexer.DelegateLexer;
 import com.intellij.lexer.LexerPosition;
@@ -9,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-import static aldor.lexer.AldorLexerAdapter.LexMode.Spad;
 import static aldor.lexer.AldorTokenTypes.KW_BlkEnd;
 import static aldor.lexer.AldorTokenTypes.KW_BlkNext;
 import static aldor.lexer.AldorTokenTypes.KW_BlkStart;
@@ -18,6 +16,7 @@ import static aldor.lexer.AldorTokenTypes.KW_NewLine;
 import static aldor.lexer.AldorTokenTypes.TK_PostDoc;
 import static aldor.lexer.AldorTokenTypes.TK_PreDoc;
 import static aldor.lexer.AldorTokenTypes.TK_SysCmd;
+import static aldor.lexer.LexMode.Spad;
 
 /**
  * Adds functionality to track indent width and pile mode.
@@ -67,7 +66,7 @@ public class AldorIndentLexer extends DelegateLexer {
                 return KW_EndPile;
             }
         }
-        else if (getAldorDelegate().mode() == Spad && Objects.equals(tokType, TK_PostDoc)) {
+        else if ((getAldorDelegate().mode() == Spad) && Objects.equals(tokType, TK_PostDoc)) {
             return isSpadPreDocument() ? TK_PreDoc : TK_PostDoc;
         }
         return tokType;

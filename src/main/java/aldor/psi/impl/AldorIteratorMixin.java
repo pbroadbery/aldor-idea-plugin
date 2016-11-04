@@ -30,6 +30,7 @@ public abstract class AldorIteratorMixin extends ASTWrapperPsiElement implements
         }
 
         for (PsiElement elt: findForVariables(this.getForLhs())) {
+            //noinspection ObjectEquality
             if (elt == lastParent) {
                 continue;
             }

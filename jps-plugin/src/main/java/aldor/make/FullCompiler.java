@@ -74,6 +74,7 @@ public class FullCompiler implements AldorFileTargetBuilder.Compiler {
         }
     }
 
+    @SuppressWarnings("UnusedParameters")
     private void watchStdError(String target, Process process) {
         Reader reader = new InputStreamReader(process.getErrorStream(), Charsets.US_ASCII);
         try (BufferedReader lineReader = new BufferedReader(reader)) {
@@ -88,6 +89,7 @@ public class FullCompiler implements AldorFileTargetBuilder.Compiler {
     }
 
 
+    @SuppressWarnings("UnusedParameters")
     private void watchStdOut(String target, Process process) {
         Reader reader = new InputStreamReader(process.getInputStream(), Charsets.US_ASCII);
         try (BufferedReader lineReader = new BufferedReader(reader)) {

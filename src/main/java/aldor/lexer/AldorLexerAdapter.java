@@ -1,17 +1,14 @@
 package aldor.lexer;
 
 import com.intellij.lexer.FlexAdapter;
+import com.intellij.lexer.FlexLexer;
 
 import java.io.Reader;
 import java.util.Arrays;
 
-import static aldor.lexer.AldorLexerAdapter.LexMode.Aldor;
+import static aldor.lexer.LexMode.Aldor;
 
 public class AldorLexerAdapter extends FlexAdapter {
-
-    public enum LexMode {
-        Aldor, Spad
-    }
     private final LexMode mode;
 
     public AldorLexerAdapter() {
@@ -23,8 +20,14 @@ public class AldorLexerAdapter extends FlexAdapter {
     }
 
     public AldorLexerAdapter(LexMode mode, Reader reader) {
-        super(new AldorLexer(reader));
+        super(createLexer(mode, reader));
         this.mode = mode;
+    }
+
+    private static FlexLexer createLexer(LexMode mode, Reader reader) {
+        AldorLexer lexer = new AldorLexer(reader);
+        lexer.lexMode(mode);
+        return lexer;
     }
 
 

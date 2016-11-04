@@ -96,7 +96,7 @@ public class AldorDocumentationProviderTest extends LightPlatformCodeInsightFixt
         return cons(Syme, cons(Ref, integer(ref)));
     }
 
-    public VirtualFile createFile(VirtualFile dir, String name, String content) throws IOException {
+    public VirtualFile createFile(VirtualFile dir, String name, String content) {
         ApplicationManager.getApplication().runWriteAction(() -> {
             try {
                 VirtualFile file = dir.createChildData(null, name);

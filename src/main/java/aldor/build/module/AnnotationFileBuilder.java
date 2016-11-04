@@ -5,6 +5,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 /** Maybe make this an interface */
 public class AnnotationFileBuilder {
 
+    @SuppressWarnings("EmptyMethod")
     public void invokeRebuild(VirtualFile virtualFile) {
     }
 

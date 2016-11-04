@@ -23,7 +23,11 @@ public final class LexerFunctions {
     }
 
     public static NavigableMap<Integer, IElementType> tokens(CharSequence text) {
-        AldorIndentLexer lexer = new AldorIndentLexer(new AldorLexerAdapter());
+        return tokens(LexMode.Aldor, text);
+    }
+
+    public static NavigableMap<Integer, IElementType> tokens(LexMode mode, CharSequence text) {
+        AldorIndentLexer lexer = new AldorIndentLexer(new AldorLexerAdapter(mode, null));
 
         lexer.start(text);
         NavigableMap<Integer, IElementType> map = new TreeMap<>();

@@ -45,12 +45,12 @@ public final class SExpressionTypes {
         }
 
         @Override
-        public void setCar(SExpression car) {
+        public void setCar(@NotNull SExpression car) {
             this.car = car;
         }
 
         @Override
-        public void setCdr(SExpression cdr) {
+        public void setCdr(@NotNull SExpression cdr) {
             this.cdr = cdr;
         }
 

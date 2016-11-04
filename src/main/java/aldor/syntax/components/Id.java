@@ -54,4 +54,9 @@ public class Id extends Syntax {
     public <T> T accept(SyntaxVisitor<T> syntaxVisitor) {
         return syntaxVisitor.visitId(this);
     }
+
+    @Override
+    public String toString() {
+        return symbol();
+    }
 }

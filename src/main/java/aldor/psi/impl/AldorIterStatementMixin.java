@@ -29,6 +29,7 @@ public abstract class AldorIterStatementMixin extends ASTWrapperPsiElement imple
         AldorIterators iters = this.getIterators();
 
         for (AldorIterator iter: iters.getIteratorList()) {
+            //noinspection ObjectEquality
             if (lastParent == iter) {
                 continue;
             }
