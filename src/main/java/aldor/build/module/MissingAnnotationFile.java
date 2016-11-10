@@ -15,6 +15,12 @@ public class MissingAnnotationFile implements AnnotationFile {
         this.errorMessage = errorMessage;
     }
 
+    @Nullable
+    @Override
+    public Syme symeForNameAndCode(String name, int typeCode) {
+        return null;
+    }
+
     @Override
     public String sourceFile() {
         return file.getPath();

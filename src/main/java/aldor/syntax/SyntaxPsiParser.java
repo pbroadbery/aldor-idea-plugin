@@ -9,6 +9,7 @@ import aldor.psi.AldorInfixedTok;
 import aldor.psi.AldorJxleftAtom;
 import aldor.psi.AldorLiteral;
 import aldor.psi.AldorParened;
+import aldor.psi.AldorQuotedIds;
 import aldor.psi.AldorRecursiveVisitor;
 import aldor.psi.AldorWithPart;
 import aldor.psi.JxrightElement;
@@ -17,6 +18,7 @@ import aldor.syntax.components.Add;
 import aldor.syntax.components.Apply;
 import aldor.syntax.components.Comma;
 import aldor.syntax.components.Declaration;
+import aldor.syntax.components.EnumList;
 import aldor.syntax.components.Id;
 import aldor.syntax.components.Literal;
 import aldor.syntax.components.Other;
@@ -67,7 +69,7 @@ public final class SyntaxPsiParser {
         /**
          * Scan the following:
          * E14 ::= ((E15? (WithPart | AddPart)) | (E15 (KW_Except E15 | KW_Throw E15| Nothing))) (WithPart | AddPart)*
-         * Nothing to do with the canary wharf tourist department.
+         * Nothing to do with the canary wharf tourist board.
          */
         @Override
         public void visitE14(@NotNull AldorE14 o) {
@@ -127,6 +129,15 @@ public final class SyntaxPsiParser {
                 }
                 visitStack.peek().add(all);
             }
+        }
+
+        @Override
+        public void visitQuotedIds(@NotNull AldorQuotedIds ids) {
+            List<Syntax> parenContent = Lists.newArrayList();
+            visitStack.push(parenContent);
+            ids.acceptChildren(this);
+            List<Syntax>  last = visitStack.pop();
+            visitStack.peek().add(new EnumList(ids, last));
         }
 
         @Override

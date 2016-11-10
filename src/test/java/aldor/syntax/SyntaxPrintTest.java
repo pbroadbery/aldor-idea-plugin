@@ -19,6 +19,8 @@ public class SyntaxPrintTest extends LightPlatformCodeInsightFixtureTestCase {
         assertEquals("f(x, y)", parseAndPrint("f(x, y)"));
         assertEquals("f f x", parseAndPrint("f f x"));
         assertEquals("(f a) x", parseAndPrint("(f a) x"));
+        assertEquals("foo(x: Int)", parseAndPrint("foo(x: Int)"));
+         assertEquals("'a,b'", parseAndPrint("'a, b'"));
     }
 
     public void testApplyMap() {

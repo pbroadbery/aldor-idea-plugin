@@ -12,6 +12,12 @@ import static org.junit.Assert.fail;
 public class SExpressionTest {
 
     @Test
+    public void testReadPolicy() throws FileNotFoundException {
+        SExpression sx = SExpression.read(new StringReader("foo"), SymbolPolicy.ALLCAPS);
+        assertEquals(sx, SExpression.symbol("FOO"));
+    }
+
+    @Test
     public void testReadNice() throws FileNotFoundException {
         SExpression sx = SExpression.read(new StringReader("(Hello there)"));
         assertEquals(sx, SExpression.cons(SExpression.symbol("Hello"),

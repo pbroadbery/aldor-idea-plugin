@@ -11,6 +11,8 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 
+import static aldor.psi.AldorPsiUtils.logPsi;
+
 public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase {
 
 
@@ -140,6 +142,21 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
         assertNotNull(resolved);
         assertEquals(text.indexOf("x in"), resolved.getTextOffset());
     }
+
+
+    public void testLookupAssignment() {
+        String text = "foo(): () == { x := 1; x}";
+        PsiFile file = createAldorFile(text);
+
+        PsiReference ref = file.findReferenceAt(text.indexOf("x}"));
+        logPsi(file);
+        assertNotNull(ref);
+        PsiElement resolved = ref.resolve();
+        assertNotNull(resolved);
+        assertEquals(text.indexOf("x :="), resolved.getTextOffset());
+    }
+
+
 
 
     private PsiFile createAldorFile(String text) {

@@ -18,6 +18,7 @@ public final class AldorPsiUtils {
     static void logPsi(PsiElement psi, int i) {
         logPsi(psi, i, "");
     }
+
     static void logPsi(PsiElement psi, int depth, String lastStuff) {
         PsiElement[] children = psi.getChildren();
         int childCount = children.length;

@@ -30,12 +30,14 @@
   implements("IterRepeatStatement.*")="aldor.psi.AldorIterRepeatStatement";
   implements("Collection") = "aldor.psi.AldorAnyCollection"
   implements("AnyStatement_Collection") = "aldor.psi.AldorAnyCollection"
+  implements(".*_Assign") = "aldor.psi.AldorAssign"
 
   mixin("Id")="aldor.psi.impl.AldorIdentifierMixin"
   mixin("InfixedTok")="aldor.psi.impl.AldorIdentifierMixin"
   mixin("Declaration")="aldor.psi.impl.AldorDeclarationMixin"
   mixin("DeclPart")="aldor.psi.impl.AldorDeclMixin"
   mixin(".*_Define")="aldor.psi.impl.AldorDefineMixin"
+  mixin(".*_Assign")="aldor.psi.impl.AldorAssignMixin"
   mixin("IterRepeatStatement.*")="aldor.psi.impl.AldorIterStatementMixin"
   mixin("Iterator")="aldor.psi.impl.AldorIteratorMixin"
   mixin("Collection")="aldor.psi.impl.AldorCollectionMixin"
@@ -160,7 +162,7 @@ Binding_BalStatement ::= BindingL_Infixed_BalStatement
 // AnyStatement now excludes "Infixed", and we deal with it here instead.
 // TODO: Remove recursive call.
 private BindingL_Infixed_AnyStatement ::=
-                 Infixed (KW_Assign BindingL_Infixed_AnyStatement
+                 Infixed (BindingL_Infixed_AnyStatement_Assign
                           | BindingL_Infixed_AnyStatement_Define
                           | KW_MArrow BindingL_Infixed_AnyStatement
                           | KW_MapsTo BindingL_Infixed_AnyStatement
@@ -170,25 +172,33 @@ private BindingL_Infixed_AnyStatement ::=
                | AnyStatement
 
 left BindingL_Infixed_AnyStatement_Define ::= KW_2EQ BindingL_Infixed_AnyStatement
+left BindingL_Infixed_AnyStatement_Assign ::= KW_Assign BindingL_Infixed_AnyStatement
 left AnyStatement_Collection ::= (Iterator+ <<noRepeatHere>>)
 
 // TODO: Similar left factoring as above.
 private BindingL_Infixed_BalStatement ::=
-                 Infixed (KW_Assign BindingL_Infixed_BalStatement
-                          | KW_2EQ BindingL_Infixed_BalStatement
+                 Infixed (BindingL_Infixed_BalStatement_Assign
+                          | BindingL_Infixed_BalStatement_Define
                           | KW_MArrow BindingL_Infixed_BalStatement
                           | KW_MapsTo BindingL_Infixed_BalStatement
                           | KW_MapsToStar BindingL_Infixed_BalStatement)
                | BalStatement
 
+left BindingL_Infixed_BalStatement_Assign ::= KW_Assign BindingL_Infixed_BalStatement
+left BindingL_Infixed_BalStatement_Define ::= KW_2EQ BindingL_Infixed_BalStatement
+
 // TODO: Similar left factoring as above.
 private BindingL_Infixed_Collection ::=
-                 Infixed (KW_Assign BindingL_Infixed_Collection
-                          | KW_2EQ BindingL_Infixed_Collection
+                 Infixed (BindingL_Infixed_Collection_Assign
+                          | BindingL_Infixed_Collection_Define
                           | KW_MArrow BindingL_Infixed_Collection
                           | KW_MapsTo BindingL_Infixed_Collection
                           | KW_MapsToStar BindingL_Infixed_Collection)
                | Collection
+
+BindingL_Infixed_Collection_Assign ::= KW_Assign BindingL_Infixed_Collection
+BindingL_Infixed_Collection_Define ::= KW_2EQ BindingL_Infixed_Collection
+
 /*
 BindingL_Infixed_InfixedExprsDecl ::=
                Infixed (KW_Assign BindingL_Infixed_InfixedExprsDecl
@@ -217,12 +227,14 @@ BindingR_InfixedExprsDecl_InfixedExprsDecl ::=
                                | KW_MapsToStar Binding_InfixedExprsDecl)?
 */
 
-private BindingR_InfixedExprsDecl_AnyStatement ::= InfixedExprsDecl (KW_Assign Binding_AnyStatement
-                                                             | KW_2EQ Binding_AnyStatement
+private BindingR_InfixedExprsDecl_AnyStatement ::= InfixedExprsDecl (Binding_AnyStatement_Assign
+                                                             | Binding_AnyStatement_Define
                                                              | KW_MArrow Binding_AnyStatement
                                                              | KW_MapsTo Binding_AnyStatement
                                                              | KW_MapsToStar Binding_AnyStatement)?
 
+Binding_AnyStatement_Assign ::= KW_Assign Binding_AnyStatement
+Binding_AnyStatement_Define ::= KW_2EQ Binding_AnyStatement
 //no_semicolon ::= ! KW_Semicolon
 //AnyStatement ::= KW_If CommaItem KW_Then Binding_AnyStatement | Flow_AnyStatement
 
@@ -492,7 +504,7 @@ Dot_BlockMolecule ::= KW_Dot BlockMolecule
 
 Molecule ::= Atom | BlockEnclosure
 
-Enclosure ::= Parened | Bracketed | QuotedIds
+Enclosure ::= Parened | Bracketed | <<isAldorMode>> QuotedIds
 
 DeclMolecule ::= DeclBlock | opt_Application
 
@@ -516,7 +528,8 @@ private Atom ::= Id | Literal
 
 xName ::= Id | NakedOp
 
-Id ::= TK_Id | KW_Sharp | KW_Tilde
+Id ::= TK_Id | KW_Sharp | KW_Tilde | <<isSpadMode>> SpadSymbol
+SpadSymbol ::= KW_Quote TK_Id
 
 Literal ::= TK_Int | TK_Float | TK_String
 

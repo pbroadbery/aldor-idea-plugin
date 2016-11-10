@@ -84,4 +84,9 @@ public final class SymbolFileSymbols {
     public static final SExpression Name = symbol("name");
     public static final SExpression Syme = symbol("syme");
     public static final SExpression Type = symbol("type");
+    public static final SExpression TypeCode = symbol("typeCode");
+    public static final SExpression Original = symbol("original");
+    public static final SExpression Lib = symbol("lib");
+    public static final SExpression Exporter = symbol("exporter");
+
 }

@@ -2,6 +2,7 @@ package aldor.symbolfile;
 
 import aldor.syntax.Syntax;
 import aldor.util.SExpression;
+import aldor.util.SymbolPolicy;
 import org.junit.Test;
 
 import java.io.FileNotFoundException;
@@ -25,4 +26,20 @@ public class PopulatedAnnotationFileTest {
             assertNotNull(syntax);
         }
     }
+
+    @Test
+    public void testFile2() throws FileNotFoundException {
+        SExpression sx = SExpression.read(new FileReader("/tmp/alg_serpoly.abn"), SymbolPolicy.ALLCAPS);
+
+        PopulatedAnnotationFile file = new PopulatedAnnotationFile("array", sx);
+
+        Iterable<Syme> symes = file.symes();
+
+        for (Syme syme: symes) {
+            Syntax syntax = syme.type();
+            System.out.println("Syme: " + syme.name() + " " + syme.type());
+            assertNotNull(syntax);
+        }
+    }
+
 }

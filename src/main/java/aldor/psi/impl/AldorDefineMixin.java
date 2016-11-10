@@ -1,5 +1,7 @@
 package aldor.psi.impl;
 
+import aldor.psi.AldorAssign;
+import aldor.psi.AldorRecursiveVisitor;
 import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxPsiParser;
 import aldor.syntax.components.SyntaxUtils;
@@ -48,6 +50,22 @@ public abstract class AldorDefineMixin extends ASTWrapperPsiElement {
                 }
             }
         }
+
+        PsiElement rhs = this.getLastChild();
+
+        rhs.accept(new AldorRecursiveVisitor() {
+            @Override
+            public void visitElement(PsiElement o) {
+                if (o == lastParent)
+                    return;
+                o.acceptChildren(this);
+            }
+
+            @Override
+            public void visitAssign(AldorAssign assign) {
+
+            }
+        });
         return true;
     }
 }

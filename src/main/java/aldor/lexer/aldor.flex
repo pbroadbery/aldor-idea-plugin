@@ -38,7 +38,7 @@ ESC_CRLF=_(\n|\r|\r\n)
 CRLF=\n|\r|\r\n
 WHITE_SPACE=[\ \t\f]
 INDENT=[\ \t]+
-ID =([A-Za-z%?]|_.)([A-Za-z0-9%_?!']|_.)*
+ID =([A-Za-z%?]|_.)([A-Za-z0-9%_?!]|_.)*
 INT=[0-9]+
 ESCID=_[^\n\t ]([A-Za-z0-9%_?!]|_.)*
 

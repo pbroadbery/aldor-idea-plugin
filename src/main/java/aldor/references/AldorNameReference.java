@@ -1,6 +1,7 @@
 package aldor.references;
 
 import aldor.psi.AldorIdentifier;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReferenceBase;
@@ -12,6 +13,7 @@ import static aldor.psi.AldorPsiUtils.logPsi;
 import static aldor.references.FileScopeWalker.resolveAndWalk;
 
 public class AldorNameReference extends PsiReferenceBase<AldorIdentifier> {
+    private static final Logger LOG = Logger.getInstance(AldorNameReference.class);
     public static final Object[] NO_VARIANTS = new Object[0];
 
     public AldorNameReference(@NotNull AldorIdentifier element) {
@@ -21,11 +23,14 @@ public class AldorNameReference extends PsiReferenceBase<AldorIdentifier> {
     @Nullable
     @Override
     public PsiElement resolve() {
-
         AldorScopeProcessor scopeProcessor = new AldorScopeProcessor(getElement().getText());
         resolveAndWalk(scopeProcessor, getElement());
 
-        return scopeProcessor.getResult();
+        PsiElement result = scopeProcessor.getResult();
+        if (result == null) {
+            result = FileScopeWalker.lookupBySymbolFile(getElement());
+        }
+        return result;
     }
 
 
@@ -37,6 +42,12 @@ public class AldorNameReference extends PsiReferenceBase<AldorIdentifier> {
         return myElement.setName(newElementName);
     }
 
+    @Override
+    public boolean isReferenceTo(PsiElement element) {
+        //LOG.info("IsRefTo: " + this.getElement() + "@" + this.getElement().getContainingFile().getName() + ":" + getElement().getTextOffset()
+        //        + " " + element + "@" + element.getContainingFile().getName() + ":" + element.getTextOffset());
+        return super.isReferenceTo(element);
+    }
 
     @Override
     public TextRange getRangeInElement() {

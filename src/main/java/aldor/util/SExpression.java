@@ -44,9 +44,14 @@ public abstract class SExpression {
 
     @Override
     public String toString() {
+        return toString(SymbolPolicy.NORMAL);
+    }
+
+
+    public String toString(SymbolPolicy mode) {
         Writer sw = new StringWriter();
         try {
-            write(sw);
+            write(sw, mode);
         } catch (IOException e) {
             //noinspection ProhibitedExceptionThrown
             throw new RuntimeException(e);
@@ -128,7 +133,7 @@ public abstract class SExpression {
         throw typeConversionException(SxType.Cons);
     }
 
-    public abstract void write(Writer w) throws IOException;
+    public abstract void write(Writer w, SymbolPolicy mode) throws IOException;
 
     public boolean isOfType(SxType<?> type) {
         return Objects.equals(this.type, type);

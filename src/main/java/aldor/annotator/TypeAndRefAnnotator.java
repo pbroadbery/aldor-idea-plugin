@@ -9,6 +9,7 @@ import aldor.symbolfile.SymbolFileSymbols;
 import aldor.symbolfile.Syme;
 import aldor.syntax.Syntax;
 import aldor.util.SExpression;
+import aldor.util.SymbolPolicy;
 import aldor.util.sexpr.SExpressionReadException;
 import com.intellij.ide.highlighter.JavaHighlightingColors;
 import com.intellij.lang.annotation.Annotation;
@@ -206,7 +207,7 @@ public class TypeAndRefAnnotator extends ExternalAnnotator<TypeAndRefAnnotator.C
             PopulatedAnnotationFile annotation;
             //noinspection NestedTryStatement
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(buildFile.getInputStream(), StandardCharsets.US_ASCII))) {
-                annotation = new PopulatedAnnotationFile(file.getPath(), SExpression.read(reader));
+                annotation = new PopulatedAnnotationFile(file.getPath(), SExpression.read(reader, SymbolPolicy.ALLCAPS));
             }
             return new FullInfo(collectedInfo, annotation);
         } catch (InterruptedException ignored) {

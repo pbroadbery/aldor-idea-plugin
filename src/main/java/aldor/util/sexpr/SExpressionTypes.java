@@ -2,6 +2,7 @@ package aldor.util.sexpr;
 
 import aldor.util.SExpression;
 import aldor.util.SxType;
+import aldor.util.SymbolPolicy;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -55,12 +56,12 @@ public final class SExpressionTypes {
         }
 
         @Override
-        public void write(Writer w) throws IOException {
+        public void write(Writer w, SymbolPolicy mode) throws IOException {
             w.write("(");
             SExpression current = this;
             boolean done = false;
             while (!done) {
-                current.car().write(w);
+                current.car().write(w, mode);
 
                 if (current.cdr().isOfType(SxType.Cons)) {
                     w.write(" ");
@@ -69,7 +70,7 @@ public final class SExpressionTypes {
                     done = true;
                 } else {
                     w.write(" . ");
-                    current.cdr().write(w);
+                    current.cdr().write(w, mode);
                     done = true;
                 }
             }
@@ -115,7 +116,7 @@ public final class SExpressionTypes {
         }
 
         @Override
-        public void write(Writer w) throws IOException {
+        public void write(Writer w, SymbolPolicy mode) throws IOException {
             w.append(String.valueOf(value()));
         }
 
@@ -133,7 +134,7 @@ public final class SExpressionTypes {
         }
 
         @Override
-        public void write(Writer w) throws IOException {
+        public void write(Writer w, SymbolPolicy mode) throws IOException {
             w.append("\"");
             w.append(string());
             w.append("\"");
@@ -151,8 +152,25 @@ public final class SExpressionTypes {
         }
 
         @Override
-        public void write(Writer w) throws IOException {
-            w.append(this.value());
+        public void write(Writer w, SymbolPolicy mode) throws IOException {
+            if (needsEscape(mode)) {
+                w.append("|");
+                w.append(value());
+                w.append("|");
+            }
+            else {
+                w.append(this.value());
+            }
+        }
+
+        private boolean needsEscape(SymbolPolicy mode) {
+            if (mode == SymbolPolicy.NORMAL) {
+                return false;
+            }
+            else {
+                //noinspection StringToUpperCaseOrToLowerCaseWithoutLocale
+                return !value().equals(value().toUpperCase());
+            }
         }
     }
 
@@ -162,7 +180,7 @@ public final class SExpressionTypes {
         }
 
         @Override
-        public void write(Writer w) throws IOException {
+        public void write(Writer w, SymbolPolicy mode) throws IOException {
             w.append("()");
         }
 

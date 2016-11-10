@@ -2,6 +2,7 @@ package aldor.syntax.components;
 
 import aldor.psi.AldorDeclPart;
 import aldor.syntax.Syntax;
+import aldor.syntax.SyntaxVisitor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -25,5 +26,10 @@ public class Declaration extends SyntaxNode<AldorDeclPart> {
     @Override
     public String name() {
         return "Decl";
+    }
+
+    @Override
+    public <T> T accept(SyntaxVisitor<T> syntaxVisitor) {
+        return syntaxVisitor.visitDeclaration(this);
     }
 }

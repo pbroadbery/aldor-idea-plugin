@@ -52,6 +52,14 @@ public class SyntaxTest extends LightPlatformCodeInsightFixtureTestCase {
         PsiElement psi = parseText("(a: A) + (b: B)");
         Syntax syntax = parse(psi);
         assertNotNull(syntax);
+        assertEquals("(Decl (Apply f (Comma (Decl x I) (Decl y I))) X)", syntax.toString());
+    }
+
+
+    public void testParseMulti() {
+        PsiElement psi = parseText("f(x: I, y: I): X");
+        Syntax syntax = parse(psi);
+        assertNotNull(syntax);
         assertEquals("(Apply + (Decl a A) (Decl b B))", syntax.toString());
     }
 
@@ -76,9 +84,16 @@ public class SyntaxTest extends LightPlatformCodeInsightFixtureTestCase {
         PsiElement psi = parseText("Tuple Cross(K, V) -> %");
         Syntax syntax = parse(psi);
         assertNotNull(syntax);
-        // FIXME: This is wrong - ought to show full type
         assertEquals("(Apply -> (Apply Tuple (Apply Cross (Comma K V))) %)", syntax.toString());
     }
+
+    public void testEnum() {
+        PsiElement psi = parseText("'a,b,c'");
+        Syntax syntax = parse(psi);
+        assertNotNull(syntax);
+        assertEquals("(Enum a b c)", syntax.toString());
+    }
+
 
     private PsiElement parseText(CharSequence text) {
         return ParserFunctions.parseAldorText(getProject(), text);

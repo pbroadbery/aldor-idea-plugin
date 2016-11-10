@@ -3,6 +3,8 @@ package aldor.syntax;
 import aldor.lexer.AldorTokenType;
 import aldor.syntax.components.Apply;
 import aldor.syntax.components.Comma;
+import aldor.syntax.components.Declaration;
+import aldor.syntax.components.EnumList;
 import aldor.syntax.components.Id;
 import aldor.syntax.components.Other;
 import org.jetbrains.annotations.NotNull;
@@ -53,6 +55,12 @@ public class SyntaxPrinter {
         }
 
         @Override
+        public Void visitDeclaration(Declaration node) {
+            printDeclaration(this, node);
+            return null;
+        }
+
+        @Override
         public Void visitApply(Apply apply) {
             printApply(this, apply);
             return null;
@@ -61,6 +69,12 @@ public class SyntaxPrinter {
         @Override
         public Void visitComma(Comma comma) {
             printComma(this, comma);
+            return null;
+        }
+
+        @Override
+        public Void visitEnumList(EnumList enumList) {
+            printEnumList(this, enumList);
             return null;
         }
 
@@ -75,6 +89,18 @@ public class SyntaxPrinter {
         }
     }
 
+    private void printEnumList(SyntaxPrintVisitor visitor, EnumList enumList) {
+        visitor.write("'");
+        printCommaSeq(visitor, enumList, enumList.children());
+        visitor.write("'");
+    }
+
+    private void printDeclaration(SyntaxPrintVisitor visitor, Declaration node) {
+        node.lhs().accept(visitor);
+        visitor.write(": ");
+        node.rhs().accept(visitor);
+    }
+
     private void printApply(SyntaxPrintVisitor visitor, Apply apply) {
         Syntax operator = apply.operator();
         AldorTokenType opToken = tokenForSyntax(operator);
@@ -85,8 +111,7 @@ public class SyntaxPrinter {
             visitor.write("[");
             printCommaSeq(visitor, apply, apply.arguments());
             visitor.write("]");
-        }
-        else if (isInfix && (apply.arguments().size() == 2)) {
+        } else if (isInfix && (apply.arguments().size() == 2)) {
             Syntax lhs = apply.arguments().get(0);
             Syntax rhs = apply.arguments().get(1);
             printWithParens(visitor, apply, lhs);
@@ -94,22 +119,21 @@ public class SyntaxPrinter {
             operator.accept(visitor);
             visitor.write(" ");
             printWithParens(visitor, apply, rhs);
-        }
-        else {
+        } else {
             Syntax argument0 = apply.arguments().get(0);
             printWithParens(visitor, apply, operator);
             if (apply.arguments().isEmpty()) {
                 visitor.write("()");
-            }
-            else if (apply.arguments().size() == 1) {
+            } else if (apply.arguments().size() == 1) {
                 if (argument0.is(Comma.class)) {
                     visitor.write("(");
                     argument0.accept(visitor);
                     visitor.write(")");
-                }
-                else {
+                } else {
                     // Some operators might not want a space. tough.
-                    visitor.write(" ");
+                    if (!needsParens(apply, argument0)) {
+                        visitor.write(" ");
+                    }
                     printWithParens(visitor, apply, argument0);
                 }
             }
@@ -138,18 +162,16 @@ public class SyntaxPrinter {
     private void printComma(SyntaxPrintVisitor visitor, Comma comma) {
         if (comma.children().isEmpty()) {
             visitor.write("()");
-        }
-        else if (comma.children().size() == 1) {
+        } else if (comma.children().size() == 1) {
             comma.children().get(0).accept(visitor);
-        }
-        else {
+        } else {
             printCommaSeq(visitor, comma, comma.children());
         }
     }
 
     private void printCommaSeq(SyntaxPrintVisitor visitor, Syntax outer, Iterable<Syntax> children) {
         String sep = "";
-        for (Syntax syntax: children) {
+        for (Syntax syntax : children) {
             visitor.write(sep);
             sep = ", ";
             printWithParens(visitor, outer, syntax);
@@ -176,9 +198,22 @@ public class SyntaxPrinter {
             return false;
         }
 
+        @NotNull
+        @Override
+        public Boolean visitEnumList(EnumList list) {
+            return false;
+        }
+
         @Override
         public Boolean visitApply(Apply apply) {
             if (inner.is(Id.class)) {
+                return false;
+            }
+            if (inner.is(Apply.class)) {
+                //noinspection ObjectEquality
+                if (inner == apply.operator()) {
+                    return true;
+                }
                 return false;
             }
             return true;

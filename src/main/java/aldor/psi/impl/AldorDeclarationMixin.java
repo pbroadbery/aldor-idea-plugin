@@ -28,7 +28,6 @@ public abstract class AldorDeclarationMixin extends ASTWrapperPsiElement impleme
             return true;
         }
         Syntax syntax = SyntaxPsiParser.parse(getSig());
-        System.out.println("Syntax is " + syntax);
 
         Iterable<Syntax> scopes = SyntaxUtils.childScopesForDefineLhs(syntax);
         for (Syntax childScope: scopes) {

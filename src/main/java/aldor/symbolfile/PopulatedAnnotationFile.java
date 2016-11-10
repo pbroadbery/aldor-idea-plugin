@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
@@ -37,13 +38,32 @@ public class PopulatedAnnotationFile implements AnnotationFile {
         return lookup.symes();
     }
 
+    @Override
+    @Nullable
+    public Syme symeForNameAndCode(String name, int typeCode) {
+        return lookup.symeForNameAndCode(name, typeCode);
+    }
+
     private static class Lookup implements AnnotationLookup {
         private final List<Syme> symes;
         private final List<SExpression> types;
+        private final Map<String, Syme> symeForNameAndCode;
 
         Lookup(SExpression symesSx, SExpression typesSx) {
             symes = parseSymes(symesSx);
             types = new ArrayList<>(typesSx.asList());
+            symeForNameAndCode = new HashMap<>();
+            for (Syme syme: symes) {
+                symeForNameAndCode.put(symeKey(syme), syme);
+            }
+        }
+
+        private String symeKey(Syme syme) {
+            return syme.name() + "-" + syme.typeCode();
+        }
+
+        private String symeKey(String name, int typeCode) {
+            return name + "-" + typeCode;
         }
 
         @Override
@@ -66,9 +86,14 @@ public class PopulatedAnnotationFile implements AnnotationFile {
             return symeList.asList().stream().map((sx1) -> new Syme(this, sx1)).collect(Collectors.toList());
         }
 
+        @Nullable
+        public Syme symeForNameAndCode(String name, int typeCode) {
+            return symeForNameAndCode.get(symeKey(name, typeCode));
+        }
     }
 
     void parseForIds(Map<SrcPos, SExpression> map, SExpression sx) {
+        System.out.println("Parse for ids: " + sx);
         for (SExpression child: sx.asList()) {
             if (child.isOfType(SxType.Cons) && child.car().equals(SymbolFileSymbols.Id)) {
                 SExpression sxPos = child.cdr().asAssociationList().get(SymbolFileSymbols.SrcPos);
@@ -121,5 +146,4 @@ public class PopulatedAnnotationFile implements AnnotationFile {
         }
         return lookup.syme(index.integer());
     }
-
 }
