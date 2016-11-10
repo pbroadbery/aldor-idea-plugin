@@ -1,4 +1,4 @@
-package aldor.highlighter;
+package aldor.editor;
 
 import aldor.lexer.AldorTokenTypes;
 import com.intellij.lang.BracePair;

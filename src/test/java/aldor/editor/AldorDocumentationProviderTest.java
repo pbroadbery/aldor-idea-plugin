@@ -1,4 +1,4 @@
-package aldor.commenter;
+package aldor.editor;
 
 import aldor.build.module.AldorModuleType;
 import aldor.psi.AldorIdentifier;

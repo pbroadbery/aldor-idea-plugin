@@ -1,4 +1,4 @@
-package aldor.annotator;
+package aldor.editor;
 
 import aldor.language.AldorLanguage;
 import aldor.parser.EnsureParsingTest;

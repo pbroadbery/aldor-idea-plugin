@@ -1,4 +1,4 @@
-package aldor.highlighter;
+package aldor.editor;
 
 
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;

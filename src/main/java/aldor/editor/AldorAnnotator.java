@@ -1,4 +1,4 @@
-package aldor.annotator;
+package aldor.editor;
 
 import aldor.parser.AldorTypes;
 import aldor.psi.AldorPsiUtils;

@@ -1,4 +1,4 @@
-package aldor.annotator;
+package aldor.editor;
 
 import aldor.builder.files.BuildFiles;
 import aldor.lexer.IndentWidthCalculator;

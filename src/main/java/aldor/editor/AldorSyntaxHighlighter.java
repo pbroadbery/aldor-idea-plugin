@@ -1,4 +1,4 @@
-package aldor.highlighter;
+package aldor.editor;
 
 import aldor.lexer.AldorLexerAdapter;
 import aldor.lexer.AldorTokenType;

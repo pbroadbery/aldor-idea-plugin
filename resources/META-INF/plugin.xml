@@ -34,18 +34,18 @@
                     implementationClass="aldor.build.module.AldorModuleType"/>
         <moduleConfigurationEditorProvider implementation="aldor.build.module.AldorModuleConfigEditor"/>
 
-        <lang.syntaxHighlighterFactory language="Aldor" implementationClass="aldor.highlighter.AldorSyntaxHighlighterFactory"/>
-        <lang.braceMatcher language="Aldor" implementationClass="aldor.highlighter.AldorBracketMatcher"/>
+        <lang.syntaxHighlighterFactory language="Aldor" implementationClass="aldor.editor.AldorSyntaxHighlighterFactory"/>
+        <lang.braceMatcher language="Aldor" implementationClass="aldor.editor.AldorBracketMatcher"/>
 
-        <lang.commenter language="Aldor" implementationClass="aldor.commenter.AldorCommenter"/>
+        <lang.commenter language="Aldor" implementationClass="aldor.editor.AldorCommenter"/>
 
         <lang.foldingBuilder language="Aldor" implementationClass="aldor.folder.AldorFoldingBuilder"/>
 
-        <annotator language="Aldor" implementationClass="aldor.annotator.AldorAnnotator"/>
-        <!-- <externalAnnotator language="Aldor" implementationClass="aldor.annotator.TypeAndRefAnnotator"/> -->
+        <annotator language="Aldor" implementationClass="aldor.editor.AldorAnnotator"/>
+        <!-- <externalAnnotator language="Aldor" implementationClass="aldor.editor.TypeAndRefAnnotator"/> -->
 
         <lang.refactoringSupport language="Aldor" implementationClass="aldor.references.AldorRefactoringSupportProvider"/>
-        <documentationProvider implementation="aldor.commenter.AldorDocumentationProvider"/>
+        <documentationProvider implementation="aldor.editor.AldorDocumentationProvider"/>
 
         <!-- Aldor extras -->
         <fileTypeFactory implementation="aldor.file.AldorFileTypeFactory"/>
