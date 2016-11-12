@@ -11,7 +11,6 @@ import aldor.syntax.SyntaxPrinter;
 import com.intellij.lang.documentation.DocumentationProviderEx;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.Nullable;
@@ -37,7 +36,7 @@ public class AldorDocumentationProvider extends DocumentationProviderEx {
             return null;
         }
         AldorModuleManager moduleManager = AldorModuleManager.getInstance(element.getProject());
-        Optional<Pair<Module, VirtualFile>> moduleMaybe = moduleManager.aldorModuleForFile(virtualFile);
+        Optional<Module> moduleMaybe = moduleManager.aldorModuleForFile(virtualFile);
         LOG.info("Module: " + element.getContainingFile().getName() + " " + moduleMaybe);
         if (!moduleMaybe.isPresent()) {
             return null;
@@ -45,7 +44,7 @@ public class AldorDocumentationProvider extends DocumentationProviderEx {
         if (!isInterestingElement(element)) {
             return null;
         }
-        Module module = moduleMaybe.get().first;
+        Module module = moduleMaybe.get();
         AnnotationFileManager annotationManager = AnnotationFileManager.getAnnotationFileManager(module);
         assert annotationManager != null;
         AnnotationFile file = annotationManager.annotationFile(element.getContainingFile());

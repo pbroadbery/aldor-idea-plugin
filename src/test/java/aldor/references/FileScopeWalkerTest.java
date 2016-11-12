@@ -2,7 +2,6 @@ package aldor.references;
 
 import aldor.build.module.AldorModuleType;
 import aldor.psi.AldorId;
-import aldor.util.JUnits;
 import aldor.util.SExpression;
 import aldor.util.SymbolPolicy;
 import aldor.util.VirtualFileTests;
@@ -17,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 import static aldor.symbolfile.AnnotationFileTests.lib;
 import static aldor.symbolfile.AnnotationFileTests.name;
@@ -25,6 +25,7 @@ import static aldor.symbolfile.AnnotationFileTests.srcpos;
 import static aldor.symbolfile.AnnotationFileTests.syme;
 import static aldor.symbolfile.AnnotationFileTests.type;
 import static aldor.symbolfile.AnnotationFileTests.typeCode;
+import static aldor.symbolfile.SymbolFileSymbols.Exporter;
 import static aldor.symbolfile.SymbolFileSymbols.Id;
 import static aldor.util.SExpressions.list;
 import static aldor.util.VirtualFileTests.createChildDirectory;
@@ -36,7 +37,7 @@ public class FileScopeWalkerTest extends LightPlatformCodeInsightFixtureTestCase
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        JUnits.setLogToDebug();
+        //JUnits.setLogToDebug();
     }
 
     public void testFileReference() throws IOException {
@@ -91,6 +92,76 @@ public class FileScopeWalkerTest extends LightPlatformCodeInsightFixtureTestCase
 
     }
 
+
+    public void testTopLevelReference() throws IOException {
+        VirtualFile root = VirtualFileTests.getProjectRoot(getProject());
+        VirtualFile srcDir = createChildDirectory(root, "src");
+        VirtualFile buildDir = createChildDirectory(root, "build");
+        VirtualFile markerFile = createFile(srcDir, "configure.ac", "");
+        VirtualFile defFile = createFile(srcDir, "def.as", "\nD: with { f: () -> ()}");
+        VirtualFile useFile = createFile(srcDir, "use.as", "\nf()$D");
+
+        VirtualFile defAnnotationFile = createFile(buildDir, "def.abn", createTopLevelDefAnnotation().toString(SymbolPolicy.ALLCAPS));
+        VirtualFile useAnnotationFile = createFile(buildDir, "use.abn", createTopLevelUseAnnotation().toString(SymbolPolicy.ALLCAPS));
+        PsiFile file = getPsiManager().findFile(useFile);
+
+        Collection<AldorId> ids = PsiTreeUtil.findChildrenOfType(file, AldorId.class);
+        System.out.println("Ids: " + ids.stream().map(x -> x.getText()).collect(Collectors.toList()));
+        AldorId theDomainId = ids.stream().filter(x -> "D".equals(x.getName())).findFirst().orElseThrow(RuntimeException::new);
+        AldorId theFunctionId = ids.stream().filter(x -> "f".equals(x.getName())).findFirst().orElseThrow(RuntimeException::new);
+
+        PsiElement theDomain = FileScopeWalker.lookupBySymbolFile(theDomainId);
+        PsiElement theFunction = FileScopeWalker.lookupBySymbolFile(theFunctionId);
+        assertNotNull(theDomain);
+        assertEquals(defFile.getPath(), theDomain.getContainingFile().getVirtualFile().getPath());
+        assertNotNull(theFunction);
+        assertEquals(defFile.getPath(), theFunction.getContainingFile().getVirtualFile().getPath());
+    }
+
+    SExpression createTopLevelDefAnnotation() {
+        String file = "def";
+        return list(
+                list(//Syntax (no need)
+                ),
+                list(//Symbols
+                        list(name("D"), srcpos(file, 2, 1), type(0), typeCode(0xDDD)),
+                        list(name("f"), srcpos(file, 2, 11), type(1), typeCode(0xFFF)),
+                        list(name("T"))
+                ),
+                list(//Types
+                        list(Id, syme(2)),
+                        list(Id, syme(2)),
+                        list(Id, syme(2))
+                ));
+    }
+
+
+    SExpression createTopLevelUseAnnotation() {
+        String file = "use";
+        return list(
+                list(
+                        list(Id, srcpos(file, 2, 1), syme(0)),
+                        list(Id, srcpos(file, 2, 5), syme(1))
+          /*      list(//Syntax
+                        (|Apply|
+                                (|Qualify|
+                                (|Id| (|srcpos| "use" 2 1) (|syme| |ref| . 3))
+        (|Id| (|srcpos| "use" 2 5) (|syme| |ref| . 5)))))
+        (((|name| . |AldorLib|) (|type| |ref| . 0))
+        */
+                ),
+                list(//Symbols
+                        list(name("f"), type(1), original(3), typeCode(0xFFF)),
+                        list(name("D"), type(1), list(Exporter, lib("def.ao"), typeCode(0xDDD)), typeCode(0xDDD)),
+                        list(name("T"), type(1), lib("lang.ao"), typeCode(0x111)),
+                        list(name("f"), type(1), lib("def.ao"), typeCode(0xFFF))
+                ),
+                list(//Types
+                        list(Id, syme(2)),
+                        list(Id, syme(2)),
+                        list(Id, syme(2))
+                ));
+    }
 
     @Override
     protected LightProjectDescriptor getProjectDescriptor() {

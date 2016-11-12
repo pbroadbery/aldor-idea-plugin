@@ -52,7 +52,7 @@ public class SyntaxTest extends LightPlatformCodeInsightFixtureTestCase {
         PsiElement psi = parseText("(a: A) + (b: B)");
         Syntax syntax = parse(psi);
         assertNotNull(syntax);
-        assertEquals("(Decl (Apply f (Comma (Decl x I) (Decl y I))) X)", syntax.toString());
+        assertEquals("(Apply + (Decl a A) (Decl b B))", syntax.toString());
     }
 
 
@@ -60,7 +60,7 @@ public class SyntaxTest extends LightPlatformCodeInsightFixtureTestCase {
         PsiElement psi = parseText("f(x: I, y: I): X");
         Syntax syntax = parse(psi);
         assertNotNull(syntax);
-        assertEquals("(Apply + (Decl a A) (Decl b B))", syntax.toString());
+        assertEquals("(Decl (Apply f (Comma (Decl x I) (Decl y I))) X)", syntax.toString());
     }
 
     public void testParseCurriedDeclare() {
@@ -77,7 +77,7 @@ public class SyntaxTest extends LightPlatformCodeInsightFixtureTestCase {
         Syntax syntax = parse(psi);
         assertNotNull(syntax);
         // FIXME: This is wrong - ought to show full type
-        assertEquals("(Other)", syntax.toString());
+        assertEquals("{?:Other}", syntax.toString());
     }
 
     public void testTupleCross() {

@@ -8,15 +8,14 @@ import aldor.symbolfile.Syme;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -46,11 +45,14 @@ public final class FileScopeWalker {
     public static PsiElement lookupBySymbolFile(PsiElement element) {
         PsiFile containingFile = element.getContainingFile();
         Project project = containingFile.getProject();
-        Optional<Pair<Module, VirtualFile>> moduleAndRoot = AldorModuleManager.getInstance(project).aldorModuleForFile(containingFile.getVirtualFile());
+        if (containingFile.getVirtualFile() == null) {
+            return null;
+        }
+        Optional<Module> moduleAndRoot = AldorModuleManager.getInstance(project).aldorModuleForFile(containingFile.getVirtualFile());
         if (!moduleAndRoot.isPresent()) {
             return null;
         }
-        Module module = moduleAndRoot.get().first;
+        Module module = moduleAndRoot.get();
         AnnotationFileManager fileManager = AnnotationFileManager.getAnnotationFileManager(module);
         if (fileManager == null) {
             return null;
@@ -61,6 +63,11 @@ public final class FileScopeWalker {
         if (syme == null) {
             LOG.info("No Symbol found at " + srcPos);
             return null;
+        }
+
+        if (syme.srcpos() != null) {
+            PsiFile theFile = psiFileForFileName(module, syme.srcpos().fileName() + ".as");
+            return fileManager.findElementForSrcPos(theFile, syme.srcpos());
         }
 
         Syme original = syme.original();
@@ -77,20 +84,12 @@ public final class FileScopeWalker {
             refName = original.library();
         }
         if (refName == null) {
-            LOG.info("No library for" + srcPos + " " + syme + " " + original);
+            LOG.info("No library for " + srcPos + " " + syme + " " + original);
             return null;
         }
         String refSourceFile = StringUtil.trimExtension(refName) + ".as";
-        PsiFile[] refFiles = FilenameIndex.getFilesByName(project, refSourceFile, GlobalSearchScope.moduleScope(module));
-        if (refFiles.length > 1) {
-            LOG.info("Multiple files called " + refSourceFile);
-            return null; // ?? Multi???
-        }
-        if (refFiles.length == 0) {
-            LOG.info("No file " + refSourceFile);
-            return null;
-        }
-        PsiFile refFile = refFiles[0];
+        PsiFile refFile = psiFileForFileName(module, refSourceFile);
+
         AnnotationFile refAnnotationFile = fileManager.annotationFile(refFile);
         Syme refSyme = refAnnotationFile.symeForNameAndCode(syme.name(), syme.typeCode());
         if (refSyme == null) {
@@ -103,6 +102,24 @@ public final class FileScopeWalker {
         }
         LOG.info("Found reference to " + element.getText() + " at " + refSyme.srcpos());
         return fileManager.findElementForSrcPos(refFile, refSyme.srcpos());
+    }
+
+    @Nullable
+    private static PsiFile psiFileForFileName(Module module, String sourceFile) {
+        PsiFile[] refFiles = FilenameIndex.getFilesByName(module.getProject(), sourceFile, GlobalSearchScope.moduleScope(module));
+        PsiFile refFile;
+        if (refFiles.length > 1) {
+            LOG.info("Multiple files called " + sourceFile);
+            refFile = null; // ?? Multi???
+        }
+        else if (refFiles.length == 0) {
+            LOG.info("No file " + sourceFile);
+            refFile = null;
+        }
+        else {
+            refFile = refFiles[0];
+        }
+        return refFile;
     }
 }
 

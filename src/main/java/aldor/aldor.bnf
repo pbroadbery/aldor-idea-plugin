@@ -233,8 +233,8 @@ private BindingR_InfixedExprsDecl_AnyStatement ::= InfixedExprsDecl (Binding_Any
                                                              | KW_MapsTo Binding_AnyStatement
                                                              | KW_MapsToStar Binding_AnyStatement)?
 
-Binding_AnyStatement_Assign ::= KW_Assign Binding_AnyStatement
-Binding_AnyStatement_Define ::= KW_2EQ Binding_AnyStatement
+left Binding_AnyStatement_Assign ::= KW_Assign Binding_AnyStatement
+left Binding_AnyStatement_Define ::= KW_2EQ Binding_AnyStatement
 //no_semicolon ::= ! KW_Semicolon
 //AnyStatement ::= KW_If CommaItem KW_Then Binding_AnyStatement | Flow_AnyStatement
 

@@ -42,7 +42,12 @@ public final class AnnotationFileTests {
         return cons(Original, cons(Ref, integer(index)));
     }
 
-    public static SExpression lib(String index) {
-        return cons(Lib, string(index));
+    public static SExpression lib(String name) {
+        return cons(Lib, string(name));
     }
+
+    public static SExpression exporter(int index) {
+        return cons(Lib, cons(Ref, integer(index)));
+    }
+
 }

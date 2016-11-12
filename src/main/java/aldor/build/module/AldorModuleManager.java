@@ -4,9 +4,8 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
@@ -53,14 +52,10 @@ public final class AldorModuleManager {
     }
 
     @NotNull
-    public Optional<Pair<Module, VirtualFile>> aldorModuleForFile(@NotNull VirtualFile file) {
-        Collection<Module> modules = aldorModules();
-        Stream<Pair<Module, VirtualFile>> moduleStream = modules.stream()
-                .flatMap(module -> Arrays.stream(ModuleRootManager.getInstance(module).getContentRoots())
-                        .map(root -> Pair.create(module, root)))
-                .filter(pair -> isParent(pair.getSecond(), file));
+    public Optional<Module> aldorModuleForFile(@NotNull VirtualFile file) {
+        Module module = ProjectRootManager.getInstance(project).getFileIndex().getModuleForFile(file);
 
-        return moduleStream.findFirst();
+        return Optional.ofNullable(module).filter(mod -> ModuleType.is(mod, AldorModuleType.instance()));
     }
 
     private boolean isParent(VirtualFile root, VirtualFile containingFile) {
@@ -79,11 +74,12 @@ public final class AldorModuleManager {
 
 
     public String buildPathForFile(VirtualFile virtualFile) {
-        Optional<Pair<Module, VirtualFile>> maybeModuleAndRoot = aldorModuleForFile(virtualFile);
-        if (!maybeModuleAndRoot.isPresent()) {
+        Optional<Module> maybeModule = aldorModuleForFile(virtualFile);
+        if (!maybeModule.isPresent()) {
             return null;
         }
-        VirtualFile root = maybeModuleAndRoot.get().getSecond();
+
+        VirtualFile root = ProjectRootManager.getInstance(project).getFileIndex().getContentRootForFile(virtualFile);
 
         return buildPathFromRoot(root, virtualFile.getParent());
     }

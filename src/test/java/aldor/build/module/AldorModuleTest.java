@@ -3,7 +3,7 @@ package aldor.build.module;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.UsefulTestCase;
 import com.intellij.testFramework.fixtures.IdeaProjectTestFixture;
@@ -56,15 +56,17 @@ public class AldorModuleTest extends UsefulTestCase {
         VirtualFile foo_as = createFile("root/aldor/src/foo.as", "");
         createFile("root/build", "");
 
-        Optional<Pair<Module, VirtualFile>> someModule = manager.aldorModuleForFile(foo_as);
+        Optional<Module> someModule = manager.aldorModuleForFile(foo_as);
         assertTrue(someModule.isPresent());
-        assertSame(module, someModule.get().first);
+        assertSame(module, someModule.get());
 
+        VirtualFile root = ProjectRootManager.getInstance(project).getFileIndex().getContentRootForFile(foo_as);
+        assertNotNull(root);
         String path = manager.buildPathForFile(foo_as);
-        assertEquals(someModule.get().second.getPath() + "/build/src", path);
+        assertEquals(root.getPath() + "/build/src", path);
 
         String annotationFile = manager.annotationFileForSourceFile(foo_as);
-        assertEquals(someModule.get().second.getPath() + "/build/src/foo.abn", annotationFile);
+        assertEquals(root.getPath() + "/build/src/foo.abn", annotationFile);
     }
 
     private VirtualFile createFile(String path, String text) throws IOException {
