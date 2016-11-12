@@ -75,6 +75,13 @@ public class SpadParsingTest extends LightPlatformCodeInsightTestCase {
         assertEquals(0, errors.size());
     }
 
+    public void testTopLevelSeq() {
+        PsiElement psi = parseText("++ Foo\nFoo: with == add\n++ Bar\nBar: with == add\n");
+        logPsi(psi);
+        final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
+        assertEquals(0, errors.size());
+    }
+
     public void testTopLevelCategory() {
         PsiElement psi = parseText("QQQ(): Category == X with\n  foo: %a\n add\n  foo: % == 1\n   bar: % == 3\n");
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
