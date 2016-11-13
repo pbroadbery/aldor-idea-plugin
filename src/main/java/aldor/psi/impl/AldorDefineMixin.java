@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
-@SuppressWarnings({"AbstractClassExtendsConcreteClass", "AbstractClassWithOnlyOneDirectInheritor"})
+@SuppressWarnings({"AbstractClassExtendsConcreteClass"})
 public abstract class AldorDefineMixin extends ASTWrapperPsiElement {
     private static final Key<Optional<Syntax>> cachedLhsSyntax = new Key<>("LhsSyntax");
 
@@ -56,8 +56,9 @@ public abstract class AldorDefineMixin extends ASTWrapperPsiElement {
         rhs.accept(new AldorRecursiveVisitor() {
             @Override
             public void visitElement(PsiElement o) {
-                if (o == lastParent)
+                if (o == lastParent) {
                     return;
+                }
                 o.acceptChildren(this);
             }
 

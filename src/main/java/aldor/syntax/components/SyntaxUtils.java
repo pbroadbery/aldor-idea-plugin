@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public class SyntaxUtils {
+public final class SyntaxUtils {
 
     public static Iterable<Syntax> childScopesForDefineLhs(Syntax syntax) {
         if ((syntax == null) || !syntax.is(Declaration.class)) {

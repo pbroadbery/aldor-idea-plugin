@@ -44,7 +44,7 @@ public abstract class SExpression {
 
     @Override
     public String toString() {
-        return toString(SymbolPolicy.NORMAL);
+        return toString(NORMAL);
     }
 
 

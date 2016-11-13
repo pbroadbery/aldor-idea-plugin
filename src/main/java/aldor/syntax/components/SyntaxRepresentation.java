@@ -21,7 +21,7 @@ public abstract class SyntaxRepresentation<T extends PsiElement> {
     private static class PsiSyntaxRepresentation<T extends PsiElement> extends SyntaxRepresentation<T> {
         private final T element;
 
-        public PsiSyntaxRepresentation(T element) {
+        PsiSyntaxRepresentation(T element) {
             this.element = element;
         }
 

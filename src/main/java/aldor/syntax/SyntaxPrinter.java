@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-public class SyntaxPrinter {
+public final class SyntaxPrinter {
     private static final SyntaxPrinter instance = new SyntaxPrinter();
 
     private SyntaxPrinter() {

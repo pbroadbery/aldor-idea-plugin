@@ -42,6 +42,7 @@ public class AldorNameReference extends PsiReferenceBase<AldorIdentifier> {
         return myElement.setName(newElementName);
     }
 
+    @SuppressWarnings("RedundantMethodOverride")
     @Override
     public boolean isReferenceTo(PsiElement element) {
         //LOG.info("IsRefTo: " + this.getElement() + "@" + this.getElement().getContainingFile().getName() + ":" + getElement().getTextOffset()

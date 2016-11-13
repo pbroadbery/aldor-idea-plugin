@@ -5,7 +5,7 @@ import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings({"AbstractClassExtendsConcreteClass", "AbstractClassWithOnlyOneDirectInheritor"})
+@SuppressWarnings({"AbstractClassExtendsConcreteClass"})
 public abstract class AldorAssignMixin extends ASTWrapperPsiElement implements AldorAssign {
 
     protected AldorAssignMixin(@NotNull ASTNode node) {

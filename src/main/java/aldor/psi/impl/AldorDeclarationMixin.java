@@ -11,6 +11,7 @@ import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("AbstractClassExtendsConcreteClass")
 public abstract class AldorDeclarationMixin extends ASTWrapperPsiElement implements AldorDeclaration {
 
     protected AldorDeclarationMixin(@NotNull ASTNode node) {
