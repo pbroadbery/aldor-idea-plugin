@@ -30,6 +30,6 @@ public class AldorBracketMatcher implements PairedBraceMatcher {
 
     @Override
     public int getCodeConstructStart(PsiFile file, int openingBraceOffset) {
-        return 0;
+        return openingBraceOffset;
     }
 }

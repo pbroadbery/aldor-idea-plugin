@@ -139,7 +139,7 @@ public class AnnotationFileManager implements Disposable {
     }
 
     @Nullable
-    public AldorIdentifier findElementForSrcPos(PsiFile file, SrcPos srcPos) {
+    public PsiElement findElementForSrcPos(PsiFile file, SrcPos srcPos) {
         LineNumberMap map = lineNumberMapForFile.get(file.getVirtualFile().getPath());
         if (map == null) {
             return null;

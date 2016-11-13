@@ -436,7 +436,7 @@ public class SpadParsingTest extends LightPlatformCodeInsightTestCase {
     }
 
     private PsiElement parseFile(File file) throws IOException {
-        String text = new String(Files.readAllBytes(file.toPath()), Charset.defaultCharset());
+        CharSequence text = new String(Files.readAllBytes(file.toPath()), Charset.defaultCharset());
         System.out.println(LexerFunctions.tokens(Spad, text).values().stream().map(t -> AldorTokenTypes.isNewLine(t) ? (t + "\n") : (t + " ")).collect(Collectors.joining()));
         return parseText(text);
     }

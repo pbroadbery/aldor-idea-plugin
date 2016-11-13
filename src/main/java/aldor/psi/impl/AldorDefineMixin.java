@@ -62,7 +62,7 @@ public abstract class AldorDefineMixin extends ASTWrapperPsiElement {
             }
 
             @Override
-            public void visitAssign(AldorAssign assign) {
+            public void visitAssign(@NotNull AldorAssign assign) {
 
             }
         });

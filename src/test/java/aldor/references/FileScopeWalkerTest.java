@@ -16,7 +16,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 import static aldor.symbolfile.AnnotationFileTests.lib;
 import static aldor.symbolfile.AnnotationFileTests.name;
@@ -106,7 +105,6 @@ public class FileScopeWalkerTest extends LightPlatformCodeInsightFixtureTestCase
         PsiFile file = getPsiManager().findFile(useFile);
 
         Collection<AldorId> ids = PsiTreeUtil.findChildrenOfType(file, AldorId.class);
-        System.out.println("Ids: " + ids.stream().map(x -> x.getText()).collect(Collectors.toList()));
         AldorId theDomainId = ids.stream().filter(x -> "D".equals(x.getName())).findFirst().orElseThrow(RuntimeException::new);
         AldorId theFunctionId = ids.stream().filter(x -> "f".equals(x.getName())).findFirst().orElseThrow(RuntimeException::new);
 

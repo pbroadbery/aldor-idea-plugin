@@ -19,7 +19,6 @@ import org.jetbrains.annotations.NotNull;
  *    - Macros
  *    - System commands (actually, this should be in the highlighter)
  *    - Errors (we'd need to compile the thing first)
- *    - Type tooltips
  *    - Potential quick fixes
  */
 public class AldorAnnotator implements Annotator {
