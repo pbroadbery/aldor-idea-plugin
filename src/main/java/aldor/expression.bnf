@@ -72,9 +72,14 @@
 
 }
 
-Goal ::= SimpleExpression
+Goal ::= StatementSequence
 
-SimpleExpression ::= Expr
+StatementSequence ::= StatementItem*
+StatementItem ::= Statement (KW_Semicolon | <<eof>>)
+
+Statement ::= Expr DefineStmt?
+
+left DefineStmt ::= KW_2EQ Expr {pin=1}
 
 Expr ::=
          Or_200_Group |

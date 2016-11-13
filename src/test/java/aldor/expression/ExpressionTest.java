@@ -48,9 +48,17 @@ public class ExpressionTest extends LightPlatformCodeInsightTestCase {
         assertEquals(0, errors.size());
     }
 
+    public void testDefines() {
+        PsiElement element = parseExpressionText(getProject(), "a: String == b; b: Integer == a", ExpressionTypes.STATEMENT_SEQUENCE);
+        assertNotNull(element);
+        logPsi(element);
+        final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(element);
+        assertEquals(0, errors.size());
+    }
+
 
     public static PsiElement parseExpressionText(Project project, CharSequence text) {
-        return parseExpressionText(project, text, ExpressionTypes.SIMPLE_EXPRESSION);
+        return parseExpressionText(project, text, ExpressionTypes.STATEMENT);
     }
 
     public static PsiElement parseExpressionText(Project project, CharSequence text, IElementType elementType) {
