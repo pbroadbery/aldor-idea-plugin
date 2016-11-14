@@ -56,7 +56,10 @@
         <lang.parserDefinition language="Spad" implementationClass="aldor.parser.SpadParserDefinition"/>
 
         <!-- Test language -->
+        <fileTypeFactory implementation="aldor.expression.ExpressionFileTypeFactory"/>
         <lang.parserDefinition language="Expression" implementationClass="aldor.expression.ExpressionParserDefinition"/>
+        <stubElementTypeHolder class="aldor.expression.ExpressionTypes"/>
+        <stubIndex implementation="aldor.expression.ExpressionDefineStubIndex"/>
     </extensions>
 
     <actions>

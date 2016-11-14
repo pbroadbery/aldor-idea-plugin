@@ -5,7 +5,7 @@
   extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
 
   elementTypeHolderClass="aldor.expression.ExpressionTypes"
-  elementTypeClass="aldor.expression.ExpressionElementType"
+  elementTypeFactory="aldor.expression.ExpressionTypeFactory.createElement"
 
   tokenTypeClass="aldor.lexer.AldorTokenType"
   tokenTypeFactory = "aldor.lexer.AldorTokenTypes.createToken"
@@ -69,6 +69,9 @@
    ]
   extends(".*Expr")=Expr
   extends(".*Molecule")=Molecule
+
+  stubClass("DefineStmt")='aldor.expression.ExpressionDefineStub'
+  implements("DefineStmt")='aldor.expression.psi.ExpressionDefine'
 
 }
 
