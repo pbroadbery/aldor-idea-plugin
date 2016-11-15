@@ -185,7 +185,7 @@ public class AnnotationFileManager implements Disposable {
         }
 
         @Nullable
-        public AldorIdentifier findPsiElementForSrcPos(PsiFile file, int line, int col) {
+        public PsiElement findPsiElementForSrcPos(PsiFile file, int line, int col) {
             int lineOffset = offsetForLine(line-1);
             int colOffset = lineOffset + widthCalculator.offsetForWidth(new CharSequenceSubSequence(file.getText(), lineOffset, file.getTextLength()), col);
             return PsiTreeUtil.findElementOfClassAtOffset(file, colOffset, AldorIdentifier.class, true);

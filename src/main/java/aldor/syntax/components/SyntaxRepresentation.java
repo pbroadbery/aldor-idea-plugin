@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
 public abstract class SyntaxRepresentation<T extends PsiElement> {
 
     public static <T extends PsiElement> SyntaxRepresentation<T> create(T element) {
-        return new PsiSyntaxRepresentation<T>(element);
+        return new PsiSyntaxRepresentation<>(element);
     }
 
     @Nullable

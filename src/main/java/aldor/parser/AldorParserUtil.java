@@ -34,7 +34,7 @@ public class AldorParserUtil extends GeneratedParserUtilBase {
     // Return true if last token was a close brace, or looking at a semicolon
     // Used to determine if there is a logical semicolon - ie. statement terminator
     // at the current position.
-    @SuppressWarnings("ObjectEquality")
+    @SuppressWarnings({"ObjectEquality", "UnusedParameters"})
     public static boolean semicolonOrCloseBraceNearby(@NotNull PsiBuilder builder, int level) {
         if (consumeToken(builder, KW_Semicolon)) {
             return true;
@@ -188,12 +188,12 @@ public class AldorParserUtil extends GeneratedParserUtilBase {
     }
 
 
-    static boolean isSpadMode(@NotNull PsiBuilder builder, int indentLevel) {
+    static boolean isSpadMode(@NotNull PsiBuilder builder, @SuppressWarnings("UnusedParameters") int indentLevel) {
         AldorIndentLexer lexer = (AldorIndentLexer) ((Builder) builder).getLexer();
         return lexer.isSpadMode();
     }
 
-    static boolean isAldorMode(@NotNull PsiBuilder builder, int indentLevel) {
+    static boolean isAldorMode(@NotNull PsiBuilder builder, @SuppressWarnings("UnusedParameters") int indentLevel) {
         AldorIndentLexer lexer = (AldorIndentLexer) ((Builder) builder).getLexer();
         return lexer.isAldorMode();
     }

@@ -1,5 +1,6 @@
 package aldor.expression;
 
+import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.util.IconUtil;
 import org.jetbrains.annotations.NotNull;
@@ -8,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.Icon;
 
 public final class ExpressionFileType extends LanguageFileType {
-    public static final ExpressionFileType INSTANCE = new ExpressionFileType();
+    public static final FileType INSTANCE = new ExpressionFileType();
     public static final String FILE_EXTENSION = "expr";
 
     /**

@@ -107,7 +107,7 @@ public final class FileScopeWalker {
     @Nullable
     private static PsiFile psiFileForFileName(Module module, String sourceFile) {
         PsiFile[] refFiles = FilenameIndex.getFilesByName(module.getProject(), sourceFile, GlobalSearchScope.moduleScope(module));
-        PsiFile refFile;
+        @Nullable PsiFile refFile;
         if (refFiles.length > 1) {
             LOG.info("Multiple files called " + sourceFile);
             refFile = null; // ?? Multi???

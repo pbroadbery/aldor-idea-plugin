@@ -88,10 +88,9 @@ public class Syme {
     }
 
     public String archiveLib() {
-        String lib = ofNullable(sx.asAssociationList().get(SymbolFileSymbols.Exporter))
+        return ofNullable(sx.asAssociationList().get(SymbolFileSymbols.Exporter))
                 .map(x -> x.asAssociationList().get(SymbolFileSymbols.Lib))
                 .map(SExpression::string)
                 .orElse(null);
-        return lib;
     }
 }

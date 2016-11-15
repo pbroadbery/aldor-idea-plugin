@@ -62,6 +62,7 @@ public class BuildResult implements MessageHandler {
     void storeMappingsDump(ProjectDescriptor pd) throws IOException {
         final ByteArrayOutputStream dump = new ByteArrayOutputStream();
 
+        //noinspection ImplicitDefaultCharsetUsage
         try (PrintStream stream = new PrintStream(dump)) {
             pd.dataManager.getMappings().toStream(stream);
             dumpSourceToOutputMappings(pd, stream);

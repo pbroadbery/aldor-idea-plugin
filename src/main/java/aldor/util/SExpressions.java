@@ -6,6 +6,7 @@ import java.util.List;
 
 public final class SExpressions {
 
+    @SuppressWarnings("OverloadedVarargsMethod")
     public static SExpression list(SExpression ... sxArray) {
         return list(Arrays.asList(sxArray));
     }

@@ -20,8 +20,8 @@ public class Id extends Syntax {
         this.rep = SyntaxRepresentation.create(id);
     }
 
-    public Id(SxSyntaxRepresentation<AldorIdentifier> sxSyntaxRepresentation) {
-        this.rep = sxSyntaxRepresentation;
+    public Id(SxSyntaxRepresentation<AldorIdentifier> syntaxRepresentation) {
+        this.rep = syntaxRepresentation;
     }
 
     @Override

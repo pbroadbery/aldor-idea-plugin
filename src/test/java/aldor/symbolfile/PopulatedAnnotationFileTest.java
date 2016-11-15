@@ -14,6 +14,7 @@ public class PopulatedAnnotationFileTest {
 
     @Test
     public void testFile() throws FileNotFoundException {
+        @SuppressWarnings("ImplicitDefaultCharsetUsage")
         SExpression sx = SExpression.read(new FileReader("/tmp/sal_array.abn"));
 
         PopulatedAnnotationFile file = new PopulatedAnnotationFile("array", sx);
@@ -29,6 +30,7 @@ public class PopulatedAnnotationFileTest {
 
     @Test
     public void testFile2() throws FileNotFoundException {
+        @SuppressWarnings("ImplicitDefaultCharsetUsage")
         SExpression sx = SExpression.read(new FileReader("/tmp/alg_serpoly.abn"), SymbolPolicy.ALLCAPS);
 
         PopulatedAnnotationFile file = new PopulatedAnnotationFile("array", sx);

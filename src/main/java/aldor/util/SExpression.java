@@ -18,6 +18,7 @@ import java.util.Objects;
 
 import static aldor.util.SymbolPolicy.NORMAL;
 
+@SuppressWarnings("ClassWithTooManyMethods")
 public abstract class SExpression {
     private final SxType<?> type;
 
