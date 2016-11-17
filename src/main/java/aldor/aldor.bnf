@@ -4,8 +4,8 @@
   parserClass="aldor.parser.AldorParser"
   extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
 
-  elementTypeHolderClass="aldor.parser.AldorTypes"
-  elementTypeClass="aldor.parser.AldorElementType"
+  elementTypeHolderClass="aldor.psi.elements.AldorTypes"
+  elementTypeFactory="aldor.psi.elements.AldorElementTypeFactory.createElement"
 
   tokenTypeClass="aldor.lexer.AldorTokenType"
   tokenTypeFactory = "aldor.lexer.AldorTokenTypes.createToken"
@@ -45,6 +45,17 @@
 
   extends(".*Expr")=Expr
 
+  // These things are documented
+  mixin("Doc_Expression")='aldor.psi.AldorDocumentedMixin'
+  mixin("Documented_Labelled")='aldor.psi.AldorDocumentedMixin'
+  mixin("SpadTopLevelExpression")='aldor.psi.AldorDocumentedMixin'
+
+  // These are definitions
+  stubClass(".*_Define")='aldor.psi.stub.AldorDefineStub'
+  implements(".*_Define")='aldor.psi.AldorDefine'
+
+  // Declarations (should be with body only...)
+  // Version 2, I think.
 
   tokens = [
           TK_Id TK_Blank TK_Int TK_Float TK_String TK_PreDoc TK_PostDoc
@@ -612,7 +623,7 @@ CurlyContents_Labelled ::= CurlyContentsList_Labelled
 
 //CurlyContentsList_E ::= CurlyContent1_E
 //            | CurlyContent1_E CurlyContentB_E
-CurlyContentsList_Labelled ::= CurlyContent1_Labelled CurlyContentB_Labelled?
+CurlyContentsList_Labelled ::= CurlyContent1_Labelled Documented_Labelled?
 
 //CurlyContent1_E ::= Nothing
 //        | CurlyContent1_E CurlyContentA_E
@@ -621,13 +632,13 @@ CurlyContent1_Labelled ::= CurlyContentA_Labelled*
 
 //CurlyContentA_E ::= CurlyContentB_E KW_Semicolon PostDocument
 //        | error KW_Semicolon PostDocument
-CurlyContentA_Labelled ::= CurlyContentB_Labelled Semicolon PostDocument
+CurlyContentA_Labelled ::= Documented_Labelled Semicolon PostDocument
         | error KW_Semicolon PostDocument
 
 Semicolon ::= <<semicolonOrCloseBraceNearby>>
 
 //CurlyContentB_E ::= PreDocument E PostDocument
-CurlyContentB_Labelled ::= PreDocument Labelled PostDocument
+Documented_Labelled ::= PreDocument Labelled PostDocument
 
 Doc_Expression ::= Expression PostDocument
 

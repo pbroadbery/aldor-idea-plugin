@@ -1,26 +1,33 @@
 package aldor.psi.impl;
 
 import aldor.psi.AldorAssign;
+import aldor.psi.AldorDefine;
 import aldor.psi.AldorRecursiveVisitor;
+import aldor.psi.stub.AldorDefineStub;
 import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxPsiParser;
 import aldor.syntax.components.SyntaxUtils;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
+import com.intellij.extapi.psi.StubBasedPsiElementBase;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
+import com.intellij.psi.stubs.IStubElementType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
 @SuppressWarnings({"AbstractClassExtendsConcreteClass"})
-public abstract class AldorDefineMixin extends ASTWrapperPsiElement {
+public abstract class AldorDefineMixin extends StubBasedPsiElementBase<AldorDefineStub> implements AldorDefine {
     private static final Key<Optional<Syntax>> cachedLhsSyntax = new Key<>("LhsSyntax");
 
     protected AldorDefineMixin(@NotNull ASTNode node) {
         super(node);
+    }
+
+    protected AldorDefineMixin(AldorDefineStub stub, @SuppressWarnings("rawtypes") IStubElementType type) {
+        super(stub, type);
     }
 
     @Override

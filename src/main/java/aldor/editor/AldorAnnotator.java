@@ -1,9 +1,9 @@
 package aldor.editor;
 
-import aldor.parser.AldorTypes;
 import aldor.psi.AldorPsiUtils;
 import aldor.psi.AldorType;
 import aldor.psi.AldorTypeE12;
+import aldor.psi.elements.AldorTypes;
 import com.intellij.ide.highlighter.JavaHighlightingColors;
 import com.intellij.lang.annotation.Annotation;
 import com.intellij.lang.annotation.AnnotationHolder;

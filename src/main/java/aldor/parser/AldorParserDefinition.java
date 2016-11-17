@@ -5,6 +5,7 @@ import aldor.language.AldorLanguage;
 import aldor.lexer.AldorIndentLexer;
 import aldor.lexer.AldorLexerAdapter;
 import aldor.lexer.AldorTokenTypes;
+import aldor.psi.elements.AldorTypes;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import com.intellij.lang.ParserDefinition;

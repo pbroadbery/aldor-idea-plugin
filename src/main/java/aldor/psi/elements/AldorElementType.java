@@ -1,4 +1,4 @@
-package aldor.parser;
+package aldor.psi.elements;
 
 import aldor.language.AldorLanguage;
 import com.intellij.psi.tree.IElementType;
