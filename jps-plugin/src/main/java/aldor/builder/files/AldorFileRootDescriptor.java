@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class AldorFileRootDescriptor extends BuildRootDescriptor {
-    private static final Logger LOG = Logger.getInstance(AldorFileBuildTargetType.class);
+    private static final Logger LOG = Logger.getInstance(AldorFileRootDescriptor.class);
     private final File path;
     private final AldorFileBuildTarget target;
     private final List<File> contentRoots;

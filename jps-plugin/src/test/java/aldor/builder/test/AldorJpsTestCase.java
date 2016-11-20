@@ -71,7 +71,7 @@ public abstract class AldorJpsTestCase extends UsefulTestCase {
         LogManager.getRootLogger().setLevel(DEBUG);
         Logger.setFactory(TestLoggerFactory.class);
     }
-    private static final Logger LOG = Logger.getInstance(CompileScopeTestBuilder.class);
+    private static final Logger LOG = Logger.getInstance(AldorJpsTestCase.class);
 
     private File myProjectDir = null;
     private JpsModel myModel;

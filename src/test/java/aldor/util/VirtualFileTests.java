@@ -27,6 +27,10 @@ public final class VirtualFileTests {
     public static VirtualFile createFile(VirtualFile dir, String name, String content) {
         ApplicationManager.getApplication().runWriteAction(() -> {
             try {
+                VirtualFile existingFile = dir.findChild(name);
+                if (existingFile != null) {
+                    existingFile.delete(null);
+                }
                 VirtualFile file = dir.createChildData(null, name);
                 //noinspection NestedTryStatement
                 try (OutputStream stream = file.getOutputStream(null)) {
@@ -49,5 +53,14 @@ public final class VirtualFileTests {
             }
         });
         return dir.findChild(dirName);
+    }
+
+    public static void deleteFile(VirtualFile file) {
+        ApplicationManager.getApplication().runWriteAction(() -> {
+            try {
+            file.delete(null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }});
     }
 }

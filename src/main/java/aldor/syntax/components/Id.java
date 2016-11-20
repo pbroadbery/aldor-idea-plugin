@@ -39,6 +39,11 @@ public class Id extends Syntax {
         return rep.element();
     }
 
+    @Nullable
+    public AldorIdentifier aldorIdentifier() {
+        return rep.element();
+    }
+
     @Override
     public Iterable<Syntax> children() {
         return Collections.emptyList();

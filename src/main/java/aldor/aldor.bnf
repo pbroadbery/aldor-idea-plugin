@@ -51,7 +51,7 @@
   mixin("SpadTopLevelExpression")='aldor.psi.AldorDocumentedMixin'
 
   // These are definitions
-  stubClass(".*_Define")='aldor.psi.stub.AldorDefineStub'
+  stubClass(".*_Define")='aldor.psi.AldorDefine.AldorDefineStub'
   implements(".*_Define")='aldor.psi.AldorDefine'
 
   // Declarations (should be with body only...)

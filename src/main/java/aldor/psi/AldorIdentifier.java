@@ -1,5 +1,6 @@
 package aldor.psi;
 
+import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiNameIdentifierOwner;
 
 /** Used to mark types which represent an id - infix operators and TK_ID.
@@ -11,6 +12,6 @@ import com.intellij.psi.PsiNameIdentifierOwner;
  * '(a: X) + (b: X)'.
  */
 @SuppressWarnings("MarkerInterface")
-public interface AldorIdentifier extends PsiNameIdentifierOwner {
+public interface AldorIdentifier extends PsiNameIdentifierOwner, Navigatable {
 
 }

@@ -2,32 +2,69 @@ package aldor.psi.impl;
 
 import aldor.psi.AldorAssign;
 import aldor.psi.AldorDefine;
+import aldor.psi.AldorIdentifier;
 import aldor.psi.AldorRecursiveVisitor;
-import aldor.psi.stub.AldorDefineStub;
 import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxPsiParser;
+import aldor.syntax.components.Apply;
+import aldor.syntax.components.Declaration;
+import aldor.syntax.components.Id;
 import aldor.syntax.components.SyntaxUtils;
 import com.intellij.extapi.psi.StubBasedPsiElementBase;
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.psi.stubs.StubBase;
+import com.intellij.psi.stubs.StubElement;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
-@SuppressWarnings({"AbstractClassExtendsConcreteClass"})
-public abstract class AldorDefineMixin extends StubBasedPsiElementBase<AldorDefineStub> implements AldorDefine {
+@SuppressWarnings({"AbstractClassExtendsConcreteClass", "StubBasedPsiElementBaseGetParent"})
+
+public class AldorDefineMixin extends StubBasedPsiElementBase<AldorDefine.AldorDefineStub> implements AldorDefine {
+    private static final Logger LOG = Logger.getInstance(AldorDefineMixin.class);
     private static final Key<Optional<Syntax>> cachedLhsSyntax = new Key<>("LhsSyntax");
 
     protected AldorDefineMixin(@NotNull ASTNode node) {
         super(node);
     }
 
-    protected AldorDefineMixin(AldorDefineStub stub, @SuppressWarnings("rawtypes") IStubElementType type) {
+    public AldorDefineMixin(AldorDefineStub stub, @SuppressWarnings("rawtypes") IStubElementType type) {
         super(stub, type);
+    }
+
+    @Override
+    public AldorDefineStub createStub(IStubElementType<AldorDefineStub, AldorDefine> elementType, StubElement<?> parentStub) {
+        return new AldorDefineConcreteStub(parentStub, elementType, defineId().map(Id::symbol).orElse(null));
+    }
+
+    @Override
+    public Optional<AldorIdentifier> defineIdentifier() {
+        return defineId().map(Id::aldorIdentifier);
+    }
+
+    private Optional<Id> defineId() {
+        Optional<Syntax> syntaxMaybe = syntax();
+        LOG.info("Define for " + syntaxMaybe);
+        if (!syntaxMaybe.isPresent()) {
+            return Optional.empty();
+        }
+        Syntax syntax = syntaxMaybe.get();
+        if (syntax.is(Declaration.class)) {
+            syntax = syntax.as(Declaration.class).lhs();
+        }
+        while (syntax.is(Apply.class)) {
+            syntax = syntax.as(Apply.class).operator();
+        }
+        if (syntax.is(Id.class)) {
+            return Optional.ofNullable(syntax.as(Id.class));
+        }
+        return Optional.empty();
     }
 
     @Override
@@ -43,12 +80,7 @@ public abstract class AldorDefineMixin extends StubBasedPsiElementBase<AldorDefi
         if (lastParent == lhs) {
             return true;
         }
-        Optional<Syntax> syntax = this.getUserData(cachedLhsSyntax);
-        if (syntax == null) {
-            Syntax calculatedSyntax = SyntaxPsiParser.parse(lhs);
-            syntax = Optional.ofNullable(calculatedSyntax);
-            this.putUserDataIfAbsent(cachedLhsSyntax, syntax);
-        }
+        Optional<Syntax> syntax = syntax();
 
         if (syntax.isPresent()) {
             for (Syntax childScope: SyntaxUtils.childScopesForDefineLhs(syntax.get())) {
@@ -76,4 +108,48 @@ public abstract class AldorDefineMixin extends StubBasedPsiElementBase<AldorDefi
         });
         return true;
     }
+
+    @NotNull
+    private Optional<Syntax> syntax() {
+        PsiElement lhs = getFirstChild();
+        Optional<Syntax> syntax = this.getUserData(cachedLhsSyntax);
+        if (syntax == null) {
+            Syntax calculatedSyntax = SyntaxPsiParser.parse(lhs);
+            syntax = Optional.ofNullable(calculatedSyntax);
+            this.putUserDataIfAbsent(cachedLhsSyntax, syntax);
+        }
+        return syntax;
+    }
+
+
+    public static class AldorDefineConcreteStub extends StubBase<AldorDefine> implements AldorDefine.AldorDefineStub {
+        private final Syntax syntax;
+        private final String defineId;
+
+        @SuppressWarnings("rawtypes")
+        public AldorDefineConcreteStub(StubElement<?> parent,
+                                       IStubElementType<AldorDefineStub, AldorDefine> type,
+                                       String defineId) {
+            super(parent, type);
+            syntax = null; // TODO: This one will be tricky
+            this.defineId = defineId;
+        }
+
+        @Override
+        public AldorDefine createPsi(IStubElementType<AldorDefine.AldorDefineStub, AldorDefine> elementType) {
+            return new AldorDefineMixin(this, elementType);
+        }
+
+        @Override
+        public String defineId() {
+            return defineId;
+        }
+
+        @Override
+        public Syntax syntax() {
+            return syntax;
+        }
+
+    }
+
 }

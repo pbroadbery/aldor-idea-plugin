@@ -13,13 +13,15 @@ import java.util.Map;
  * Aldor element types
  */
 public class AldorElementTypeFactory {
-    private static final AldorElementTypeFactory instance = new AldorElementTypeFactory();
-    public static final AldorDefineElementType DEFINE_ELEMENT_TYPE = new AldorDefineElementType();
+    private static final AldorStubFactory stubFactory = new AldorStubFactoryImpl();
+    public static final AldorDefineElementType DEFINE_ELEMENT_TYPE = new AldorDefineElementType(stubFactory);
     public static final FileStubElementType FILE_ELEMENT_TYPE = new FileStubElementType();
+    private static final AldorElementTypeFactory instance = new AldorElementTypeFactory();
+
     private final Map<String, IElementType> factoryForName = Maps.newHashMap();
 
     AldorElementTypeFactory() {
-        factoryForName.put(".*_Define", DEFINE_ELEMENT_TYPE);
+        factoryForName.put(".*_DEFINE", DEFINE_ELEMENT_TYPE);
         factoryForName.put("FILE", FILE_ELEMENT_TYPE);
     }
 
@@ -34,12 +36,20 @@ public class AldorElementTypeFactory {
                 return ent.getValue();
             }
         }
+
         return new AldorElementType(name);
     }
 
     public static final class FileStubElementType extends IStubFileElementType<PsiFileStub<PsiFile>> {
         private FileStubElementType() {
             super("aldorFile", AldorLanguage.INSTANCE);
+
         }
+
+        @Override
+        public int getStubVersion() {
+            return stubFactory.getVersion();
+        }
+
     }
 }

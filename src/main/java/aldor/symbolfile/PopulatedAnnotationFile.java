@@ -93,7 +93,6 @@ public class PopulatedAnnotationFile implements AnnotationFile {
     }
 
     void parseForIds(Map<SrcPos, SExpression> map, SExpression sx) {
-        System.out.println("Parse for ids: " + sx);
         for (SExpression child: sx.asList()) {
             if (child.isOfType(SxType.Cons) && child.car().equals(SymbolFileSymbols.Id)) {
                 SExpression sxPos = child.cdr().asAssociationList().get(SymbolFileSymbols.SrcPos);

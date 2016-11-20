@@ -1,5 +1,7 @@
 package aldor.build.module;
 
+import aldor.editor.DefaultNavigator;
+import aldor.parser.NavigatorFactory;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.editor.Document;
@@ -32,6 +34,11 @@ public class AldorApplicationComponent implements ApplicationComponent {
         MessageBusConnection connection = bus.connect();
         connection.subscribe(FILE_DOCUMENT_SYNC, new SaveActionProcessor());
 
+        initialiseComponents();
+    }
+
+    private void initialiseComponents() {
+        NavigatorFactory.registerDefaultNavigator(new DefaultNavigator());
     }
 
     @Override

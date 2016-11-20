@@ -1,13 +1,12 @@
 package aldor.parser;
 
 import aldor.file.AldorFile;
-import aldor.language.AldorLanguage;
 import aldor.lexer.AldorIndentLexer;
 import aldor.lexer.AldorLexerAdapter;
 import aldor.lexer.AldorTokenTypes;
+import aldor.psi.elements.AldorElementTypeFactory;
 import aldor.psi.elements.AldorTypes;
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
 import com.intellij.lang.ParserDefinition;
 import com.intellij.lang.PsiParser;
 import com.intellij.lexer.Lexer;
@@ -28,9 +27,6 @@ public class AldorParserDefinition implements ParserDefinition {
                                                                 AldorTokenTypes.TK_SysCmdIf, AldorTokenTypes.TK_SysCmdEndIf,
                                                                 AldorTokenTypes.TK_IfLine,
                                                                 AldorTokenTypes.KW_Indent, AldorTokenTypes.TK_SysCmd);
-
-    private static final IFileElementType FILE =
-            new IFileElementType(Language.findInstance(AldorLanguage.class));
 
     @NotNull
     @Override
@@ -64,7 +60,7 @@ public class AldorParserDefinition implements ParserDefinition {
 
     @Override
     public IFileElementType getFileNodeType() {
-        return FILE;
+        return AldorElementTypeFactory.FILE_ELEMENT_TYPE;
     }
 
     @Override
