@@ -17,6 +17,9 @@ import java.io.IOException;
 public class AldorDefineElementType extends IStubElementType<AldorDefine.AldorDefineStub, AldorDefine> {
     private static final Logger LOG = Logger.getInstance(AldorDefineElementType.class);
     public static final StubIndexKey<String, AldorDefine> DEFINE_NAME_INDEX = StubIndexKey.createIndexKey("Aldor.Define.Name");
+    public static final StubIndexKey<String, AldorDefine> DEFINE_TOPLEVEL_INDEX = StubIndexKey.createIndexKey("Aldor.Define.TopLevel");
+    private static final IndexCodec<AldorDefineInfo> infoCodec = new AldorDefineInfoIndexCodec();
+
     private final AldorStubFactory stubFactory;
 
     public AldorDefineElementType(AldorStubFactory stubFactory) {
@@ -43,12 +46,12 @@ public class AldorDefineElementType extends IStubElementType<AldorDefine.AldorDe
     @Override
     public void serialize(@NotNull AldorDefine.AldorDefineStub stub, @NotNull StubOutputStream dataStream) throws IOException {
         // TODO: stub factory becomes a codec store, this becomes codecStore.encode(AldorDefine.class, stub, dataStream)
-        LOG.info("Writing" + stub.defineId());
         String defineId = stub.defineId();
         dataStream.writeBoolean(defineId != null);
         if (defineId != null) {
             dataStream.writeUTFFast(defineId);
         }
+        infoCodec.encode(dataStream, stub.defineInfo());
     }
 
     @NotNull
@@ -59,9 +62,11 @@ public class AldorDefineElementType extends IStubElementType<AldorDefine.AldorDe
 
     @Override
     public void indexStub(@NotNull AldorDefine.AldorDefineStub stub, @NotNull IndexSink sink) {
-        LOG.info("Indexing " + stub.defineId());
         if (stub.defineId() != null) {
             sink.occurrence(DEFINE_NAME_INDEX, stub.defineId());
+            if (stub.defineInfo().level() == AldorDefineInfo.Level.TOP) {
+                sink.occurrence(DEFINE_TOPLEVEL_INDEX, stub.defineId());
+            }
         }
     }
 

@@ -15,6 +15,7 @@ import java.io.IOException;
  */
 public class AldorStubFactoryImpl implements AldorStubFactory {
     private static final Logger LOG = Logger.getInstance(AldorStubFactoryImpl.class);
+    private static final IndexCodec<AldorDefineInfo> infoCodec = new AldorDefineInfoIndexCodec();
 
     @Override
     public <PsiElt extends PsiElement, StubElt extends StubElement<PsiElt>> StubElt createStub(Class<PsiElt> clss,
@@ -23,9 +24,10 @@ public class AldorStubFactoryImpl implements AldorStubFactory {
                                                                                                StubElement<?> parentStub) throws IOException {
         boolean nonNull = dataStream.readBoolean();
         String name = nonNull? dataStream.readUTFFast() : null;
+        AldorDefineInfo defineInfo = infoCodec.decode(dataStream);
         //noinspection unchecked
         IStubElementType<AldorDefine.AldorDefineStub, AldorDefine> elementType = (IStubElementType<AldorDefine.AldorDefineStub, AldorDefine>) eltType;
-        AldorDefineMixin.AldorDefineConcreteStub stub = new AldorDefineMixin.AldorDefineConcreteStub(parentStub, elementType, name);
+        AldorDefineMixin.AldorDefineConcreteStub stub = new AldorDefineMixin.AldorDefineConcreteStub(parentStub, elementType, name, defineInfo);
         //noinspection unchecked
         return (StubElt) stub;
 

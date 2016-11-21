@@ -146,7 +146,10 @@ Sig ::= DeclBinding | Block
 left DeclPart ::= KW_Colon Type | KW_ColonStar Type
 
 Comma ::= enlist1_CommaItem_KW_Comma
-private CommaItem ::= Binding_AnyStatement (KW_Where (<<isSpadMode>> SpadPredocWhere) CommaItem)?
+// isSpadMode here is for the rather dubious ... "where \n++ xyz" which shows up in a few spad files
+private CommaItem ::= Binding_AnyStatement  WhereBlock?
+left WhereBlock ::= KW_Where (<<isSpadMode>> SpadPredocWhere)? WhereRhs
+WhereRhs ::= CommaItem
 
 SpadPredocWhere ::= PreDocument
 

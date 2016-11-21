@@ -47,6 +47,7 @@
         <gotoClassContributor implementation="aldor.editor.AldorGotoClassContributor"/>
         <stubElementTypeHolder class="aldor.psi.elements.AldorTypes"/>
         <stubIndex implementation="aldor.psi.index.AldorDefineNameIndex"/>
+        <stubIndex implementation="aldor.psi.index.AldorDefineTopLevelIndex"/>
 
         <!-- Aldor extras -->
         <lang.refactoringSupport language="Aldor" implementationClass="aldor.references.AldorRefactoringSupportProvider"/>

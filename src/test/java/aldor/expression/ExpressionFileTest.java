@@ -1,7 +1,6 @@
 package aldor.expression;
 
 import aldor.build.module.AldorModuleType;
-import aldor.util.VirtualFileTests;
 import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.FileIndexFacade;
@@ -21,7 +20,7 @@ public class ExpressionFileTest extends LightPlatformCodeInsightFixtureTestCase 
 
     public void testIndexing() {
         Project project = getProject();
-        VirtualFile root = VirtualFileTests.getProjectRoot(project);
+
         VirtualFile file = createFile(getSourceRoot(), "foo2.expr", "a == b; c == d");
         assertTrue(FileIndexFacade.getInstance(project).isInSource(file));
         assertFalse(FileIndexFacade.getInstance(project).isExcludedFile(file));

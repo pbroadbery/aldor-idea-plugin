@@ -9,15 +9,23 @@ public final class NavigatorFactory {
     private Navigator defaultNavigator;
 
     private NavigatorFactory() {
-        defaultNavigator = null;
+        setDefaultNavigator(null);
     }
 
     public static void registerDefaultNavigator(Navigator navigator) {
-        instance.defaultNavigator = navigator;
+        instance.setDefaultNavigator(navigator);
     }
 
     public static Navigator get(Project project) {
-        return instance.defaultNavigator;
+        return instance.getDefaultNavigator();
+    }
+
+    public Navigator getDefaultNavigator() {
+        return defaultNavigator;
+    }
+
+    public void setDefaultNavigator(Navigator defaultNavigator) {
+        this.defaultNavigator = defaultNavigator;
     }
 
     public interface Navigator {

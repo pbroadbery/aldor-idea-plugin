@@ -2,7 +2,7 @@ package aldor.editor;
 
 import aldor.parser.NavigatorFactory;
 import aldor.psi.AldorDefine;
-import aldor.psi.index.AldorDefineNameIndex;
+import aldor.psi.index.AldorDefineTopLevelIndex;
 import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.project.Project;
@@ -19,15 +19,15 @@ public class AldorGotoClassContributor implements ChooseByNameContributor {
 
     @NotNull
     @Override
-    public String[] getNames(Project project, boolean includeNonProjectItems) {
-        Collection<String> keys = AldorDefineNameIndex.instance.getAllKeys(project);
+    public String[] getNames(Project project, boolean nonProjectItems) {
+        Collection<String> keys = AldorDefineTopLevelIndex.instance.getAllKeys(project);
         return keys.toArray(ArrayUtil.EMPTY_STRING_ARRAY);
     }
 
     @NotNull
     @Override
-    public NavigationItem[] getItemsByName(String name, String pattern, Project project, boolean includeNonProjectItems) {
-        Collection<AldorDefine> items = AldorDefineNameIndex.instance.get(name, project, GlobalSearchScope.allScope(project));
+    public NavigationItem[] getItemsByName(String name, String pattern, Project project, boolean nonProjectItems) {
+        Collection<AldorDefine> items = AldorDefineTopLevelIndex.instance.get(name, project, GlobalSearchScope.allScope(project));
         List<NavigationItem> collect = items.stream()
                 .map(AldorDefine::defineIdentifier)
                 .map(identMaybe-> identMaybe.map(ident2 -> NavigatorFactory.get(project).getNavigationItem(ident2)))

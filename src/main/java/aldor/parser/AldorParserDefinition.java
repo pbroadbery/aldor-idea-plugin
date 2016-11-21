@@ -60,7 +60,7 @@ public class AldorParserDefinition implements ParserDefinition {
 
     @Override
     public IFileElementType getFileNodeType() {
-        return AldorElementTypeFactory.FILE_ELEMENT_TYPE;
+        return AldorElementTypeFactory.ALDOR_FILE_ELEMENT_TYPE;
     }
 
     @Override

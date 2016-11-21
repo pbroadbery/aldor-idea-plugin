@@ -3,7 +3,9 @@ package aldor.psi.impl;
 import aldor.psi.AldorAssign;
 import aldor.psi.AldorDefine;
 import aldor.psi.AldorIdentifier;
+import aldor.psi.AldorPsiUtils;
 import aldor.psi.AldorRecursiveVisitor;
+import aldor.psi.elements.AldorDefineInfo;
 import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxPsiParser;
 import aldor.syntax.components.Apply;
@@ -24,13 +26,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
-@SuppressWarnings({"AbstractClassExtendsConcreteClass", "StubBasedPsiElementBaseGetParent"})
+@SuppressWarnings({"StubBasedPsiElementBaseGetParent"})
 
 public class AldorDefineMixin extends StubBasedPsiElementBase<AldorDefine.AldorDefineStub> implements AldorDefine {
     private static final Logger LOG = Logger.getInstance(AldorDefineMixin.class);
     private static final Key<Optional<Syntax>> cachedLhsSyntax = new Key<>("LhsSyntax");
 
-    protected AldorDefineMixin(@NotNull ASTNode node) {
+    // Must be public - parser generator insists on it.
+    public AldorDefineMixin(@NotNull ASTNode node) {
         super(node);
     }
 
@@ -40,7 +43,12 @@ public class AldorDefineMixin extends StubBasedPsiElementBase<AldorDefine.AldorD
 
     @Override
     public AldorDefineStub createStub(IStubElementType<AldorDefineStub, AldorDefine> elementType, StubElement<?> parentStub) {
-        return new AldorDefineConcreteStub(parentStub, elementType, defineId().map(Id::symbol).orElse(null));
+        String defineId = defineId().map(Id::symbol).orElse(null);
+        boolean isTopLevelDefine = AldorPsiUtils.isTopLevel(getParent());
+        AldorDefineInfo info = AldorDefineInfo.info(
+                isTopLevelDefine ? AldorDefineInfo.Level.TOP: AldorDefineInfo.Level.INNER,
+                AldorDefineInfo.Classification.OTHER);
+        return new AldorDefineConcreteStub(parentStub, elementType, defineId, info);
     }
 
     @Override
@@ -62,7 +70,7 @@ public class AldorDefineMixin extends StubBasedPsiElementBase<AldorDefine.AldorD
             syntax = syntax.as(Apply.class).operator();
         }
         if (syntax.is(Id.class)) {
-            return Optional.ofNullable(syntax.as(Id.class));
+            return Optional.of(syntax.as(Id.class));
         }
         return Optional.empty();
     }
@@ -95,6 +103,7 @@ public class AldorDefineMixin extends StubBasedPsiElementBase<AldorDefine.AldorD
         rhs.accept(new AldorRecursiveVisitor() {
             @Override
             public void visitElement(PsiElement o) {
+                //noinspection ObjectEquality
                 if (o == lastParent) {
                     return;
                 }
@@ -125,14 +134,15 @@ public class AldorDefineMixin extends StubBasedPsiElementBase<AldorDefine.AldorD
     public static class AldorDefineConcreteStub extends StubBase<AldorDefine> implements AldorDefine.AldorDefineStub {
         private final Syntax syntax;
         private final String defineId;
+        private final AldorDefineInfo defineInfo;
 
-        @SuppressWarnings("rawtypes")
         public AldorDefineConcreteStub(StubElement<?> parent,
                                        IStubElementType<AldorDefineStub, AldorDefine> type,
-                                       String defineId) {
+                                       String defineId, AldorDefineInfo defineInfo) {
             super(parent, type);
             syntax = null; // TODO: This one will be tricky
             this.defineId = defineId;
+            this.defineInfo = defineInfo;
         }
 
         @Override
@@ -148,6 +158,11 @@ public class AldorDefineMixin extends StubBasedPsiElementBase<AldorDefine.AldorD
         @Override
         public Syntax syntax() {
             return syntax;
+        }
+
+        @Override
+        public AldorDefineInfo defineInfo() {
+            return defineInfo;
         }
 
     }

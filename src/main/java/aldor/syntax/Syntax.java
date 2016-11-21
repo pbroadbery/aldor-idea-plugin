@@ -17,12 +17,12 @@ public abstract class Syntax {
 
     public abstract Iterable<Syntax> children();
 
-    @Nullable
+    @NotNull
     public <T extends Syntax> T as(@NotNull Class<T> clzz) {
         if (clzz.isAssignableFrom(this.getClass())) {
             return clzz.cast(this);
         }
-        return null;
+        throw new IllegalArgumentException("Expected a " + clzz.getName() + " got " + this.getClass() + " " + this);
     }
 
     public <T extends Syntax> boolean is(@NotNull Class<T> clzz) {

@@ -11,7 +11,6 @@ import com.intellij.psi.PsiNameIdentifierOwner;
  * '+' to 'add' should cause the definition to be re-written as 'add(a: X, b: X): X instead of
  * '(a: X) + (b: X)'.
  */
-@SuppressWarnings("MarkerInterface")
 public interface AldorIdentifier extends PsiNameIdentifierOwner, Navigatable {
 
 }

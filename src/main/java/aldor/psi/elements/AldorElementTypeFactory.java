@@ -1,7 +1,9 @@
 package aldor.psi.elements;
 
 import aldor.language.AldorLanguage;
+import aldor.language.SpadLanguage;
 import com.google.common.collect.Maps;
+import com.intellij.lang.Language;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.stubs.PsiFileStub;
 import com.intellij.psi.tree.IElementType;
@@ -15,14 +17,16 @@ import java.util.Map;
 public class AldorElementTypeFactory {
     private static final AldorStubFactory stubFactory = new AldorStubFactoryImpl();
     public static final AldorDefineElementType DEFINE_ELEMENT_TYPE = new AldorDefineElementType(stubFactory);
-    public static final FileStubElementType FILE_ELEMENT_TYPE = new FileStubElementType();
+    public static final FileStubElementType ALDOR_FILE_ELEMENT_TYPE = new FileStubElementType(AldorLanguage.INSTANCE);
+    public static final FileStubElementType SPAD_FILE_ELEMENT_TYPE = new FileStubElementType(SpadLanguage.INSTANCE);
     private static final AldorElementTypeFactory instance = new AldorElementTypeFactory();
 
     private final Map<String, IElementType> factoryForName = Maps.newHashMap();
 
     AldorElementTypeFactory() {
         factoryForName.put(".*_DEFINE", DEFINE_ELEMENT_TYPE);
-        factoryForName.put("FILE", FILE_ELEMENT_TYPE);
+        factoryForName.put("ALDOR_FILE", ALDOR_FILE_ELEMENT_TYPE);
+        factoryForName.put("SPAD_FILE", SPAD_FILE_ELEMENT_TYPE);
     }
 
     public static IElementType createElement(String name) {
@@ -41,8 +45,8 @@ public class AldorElementTypeFactory {
     }
 
     public static final class FileStubElementType extends IStubFileElementType<PsiFileStub<PsiFile>> {
-        private FileStubElementType() {
-            super("aldorFile", AldorLanguage.INSTANCE);
+        private FileStubElementType(Language language) {
+            super("aldorFile", language);
 
         }
 

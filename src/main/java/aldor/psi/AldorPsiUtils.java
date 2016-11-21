@@ -3,7 +3,9 @@ package aldor.psi;
 import com.google.common.base.Strings;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
+import org.jetbrains.annotations.NotNull;
 
 public final class AldorPsiUtils {
     private static final Logger LOG = Logger.getInstance(AldorPsiUtils.class);
@@ -45,6 +47,40 @@ public final class AldorPsiUtils {
             }
         }
         return false;
+    }
+
+    public static boolean isTopLevel(PsiElement element) {
+        TopLevelVisitor visitor = new TopLevelVisitor();
+        element.accept(visitor);
+        return visitor.isTopLevel();
+    }
+    private static final class TopLevelVisitor extends AldorVisitor {
+        private boolean isTopLevel = false;
+
+        @Override
+        public void visitElement(PsiElement element) {
+            element.getParent().accept(this);
+        }
+        @Override
+        public void visitFile(PsiFile element) {
+            isTopLevel = true;
+        }
+
+        @Override
+        public void visitDefine(@NotNull AldorDefine o) {
+            isTopLevel = false;
+        }
+
+
+        @Override
+        public void visitWhereRhs(@NotNull AldorWhereRhs o) {
+            isTopLevel = false;
+        }
+
+        public boolean isTopLevel() {
+            return isTopLevel;
+        }
+
     }
 
 }

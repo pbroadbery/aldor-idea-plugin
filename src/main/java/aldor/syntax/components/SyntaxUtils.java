@@ -15,19 +15,17 @@ public final class SyntaxUtils {
             return Collections.singleton(syntax);
         }
         Declaration decl = syntax.as(Declaration.class);
-        assert decl != null;
         Collection<Syntax> scopes = new ArrayList<>();
         if (decl.lhs().is(Apply.class)) {
             Apply apply = decl.lhs().as(Apply.class);
-            assert apply != null;
             List<Syntax> ll = apply.arguments();
             for (Syntax child : ll) {
-                if (child.as(Comma.class) != null) {
+                if (child.is(Comma.class)) {
                     for (Syntax commaElt: child.children()) {
                         scopes.add(commaElt);
                     }
                 }
-                else if (child.as(Declaration.class) != null){
+                else if (child.is(Declaration.class)){
                     scopes.add(child);
                 }
 

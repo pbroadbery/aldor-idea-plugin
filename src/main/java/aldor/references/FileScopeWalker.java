@@ -67,7 +67,7 @@ public final class FileScopeWalker {
 
         if (syme.srcpos() != null) {
             PsiFile theFile = psiFileForFileName(module, syme.srcpos().fileName() + ".as");
-            return fileManager.findElementForSrcPos(theFile, syme.srcpos());
+            return (theFile == null) ? null : fileManager.findElementForSrcPos(theFile, syme.srcpos());
         }
 
         Syme original = syme.original();

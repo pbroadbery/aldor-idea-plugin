@@ -476,7 +476,7 @@ public class Linearise {
             endOffset = offset;
         }
 
-        SrcLine line(int nextLineIdx) {
+        private SrcLine line(int nextLineIdx) {
             return lines.get(nextLineIdx);
         }
 

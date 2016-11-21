@@ -1,11 +1,10 @@
 package aldor.parser;
 
 import aldor.file.SpadFile;
-import aldor.language.SpadLanguage;
 import aldor.lexer.AldorIndentLexer;
 import aldor.lexer.AldorLexerAdapter;
 import aldor.lexer.LexMode;
-import com.intellij.lang.Language;
+import aldor.psi.elements.AldorElementTypeFactory;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.FileViewProvider;
@@ -15,12 +14,9 @@ import org.jetbrains.annotations.NotNull;
 
 public class SpadParserDefinition extends AldorParserDefinition {
 
-    private static final IFileElementType FILE =
-            new IFileElementType(Language.findInstance(SpadLanguage.class));
-
     @Override
     public IFileElementType getFileNodeType() {
-        return FILE;
+        return AldorElementTypeFactory.SPAD_FILE_ELEMENT_TYPE;
     }
 
     @NotNull

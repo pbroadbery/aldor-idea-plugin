@@ -39,6 +39,7 @@ public class FileScopeWalkerTest extends LightPlatformCodeInsightFixtureTestCase
         //JUnits.setLogToDebug();
     }
 
+    @SuppressWarnings("UnusedAssignment")
     public void testFileReference() throws IOException {
         VirtualFile root = VirtualFileTests.getProjectRoot(getProject());
         VirtualFile srcDir = createChildDirectory(root, "src");
@@ -92,6 +93,7 @@ public class FileScopeWalkerTest extends LightPlatformCodeInsightFixtureTestCase
     }
 
 
+    @SuppressWarnings("UnusedAssignment")
     public void testTopLevelReference() throws IOException {
         VirtualFile root = VirtualFileTests.getProjectRoot(getProject());
         VirtualFile srcDir = createChildDirectory(root, "src");

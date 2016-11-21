@@ -1,5 +1,6 @@
 package aldor.psi;
 
+import aldor.psi.elements.AldorDefineInfo;
 import aldor.syntax.Syntax;
 import com.intellij.psi.StubBasedPsiElement;
 import com.intellij.psi.stubs.IStubElementType;
@@ -19,5 +20,7 @@ public interface AldorDefine extends StubBasedPsiElement<AldorDefine.AldorDefine
 
         String defineId();
         Syntax syntax();
+
+        AldorDefineInfo defineInfo();
     }
 }
