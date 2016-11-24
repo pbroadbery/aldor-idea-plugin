@@ -32,7 +32,7 @@ public final class AldorFileType extends LanguageFileType {
   @NotNull
   @Override
   public String getDefaultExtension() {
-    return "aldor";
+    return "as";
   }
 
   @Nullable

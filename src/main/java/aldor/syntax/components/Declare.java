@@ -10,8 +10,8 @@ import java.util.List;
 /**
  * a: B
  */
-public class Declaration extends SyntaxNode<AldorDeclPart> {
-    public Declaration(AldorDeclPart element, @NotNull List<Syntax> arguments) {
+public class Declare extends SyntaxNode<AldorDeclPart> {
+    public Declare(AldorDeclPart element, @NotNull List<Syntax> arguments) {
         super(element, arguments);
     }
 

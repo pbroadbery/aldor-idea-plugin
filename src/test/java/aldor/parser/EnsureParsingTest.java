@@ -1,5 +1,8 @@
 package aldor.parser;
 
+import aldor.psi.AldorDefine;
+import aldor.psi.AldorPsiUtils;
+import aldor.psi.AldorRecursiveVisitor;
 import aldor.psi.elements.AldorTypes;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
@@ -256,6 +259,22 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
         assertEquals(0, errors.size());
     }
+
+    public void testParseMacroThenDef() {
+        String text = "macro { a == 1}\nB: X == Y\n";
+        PsiElement psi = parseText(text);
+        final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
+        System.out.println("Errors: " + errors);
+        assertEquals(0, errors.size());
+
+        psi.accept(new AldorRecursiveVisitor() {
+            @Override
+            public void visitDefine(@NotNull AldorDefine o) {
+                assertTrue(AldorPsiUtils.isTopLevel(o.getParent()));
+            }
+        });
+    }
+
 
     public void testEmpty() {
         ParserDefinition aldorParserDefinition = new AldorParserDefinition();

@@ -1,6 +1,7 @@
 package aldor.syntax.components;
 
 import aldor.lexer.AldorTokenType;
+import aldor.lexer.AldorTokenTypes;
 import aldor.psi.AldorIdentifier;
 import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxVisitor;
@@ -20,7 +21,27 @@ public class Id extends Syntax {
         this.rep = SyntaxRepresentation.create(id);
     }
 
-    public Id(SxSyntaxRepresentation<AldorIdentifier> syntaxRepresentation) {
+    public static Id createImplicitId(String name) {
+        return new Id(new SyntaxRepresentation<AldorIdentifier>() {
+            @Nullable
+            @Override
+            public AldorIdentifier element() {
+                return null;
+            }
+
+            @Override
+            public AldorTokenType tokenType() {
+                return AldorTokenTypes.TK_Id;
+            }
+
+            @Override
+            public String text() {
+                return name;
+            }
+        });
+    }
+
+    public Id(SyntaxRepresentation<AldorIdentifier> syntaxRepresentation) {
         this.rep = syntaxRepresentation;
     }
 

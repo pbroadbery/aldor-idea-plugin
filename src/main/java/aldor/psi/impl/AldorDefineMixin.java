@@ -9,7 +9,7 @@ import aldor.psi.elements.AldorDefineInfo;
 import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxPsiParser;
 import aldor.syntax.components.Apply;
-import aldor.syntax.components.Declaration;
+import aldor.syntax.components.Declare;
 import aldor.syntax.components.Id;
 import aldor.syntax.components.SyntaxUtils;
 import com.intellij.extapi.psi.StubBasedPsiElementBase;
@@ -63,8 +63,8 @@ public class AldorDefineMixin extends StubBasedPsiElementBase<AldorDefine.AldorD
             return Optional.empty();
         }
         Syntax syntax = syntaxMaybe.get();
-        if (syntax.is(Declaration.class)) {
-            syntax = syntax.as(Declaration.class).lhs();
+        if (syntax.is(Declare.class)) {
+            syntax = syntax.as(Declare.class).lhs();
         }
         while (syntax.is(Apply.class)) {
             syntax = syntax.as(Apply.class).operator();

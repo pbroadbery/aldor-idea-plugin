@@ -3,7 +3,7 @@ package aldor.symbolfile;
 import aldor.syntax.Syntax;
 import aldor.syntax.components.Apply;
 import aldor.syntax.components.Comma;
-import aldor.syntax.components.Declaration;
+import aldor.syntax.components.Declare;
 import aldor.syntax.components.Id;
 import aldor.syntax.components.OtherSx;
 import aldor.syntax.components.SxSyntaxRepresentation;
@@ -55,7 +55,7 @@ public final class AnnotationFileUtils {
             }
             else if (sx.car().equals(SymbolFileSymbols.Declare)) {
                 List<Syntax> args = sx.cdr().asList().stream().map(elt -> parseSx(lookup, elt)).collect(Collectors.toList());
-                return new Declaration(null, args);
+                return new Declare(null, args);
             }
         }
         else {

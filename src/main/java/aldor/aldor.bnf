@@ -141,7 +141,7 @@ FromPart ::= KW_From enlist1_Infixed_KW_Comma
 
 MacroBody ::= Sig | ExportDecl | KW_Import Sig opt_FromPart
 
-Sig ::= DeclBinding | Block
+Sig ::= Block | DeclBinding
 
 left DeclPart ::= KW_Colon Type | KW_ColonStar Type
 
@@ -660,8 +660,6 @@ SpadDocument ::= TK_PostDoc*
 //private TopLevel_Recover ::= !(TK_PreDoc)
 
 SpadInfixed ::= Block | Expr
-
-// Not sure where this fits..
 
 Expr ::=
          Colon_194_Expr |

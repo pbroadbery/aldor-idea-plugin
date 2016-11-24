@@ -94,7 +94,34 @@ public class SyntaxTest extends LightPlatformCodeInsightFixtureTestCase {
         assertEquals("(Enum a b c)", syntax.toString());
     }
 
+    public void testComplexCall() {
+        PsiElement psi = parseText("DM(R: Join(A, E))");
+        Syntax syntax = parse(psi);
+        assertNotNull(syntax);
+        assertEquals("(Apply DM (Decl R (Apply Join (Comma A E))))", syntax.toString());
+    }
 
+    public void testDefaultArguments() {
+        PsiElement psi = parseText("foo(x: I == 1)");
+        Syntax syntax = parse(psi);
+        assertNotNull(syntax);
+        assertEquals("(Apply foo (Define (Decl x I) Literal))", syntax.toString());
+    }
+
+    public void testDefaultArguments2() {
+        PsiElement psi = parseText("foo(x: L == [])");
+        Syntax syntax = parse(psi);
+        assertNotNull(syntax);
+        assertEquals("(Apply foo (Define (Decl x L) (Apply bracket)))", syntax.toString());
+    }
+
+
+    public void testDefaultArguments3() {
+        PsiElement psi = parseText("foo(a: S, x: I == 5)");
+        Syntax syntax = parse(psi);
+        assertNotNull(syntax);
+        assertEquals("(Apply foo (Comma (Decl a S) (Define (Decl x I) Literal)))", syntax.toString());
+    }
     private PsiElement parseText(CharSequence text) {
         return ParserFunctions.parseAldorText(getProject(), text);
     }

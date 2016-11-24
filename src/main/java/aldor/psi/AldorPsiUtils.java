@@ -54,6 +54,7 @@ public final class AldorPsiUtils {
         element.accept(visitor);
         return visitor.isTopLevel();
     }
+
     private static final class TopLevelVisitor extends AldorVisitor {
         private boolean isTopLevel = false;
 
@@ -61,8 +62,14 @@ public final class AldorPsiUtils {
         public void visitElement(PsiElement element) {
             element.getParent().accept(this);
         }
+
         @Override
         public void visitFile(PsiFile element) {
+            isTopLevel = true;
+        }
+
+        @Override
+        public void visitTopLevel(@NotNull AldorTopLevel o) {
             isTopLevel = true;
         }
 
@@ -70,7 +77,6 @@ public final class AldorPsiUtils {
         public void visitDefine(@NotNull AldorDefine o) {
             isTopLevel = false;
         }
-
 
         @Override
         public void visitWhereRhs(@NotNull AldorWhereRhs o) {

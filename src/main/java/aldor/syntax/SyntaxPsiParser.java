@@ -1,7 +1,9 @@
 package aldor.syntax;
 
 import aldor.psi.AldorAddPart;
+import aldor.psi.AldorBracketed;
 import aldor.psi.AldorDeclPart;
+import aldor.psi.AldorDefine;
 import aldor.psi.AldorE14;
 import aldor.psi.AldorId;
 import aldor.psi.AldorInfixedExpr;
@@ -17,7 +19,8 @@ import aldor.psi.NegationElement;
 import aldor.syntax.components.Add;
 import aldor.syntax.components.Apply;
 import aldor.syntax.components.Comma;
-import aldor.syntax.components.Declaration;
+import aldor.syntax.components.Declare;
+import aldor.syntax.components.Define;
 import aldor.syntax.components.EnumList;
 import aldor.syntax.components.Id;
 import aldor.syntax.components.Literal;
@@ -32,6 +35,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
+
+import static aldor.psi.AldorPsiUtils.logPsi;
+import static aldor.syntax.components.Id.createImplicitId;
 
 /**
  * Turns Psi into syntax
@@ -48,6 +54,7 @@ public final class SyntaxPsiParser {
             return visitStack.getFirst().get(0);
         }
         catch (RuntimeException e) {
+            logPsi(elt);
             LOG.error("Failed to parse " + elt.getText() + " " + elt, e);
             return null;
         }
@@ -133,10 +140,7 @@ public final class SyntaxPsiParser {
 
         @Override
         public void visitQuotedIds(@NotNull AldorQuotedIds ids) {
-            List<Syntax> parenContent = Lists.newArrayList();
-            visitStack.push(parenContent);
-            ids.acceptChildren(this);
-            List<Syntax>  last = visitStack.pop();
+            List<Syntax> last = buildChildren(ids);
             visitStack.peek().add(new EnumList(ids, last));
         }
 
@@ -169,11 +173,9 @@ public final class SyntaxPsiParser {
 
         @Override
         public void visitDeclPart(@NotNull AldorDeclPart decl) {
-            List<Syntax> parenContent = Lists.newArrayList();
-            visitStack.push(parenContent);
-            decl.acceptChildren(this);
-            List<Syntax> last = visitStack.pop();
-            Syntax result = new Declaration(decl, last);
+            PsiElement psi = decl;
+            List<Syntax> last = buildChildren(psi);
+            Syntax result = new Declare(decl, last);
             visitStack.peek().add(result);
         }
 
@@ -192,12 +194,7 @@ public final class SyntaxPsiParser {
 
         @Override
         public void visitInfixedExpr(@NotNull AldorInfixedExpr expr) {
-            List<Syntax> exprContent = Lists.newArrayList();
-            visitStack.push(exprContent);
-            expr.acceptChildren(this);
-            List<Syntax>  last = visitStack.pop();
-            //noinspection ObjectEquality
-            assert last == exprContent;
+            List<Syntax> exprContent = buildChildren(expr);
             Syntax lhs;
             int i=1;
             if ((exprContent.size() % 2) == 0) {
@@ -220,6 +217,29 @@ public final class SyntaxPsiParser {
         public void visitInfixedTok(@NotNull AldorInfixedTok tok) {
             visitStack.peek().add(new Id(tok));
         }
+
+        @Override
+        public void visitDefine(@NotNull AldorDefine define) {
+            List<Syntax> last = buildChildren(define);
+            visitStack.peek().add(new Define(define, last));
+        }
+
+        @Override
+        public void visitBracketed(@NotNull AldorBracketed brackets) {
+            List<Syntax> last = buildChildren(brackets);
+            Syntax implicitOp = createImplicitId("bracket");
+            last.add(0, implicitOp);
+            visitStack.peek().add(new Apply(brackets, last));
+        }
+
+
+        private List<Syntax> buildChildren(PsiElement psi) {
+            List<Syntax> parenContent = Lists.newArrayList();
+            visitStack.push(parenContent);
+            psi.acceptChildren(this);
+            return visitStack.pop();
+        }
+
     }
 
     public static String prettyPrint(Syntax syntax) {

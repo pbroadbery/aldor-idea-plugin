@@ -11,10 +11,10 @@ import java.util.List;
 public final class SyntaxUtils {
 
     public static Iterable<Syntax> childScopesForDefineLhs(Syntax syntax) {
-        if ((syntax == null) || !syntax.is(Declaration.class)) {
+        if ((syntax == null) || !syntax.is(Declare.class)) {
             return Collections.singleton(syntax);
         }
-        Declaration decl = syntax.as(Declaration.class);
+        Declare decl = syntax.as(Declare.class);
         Collection<Syntax> scopes = new ArrayList<>();
         if (decl.lhs().is(Apply.class)) {
             Apply apply = decl.lhs().as(Apply.class);
@@ -25,7 +25,7 @@ public final class SyntaxUtils {
                         scopes.add(commaElt);
                     }
                 }
-                else if (child.is(Declaration.class)){
+                else if (child.is(Declare.class)){
                     scopes.add(child);
                 }
 
