@@ -173,6 +173,13 @@ public class SpadParsingTest extends LightPlatformCodeInsightTestCase {
         assertEquals(0, errors.size());
     }
 
+    public void testDubiousDocco() {
+        PsiElement psi = parseText("Foo where \n  ++ this comment must die \n  Something\n");
+        final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
+        logPsi(psi);
+        assertEquals(0, errors.size());
+    }
+
     public void testCoerce() {
         PsiElement psi = parseText("(p1 exquo monomial(1, e1))::SUP %");
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);

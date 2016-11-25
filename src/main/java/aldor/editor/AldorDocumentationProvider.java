@@ -8,6 +8,7 @@ import aldor.symbolfile.SrcPos;
 import aldor.symbolfile.Syme;
 import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxPrinter;
+import aldor.util.AnnotatedOptional;
 import com.intellij.lang.documentation.DocumentationProviderEx;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
@@ -31,39 +32,61 @@ public class AldorDocumentationProvider extends DocumentationProviderEx {
     @Override
     @Nullable
     public String generateDoc(PsiElement element, @Nullable PsiElement originalElement) {
+        if (!isInterestingElement(element)) {
+            return null;
+        }
+
+        AnnotatedOptional<Syme, String> symeMaybe = symeForElement(element);
+
+        String typeText = "";
+        if (symeMaybe.isPresent()) {
+            SyntaxPrinter printer = SyntaxPrinter.instance();
+            Syntax exporter = symeMaybe.get().exporter();
+            Syntax type = symeMaybe.get().type();
+
+            typeText = "<p><b>exporter:</b> " + printer.toString(exporter) + "</b></p>" + "\n<p><b>type:</b> " + printer.toString(type) + "</p>";
+        }
+
+        /*
+        if (element instanceof AldorIdentifier) {
+            AldorIdentifier id = (AldorIdentifier) element;
+            PsiReference ref = id.getReference();
+            PsiElement resolution = ref.resolve();
+            String docco = AldorPsiUtils.documentationForId(resolution);
+        }
+        */
+
+        return typeText;
+    }
+
+    AnnotatedOptional<Syme, String> symeForElement(PsiElement element) {
         VirtualFile virtualFile = element.getContainingFile().getVirtualFile();
         if (virtualFile == null) {
-            return null;
+            return AnnotatedOptional.missing("No file for element(!)");
         }
         AldorModuleManager moduleManager = AldorModuleManager.getInstance(element.getProject());
         Optional<Module> moduleMaybe = moduleManager.aldorModuleForFile(virtualFile);
         LOG.info("Module: " + element.getContainingFile().getName() + " " + moduleMaybe);
         if (!moduleMaybe.isPresent()) {
-            return null;
-        }
-        if (!isInterestingElement(element)) {
-            return null;
+            return AnnotatedOptional.missing("No module for file " + virtualFile.getName());
         }
         Module module = moduleMaybe.get();
         AnnotationFileManager annotationManager = AnnotationFileManager.getAnnotationFileManager(module);
         assert annotationManager != null;
         AnnotationFile file = annotationManager.annotationFile(element.getContainingFile());
         if (file.errorMessage() != null) {
-            return "Error when reading file: " + file.errorMessage();
+            return AnnotatedOptional.missing("Error when reading file: " + file.errorMessage());
         }
         SrcPos srcPos = annotationManager.findSrcPosForElement(element);
         LOG.info("Srcpos for id is: " + srcPos + " " + element.getText());
         Syme syme = file.lookupSyme(srcPos);
         if (syme == null) {
-            return "no information";
+            return AnnotatedOptional.missing("no information");
         }
 
-        SyntaxPrinter printer = SyntaxPrinter.instance();
-        Syntax exporter = syme.exporter();
-        Syntax type = syme.type();
-
-        return "<p><b>exporter:</b> " + printer.toString(exporter) + "</b></p>" + "\n<p><b>type:</b> " + printer.toString(type) + "</p>";
+        return AnnotatedOptional.of(syme);
     }
+
 
     private boolean isInterestingElement(PsiElement element) {
         return element instanceof AldorIdentifier;

@@ -25,6 +25,31 @@ import com.intellij.psi.TokenType;
     IElementType aldorModeKeyword(IElementType type) {
         return this.mode == LexMode.Aldor ? type : AldorTokenTypes.TK_Id;
     }
+
+    enum XState {
+            Id(ALDOR_ID, SPAD_ID);
+
+        private final int aldorState;
+        private final int spadState;
+
+        XState(int aldorState, int spadState) {
+            this.aldorState = aldorState;
+            this.spadState = spadState;
+        }
+    }
+
+    int stateFor(XState state) {
+        switch (this.mode) {
+            case Aldor:
+                return state.aldorState;
+            case Spad:
+                return state.spadState;
+            default:
+                throw new RuntimeException("oops");
+       }
+    }
+
+
 %}
 
 %eof{  return null;
@@ -33,12 +58,16 @@ import com.intellij.psi.TokenType;
 %state LINE_START
 %state IF_TEXT
 %state NORMAL
+%state TRAILING_QUOTES
+%state ALDOR_ID
+%state SPAD_ID
 
 ESC_CRLF=_(\n|\r|\r\n)
 CRLF=\n|\r|\r\n
 WHITE_SPACE=[\ \t\f]
 INDENT=[\ \t]+
-ID =([A-Za-z%?]|_.)([A-Za-z0-9%_?!]|_.)*
+IDSTART=[A-Za-z%?_]
+ID = ([A-Za-z%?]|_.)([A-Za-z0-9%_?!]|_.)*
 INT=[0-9]+
 ESCID=_[^\n\t ]([A-Za-z0-9%_?!]|_.)*
 
@@ -86,7 +115,7 @@ SPAD_SYSCMD_ENDIF=\)endif[^\r\n]*
 "catch" { yybegin(NORMAL); return AldorTokenTypes.KW_Catch; }
 "default" { yybegin(NORMAL); return AldorTokenTypes.KW_Default; }
 "define" { yybegin(NORMAL); return AldorTokenTypes.KW_Define; }
-"delay" { yybegin(NORMAL); return AldorTokenTypes.KW_Delay; }
+"delay" { yybegin(NORMAL); return aldorModeKeyword(AldorTokenTypes.KW_Delay);  }
 "do" { yybegin(NORMAL); return AldorTokenTypes.KW_Do; }
 "else" { yybegin(NORMAL); return AldorTokenTypes.KW_Else; }
 "except" { yybegin(NORMAL); return AldorTokenTypes.KW_Except; }
@@ -223,12 +252,18 @@ SPAD_SYSCMD_ENDIF=\)endif[^\r\n]*
 
 //"TK_LIMIT" { return AldorTokenTypes.TK_LIMIT; }
 <YYINITIAL, LINE_START, NORMAL> {
-
-    { ID } { yybegin(NORMAL); return AldorTokenTypes.TK_Id; }
+    { ID } { if (lexMode() == LexMode.Spad) yybegin(TRAILING_QUOTES); else { yybegin(NORMAL); return AldorTokenTypes.TK_Id; }}
     { ESCID } { yybegin(NORMAL); return AldorTokenTypes.TK_Id; }
     { INT } { yybegin(NORMAL); return AldorTokenTypes.TK_Int; }
     { ESC_CRLF } { yybegin(LINE_START); return TokenType.WHITE_SPACE; }
     { CRLF } { yybegin(LINE_START); return AldorTokenTypes.KW_NewLine; }
     { STRING } { yybegin(NORMAL); return AldorTokenTypes.TK_String; }
     . { System.out.println("Bad token `" + yytext() + "'"); return TokenType.BAD_CHARACTER; }
+}
+
+<TRAILING_QUOTES> {
+    '+ { yybegin(NORMAL); return AldorTokenTypes.TK_Id; }
+    <<EOF>> { yybegin(NORMAL); return AldorTokenTypes.TK_Id; }
+    { CRLF } { yybegin(NORMAL); yypushback(yylength()); return AldorTokenTypes.TK_Id; }
+    . { yybegin(NORMAL); yypushback(1); return AldorTokenTypes.TK_Id; }
 }

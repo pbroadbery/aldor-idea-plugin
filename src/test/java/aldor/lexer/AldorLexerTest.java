@@ -9,10 +9,12 @@ import java.util.List;
 
 import static aldor.lexer.AldorTokenTypes.KW_2EQ;
 import static aldor.lexer.AldorTokenTypes.KW_Add;
+import static aldor.lexer.AldorTokenTypes.KW_Assign;
 import static aldor.lexer.AldorTokenTypes.KW_Colon;
 import static aldor.lexer.AldorTokenTypes.KW_Define;
 import static aldor.lexer.AldorTokenTypes.KW_Indent;
 import static aldor.lexer.AldorTokenTypes.KW_NewLine;
+import static aldor.lexer.AldorTokenTypes.KW_Quote;
 import static aldor.lexer.AldorTokenTypes.KW_Repeat;
 import static aldor.lexer.AldorTokenTypes.KW_With;
 import static aldor.lexer.AldorTokenTypes.TK_Id;
@@ -24,6 +26,7 @@ import static aldor.lexer.AldorTokenTypes.TK_SysCmd;
 import static aldor.lexer.AldorTokenTypes.TK_SysCmdEndIf;
 import static aldor.lexer.AldorTokenTypes.TK_SysCmdIf;
 import static aldor.lexer.AldorTokenTypes.WHITE_SPACE;
+import static aldor.lexer.LexMode.Aldor;
 import static aldor.lexer.LexMode.Spad;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -152,4 +155,30 @@ public class AldorLexerTest {
         assertEquals(Lists.newArrayList(TK_SysCmd, KW_NewLine, TK_PostDoc, KW_NewLine, TK_Id, KW_Colon, WHITE_SPACE, KW_With, WHITE_SPACE, KW_2EQ, WHITE_SPACE, KW_Add, KW_NewLine), tokens);
     }
 
+    @Test
+    public void spadLexerTestQuoteIds() {
+        AldorLexerAdapter lla = new AldorLexerAdapter(Spad, null);
+        String text = "foo' := foo''";
+        lla.start(text);
+        List<IElementType> tokens = LexerFunctions.readTokens(lla);
+        assertEquals(Lists.newArrayList(TK_Id, WHITE_SPACE, KW_Assign, WHITE_SPACE, TK_Id), tokens);
+    }
+
+    @Test
+    public void aldorLexerTestQuoteIds() {
+        AldorLexerAdapter lla = new AldorLexerAdapter(Aldor, null);
+        String text = "foo'\n";
+        lla.start(text);
+        List<IElementType> tokens = LexerFunctions.readTokens(lla);
+        assertEquals(Lists.newArrayList(TK_Id, KW_Quote, KW_NewLine), tokens);
+    }
+
+    @Test
+    public void checkPrefixLexed() {
+        AldorLexerAdapter lla = new AldorLexerAdapter(Aldor, null);
+        String text = "incremental forth returning selected\n";
+        lla.start(text);
+        List<IElementType> tokens = LexerFunctions.readTokens(lla);
+        assertEquals(Lists.newArrayList(TK_Id, WHITE_SPACE, TK_Id, WHITE_SPACE, TK_Id, WHITE_SPACE, TK_Id, KW_NewLine), tokens);
+    }
 }

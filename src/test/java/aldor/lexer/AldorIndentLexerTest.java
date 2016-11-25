@@ -31,6 +31,7 @@ import static aldor.lexer.AldorTokenTypes.KW_Repeat;
 import static aldor.lexer.AldorTokenTypes.KW_Return;
 import static aldor.lexer.AldorTokenTypes.KW_StartPile;
 import static aldor.lexer.AldorTokenTypes.KW_Then;
+import static aldor.lexer.AldorTokenTypes.KW_Where;
 import static aldor.lexer.AldorTokenTypes.KW_With;
 import static aldor.lexer.AldorTokenTypes.TK_Comment;
 import static aldor.lexer.AldorTokenTypes.TK_Id;
@@ -661,6 +662,21 @@ public class AldorIndentLexerTest {
                 TK_Id, KW_NewLine
         ), tokens);
     }
+
+    @Test
+    public void spadLexerDubiousDoc() {
+        AldorIndentLexer unit = new AldorIndentLexer(new AldorLexerAdapter(Spad, null));
+        String text = "X where\n  ++ foo\n  A\n  B\n";
+        unit.start(text);
+        List<IElementType> tokens = LexerFunctions.readTokens(unit);
+        assertEquals(Lists.newArrayList(
+                TK_Id, WHITE_SPACE, KW_Where, KW_NewLine,
+                KW_Indent, TK_PreDoc, KW_BlkStart,
+                KW_Indent, TK_Id, KW_BlkNext,
+                KW_Indent, TK_Id, KW_NewLine
+        ), tokens);
+    }
+
 
     @Test
     public void spadLexerCommentsInMid() {
