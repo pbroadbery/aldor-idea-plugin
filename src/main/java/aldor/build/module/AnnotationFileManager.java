@@ -3,6 +3,7 @@ package aldor.build.module;
 import aldor.lexer.IndentWidthCalculator;
 import aldor.psi.AldorIdentifier;
 import aldor.symbolfile.AnnotationFile;
+import aldor.symbolfile.MissingAnnotationFile;
 import aldor.symbolfile.PopulatedAnnotationFile;
 import aldor.symbolfile.SrcPos;
 import aldor.util.SExpression;
@@ -54,13 +55,8 @@ public class AnnotationFileManager implements Disposable {
         updatingFiles = new HashSet<>();
         annotationFileForFile = Maps.newHashMap();
         lineNumberMapForFile = Maps.newHashMap();
-        annotationFileBuilder = new AnnotationFileBuilder();
+        annotationFileBuilder = new AnnotationFileBuilder.AnnotationFileBuilderImpl();
         widthCalculator = new IndentWidthCalculator();
-    }
-
-    public void beforeDocumentSaving(PsiFileSystemItem psiFile) {
-        LOG.info("About to save: " + psiFile.getName());
-        annotationFileBuilder.invokeRebuild(psiFile.getVirtualFile());
     }
 
     @Nullable
@@ -90,7 +86,7 @@ public class AnnotationFileManager implements Disposable {
     public AnnotationFile annotationFile(PsiFile psiFile) {
         VirtualFile virtualFile = psiFile.getVirtualFile();
         if (!annotationFileForFile.containsKey(virtualFile.getPath())) {
-            annotationFileForFile.put(virtualFile.getPath(), createAnnotationFile(psiFile));
+            annotationFileForFile.put(virtualFile.getPath(), annotatedFile(psiFile));
             LineNumberMap map = new LineNumberMap(psiFile);
             this.lineNumberMapForFile.put(virtualFile.getPath(), map);
 
@@ -98,8 +94,13 @@ public class AnnotationFileManager implements Disposable {
         return annotationFileForFile.get(virtualFile.getPath());
     }
 
+    // ToDo: There's probably a fair amount of missing thread-safety here.
+    public void invalidate(VirtualFile file) {
+        annotationFileForFile.remove(file.getPath());
+    }
+
     @NotNull
-    private AnnotationFile createAnnotationFile(PsiFileSystemItem psiFile) {
+    private AnnotationFile annotatedFile(PsiFileSystemItem psiFile) {
         VirtualFile virtualFile = psiFile.getVirtualFile();
         VirtualFileSystem vfs = virtualFile.getFileSystem();
 
@@ -126,6 +127,10 @@ public class AnnotationFileManager implements Disposable {
                 LOG.error("When creating annotation file " + buildFilePath, e);
                 return new MissingAnnotationFile(virtualFile, e.getMessage());
             }
+            catch (RuntimeException e) {
+                LOG.error("Failed to parse annotation file " + buildFilePath, e);
+                return new MissingAnnotationFile(virtualFile, e.getMessage());
+            }
         }
     }
 
@@ -145,6 +150,10 @@ public class AnnotationFileManager implements Disposable {
             return null;
         }
         return map.findPsiElementForSrcPos(file, srcPos.lineNumber(), srcPos.columnNumber());
+    }
+
+    public void requestRebuild(PsiFile psiFile) {
+        annotationFileBuilder.invokeAnnotationBuild(psiFile);
     }
 
     private class LineNumberMap {

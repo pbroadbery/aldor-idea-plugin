@@ -1,17 +1,25 @@
 package aldor.build.module;
 
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.compiler.CompileContext;
+import com.intellij.openapi.compiler.CompileStatusNotification;
+import com.intellij.openapi.compiler.CompilerManager;
+import com.intellij.openapi.compiler.CompilerMessage;
+import com.intellij.openapi.compiler.CompilerMessageCategory;
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileSystem;
+import com.intellij.psi.PsiFile;
 
 /** Maybe make this an interface */
-public class AnnotationFileBuilder {
+public interface AnnotationFileBuilder {
 
-    @SuppressWarnings("EmptyMethod")
-    public void invokeRebuild(VirtualFile virtualFile) {
-    }
+    void invokeAnnotationBuild(PsiFile psiFile);
 
-    /*
-
-    private static final class CompilerResult {
+    final class CompilerResult {
         private final boolean aborted;
         private final int errors;
         private final int warnings;
@@ -24,30 +32,41 @@ public class AnnotationFileBuilder {
         }
     }
 
+    class AnnotationFileBuilderImpl implements AnnotationFileBuilder {
+        private static final Logger LOG = Logger.getInstance(AnnotationFileBuilderImpl.class);
 
-    private void invokeBuild(PsiFile psiFile) {
-        final VirtualFile file = psiFile.getVirtualFile();
-        final VirtualFileSystem vfs = file.getFileSystem();
-        final BlockingQueue<AnnotationFileManager.CompilerResult> resultLater = new ArrayBlockingQueue<>(1);
+        @Override
+        public void invokeAnnotationBuild(PsiFile psiFile) {
 
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                CompilerManager compilerManager = CompilerManager.getInstance(collectedInfo.project());
-                compilerManager.compile(new VirtualFile[]{collectedInfo.file()}, new CompileStatusNotification() {
-                    @Override
-                    public void finished(boolean aborted, int errors, int warnings, CompileContext compileContext) {
-                        resultLater.add(new TypeAndRefAnnotator.CompilerResult(aborted, errors, warnings));
-                    }
-                });
-            }
-        });
+            final VirtualFile file = psiFile.getVirtualFile();
+            final VirtualFileSystem vfs = file.getFileSystem();
+            final Project project = psiFile.getProject();
+            ApplicationManager.getApplication().invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    CompilerManager compilerManager = CompilerManager.getInstance(project);
+                    compilerManager.compile(new VirtualFile[]{psiFile.getVirtualFile()}, new CompileStatusNotification() {
+                        @Override
+                        public void finished(boolean aborted, int errors, int warnings, CompileContext compileContext) {
+                            Module module = ProjectRootManager.getInstance(project).getFileIndex().getModuleForFile(file);
+                            LOG.info("Rebuilt " + psiFile.getContainingFile().getName() + ": " + errors + " errors, " + warnings + " warnings. aborted: " + aborted);
+                            for (CompilerMessage message: compileContext.getMessages(CompilerMessageCategory.ERROR)) {
+                                LOG.info("Message: " + message);
+                            }
+                            AnnotationFileManager.getAnnotationFileManager(module).invalidate(file);
+                            compileContext.getMessages(CompilerMessageCategory.ERROR);
+                        }
+                    });
+                }
+            });
+        }
 
 
+        /*
         try {
             String buildPath = collectedInfo.buildPath();
             LOG.info("Reading file: " + buildPath);
-            assert buildPath != null;
+            assert buildPath !=  null;
             TypeAndRefAnnotator.CompilerResult result = resultLater.poll(COMPILE_TIMEOUT, TimeUnit.SECONDS);
             if (result == null) {
                 return new TypeAndRefAnnotator.FullInfo(collectedInfo, "Time out while compiling " + file.getPresentableName());
@@ -72,6 +91,7 @@ public class AnnotationFileBuilder {
         catch (SExpressionReadException e) {
             return new TypeAndRefAnnotator.FullInfo(collectedInfo, "Failed to parse annotation file: "+ e.getMessage());
         }
+        */
     }
-    */
+
 }

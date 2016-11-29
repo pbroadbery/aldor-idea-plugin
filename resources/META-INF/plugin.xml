@@ -2,16 +2,14 @@
     <id>pab.aldor</id>
     <name>Aldor Plugin</name>
     <version>1.0</version>
-    <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
+    <vendor email="notgonnafly@aldor.org" url="http://www.notreally.org">Peter Broadbery</vendor>
 
     <description><![CDATA[
-      Enter short description for your plugin here.<br>
-      <em>most HTML tags may be used</em>
+      Aldor/Spad plugin.
     ]]></description>
 
     <change-notes><![CDATA[
-      Add change notes here.<br>
-      <em>most HTML tags may be used</em>
+      Version the first
     ]]>
     </change-notes>
 
@@ -26,6 +24,9 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Common-->
+        <projectService serviceInterface="aldor.build.AldorCompilationService"
+                        serviceImplementation="aldor.build.AldorCompilationServiceImpl"/>
+
         <compileServer.plugin classpath="aldor-jps-plugin.jar"/>
 
         <compiler.buildTargetScopeProvider implementation="aldor.build.builders.AldorBuildTargetScopeProvider" />
@@ -42,6 +43,11 @@
         <lang.foldingBuilder language="Aldor" implementationClass="aldor.folder.AldorFoldingBuilder"/>
 
         <annotator language="Aldor" implementationClass="aldor.editor.AldorAnnotator"/>
+        <externalAnnotator language="Aldor" implementationClass="aldor.editor.CompileMessageAnnotator"/>
+
+        <langCodeStyleSettingsProvider implementation="aldor.formatting.AldorLanguageCodeStyleSettingsProvider"/>
+        <codeStyleSettingsProvider implementation="aldor.formatting.AldorCodeStyleSettingsProvider"/>
+
         <!-- Not useful: <externalAnnotator language="Aldor" implementationClass="aldor.editor.TypeAndRefAnnotator"/> -->
 
         <gotoClassContributor implementation="aldor.editor.AldorGotoClassContributor"/>

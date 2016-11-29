@@ -50,13 +50,12 @@ import org.jetbrains.jps.model.JpsElement;
 import org.jetbrains.jps.model.JpsElementFactory;
 import org.jetbrains.jps.model.JpsModel;
 import org.jetbrains.jps.model.JpsProject;
-import org.jetbrains.jps.model.java.JavaSourceRootType;
 import org.jetbrains.jps.model.module.JpsModule;
 import org.jetbrains.jps.util.JpsPathUtil;
+import org.junit.Assert;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -132,19 +131,11 @@ public abstract class AldorJpsTestCase extends UsefulTestCase {
         return FileUtil.createTempDirectory("prj", null);
     }
 
-    protected <T extends JpsElement> JpsModule addModule(String moduleName,
-                                                         Collection<String> srcPaths,
-                                                         @Nullable String outputPath) {
+    protected <T extends JpsElement> JpsModule addModule(String moduleName) {
         JpsModule module = myProject.addModule(moduleName, JpsAldorModuleType.INSTANCE);
+
         module.getContentRootsList().addUrl(JpsPathUtil.pathToUrl(new File(getOrCreateProjectDir(), moduleName).toString()));
-        if ((!srcPaths.isEmpty()) || (outputPath != null)) {
-            for (String srcPath : srcPaths) {
-                module.getContentRootsList().addUrl(JpsPathUtil.pathToUrl(srcPath));
-                module.addSourceRoot(JpsPathUtil.pathToUrl(srcPath), JavaSourceRootType.SOURCE);
-            }
-            //JpsAldorModuleExtension extension = JpsAldorExtensionService.getInstance().getOrCreateModuleExtension(module);
-            // Set up extension here if needed
-        }
+
         return module;
     }
 
@@ -173,11 +164,18 @@ public abstract class AldorJpsTestCase extends UsefulTestCase {
     protected void beforeBuildStarted(@NotNull ProjectDescriptor descriptor) {
     }
 
-    protected BuildResult rebuildAll() {
+    protected BuildResult rebuildAllAndSucceed() {
         BuildResult res = doBuild(CompileScopeTestBuilder.rebuild().all());
         res.assertSuccessful();
         return res;
     }
+
+    protected BuildResult rebuildAllAndFail() {
+        BuildResult res = doBuild(CompileScopeTestBuilder.rebuild().all());
+        res.assertFailed();
+        return res;
+    }
+
 
     protected BuildResult makeAll() {
         return doBuild(CompileScopeTestBuilder.make().all());
@@ -210,7 +208,7 @@ public abstract class AldorJpsTestCase extends UsefulTestCase {
         File dir = fileForProjectPath(relativePath);
         boolean created = dir.mkdirs();
         if (!created && !dir.isDirectory()) {
-            fail("Cannot create " + dir.getAbsolutePath() + " directory");
+            Assert.fail("Cannot create " + dir.getAbsolutePath() + " directory");
         }
         return FileUtil.toSystemIndependentName(dir.getAbsolutePath());
     }
@@ -234,7 +232,7 @@ public abstract class AldorJpsTestCase extends UsefulTestCase {
     protected void change(String relativePath, @Nullable final String newContent) {
         try {
             File file = fileForProjectPath(relativePath);
-            assertTrue("File " + file.getAbsolutePath() + " doesn't exist", file.exists());
+            Assert.assertTrue("File " + file.getAbsolutePath() + " doesn't exist", file.exists());
             if (newContent != null) {
                 FileUtil.writeToFile(file, newContent);
             }

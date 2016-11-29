@@ -3,8 +3,8 @@ package aldor.make;
 import aldor.builder.files.AldorFileBuildTargetType;
 import aldor.builder.files.AldorFileRootDescriptor;
 import aldor.builder.files.AldorFileTargetBuilder;
+import com.google.common.base.Charsets;
 import com.intellij.openapi.diagnostic.Logger;
-import groovy.json.internal.Charsets;
 import org.jetbrains.jps.builders.BuildOutputConsumer;
 import org.jetbrains.jps.builders.DirtyFilesHolder;
 import org.jetbrains.jps.incremental.CompileContext;
@@ -16,7 +16,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
 /**
  * Simple compiler for aldor - just call make.
@@ -65,13 +67,20 @@ public class FullCompiler implements AldorFileTargetBuilder.Compiler {
         Process process = processBuilder.start();
 
         // FIXME: Use netty here (see ExternalJavacManager in intellij)
-        executorService.submit(() -> watchStdError(target, process));
-        executorService.submit(() -> watchStdOut(target, process));
+        Future<?> stdErrFut = executorService.submit(() -> watchStdError(target, process));
+        Future<?> stdOutFut = executorService.submit(() -> watchStdOut(target, path, process));
+
         try {
             process.waitFor();
+            stdErrFut.get();
+            stdOutFut.get();
         } catch (InterruptedException ignored) {
             Thread.interrupted();
+        } catch (ExecutionException e) {
+            LOG.error("Message read threw an error: ", e);
+            context.processMessage(new CompilerMessage(ALDOR_COMPILER, BuildMessage.Kind.ERROR, "Failed to read output"));
         }
+        LOG.info("Build complete: " + processBuilder.command() + " @ " + processBuilder.directory());
     }
 
     @SuppressWarnings("UnusedParameters")
@@ -80,7 +89,7 @@ public class FullCompiler implements AldorFileTargetBuilder.Compiler {
         try (BufferedReader lineReader = new BufferedReader(reader)) {
             String line;
             while ((line = lineReader.readLine()) != null) {
-                context.processMessage(new CompilerMessage("aldor builder", BuildMessage.Kind.ERROR, line));
+                context.processMessage(new CompilerMessage(ALDOR_COMPILER, BuildMessage.Kind.ERROR, line));
                 LOG.info("Error from compiler: " + line);
             }
         } catch (IOException e) {
@@ -88,18 +97,22 @@ public class FullCompiler implements AldorFileTargetBuilder.Compiler {
         }
     }
 
-
     @SuppressWarnings("UnusedParameters")
-    private void watchStdOut(String target, Process process) {
+    private void watchStdOut(String target, File baseDirectory, Process process) {
+        CompileOutputParser errorParser = new CompileOutputParser(ALDOR_COMPILER, baseDirectory, context::processMessage);
         Reader reader = new InputStreamReader(process.getInputStream(), Charsets.US_ASCII);
         try (BufferedReader lineReader = new BufferedReader(reader)) {
             String line;
             while ((line = lineReader.readLine()) != null) {
-                context.processMessage(new CompilerMessage("aldor builder", BuildMessage.Kind.INFO, line));
+                errorParser.newMessage(line);
+                context.processMessage(new CompilerMessage(ALDOR_COMPILER, BuildMessage.Kind.INFO, line));
                 LOG.info("Info from compiler: " + line);
             }
         } catch (IOException e) {
             LOG.info("Error while reading stdout: " + e.getMessage());
+        }
+        finally {
+            LOG.info("Reached end of file " + target);
         }
     }
 

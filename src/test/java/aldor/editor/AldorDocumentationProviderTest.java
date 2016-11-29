@@ -14,6 +14,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import org.jetbrains.annotations.NotNull;
+import org.junit.Assert;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -28,6 +29,9 @@ import static aldor.util.VirtualFileTests.createFile;
 
 public class AldorDocumentationProviderTest extends LightPlatformCodeInsightFixtureTestCase {
 
+    /*
+    * TODO: Make sure that this matches generated .abn files.
+     */
     public void testDocProvider() throws IOException {
         VirtualFile root = VirtualFileTests.getProjectRoot(getProject());
 
@@ -38,13 +42,13 @@ public class AldorDocumentationProviderTest extends LightPlatformCodeInsightFixt
         Collection<AldorIdentifier> ids = PsiTreeUtil.findChildrenOfType(file, AldorIdentifier.class);
 
         for (AldorIdentifier id : ids) {
-            assertNotNull(id.getContainingFile());
+            Assert.assertNotNull(id.getContainingFile());
             String docco = docForElement(id);
             System.out.println("Doc is: " + docco);
         }
 
         String firstDoc = docForElement(ids.iterator().next());
-        assertTrue(firstDoc.contains("> T<"));
+        Assert.assertTrue(firstDoc.contains("> T<"));
     }
 
     private String docForElement(PsiElement id) {

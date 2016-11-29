@@ -1,8 +1,5 @@
-package aldor.build.module;
+package aldor.symbolfile;
 
-import aldor.symbolfile.AnnotationFile;
-import aldor.symbolfile.SrcPos;
-import aldor.symbolfile.Syme;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.Nullable;
 

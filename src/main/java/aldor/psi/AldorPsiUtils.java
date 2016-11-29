@@ -83,10 +83,13 @@ public final class AldorPsiUtils {
             isTopLevel = false;
         }
 
+        // until exported macros work...
+        @Override
+        public void visitMacroBody(@NotNull AldorMacroBody e) { isTopLevel = false; }
+
         public boolean isTopLevel() {
             return isTopLevel;
         }
-
     }
 
 }

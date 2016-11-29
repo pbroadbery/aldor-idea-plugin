@@ -4,6 +4,7 @@ import aldor.editor.DefaultNavigator;
 import aldor.parser.NavigatorFactory;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManagerAdapter;
 import com.intellij.openapi.module.Module;
@@ -26,6 +27,7 @@ import static com.intellij.AppTopics.FILE_DOCUMENT_SYNC;
  * Component that looks for aldor file updates, and if it spots them notifies the annotation manager.
  */
 public class AldorApplicationComponent implements ApplicationComponent {
+    private static final Logger LOG = Logger.getInstance(AldorApplicationComponent.class);
     private static final String NAME = "AldorFileWatcher";
 
     @Override
@@ -35,6 +37,7 @@ public class AldorApplicationComponent implements ApplicationComponent {
         connection.subscribe(FILE_DOCUMENT_SYNC, new SaveActionProcessor());
 
         initialiseComponents();
+
     }
 
     private void initialiseComponents() {
@@ -68,10 +71,12 @@ public class AldorApplicationComponent implements ApplicationComponent {
                 for (Module module: AldorModuleManager.getInstance(project).aldorModules()) {
                     AnnotationFileManager manager = AnnotationFileManager.getAnnotationFileManager(module);
                     assert manager != null;
-                    manager.beforeDocumentSaving(psiFile);
+                    LOG.info("Would like to build: " + psiFile.getName());
+                    manager.requestRebuild(psiFile);
                 }
             }
         }
+
     }
 
     public static boolean isPsiFileInProject(Project project, PsiFileSystemItem file) {

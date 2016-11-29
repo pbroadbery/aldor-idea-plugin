@@ -14,6 +14,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiManager;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -36,7 +37,7 @@ public class AldorDocumentationProvider extends DocumentationProviderEx {
             return null;
         }
 
-        AnnotatedOptional<Syme, String> symeMaybe = symeForElement(element);
+        AnnotatedOptional<Syme, String> symeMaybe = symeForElement(originalElement);
 
         String typeText = "";
         if (symeMaybe.isPresent()) {
@@ -92,4 +93,8 @@ public class AldorDocumentationProvider extends DocumentationProviderEx {
         return element instanceof AldorIdentifier;
     }
 
+    @Override
+    public PsiElement getDocumentationElementForLink(PsiManager psiManager, String link, PsiElement context) {
+        return super.getDocumentationElementForLink(psiManager, link, context);
+    }
 }

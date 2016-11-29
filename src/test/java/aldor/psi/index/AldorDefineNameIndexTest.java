@@ -16,6 +16,7 @@ import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import com.intellij.util.indexing.FileBasedIndex;
 import org.jetbrains.annotations.NotNull;
+import org.junit.Assert;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -37,8 +38,8 @@ public class AldorDefineNameIndexTest extends LightPlatformCodeInsightFixtureTes
 
         VirtualFile file = createFile(getSourceRoot(), "foo.as", "a == b; c == d; e == " + System.currentTimeMillis());
 
-        assertTrue(FileIndexFacade.getInstance(project).isInSource(file));
-        assertFalse(FileIndexFacade.getInstance(project).isExcludedFile(file));
+        Assert.assertTrue(FileIndexFacade.getInstance(project).isInSource(file));
+        Assert.assertFalse(FileIndexFacade.getInstance(project).isExcludedFile(file));
         VirtualFileTests.deleteFile(file);
     }
 
@@ -50,10 +51,13 @@ public class AldorDefineNameIndexTest extends LightPlatformCodeInsightFixtureTes
         FileBasedIndex.getInstance().ensureUpToDate(StubUpdatingIndex.INDEX_ID, project, null);
 
         Collection<String> ll = AldorDefineNameIndex.instance.getAllKeys(project);
-        System.out.println("Keys:" + ll);
-
-        assertEquals(3, ll.size());
+        Assert.assertEquals(3, ll.size());
         VirtualFileTests.deleteFile(file);
+
+        FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
+        FileBasedIndex.getInstance().ensureUpToDate(StubUpdatingIndex.INDEX_ID, project, null);
+
+        Assert.assertEquals(0, AldorDefineNameIndex.instance.getAllKeys(project).size());
     }
 
 
@@ -65,7 +69,7 @@ public class AldorDefineNameIndexTest extends LightPlatformCodeInsightFixtureTes
         FileBasedIndex.getInstance().ensureUpToDate(StubUpdatingIndex.INDEX_ID, project, null);
 
         Collection<String> ll = AldorDefineNameIndex.instance.getAllKeys(project);
-        assertEquals(Sets.newHashSet("Something", "aNumber"), new HashSet<>(ll));
+        Assert.assertEquals(Sets.newHashSet("Something", "aNumber"), new HashSet<>(ll));
         VirtualFileTests.deleteFile(file);
     }
 
@@ -77,7 +81,7 @@ public class AldorDefineNameIndexTest extends LightPlatformCodeInsightFixtureTes
         FileBasedIndex.getInstance().ensureUpToDate(StubUpdatingIndex.INDEX_ID, project, null);
 
         Collection<String> ll = AldorDefineTopLevelIndex.instance.getAllKeys(project);
-        assertEquals(Sets.newHashSet("Something", "aNumber"), new HashSet<>(ll));
+        Assert.assertEquals(Sets.newHashSet("Something", "aNumber"), new HashSet<>(ll));
         VirtualFileTests.deleteFile(file);
     }
 
@@ -90,7 +94,7 @@ public class AldorDefineNameIndexTest extends LightPlatformCodeInsightFixtureTes
         FileBasedIndex.getInstance().ensureUpToDate(StubUpdatingIndex.INDEX_ID, project, null);
 
         Collection<String> ll = AldorDefineTopLevelIndex.instance.getAllKeys(project);
-        assertEquals(Sets.newHashSet("Something"), new HashSet<>(ll));
+        Assert.assertEquals(Sets.newHashSet("Something"), new HashSet<>(ll));
         VirtualFileTests.deleteFile(file);
     }
 
@@ -104,12 +108,12 @@ public class AldorDefineNameIndexTest extends LightPlatformCodeInsightFixtureTes
 
             FileBasedIndex.getInstance().ensureUpToDate(StubUpdatingIndex.INDEX_ID, project, null);
             Collection<String> ll = AldorDefineNameIndex.instance.getAllKeys(project);
-            assertEquals(Sets.newHashSet("Something", "aNumber"), new HashSet<>(ll));
+            Assert.assertEquals(Sets.newHashSet("Something", "aNumber"), new HashSet<>(ll));
 
             Collection<AldorDefine> items = AldorDefineNameIndex.instance.get("Something", getProject(), GlobalSearchScope.allScope(getProject()));
             System.out.println("Items: " + items + " " + items.iterator().next().getText());
-            assertEquals(1, items.size());
-            assertTrue(items.iterator().next().getText().startsWith("Something"));
+            Assert.assertEquals(1, items.size());
+            Assert.assertTrue(items.iterator().next().getText().startsWith("Something"));
         }
         finally {
             if (file != null) {

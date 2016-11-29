@@ -58,7 +58,6 @@ public class AldorDefineMixin extends StubBasedPsiElementBase<AldorDefine.AldorD
 
     private Optional<Id> defineId() {
         Optional<Syntax> syntaxMaybe = syntax();
-        LOG.info("Define for " + syntaxMaybe);
         if (!syntaxMaybe.isPresent()) {
             return Optional.empty();
         }

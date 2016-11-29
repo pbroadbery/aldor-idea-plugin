@@ -14,7 +14,6 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.FilenameIndex;
-import com.intellij.psi.search.GlobalSearchScope;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -106,7 +105,7 @@ public final class FileScopeWalker {
 
     @Nullable
     private static PsiFile psiFileForFileName(Module module, String sourceFile) {
-        PsiFile[] refFiles = FilenameIndex.getFilesByName(module.getProject(), sourceFile, GlobalSearchScope.moduleScope(module));
+        PsiFile[] refFiles = FilenameIndex.getFilesByName(module.getProject(), sourceFile, module.getModuleContentScope());
         @Nullable PsiFile refFile;
         if (refFiles.length > 1) {
             LOG.info("Multiple files called " + sourceFile);

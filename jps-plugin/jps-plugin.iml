@@ -10,5 +10,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="aldor-common" />
+    <orderEntry type="library" name="com.google.guava:guava:19.0" level="project" />
   </component>
 </module>
