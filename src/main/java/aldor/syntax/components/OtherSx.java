@@ -1,7 +1,7 @@
 package aldor.syntax.components;
 
 import aldor.syntax.Syntax;
-import aldor.util.SExpression;
+import aldor.util.sexpr.SExpression;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;

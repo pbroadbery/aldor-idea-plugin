@@ -49,12 +49,16 @@ public interface AnnotationFileBuilder {
                         @Override
                         public void finished(boolean aborted, int errors, int warnings, CompileContext compileContext) {
                             Module module = ProjectRootManager.getInstance(project).getFileIndex().getModuleForFile(file);
-                            LOG.info("Rebuilt " + psiFile.getContainingFile().getName() + ": " + errors + " errors, " + warnings + " warnings. aborted: " + aborted);
-                            for (CompilerMessage message: compileContext.getMessages(CompilerMessageCategory.ERROR)) {
-                                LOG.info("Message: " + message);
+                            if (module != null) {
+                                LOG.info("Rebuilt " + psiFile.getContainingFile().getName() + ": " + errors + " errors, " + warnings + " warnings. aborted: " + aborted);
+                                for (CompilerMessage message : compileContext.getMessages(CompilerMessageCategory.ERROR)) {
+                                    LOG.info("Message: " + message);
+                                }
+                                AnnotationFileManager annotationManager = AnnotationFileManager.getAnnotationFileManager(module);
+                                assert annotationManager != null;
+                                annotationManager.invalidate(file);
+                                compileContext.getMessages(CompilerMessageCategory.ERROR);
                             }
-                            AnnotationFileManager.getAnnotationFileManager(module).invalidate(file);
-                            compileContext.getMessages(CompilerMessageCategory.ERROR);
                         }
                     });
                 }

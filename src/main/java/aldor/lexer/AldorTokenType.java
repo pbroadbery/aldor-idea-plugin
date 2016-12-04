@@ -18,7 +18,6 @@ public class AldorTokenType extends IElementType {
     private final boolean isFollower;
     private final int precedence;
 
-    @SuppressWarnings("UnusedParameters")
     public AldorTokenType(@NotNull String name, int i, @NotNull  String text, int hasString, int isComment, int isOpener, int isCloser,
                           int isFollower, int isLangWord, int isLeftAssoc, int isMaybeInfix, int precedence, int isDisabled) {
         super(name, AldorLanguage.INSTANCE);

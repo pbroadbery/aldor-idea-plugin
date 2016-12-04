@@ -4,6 +4,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
+import org.junit.Assert;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class ExpressionParseTest extends LightPlatformCodeInsightFixtureTestCase
         PsiElement psi = ParserFunctions.parseAldorText(getProject(), text);
         logPsi(psi);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
-        assertEquals(0, errors.size());
+        Assert.assertEquals(0, errors.size());
     }
 
     public void testParseEnum() {
@@ -24,7 +25,7 @@ public class ExpressionParseTest extends LightPlatformCodeInsightFixtureTestCase
         PsiElement psi = ParserFunctions.parseAldorText(getProject(), text);
         logPsi(psi);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
-        assertEquals(0, errors.size());
+        Assert.assertEquals(0, errors.size());
     }
 
     @Override

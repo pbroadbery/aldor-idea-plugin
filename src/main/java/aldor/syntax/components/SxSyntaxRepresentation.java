@@ -2,7 +2,7 @@ package aldor.syntax.components;
 
 import aldor.lexer.AldorTokenType;
 import aldor.lexer.AldorTokenTypes;
-import aldor.util.SExpression;
+import aldor.util.sexpr.SExpression;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.Nullable;
 

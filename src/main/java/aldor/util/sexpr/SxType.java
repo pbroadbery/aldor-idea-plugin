@@ -1,6 +1,6 @@
-package aldor.util;
+package aldor.util.sexpr;
 
-import aldor.util.sexpr.SExpressionTypes;
+import aldor.util.sexpr.impl.SExpressionTypes;
 
 public class SxType<T extends SExpression> {
     public static final SxType<SExpression> Any = new SxType<>("Any", SExpression.class);

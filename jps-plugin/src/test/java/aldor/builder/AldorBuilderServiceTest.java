@@ -2,9 +2,9 @@ package aldor.builder;
 
 import org.jetbrains.jps.builders.BuildTargetType;
 import org.jetbrains.jps.incremental.TargetBuilder;
+import org.junit.Assert;
 import org.junit.Test;
 
-import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertFalse;
 
 public class AldorBuilderServiceTest {
@@ -21,7 +21,7 @@ public class AldorBuilderServiceTest {
         }
 
         for (BuildTargetType<?> targetType: service.getTargetTypes()) {
-            assertNotNull(targetType.getTypeId());
+            Assert.assertNotNull(targetType.getTypeId());
         }
 
     }

@@ -12,6 +12,7 @@ import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import com.intellij.util.indexing.FileBasedIndex;
 import org.jetbrains.annotations.NotNull;
+import org.junit.Assert;
 
 import java.io.IOException;
 
@@ -31,12 +32,12 @@ public class AldorGotoClassContributorTest extends LightPlatformCodeInsightFixtu
         ChooseByNameContributor gotoClassContributor = new AldorGotoClassContributor();
 
         String[] names = gotoClassContributor.getNames(project, false);
-        assertEquals(2, names.length);
+        Assert.assertEquals(2, names.length);
 
         NavigationItem[] items = gotoClassContributor.getItemsByName("Something", "Something", project, false);
-        assertEquals(1, items.length);
+        Assert.assertEquals(1, items.length);
         NavigationItem item = items[0];
-        assertEquals("Something", item.getName());
+        Assert.assertEquals("Something", item.getName());
     }
 
     public void testGotoClass2() throws IOException {
@@ -49,12 +50,12 @@ public class AldorGotoClassContributorTest extends LightPlatformCodeInsightFixtu
         ChooseByNameContributor gotoClassContributor = new AldorGotoClassContributor();
 
         String[] names = gotoClassContributor.getNames(project, false);
-        assertEquals(2, names.length);
+        Assert.assertEquals(2, names.length);
 
         NavigationItem[] items = gotoClassContributor.getItemsByName("Something", "Something", project, false);
-        assertEquals(1, items.length);
+        Assert.assertEquals(1, items.length);
         NavigationItem item = items[0];
-        assertEquals("Something", item.getName());
+        Assert.assertEquals("Something", item.getName());
         VirtualFileTests.deleteFile(file);
     }
 

@@ -1,6 +1,6 @@
 package aldor.symbolfile;
 
-import aldor.util.SExpression;
+import aldor.util.sexpr.SExpression;
 
 interface AnnotationLookup {
     Syme syme(int n);

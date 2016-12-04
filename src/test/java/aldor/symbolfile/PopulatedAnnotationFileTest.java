@@ -1,8 +1,9 @@
 package aldor.symbolfile;
 
 import aldor.syntax.Syntax;
-import aldor.util.SExpression;
-import aldor.util.SymbolPolicy;
+import aldor.util.sexpr.SExpression;
+import aldor.util.sexpr.SymbolPolicy;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.FileNotFoundException;
@@ -13,6 +14,7 @@ import static org.junit.Assert.assertNotNull;
 public class PopulatedAnnotationFileTest {
 
     @Test
+    @Ignore
     public void testFile() throws FileNotFoundException {
         @SuppressWarnings("ImplicitDefaultCharsetUsage")
         SExpression sx = SExpression.read(new FileReader("/tmp/sal_array.abn"));
@@ -29,6 +31,7 @@ public class PopulatedAnnotationFileTest {
     }
 
     @Test
+    @Ignore
     public void testFile2() throws FileNotFoundException {
         @SuppressWarnings("ImplicitDefaultCharsetUsage")
         SExpression sx = SExpression.read(new FileReader("/tmp/alg_serpoly.abn"), SymbolPolicy.ALLCAPS);

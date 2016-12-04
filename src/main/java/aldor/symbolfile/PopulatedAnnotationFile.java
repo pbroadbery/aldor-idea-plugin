@@ -1,7 +1,7 @@
 package aldor.symbolfile;
 
-import aldor.util.SExpression;
-import aldor.util.SxType;
+import aldor.util.sexpr.SExpression;
+import aldor.util.sexpr.SxType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

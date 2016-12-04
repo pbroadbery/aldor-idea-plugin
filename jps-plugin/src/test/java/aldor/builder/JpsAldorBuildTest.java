@@ -14,7 +14,7 @@ import java.nio.charset.StandardCharsets;
 
 public class JpsAldorBuildTest extends AldorJpsTestCase {
     private static final Logger LOG = Logger.getInstance(JpsAldorBuildTest.class);
-    private AldorFixture aldorFixture = new AldorFixture(this);
+    private final AldorFixture aldorFixture = new AldorFixture(this);
 
     public void testOne() throws IOException {
 
@@ -65,12 +65,12 @@ public class JpsAldorBuildTest extends AldorJpsTestCase {
 
         LOG.info("Info messages: " + result.getMessages(BuildMessage.Kind.INFO));
         LOG.info("Error messages: " + result.getMessages(BuildMessage.Kind.ERROR));
-
+        Assert.assertFalse(result.isSuccessful());
     }
 
     class AldorFixture {
-        String projectName = "aldor-codebase";
-        AldorJpsTestCase testCase;
+        final String projectName = "aldor-codebase";
+        final AldorJpsTestCase testCase;
 
         AldorFixture(AldorJpsTestCase testCase) {
             this.testCase = testCase;

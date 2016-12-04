@@ -3,7 +3,6 @@ package aldor.builder.files;
 import aldor.make.FullCompiler;
 import com.intellij.openapi.diagnostic.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.jps.builders.BuildOutputConsumer;
 import org.jetbrains.jps.builders.DirtyFilesHolder;
 import org.jetbrains.jps.incremental.CompileContext;
@@ -39,9 +38,9 @@ public class AldorFileTargetBuilder extends TargetBuilder<AldorFileRootDescripto
 
 
     @Override
-    public void build(final AldorFileBuildTargetType.AldorFileBuildTarget target,
+    public void build(@NotNull final AldorFileBuildTargetType.AldorFileBuildTarget target,
                       final DirtyFilesHolder<AldorFileRootDescriptor, AldorFileBuildTargetType.AldorFileBuildTarget> holder,
-                      final BuildOutputConsumer outputConsumer, @NotNull final CompileContext context) throws ProjectBuildException, IOException {
+                      @NotNull final BuildOutputConsumer outputConsumer, @NotNull final CompileContext context) throws ProjectBuildException, IOException {
         assert outputConsumer != null;
         assert target != null;
         LOG.info("Building " + target + " " + holder.hasDirtyFiles());

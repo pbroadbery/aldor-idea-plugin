@@ -32,6 +32,7 @@ public class AldorDefineElementType extends IStubElementType<AldorDefine.AldorDe
         return stub.createPsi(this);
     }
 
+    @NotNull
     @Override
     public AldorDefine.AldorDefineStub createStub(@NotNull AldorDefine psi, @SuppressWarnings("rawtypes") StubElement parentStub) {
         return psi.createStub(this, parentStub);

@@ -1,8 +1,8 @@
 package aldor.symbolfile;
 
-import aldor.util.SExpression;
+import aldor.util.sexpr.SExpression;
 
-import static aldor.util.SExpression.symbol;
+import static aldor.util.sexpr.SExpression.symbol;
 
 public final class SymbolFileSymbols {
     public static final SExpression Id = symbol("Id");

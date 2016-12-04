@@ -2,9 +2,9 @@ package aldor.editor;
 
 import aldor.build.module.AldorModuleType;
 import aldor.psi.AldorIdentifier;
-import aldor.util.SExpression;
-import aldor.util.SymbolPolicy;
 import aldor.util.VirtualFileTests;
+import aldor.util.sexpr.SExpression;
+import aldor.util.sexpr.SymbolPolicy;
 import com.intellij.codeInsight.documentation.DocumentationManager;
 import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -24,8 +24,8 @@ import static aldor.symbolfile.AnnotationFileTests.srcpos;
 import static aldor.symbolfile.AnnotationFileTests.syme;
 import static aldor.symbolfile.AnnotationFileTests.type;
 import static aldor.symbolfile.SymbolFileSymbols.Id;
-import static aldor.util.SExpressions.list;
 import static aldor.util.VirtualFileTests.createFile;
+import static aldor.util.sexpr.SExpressions.list;
 
 public class AldorDocumentationProviderTest extends LightPlatformCodeInsightFixtureTestCase {
 
@@ -34,7 +34,7 @@ public class AldorDocumentationProviderTest extends LightPlatformCodeInsightFixt
      */
     public void testDocProvider() throws IOException {
         VirtualFile root = VirtualFileTests.getProjectRoot(getProject());
-
+        //FIXME: Need to recreate the correct markup
         VirtualFile virtualFile = createFile(root, "foo.as", "a; b; c; d;");
         createFile(root, "foo.abn", createMockTypeMarkup().toString(SymbolPolicy.ALLCAPS));
         PsiFile file = getPsiManager().findFile(virtualFile);

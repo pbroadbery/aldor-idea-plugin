@@ -13,7 +13,7 @@ public final class AnnotatedOptional<T, X> {
     }
 
     public static <T, X> AnnotatedOptional<T, X> of(T t) {
-        return new AnnotatedOptional<T, X>(t, null);
+        return new AnnotatedOptional<>(t, null);
     }
 
     public <S> AnnotatedOptional<S, X> map(Function<T, S> fn) {

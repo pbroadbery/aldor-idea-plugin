@@ -28,7 +28,6 @@ public class FullCompiler implements AldorFileTargetBuilder.Compiler {
     public static final String ALDOR_COMPILER = "aldor compiler";
     private final CompileContext context;
 
-    @SuppressWarnings("UnusedParameters")
     public FullCompiler(DirtyFilesHolder<AldorFileRootDescriptor, AldorFileBuildTargetType.AldorFileBuildTarget> holder, BuildOutputConsumer outputConsumer, CompileContext context) {
         this.context = context;
     }
@@ -83,7 +82,6 @@ public class FullCompiler implements AldorFileTargetBuilder.Compiler {
         LOG.info("Build complete: " + processBuilder.command() + " @ " + processBuilder.directory());
     }
 
-    @SuppressWarnings("UnusedParameters")
     private void watchStdError(String target, Process process) {
         Reader reader = new InputStreamReader(process.getErrorStream(), Charsets.US_ASCII);
         try (BufferedReader lineReader = new BufferedReader(reader)) {
@@ -97,7 +95,6 @@ public class FullCompiler implements AldorFileTargetBuilder.Compiler {
         }
     }
 
-    @SuppressWarnings("UnusedParameters")
     private void watchStdOut(String target, File baseDirectory, Process process) {
         CompileOutputParser errorParser = new CompileOutputParser(ALDOR_COMPILER, baseDirectory, context::processMessage);
         Reader reader = new InputStreamReader(process.getInputStream(), Charsets.US_ASCII);

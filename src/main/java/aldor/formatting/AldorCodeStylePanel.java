@@ -30,7 +30,6 @@ public class AldorCodeStylePanel extends CodeStyleAbstractPanel {
     private JPanel myPanel;
     private JCheckBox useLigatures;
 
-    @SuppressWarnings("unchecked")
     public AldorCodeStylePanel(@NotNull CodeStyleSettings settings) {
         super(AldorLanguage.INSTANCE, null, settings);
         addPanelToWatch(myPanel);

@@ -11,6 +11,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.testFramework.LightPlatformCodeInsightTestCase;
+import org.junit.Assert;
 
 import java.util.List;
 
@@ -22,38 +23,38 @@ public class ExpressionTest extends LightPlatformCodeInsightTestCase {
 
     public void testOne() {
         PsiElement element = parseExpressionText(getProject(), "a * b + c * d");
-        assertNotNull(element);
+        Assert.assertNotNull(element);
         logPsi(element);
     }
 
     public void testOneA() {
         PsiElement element = parseExpressionText(getProject(), "a + b * c + d");
-        assertNotNull(element);
+        Assert.assertNotNull(element);
         logPsi(element);
     }
 
     public void testTwo() {
         PsiElement element = parseExpressionText(getProject(), "(a: % + b: %): %");
-        assertNotNull(element);
+        Assert.assertNotNull(element);
         logPsi(element);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(element);
-        assertEquals(0, errors.size());
+        Assert.assertEquals(0, errors.size());
     }
 
     public void testFnCall() {
         PsiElement element = parseExpressionText(getProject(), "f x.y (a + b * c)");
-        assertNotNull(element);
+        Assert.assertNotNull(element);
         logPsi(element);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(element);
-        assertEquals(0, errors.size());
+        Assert.assertEquals(0, errors.size());
     }
 
     public void testDefines() {
         PsiElement element = parseExpressionText(getProject(), "a: String == b; b: Integer == a", ExpressionTypes.STATEMENT_SEQUENCE);
-        assertNotNull(element);
+        Assert.assertNotNull(element);
         logPsi(element);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(element);
-        assertEquals(0, errors.size());
+        Assert.assertEquals(0, errors.size());
     }
 
 

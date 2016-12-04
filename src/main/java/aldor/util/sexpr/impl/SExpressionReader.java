@@ -1,16 +1,14 @@
-package aldor.util.sexpr;
+package aldor.util.sexpr.impl;
 
 import aldor.util.ReaderCharacterStream;
-import aldor.util.SExpression;
 import aldor.util.Stream;
 import aldor.util.Strings;
-import aldor.util.SymbolPolicy;
+import aldor.util.sexpr.SExpression;
+import aldor.util.sexpr.SymbolPolicy;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Reader;
 import java.util.Locale;
-
-import static aldor.util.SymbolPolicy.ALLCAPS;
 
 public class SExpressionReader {
 
@@ -97,7 +95,7 @@ public class SExpressionReader {
         Tokeniser(Reader stream, SymbolPolicy symbolPolicy) {
             this.stream = new ReaderCharacterStream(stream);
             this.token = null;
-            this.allCapsSymbols = symbolPolicy == ALLCAPS;
+            this.allCapsSymbols = symbolPolicy == SymbolPolicy.ALLCAPS;
         }
 
         @SuppressWarnings({"OverlyComplexMethod", "OverlyLongMethod"})

@@ -78,4 +78,8 @@ public class AldorParserDefinition implements ParserDefinition {
     public PsiElement createElement(ASTNode node) {
         return AldorTypes.Factory.createElement(node);
     }
+
+    public static ParserDefinition abbrevParserDefinition(Project project) {
+        throw new RuntimeException("Need to implement");
+    }
 }

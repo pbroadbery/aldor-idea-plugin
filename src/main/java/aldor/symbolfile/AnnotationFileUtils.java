@@ -7,8 +7,8 @@ import aldor.syntax.components.Declare;
 import aldor.syntax.components.Id;
 import aldor.syntax.components.OtherSx;
 import aldor.syntax.components.SxSyntaxRepresentation;
-import aldor.util.SExpression;
-import aldor.util.SxType;
+import aldor.util.sexpr.SExpression;
+import aldor.util.sexpr.SxType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

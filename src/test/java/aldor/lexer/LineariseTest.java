@@ -1,11 +1,9 @@
 package aldor.lexer;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.List;
-
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertTrue;
 
 
 public class LineariseTest {
@@ -49,7 +47,7 @@ public class LineariseTest {
         AldorLexerAdapter lla = AldorLexerAdapter.createAndStart("#pile\nrepeat\n Statement1\n\n Statement2\n");
         Linearise lineariser = new Linearise();
         List<Linearise.PiledSection> pp = lineariser.scanForPiledSections(lla);
-        assertEquals(1, pp.size());
+        Assert.assertEquals(1, pp.size());
         Linearise.PiledSection section = pp.get(0);
         System.out.println("Blocks: " + section.blockMarkers());
     }
@@ -60,7 +58,7 @@ public class LineariseTest {
         AldorLexerAdapter lla = AldorLexerAdapter.createAndStart(text);
         Linearise lineariser = new Linearise();
         List<Linearise.PiledSection> pp = lineariser.scanForPiledSections(lla);
-        assertTrue(pp.isEmpty());
+        Assert.assertTrue(pp.isEmpty());
     }
 
     @Test
@@ -68,7 +66,7 @@ public class LineariseTest {
         AldorLexerAdapter lla = AldorLexerAdapter.createAndStart("#pile\n");
         Linearise lineariser = new Linearise();
         List<Linearise.PiledSection> pp = lineariser.scanForPiledSections(lla);
-        assertTrue(pp.isEmpty());
+        Assert.assertTrue(pp.isEmpty());
     }
 
 
@@ -77,7 +75,7 @@ public class LineariseTest {
         AldorLexerAdapter lla = AldorLexerAdapter.createAndStart("#pile");
         Linearise lineariser = new Linearise();
         List<Linearise.PiledSection> pp = lineariser.scanForPiledSections(lla);
-        assertTrue(pp.isEmpty());
+        Assert.assertTrue(pp.isEmpty());
     }
 
     @Test
@@ -85,7 +83,7 @@ public class LineariseTest {
         AldorLexerAdapter lla = AldorLexerAdapter.createAndStart("#pile\n#endpile\n");
         Linearise lineariser = new Linearise();
         List<Linearise.PiledSection> pp = lineariser.scanForPiledSections(lla);
-        assertTrue(pp.isEmpty());
+        Assert.assertTrue(pp.isEmpty());
     }
 
 }

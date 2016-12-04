@@ -9,6 +9,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import org.jetbrains.annotations.NotNull;
+import org.junit.Assert;
 
 import static aldor.psi.AldorPsiUtils.logPsi;
 
@@ -18,8 +19,8 @@ public class AldorPsiUtilsTest extends LightPlatformCodeInsightFixtureTestCase {
         PsiFile file = createLightFile(AldorFileType.INSTANCE, "A: B == C");
 
         AldorDefine definition = PsiTreeUtil.findChildOfType(file, AldorDefine.class);
-        assertTrue(definition != null);
-        assertTrue(AldorPsiUtils.isTopLevel(definition.getParent()));
+        Assert.assertNotNull(definition);
+        Assert.assertTrue(AldorPsiUtils.isTopLevel(definition.getParent()));
     }
 
     public void testIsTopLevelWithWhere() throws Exception {
@@ -27,21 +28,21 @@ public class AldorPsiUtilsTest extends LightPlatformCodeInsightFixtureTestCase {
         PsiFile file = createLightFile(AldorFileType.INSTANCE, text);
 logPsi(file);
         AldorDefine definition = PsiTreeUtil.findChildOfType(file, AldorDefine.class);
-        assertTrue(definition != null);
-        assertTrue(AldorPsiUtils.isTopLevel(definition.getParent()));
+        Assert.assertNotNull(definition);
+        Assert.assertTrue(AldorPsiUtils.isTopLevel(definition.getParent()));
 
         PsiElement elt = file.findElementAt(text.indexOf("inner"));
         while (!(elt instanceof AldorDefine)) {
-            assertNotNull(elt);
+            Assert.assertNotNull(elt);
             elt = elt.getParent();
         }
-        assertFalse(AldorPsiUtils.isTopLevel(elt.getParent()));
+        Assert.assertFalse(AldorPsiUtils.isTopLevel(elt.getParent()));
         PsiElement elt2 = file.findElementAt(text.indexOf("inner"));
         while (!(elt2 instanceof AldorDefine)) {
-            assertNotNull(elt2);
+            Assert.assertNotNull(elt2);
             elt2 = elt2.getParent();
         }
-        assertFalse(AldorPsiUtils.isTopLevel(elt2.getParent()));
+        Assert.assertFalse(AldorPsiUtils.isTopLevel(elt2.getParent()));
     }
 
 

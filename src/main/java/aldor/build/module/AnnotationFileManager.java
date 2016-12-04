@@ -6,9 +6,9 @@ import aldor.symbolfile.AnnotationFile;
 import aldor.symbolfile.MissingAnnotationFile;
 import aldor.symbolfile.PopulatedAnnotationFile;
 import aldor.symbolfile.SrcPos;
-import aldor.util.SExpression;
-import aldor.util.SymbolPolicy;
-import aldor.util.sexpr.SExpressionReadException;
+import aldor.util.sexpr.SExpression;
+import aldor.util.sexpr.SymbolPolicy;
+import aldor.util.sexpr.impl.SExpressionReadException;
 import com.google.common.collect.Maps;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
@@ -43,7 +43,9 @@ public class AnnotationFileManager implements Disposable {
     private static final Logger LOG = Logger.getInstance(AnnotationFileManager.class);
 
     private static final Key<AnnotationFileManager> MGR_KEY = new Key<>("AnnotationFileManager");
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection") // TODO: Need to track these, and use them
     private final Set<String> dirtyFiles;
+    @SuppressWarnings("unused")
     private final Set<String> updatingFiles;
     private final Map<String, AnnotationFile> annotationFileForFile;
     private final Map<String, LineNumberMap> lineNumberMapForFile;

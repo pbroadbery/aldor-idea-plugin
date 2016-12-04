@@ -10,6 +10,7 @@ import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import com.intellij.util.indexing.FileBasedIndex;
 import org.jetbrains.annotations.NotNull;
+import org.junit.Assert;
 
 import java.util.Collection;
 
@@ -22,13 +23,13 @@ public class ExpressionFileTest extends LightPlatformCodeInsightFixtureTestCase 
         Project project = getProject();
 
         VirtualFile file = createFile(getSourceRoot(), "foo2.expr", "a == b; c == d");
-        assertTrue(FileIndexFacade.getInstance(project).isInSource(file));
-        assertFalse(FileIndexFacade.getInstance(project).isExcludedFile(file));
+        Assert.assertTrue(FileIndexFacade.getInstance(project).isInSource(file));
+        Assert.assertFalse(FileIndexFacade.getInstance(project).isExcludedFile(file));
 
         FileBasedIndex.getInstance().ensureUpToDate(StubUpdatingIndex.INDEX_ID, project, null);
 
         Collection<String> ll = ExpressionDefineStubIndex.instance.getAllKeys(project);
-        assertEquals(2, ll.size());
+        Assert.assertEquals(2, ll.size());
     }
 
     @Override

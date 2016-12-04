@@ -14,13 +14,12 @@ import static aldor.make.CompileOutputParser.State.ErrorBody;
 import static aldor.make.CompileOutputParser.State.ErrorLocations;
 import static aldor.make.CompileOutputParser.State.NoError;
 import static java.util.regex.Pattern.compile;
-import static org.jetbrains.jps.incremental.messages.BuildMessage.Kind.*;
 
 public class CompileOutputParser {
     private static final Pattern firstLine = compile("\"([^\"]*)\", line (\\d+): $");
     private static final int     firstLine_grp_1_file = 1;
     private static final int     firstLine_grp_2_file = 2;
-    private static final Pattern locatorLine = compile("^\\[L(\\d+) C(\\d+)\\] #(\\d+) \\((\\w+)\\) (.*)$");
+    private static final Pattern locatorLine = compile("^\\[L(\\d+) C(\\d+)] #(\\d+) \\((\\w+)\\) (.*)$");
     private static final int     locatorLine_grp_1_line = 1;
     private static final int     locatorLine_grp_2_column = 2;
     private static final int     locatorLine_grp_3_errNo = 3;
@@ -63,6 +62,7 @@ public class CompileOutputParser {
         }
     }
 
+    @SuppressWarnings("SameReturnValue")
     @Nullable
     private CompilerMessage processNoError(CharSequence text) {
         Matcher matcher = firstLine.matcher(text);
@@ -105,17 +105,20 @@ public class CompileOutputParser {
         String messageNumberText = matcher.group(locatorLine_grp_3_errNo);
         String messageKindText = matcher.group(locatorLine_grp_4_kind);
         String errorMessageText = matcher.group(locatorLine_grp_5_msg);
-        BuildMessage.Kind kind = AldorErrorKind.valueOf(messageKindText).buildMessageKind;
+        BuildMessage.Kind kind = AldorErrorKind.valueOf(messageKindText).buildMessageKind();
 
-        File file = new File(baseDirectory, this.file);
+        if (file == null) {
+            return new CompilerMessage(compilerName, kind, errorMessageText);
+        } else {
+            return new CompilerMessage(compilerName,
+                    kind, errorMessageText,
+                    new File(baseDirectory, this.file).getAbsolutePath(),
+                    -1L, -1L, -1L,
+                    Integer.parseInt(lineNumberText),
+                    Integer.parseInt(columnNumberText));
 
-        return new CompilerMessage(compilerName,
-                                    kind, errorMessageText,
-                                    file.getAbsolutePath(), -1L, -1L, -1L,
-                                    Integer.parseInt(lineNumberText),
-                                    Integer.parseInt(columnNumberText));
+        }
     }
-
     public interface Listener {
         void messageReceived(CompilerMessage message);
     }
@@ -123,16 +126,6 @@ public class CompileOutputParser {
     @SuppressWarnings("PackageVisibleInnerClass")
     enum State {
         NoError, ErrorBody, ErrorLocations;
-    }
-
-    enum AldorErrorKind {
-        Error(ERROR), Warning(WARNING), Note(INFO) ;
-
-        private final BuildMessage.Kind buildMessageKind;
-
-        AldorErrorKind(BuildMessage.Kind kind) {
-            this.buildMessageKind = kind;
-        }
     }
 
 

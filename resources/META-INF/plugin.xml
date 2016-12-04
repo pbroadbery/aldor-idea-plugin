@@ -1,8 +1,9 @@
+<!--suppress XmlHighlighting, XmlHighlighting -->
 <idea-plugin version="2">
     <id>pab.aldor</id>
     <name>Aldor Plugin</name>
     <version>1.0</version>
-    <vendor email="notgonnafly@aldor.org" url="http://www.notreally.org">Peter Broadbery</vendor>
+    <vendor email="nobody@example.com" url="http://www.notreally.org">Peter Broadbery</vendor>
 
     <description><![CDATA[
       Aldor/Spad plugin.

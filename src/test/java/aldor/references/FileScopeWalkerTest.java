@@ -2,9 +2,9 @@ package aldor.references;
 
 import aldor.build.module.AldorModuleType;
 import aldor.psi.AldorId;
-import aldor.util.SExpression;
-import aldor.util.SymbolPolicy;
 import aldor.util.VirtualFileTests;
+import aldor.util.sexpr.SExpression;
+import aldor.util.sexpr.SymbolPolicy;
 import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
@@ -13,6 +13,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import org.jetbrains.annotations.NotNull;
+import org.junit.Assert;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -26,9 +27,9 @@ import static aldor.symbolfile.AnnotationFileTests.type;
 import static aldor.symbolfile.AnnotationFileTests.typeCode;
 import static aldor.symbolfile.SymbolFileSymbols.Exporter;
 import static aldor.symbolfile.SymbolFileSymbols.Id;
-import static aldor.util.SExpressions.list;
 import static aldor.util.VirtualFileTests.createChildDirectory;
 import static aldor.util.VirtualFileTests.createFile;
+import static aldor.util.sexpr.SExpressions.list;
 
 @SuppressWarnings("MagicNumber")
 public class FileScopeWalkerTest extends LightPlatformCodeInsightFixtureTestCase {
@@ -39,7 +40,6 @@ public class FileScopeWalkerTest extends LightPlatformCodeInsightFixtureTestCase
         //JUnits.setLogToDebug();
     }
 
-    @SuppressWarnings("UnusedAssignment")
     public void testFileReference() throws IOException {
         VirtualFile root = VirtualFileTests.getProjectRoot(getProject());
         VirtualFile srcDir = createChildDirectory(root, "src");
@@ -56,8 +56,8 @@ public class FileScopeWalkerTest extends LightPlatformCodeInsightFixtureTestCase
 
         PsiElement ref = FileScopeWalker.lookupBySymbolFile(ids.iterator().next());
 
-        assertNotNull(ref);
-        assertEquals(defFile.getPath(), ref.getContainingFile().getVirtualFile().getPath());
+        Assert.assertNotNull(ref);
+        Assert.assertEquals(defFile.getPath(), ref.getContainingFile().getVirtualFile().getPath());
     }
 
     SExpression createDefAnnotation() {
@@ -93,7 +93,6 @@ public class FileScopeWalkerTest extends LightPlatformCodeInsightFixtureTestCase
     }
 
 
-    @SuppressWarnings("UnusedAssignment")
     public void testTopLevelReference() throws IOException {
         VirtualFile root = VirtualFileTests.getProjectRoot(getProject());
         VirtualFile srcDir = createChildDirectory(root, "src");
@@ -112,10 +111,10 @@ public class FileScopeWalkerTest extends LightPlatformCodeInsightFixtureTestCase
 
         PsiElement theDomain = FileScopeWalker.lookupBySymbolFile(theDomainId);
         PsiElement theFunction = FileScopeWalker.lookupBySymbolFile(theFunctionId);
-        assertNotNull(theDomain);
-        assertEquals(defFile.getPath(), theDomain.getContainingFile().getVirtualFile().getPath());
-        assertNotNull(theFunction);
-        assertEquals(defFile.getPath(), theFunction.getContainingFile().getVirtualFile().getPath());
+        Assert.assertNotNull(theDomain);
+        Assert.assertEquals(defFile.getPath(), theDomain.getContainingFile().getVirtualFile().getPath());
+        Assert.assertNotNull(theFunction);
+        Assert.assertEquals(defFile.getPath(), theFunction.getContainingFile().getVirtualFile().getPath());
     }
 
     SExpression createTopLevelDefAnnotation() {

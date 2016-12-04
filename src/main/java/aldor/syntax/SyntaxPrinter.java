@@ -141,7 +141,6 @@ public final class SyntaxPrinter {
     }
 
     boolean isBracket(Syntax operator) {
-        //noinspection ConstantConditions
         return operator.is(Id.class) && "bracket".equals(operator.as(Id.class).symbol());
     }
 

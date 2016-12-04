@@ -1,6 +1,6 @@
 package aldor.symbolfile;
 
-import aldor.util.SExpression;
+import aldor.util.sexpr.SExpression;
 
 import static aldor.symbolfile.SymbolFileSymbols.Lib;
 import static aldor.symbolfile.SymbolFileSymbols.Name;
@@ -10,11 +10,11 @@ import static aldor.symbolfile.SymbolFileSymbols.SrcPos;
 import static aldor.symbolfile.SymbolFileSymbols.Syme;
 import static aldor.symbolfile.SymbolFileSymbols.Type;
 import static aldor.symbolfile.SymbolFileSymbols.TypeCode;
-import static aldor.util.SExpression.cons;
-import static aldor.util.SExpression.integer;
-import static aldor.util.SExpression.string;
-import static aldor.util.SExpression.symbol;
-import static aldor.util.SExpressions.list;
+import static aldor.util.sexpr.SExpression.cons;
+import static aldor.util.sexpr.SExpression.integer;
+import static aldor.util.sexpr.SExpression.string;
+import static aldor.util.sexpr.SExpression.symbol;
+import static aldor.util.sexpr.SExpressions.list;
 
 public final class AnnotationFileTests {
 

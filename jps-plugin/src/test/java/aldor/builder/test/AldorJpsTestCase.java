@@ -160,7 +160,7 @@ public abstract class AldorJpsTestCase extends UsefulTestCase {
      * Called as a build is starting
      * @param descriptor The project
      */
-    @SuppressWarnings({"EmptyMethod", "UnusedParameters"})
+    @SuppressWarnings({"EmptyMethod"})
     protected void beforeBuildStarted(@NotNull ProjectDescriptor descriptor) {
     }
 
@@ -246,7 +246,7 @@ public abstract class AldorJpsTestCase extends UsefulTestCase {
                     //Mac OS and some versions of Linux truncates timestamp to nearest second
                     setLastModified(file, time + 1000);
                     newTimeStamp = FileSystemUtil.lastModified(file);
-                    assertTrue("Failed to change timestamp for " + file.getAbsolutePath(), newTimeStamp > oldTimestamp);
+                    Assert.assertTrue("Failed to change timestamp for " + file.getAbsolutePath(), newTimeStamp > oldTimestamp);
                 }
                 sleepUntil(newTimeStamp);
             }
@@ -266,7 +266,7 @@ public abstract class AldorJpsTestCase extends UsefulTestCase {
 
     private static void setLastModified(File file, long time) {
         boolean updated = file.setLastModified(time);
-        assertTrue("Cannot modify timestamp for " + file.getAbsolutePath(), updated);
+        Assert.assertTrue("Cannot modify timestamp for " + file.getAbsolutePath(), updated);
     }
 
 

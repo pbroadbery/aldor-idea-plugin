@@ -1,8 +1,8 @@
-package aldor.util.sexpr;
+package aldor.util.sexpr.impl;
 
-import aldor.util.SExpression;
-import aldor.util.SxType;
-import aldor.util.SymbolPolicy;
+import aldor.util.sexpr.SExpression;
+import aldor.util.sexpr.SxType;
+import aldor.util.sexpr.SymbolPolicy;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;

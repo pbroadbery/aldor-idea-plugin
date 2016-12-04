@@ -62,11 +62,7 @@ public final class CompileScopeTestBuilder {
     }
 
     public CompileScopeTestBuilder file(BuildTarget<?> target, String path) {
-        Set<File> files = myFiles.get(target);
-        if (files == null) {
-            files = new THashSet<>(FileUtil.FILE_HASHING_STRATEGY);
-            myFiles.put(target, files);
-        }
+        Set<File> files = myFiles.computeIfAbsent(target, k -> new THashSet<>(FileUtil.FILE_HASHING_STRATEGY));
         files.add(new File(path));
         return this;
     }

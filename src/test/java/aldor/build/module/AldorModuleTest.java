@@ -14,6 +14,7 @@ import com.intellij.testFramework.fixtures.TestFixtureBuilder;
 import com.intellij.testFramework.fixtures.impl.ModuleFixtureBuilderImpl;
 import com.intellij.testFramework.fixtures.impl.ModuleFixtureImpl;
 import com.intellij.testFramework.fixtures.impl.TempDirTestFixtureImpl;
+import org.junit.Assert;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -42,31 +43,31 @@ public class AldorModuleTest extends UsefulTestCase {
     public void testModule() throws IOException {
 
         AldorModuleManager manager = AldorModuleManager.getInstance(project);
-        assertNotNull(manager);
+        Assert.assertNotNull(manager);
 
-        assertEquals(1, manager.aldorModules().size());
+        Assert.assertEquals(1, manager.aldorModules().size());
 
         Module module = manager.aldorModules().iterator().next();
 
         VirtualFile[] roots = ModuleRootManager.getInstance(module).getContentRoots();
 
-        assertEquals(1, roots.length);
+        Assert.assertEquals(1, roots.length);
         @SuppressWarnings({"unused", "UnusedAssignment"})
         VirtualFile configure_ac = createFile("root/aldor/configure.ac", "");
         VirtualFile foo_as = createFile("root/aldor/src/foo.as", "");
         createFile("root/build", "");
 
         Optional<Module> someModule = manager.aldorModuleForFile(foo_as);
-        assertTrue(someModule.isPresent());
-        assertSame(module, someModule.get());
+        Assert.assertTrue(someModule.isPresent());
+        Assert.assertSame(module, someModule.get());
 
         VirtualFile root = ProjectRootManager.getInstance(project).getFileIndex().getContentRootForFile(foo_as);
-        assertNotNull(root);
+        Assert.assertNotNull(root);
         String path = manager.buildPathForFile(foo_as);
-        assertEquals(root.getPath() + "/build/src", path);
+        Assert.assertEquals(root.getPath() + "/build/src", path);
 
         String annotationFile = manager.annotationFileForSourceFile(foo_as);
-        assertEquals(root.getPath() + "/build/src/foo.abn", annotationFile);
+        Assert.assertEquals(root.getPath() + "/build/src/foo.abn", annotationFile);
     }
 
     private VirtualFile createFile(String path, String text) throws IOException {

@@ -2,7 +2,7 @@ package aldor.symbolfile;
 
 import aldor.syntax.Syntax;
 import aldor.syntax.components.Other;
-import aldor.util.SExpression;
+import aldor.util.sexpr.SExpression;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

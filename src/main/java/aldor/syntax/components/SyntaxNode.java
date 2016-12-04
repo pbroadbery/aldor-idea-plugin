@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Standard-ish abstract class for syntax.
@@ -20,7 +21,7 @@ public abstract class SyntaxNode<SyntaxPsiElement extends PsiElement> extends Sy
     protected SyntaxNode(SyntaxPsiElement element, List<Syntax> arguments) {
         this.representation = SyntaxRepresentation.create(element);
         this.arguments = new ArrayList<>(arguments);
-        if (arguments.stream().filter(x->x == null).findAny().isPresent()) {
+        if (arguments.stream().anyMatch(Objects::isNull)) {
             throw new IllegalArgumentException("Found a null: " + arguments);
         }
     }

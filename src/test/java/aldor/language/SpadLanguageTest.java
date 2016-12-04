@@ -5,6 +5,7 @@ import aldor.parser.ParserFunctions;
 import com.intellij.psi.PsiFile;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
+import org.junit.Assert;
 
 import static aldor.psi.AldorPsiUtils.logPsi;
 
@@ -17,7 +18,7 @@ public class SpadLanguageTest extends LightPlatformCodeInsightFixtureTestCase {
                 "Bb: Category == C\n");
         logPsi(file);
 
-        assertEquals(0, ParserFunctions.getPsiErrorElements(file).size());
+        Assert.assertEquals(0, ParserFunctions.getPsiErrorElements(file).size());
     }
 
 

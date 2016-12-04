@@ -10,6 +10,7 @@ import com.intellij.psi.PsiReference;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
+import org.junit.Assert;
 
 import static aldor.psi.AldorPsiUtils.logPsi;
 
@@ -20,10 +21,10 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
         PsiElement whole = createAldorFile("f(n: Integer): Integer == n+1");
         PsiElement theRhs = PsiTreeUtil.findChildOfType(whole, AldorE6.class);
         AldorIdentifier theRhsN = PsiTreeUtil.findChildOfType(theRhs, AldorIdentifier.class);
-        assertNotNull(theRhsN);
-        assertNotNull(theRhsN.getReference());
+        Assert.assertNotNull(theRhsN);
+        Assert.assertNotNull(theRhsN.getReference());
         PsiElement ref = theRhsN.getReference().resolve();
-        assertNotNull(ref);
+        Assert.assertNotNull(ref);
     }
 
     public void testLookupSingleArg() {
@@ -31,30 +32,30 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
         PsiFile file = createAldorFile(text);
 
         PsiReference ref = file.findReferenceAt(text.indexOf("n+1"));
-        assertNotNull(ref);
+        Assert.assertNotNull(ref);
         PsiElement resolved = ref.resolve();
-        assertNotNull(resolved);
-        assertEquals(text.indexOf("n:"), resolved.getTextOffset());
+        Assert.assertNotNull(resolved);
+        Assert.assertEquals(text.indexOf("n:"), resolved.getTextOffset());
     }
 
     public void testLookupLocal() {
         String text = "local f(n: Integer): Integer == n+1";
         PsiFile file = createAldorFile(text);
         PsiReference ref = file.findReferenceAt(text.indexOf("n+1"));
-        assertNotNull(ref);
+        Assert.assertNotNull(ref);
         PsiElement resolved = ref.resolve();
-        assertNotNull(resolved);
-        assertEquals(text.indexOf("n:"), resolved.getTextOffset());
+        Assert.assertNotNull(resolved);
+        Assert.assertEquals(text.indexOf("n:"), resolved.getTextOffset());
     }
 
     public void testLookupDefine() {
         String text = "define f(n: Integer): Integer == n+1";
         PsiFile file = createAldorFile(text);
         PsiReference ref = file.findReferenceAt(text.indexOf("n+1"));
-        assertNotNull(ref);
+        Assert.assertNotNull(ref);
         PsiElement resolved = ref.resolve();
-        assertNotNull(resolved);
-        assertEquals(text.indexOf("n:"), resolved.getTextOffset());
+        Assert.assertNotNull(resolved);
+        Assert.assertEquals(text.indexOf("n:"), resolved.getTextOffset());
     }
 
     public void testLookupMultiArg() {
@@ -62,10 +63,10 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
         PsiFile file = createAldorFile(text);
 
         PsiReference ref = file.findReferenceAt(text.indexOf("n+m"));
-        assertNotNull(ref);
+        Assert.assertNotNull(ref);
         PsiElement resolved = ref.resolve();
-        assertNotNull(resolved);
-        assertEquals(text.indexOf("n:"), resolved.getTextOffset());
+        Assert.assertNotNull(resolved);
+        Assert.assertEquals(text.indexOf("n:"), resolved.getTextOffset());
     }
 
     public void testLookupNegationDefinition() {
@@ -73,10 +74,10 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
         PsiFile file = createAldorFile(text);
 
         PsiReference ref = file.findReferenceAt(text.lastIndexOf('x'));
-        assertNotNull(ref);
+        Assert.assertNotNull(ref);
         PsiElement resolved = ref.resolve();
-        assertNotNull(resolved);
-        assertEquals(text.indexOf('x'), resolved.getTextOffset());
+        Assert.assertNotNull(resolved);
+        Assert.assertEquals(text.indexOf('x'), resolved.getTextOffset());
     }
 
 
@@ -84,10 +85,10 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
         String text = "(+)(n: Integer, m: Integer): Integer == n+m";
         PsiFile file = createAldorFile(text);
         PsiReference ref = file.findReferenceAt(text.indexOf("n+m"));
-        assertNotNull(ref);
+        Assert.assertNotNull(ref);
         PsiElement resolved = ref.resolve();
-        assertNotNull(resolved);
-        assertEquals(text.indexOf("n:"), resolved.getTextOffset());
+        Assert.assertNotNull(resolved);
+        Assert.assertEquals(text.indexOf("n:"), resolved.getTextOffset());
     }
 
 
@@ -97,9 +98,9 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
         PsiFile file = createAldorFile(text);
 
         PsiReference ref = file.findReferenceAt(text.indexOf("foo"));
-        assertNotNull(ref);
+        Assert.assertNotNull(ref);
         PsiElement resolved = ref.resolve();
-        assertNull(resolved);
+        Assert.assertNull(resolved);
     }
 
 
@@ -107,11 +108,11 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
         String text = "(n: Integer) + (m: Integer): Integer == n+m";
         PsiFile file = createAldorFile(text);
         PsiReference ref = file.findReferenceAt(text.indexOf("n+m"));
-        assertNotNull(ref);
+        Assert.assertNotNull(ref);
         PsiElement resolved = ref.resolve();
 
-        assertNotNull(resolved);
-        assertEquals(text.indexOf("n:"), resolved.getTextOffset());
+        Assert.assertNotNull(resolved);
+        Assert.assertEquals(text.indexOf("n:"), resolved.getTextOffset());
     }
 
     public void testLookupCurriedArg() {
@@ -119,26 +120,26 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
         PsiFile file = createAldorFile(text);
 
         PsiReference refN = file.findReferenceAt(text.indexOf("n+m"));
-        assertNotNull(refN);
+        Assert.assertNotNull(refN);
         PsiElement resolved = refN.resolve();
-        assertNotNull(resolved);
-        assertEquals(text.indexOf("n:"), resolved.getTextOffset());
+        Assert.assertNotNull(resolved);
+        Assert.assertEquals(text.indexOf("n:"), resolved.getTextOffset());
 
         PsiReference refM = file.findReferenceAt(text.indexOf("m+1"));
-        assertNotNull(refM);
+        Assert.assertNotNull(refM);
         resolved = refM.resolve();
-        assertNotNull(resolved);
-        assertEquals(text.indexOf("m:"), resolved.getTextOffset());
+        Assert.assertNotNull(resolved);
+        Assert.assertEquals(text.indexOf("m:"), resolved.getTextOffset());
     }
 
     public void testLookupForVar() {
         String text = "for x in 1..10 repeat foo(x)";
         PsiFile file = createAldorFile(text);
         PsiReference ref = file.findReferenceAt(text.indexOf("x)"));
-        assertNotNull(ref);
+        Assert.assertNotNull(ref);
         PsiElement resolved = ref.resolve();
-        assertNotNull(resolved);
-        assertEquals(text.indexOf("x in"), resolved.getTextOffset());
+        Assert.assertNotNull(resolved);
+        Assert.assertEquals(text.indexOf("x in"), resolved.getTextOffset());
     }
 
     public void testLookupCollectionVar() {
@@ -146,10 +147,10 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
         PsiFile file = createAldorFile(text);
 
         PsiReference ref = file.findReferenceAt(text.indexOf('x')); // First index in this case
-        assertNotNull(ref);
+        Assert.assertNotNull(ref);
         PsiElement resolved = ref.resolve();
-        assertNotNull(resolved);
-        assertEquals(text.indexOf("x in"), resolved.getTextOffset());
+        Assert.assertNotNull(resolved);
+        Assert.assertEquals(text.indexOf("x in"), resolved.getTextOffset());
     }
 
 
@@ -159,10 +160,10 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
 
         PsiReference ref = file.findReferenceAt(text.indexOf("x}"));
         logPsi(file);
-        assertNotNull(ref);
+        Assert.assertNotNull(ref);
         PsiElement resolved = ref.resolve();
-        assertNotNull(resolved);
-        assertEquals(text.indexOf("x :="), resolved.getTextOffset());
+        Assert.assertNotNull(resolved);
+        Assert.assertEquals(text.indexOf("x :="), resolved.getTextOffset());
     }
 
 

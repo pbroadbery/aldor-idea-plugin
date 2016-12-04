@@ -26,8 +26,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
-@SuppressWarnings({"StubBasedPsiElementBaseGetParent"})
-
 public class AldorDefineMixin extends StubBasedPsiElementBase<AldorDefine.AldorDefineStub> implements AldorDefine {
     private static final Logger LOG = Logger.getInstance(AldorDefineMixin.class);
     private static final Key<Optional<Syntax>> cachedLhsSyntax = new Key<>("LhsSyntax");

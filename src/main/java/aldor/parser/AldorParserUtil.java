@@ -34,7 +34,7 @@ public class AldorParserUtil extends GeneratedParserUtilBase {
     // Return true if last token was a close brace, or looking at a semicolon
     // Used to determine if there is a logical semicolon - ie. statement terminator
     // at the current position.
-    @SuppressWarnings({"ObjectEquality", "UnusedParameters"})
+    @SuppressWarnings({"ObjectEquality"})
     public static boolean semicolonOrCloseBraceNearby(@NotNull PsiBuilder builder, int level) {
         if (consumeToken(builder, KW_Semicolon)) {
             return true;
@@ -67,7 +67,6 @@ public class AldorParserUtil extends GeneratedParserUtilBase {
         return elt;
     }
 
-    @SuppressWarnings("UnusedParameters")
     public static boolean noRepeatHere(@NotNull PsiBuilder builder, int level) {
         if (Objects.equals(builder.getTokenType(), KW_Repeat)) {
             return false;
@@ -75,7 +74,6 @@ public class AldorParserUtil extends GeneratedParserUtilBase {
         return true;
     }
 
-    @SuppressWarnings("UnusedParameters")
     public static boolean backSet(@NotNull PsiBuilder builder, int level) {
         if (consumeToken(builder, KW_BlkNext)) {
             return true;
@@ -84,7 +82,7 @@ public class AldorParserUtil extends GeneratedParserUtilBase {
     }
 
 
-    @SuppressWarnings({"SameReturnValue", "UnusedParameters"})
+    @SuppressWarnings({"SameReturnValue"})
     static boolean spadAnySym(@NotNull PsiBuilder builder, int level) {
         builder.advanceLexer();
         return true;
@@ -106,7 +104,6 @@ public class AldorParserUtil extends GeneratedParserUtilBase {
         return r;
     }
 */
-    @SuppressWarnings("UnusedParameters")
     public static boolean blockEnd(@NotNull PsiBuilder builder, int l) {
         boolean r = consumeToken(builder, KW_BlkEnd);
         if (!r) {

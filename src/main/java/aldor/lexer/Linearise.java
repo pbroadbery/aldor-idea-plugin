@@ -160,7 +160,6 @@ public class Linearise {
      *  language keyword, e.g.  "return", "then", "else", etc.
      *  (Note, this does not include user-definable operators such as "quo".)
      */
-    @SuppressWarnings("UnusedParameters")
     private static boolean isPileRequired(SrcLine lastLine, SrcLine thisLine) {
         if (lastLine.isBlank()) {
             return false;
@@ -495,7 +494,8 @@ public class Linearise {
                 else if (line.isPreDocument() && (lastLine != null) && lastLine.isPreDocument()) {
                     lastLine.joinWhitespaceTokens(line);
                 }
-                else if (line.isBlank() && (lastLine == null)) {
+                else //noinspection StatementWithEmptyBody
+                    if (line.isBlank() && (lastLine == null)) {
                     //System.out.println("Skipping " + line);
                 }
                 else if (lastLine == null) {
