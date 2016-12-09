@@ -41,8 +41,6 @@ public class AldorFileTargetBuilder extends TargetBuilder<AldorFileRootDescripto
     public void build(@NotNull final AldorFileBuildTargetType.AldorFileBuildTarget target,
                       final DirtyFilesHolder<AldorFileRootDescriptor, AldorFileBuildTargetType.AldorFileBuildTarget> holder,
                       @NotNull final BuildOutputConsumer outputConsumer, @NotNull final CompileContext context) throws ProjectBuildException, IOException {
-        assert outputConsumer != null;
-        assert target != null;
         LOG.info("Building " + target + " " + holder.hasDirtyFiles());
 
         Compiler compiler = new FullCompiler(holder, outputConsumer, context);

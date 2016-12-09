@@ -1,8 +1,8 @@
 package aldor.editor;
 
 import aldor.parser.NavigatorFactory;
-import aldor.psi.AldorDefineStubbing.AldorDefine;
-import aldor.psi.index.AldorDefineTopLevelIndex;
+import aldor.psi.SpadAbbrevStubbing;
+import aldor.psi.index.AbbrevAbbrevIndex;
 import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.project.Project;
@@ -13,25 +13,23 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-public class AldorGotoClassContributor implements ChooseByNameContributor {
+public class SpadGotoClassContributor implements ChooseByNameContributor {
 
     @NotNull
     @Override
     public String[] getNames(Project project, boolean nonProjectItems) {
-        Collection<String> keys = AldorDefineTopLevelIndex.instance.getAllKeys(project);
+        Collection<String> keys = AbbrevAbbrevIndex.instance.getAllKeys(project);
         return keys.toArray(ArrayUtil.EMPTY_STRING_ARRAY);
     }
 
     @NotNull
     @Override
     public NavigationItem[] getItemsByName(String name, String pattern, Project project, boolean nonProjectItems) {
-        Collection<AldorDefine> items = AldorDefineTopLevelIndex.instance.get(name, project, GlobalSearchScope.allScope(project));
+        Collection<SpadAbbrevStubbing.SpadAbbrev> items = AbbrevAbbrevIndex.instance.get(name, project, GlobalSearchScope.allScope(project));
         List<NavigationItem> collect = items.stream()
-                .map(AldorDefine::defineIdentifier)
-                .map(identMaybe-> identMaybe.map(ident2 -> NavigatorFactory.get(project).getNavigationItem(ident2)))
-                .flatMap(identMaybe -> identMaybe.map(Stream::of).orElse(Stream.empty()))
+                .filter(abbrev -> !abbrev.abbrevInfo().isError())
+                .map(abbrev -> NavigatorFactory.get(project).getNavigationItem(abbrev))
                 .collect(Collectors.toList());
         return collect.toArray(NavigationItem.EMPTY_NAVIGATION_ITEM_ARRAY);
 

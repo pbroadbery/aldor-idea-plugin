@@ -52,13 +52,14 @@ public class AldorModuleTest extends UsefulTestCase {
         VirtualFile[] roots = ModuleRootManager.getInstance(module).getContentRoots();
 
         Assert.assertEquals(1, roots.length);
-        @SuppressWarnings({"unused", "UnusedAssignment"})
+        //@SuppressWarnings({"UnusedAssignment"})
         VirtualFile configure_ac = createFile("root/aldor/configure.ac", "");
         VirtualFile foo_as = createFile("root/aldor/src/foo.as", "");
         createFile("root/build", "");
 
         Optional<Module> someModule = manager.aldorModuleForFile(foo_as);
         Assert.assertTrue(someModule.isPresent());
+        //noinspection OptionalGetWithoutIsPresent
         Assert.assertSame(module, someModule.get());
 
         VirtualFile root = ProjectRootManager.getInstance(project).getFileIndex().getContentRootForFile(foo_as);

@@ -1,7 +1,8 @@
 package aldor.psi.impl;
 
 import aldor.psi.AldorAssign;
-import aldor.psi.AldorDefine;
+import aldor.psi.AldorDefineStubbing.AldorDefine;
+import aldor.psi.AldorDefineStubbing.AldorDefineStub;
 import aldor.psi.AldorIdentifier;
 import aldor.psi.AldorPsiUtils;
 import aldor.psi.AldorRecursiveVisitor;
@@ -26,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
-public class AldorDefineMixin extends StubBasedPsiElementBase<AldorDefine.AldorDefineStub> implements AldorDefine {
+public class AldorDefineMixin extends StubBasedPsiElementBase<AldorDefineStub> implements AldorDefine {
     private static final Logger LOG = Logger.getInstance(AldorDefineMixin.class);
     private static final Key<Optional<Syntax>> cachedLhsSyntax = new Key<>("LhsSyntax");
 
@@ -128,7 +129,7 @@ public class AldorDefineMixin extends StubBasedPsiElementBase<AldorDefine.AldorD
     }
 
 
-    public static class AldorDefineConcreteStub extends StubBase<AldorDefine> implements AldorDefine.AldorDefineStub {
+    public static class AldorDefineConcreteStub extends StubBase<AldorDefine> implements AldorDefineStub {
         private final Syntax syntax;
         private final String defineId;
         private final AldorDefineInfo defineInfo;
@@ -143,7 +144,7 @@ public class AldorDefineMixin extends StubBasedPsiElementBase<AldorDefine.AldorD
         }
 
         @Override
-        public AldorDefine createPsi(IStubElementType<AldorDefine.AldorDefineStub, AldorDefine> elementType) {
+        public AldorDefine createPsi(IStubElementType<AldorDefineStub, AldorDefine> elementType) {
             return new AldorDefineMixin(this, elementType);
         }
 

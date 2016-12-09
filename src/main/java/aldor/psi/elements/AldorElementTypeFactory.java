@@ -16,7 +16,8 @@ import java.util.Map;
  */
 public class AldorElementTypeFactory {
     private static final AldorStubFactory stubFactory = new AldorStubFactoryImpl();
-    public static final AldorDefineElementType DEFINE_ELEMENT_TYPE = new AldorDefineElementType(stubFactory);
+    public static final IElementType DEFINE_ELEMENT_TYPE = new AldorDefineElementType(stubFactory);
+    public static final IElementType SPAD_ABBREV_ELEMENT_TYPE = new SpadAbbrevElementType(stubFactory);
     public static final FileStubElementType ALDOR_FILE_ELEMENT_TYPE = new FileStubElementType(AldorLanguage.INSTANCE);
     public static final FileStubElementType SPAD_FILE_ELEMENT_TYPE = new FileStubElementType(SpadLanguage.INSTANCE);
     private static final AldorElementTypeFactory instance = new AldorElementTypeFactory();
@@ -25,6 +26,7 @@ public class AldorElementTypeFactory {
 
     AldorElementTypeFactory() {
         factoryForName.put(".*_DEFINE", DEFINE_ELEMENT_TYPE);
+        factoryForName.put("SPAD_ABBREV", SPAD_ABBREV_ELEMENT_TYPE);
         factoryForName.put("ALDOR_FILE", ALDOR_FILE_ELEMENT_TYPE);
         factoryForName.put("SPAD_FILE", SPAD_FILE_ELEMENT_TYPE);
     }

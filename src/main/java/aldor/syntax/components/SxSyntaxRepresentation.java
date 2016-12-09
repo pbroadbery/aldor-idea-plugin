@@ -23,7 +23,7 @@ public class SxSyntaxRepresentation<T extends PsiElement> extends SyntaxRepresen
 
     @Override
     public AldorTokenType tokenType() {
-        return AldorTokenTypes.forText(symbol);
+        return (AldorTokenType) AldorTokenTypes.forText(symbol);
     }
 
     @Override

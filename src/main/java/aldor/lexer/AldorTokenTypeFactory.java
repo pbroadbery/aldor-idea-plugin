@@ -1,7 +1,10 @@
 package aldor.lexer;
 
-public interface AldorTokenTypeFactory {
-    static AldorTokenTypeFactory instance = new AldorTokenTypeFactoryImpl();
+import com.intellij.psi.tree.IElementType;
 
-    public AldorTokenType createToken(String name, AldorTokenAttributes attributes);
+public interface AldorTokenTypeFactory {
+
+    AldorTokenType createTokenType(String name, AldorTokenAttributes attributes);
+
+    IElementType createSysCmdTokenType(String name);
 }

@@ -1,7 +1,6 @@
 package aldor.editor;
 
 import aldor.lexer.AldorLexerAdapter;
-import aldor.lexer.AldorTokenType;
 import aldor.lexer.AldorTokenTypes;
 import com.google.common.collect.Maps;
 import com.intellij.lexer.Lexer;
@@ -20,8 +19,8 @@ public class AldorSyntaxHighlighter extends SyntaxHighlighterBase {
     private final Map<IElementType, TextAttributesKey> aldorHighlightMap = Maps.newHashMap();
 
     AldorSyntaxHighlighter() {
-        for (AldorTokenType tokenType : AldorTokenTypes.all()) {
-            if (tokenType.isLangWord()) {
+        for (IElementType tokenType : AldorTokenTypes.all()) {
+            if (AldorTokenTypes.isLangWord(tokenType)) {
                 aldorHighlightMap.put(tokenType, createTextAttributesKey("KEYWORD", DefaultLanguageHighlighterColors.KEYWORD));
             }
         }

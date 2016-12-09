@@ -1,40 +1,30 @@
 package aldor.psi.elements;
 
-import aldor.psi.AldorDefine;
-import aldor.psi.impl.AldorDefineMixin;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.stubs.StubInputStream;
+import aldor.psi.SpadAbbrevStubbing.SpadAbbrev;
+import aldor.psi.SpadAbbrevStubbing.SpadAbbrevStub;
 
-import java.io.IOException;
+import static aldor.psi.AldorDefineStubbing.AldorDefine;
+import static aldor.psi.AldorDefineStubbing.AldorDefineStub;
 
 /**
  *
  */
 public class AldorStubFactoryImpl implements AldorStubFactory {
-    private static final Logger LOG = Logger.getInstance(AldorStubFactoryImpl.class);
-    private static final IndexCodec<AldorDefineInfo> infoCodec = new AldorDefineInfoIndexCodec();
-
-    @Override
-    public <PsiElt extends PsiElement, StubElt extends StubElement<PsiElt>> StubElt createStub(Class<PsiElt> clss,
-                                                                                               IStubElementType<StubElt, PsiElt> eltType,
-                                                                                               StubInputStream dataStream,
-                                                                                               StubElement<?> parentStub) throws IOException {
-        boolean nonNull = dataStream.readBoolean();
-        String name = nonNull? dataStream.readUTFFast() : null;
-        AldorDefineInfo defineInfo = infoCodec.decode(dataStream);
-        //noinspection unchecked
-        IStubElementType<AldorDefine.AldorDefineStub, AldorDefine> elementType = (IStubElementType<AldorDefine.AldorDefineStub, AldorDefine>) eltType;
-        AldorDefineMixin.AldorDefineConcreteStub stub = new AldorDefineMixin.AldorDefineConcreteStub(parentStub, elementType, name, defineInfo);
-        //noinspection unchecked
-        return (StubElt) stub;
-
-    }
+    private static final PsiStubCodec<AldorDefineStub, AldorDefine> defineCodec = new AldorDefineStubCodec();
+    private static final PsiStubCodec<SpadAbbrevStub, SpadAbbrev> abbrevCodec = new SpadAbbrevStubCodec();
 
     @Override
     public int getVersion() {
-        return 2;
+        return 3;
+    }
+
+    @Override
+    public PsiStubCodec<AldorDefineStub, AldorDefine> defineCodec() {
+        return defineCodec;
+    }
+
+    @Override
+    public PsiStubCodec<SpadAbbrevStub, SpadAbbrev> abbrevCodec() {
+        return abbrevCodec;
     }
 }

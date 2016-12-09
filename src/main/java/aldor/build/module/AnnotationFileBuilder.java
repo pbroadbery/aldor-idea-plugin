@@ -11,7 +11,6 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.psi.PsiFile;
 
 /** Maybe make this an interface */
@@ -39,7 +38,6 @@ public interface AnnotationFileBuilder {
         public void invokeAnnotationBuild(PsiFile psiFile) {
 
             final VirtualFile file = psiFile.getVirtualFile();
-            final VirtualFileSystem vfs = file.getFileSystem();
             final Project project = psiFile.getProject();
             ApplicationManager.getApplication().invokeLater(new Runnable() {
                 @Override

@@ -1,34 +1,43 @@
 package aldor.parser;
 
 import aldor.psi.AldorIdentifier;
+import aldor.psi.SpadAbbrevStubbing;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.project.Project;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public final class NavigatorFactory {
     public static final NavigatorFactory instance = new NavigatorFactory();
+    @Nullable
     private Navigator defaultNavigator;
 
     private NavigatorFactory() {
-        setDefaultNavigator(null);
+        this.defaultNavigator = null;
     }
 
     public static void registerDefaultNavigator(Navigator navigator) {
-        instance.setDefaultNavigator(navigator);
+        //noinspection AccessingNonPublicFieldOfAnotherObject
+        instance.defaultNavigator = navigator;
     }
 
     public static Navigator get(Project project) {
-        return instance.getDefaultNavigator();
+        //noinspection AccessingNonPublicFieldOfAnotherObject
+        return instance.defaultNavigator;
     }
 
+    @NotNull
     public Navigator getDefaultNavigator() {
+        assert defaultNavigator != null;
         return defaultNavigator;
     }
 
-    public void setDefaultNavigator(Navigator defaultNavigator) {
+    public void setDefaultNavigator(@NotNull Navigator defaultNavigator) {
         this.defaultNavigator = defaultNavigator;
     }
 
     public interface Navigator {
+        NavigationItem getNavigationItem(SpadAbbrevStubbing.SpadAbbrev ident);
         NavigationItem getNavigationItem(AldorIdentifier ident);
     }
 }

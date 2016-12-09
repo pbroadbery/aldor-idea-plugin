@@ -8,13 +8,15 @@ import com.intellij.psi.stubs.StubElement;
 
 import java.util.Optional;
 
-public interface AldorDefine extends StubBasedPsiElement<AldorDefine.AldorDefineStub> {
+public final class AldorDefineStubbing {
 
-    AldorDefineStub createStub(IStubElementType<AldorDefineStub, AldorDefine> elementType, StubElement<?> parentStub);
+    public interface AldorDefine extends StubBasedPsiElement<aldor.psi.AldorDefineStubbing.AldorDefineStub> {
+        AldorDefineStub createStub(IStubElementType<AldorDefineStub, AldorDefine> elementType, StubElement<?> parentStub);
+        Optional<AldorIdentifier> defineIdentifier();
+    }
 
-    Optional<AldorIdentifier> defineIdentifier();
 
-    interface AldorDefineStub extends StubElement<AldorDefine> {
+    public interface AldorDefineStub extends StubElement<AldorDefineStubbing.AldorDefine> {
 
         AldorDefine createPsi(IStubElementType<AldorDefineStub, AldorDefine> elementType);
 

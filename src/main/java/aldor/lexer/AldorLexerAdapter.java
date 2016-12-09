@@ -30,7 +30,6 @@ public class AldorLexerAdapter extends FlexAdapter {
         return lexer;
     }
 
-
     @Override
     public void advance() {
         try {

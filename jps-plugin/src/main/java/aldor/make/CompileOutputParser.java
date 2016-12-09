@@ -102,7 +102,7 @@ public class CompileOutputParser {
     private CompilerMessage errorMessageForText(CharSequence text, MatchResult matcher) {
         String lineNumberText = matcher.group(locatorLine_grp_1_line);
         String columnNumberText = matcher.group(locatorLine_grp_2_column);
-        String messageNumberText = matcher.group(locatorLine_grp_3_errNo);
+        //String messageNumberText = matcher.group(locatorLine_grp_3_errNo);
         String messageKindText = matcher.group(locatorLine_grp_4_kind);
         String errorMessageText = matcher.group(locatorLine_grp_5_msg);
         BuildMessage.Kind kind = AldorErrorKind.valueOf(messageKindText).buildMessageKind();
@@ -125,7 +125,7 @@ public class CompileOutputParser {
 
     @SuppressWarnings("PackageVisibleInnerClass")
     enum State {
-        NoError, ErrorBody, ErrorLocations;
+        NoError, ErrorBody, ErrorLocations
     }
 
 

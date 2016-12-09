@@ -1,5 +1,6 @@
 package aldor.psi;
 
+import aldor.psi.AldorDefineStubbing.AldorDefine;
 import com.google.common.base.Strings;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiElement;

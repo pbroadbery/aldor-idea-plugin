@@ -17,9 +17,11 @@ import static aldor.lexer.AldorTokenTypes.KW_Semicolon;
 @SuppressWarnings({"ExtendsUtilityClass", "StaticMethodOnlyUsedInOneClass"})
 public class AldorParserUtil extends GeneratedParserUtilBase {
 
+
     /*
     public static PsiBuilder adapt_builder_(IElementType root, PsiBuilder builder, PsiParser parser, TokenSet[] extendsSets) {
-        return adapted;
+        PsiBuilder stdBuilder = GeneratedParserUtilBase.adapt_builder_(root, builder, parser, extendsSets);
+        return new AldorPsiBuilderAdapter(stdBuilder);
     }
 
     static class AldorPsiBuilderAdapter extends PsiBuilderAdapter {
@@ -28,8 +30,10 @@ public class AldorParserUtil extends GeneratedParserUtilBase {
             super(delegate);
         }
 
+
+
     }
-    */
+*/
 
     // Return true if last token was a close brace, or looking at a semicolon
     // Used to determine if there is a logical semicolon - ie. statement terminator

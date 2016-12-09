@@ -19,6 +19,7 @@ import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 
+// ToDo: Split into "Aldor"-specific and "spad-like-language" parts
 public class AldorParserDefinition implements ParserDefinition {
     private static final TokenSet STRING_LITERALS = TokenSet.create(AldorTokenTypes.TK_String);
     private static final TokenSet COMMENT_TOKENS = TokenSet.create(AldorTokenTypes.TK_Comment);
@@ -26,7 +27,8 @@ public class AldorParserDefinition implements ParserDefinition {
                                                                 AldorTokenTypes.TK_Comment,
                                                                 AldorTokenTypes.TK_SysCmdIf, AldorTokenTypes.TK_SysCmdEndIf,
                                                                 AldorTokenTypes.TK_IfLine,
-                                                                AldorTokenTypes.KW_Indent, AldorTokenTypes.TK_SysCmd);
+                                                                AldorTokenTypes.KW_Indent,
+                                                                AldorTokenTypes.TK_SysCmd);
 
     @NotNull
     @Override
@@ -79,7 +81,4 @@ public class AldorParserDefinition implements ParserDefinition {
         return AldorTypes.Factory.createElement(node);
     }
 
-    public static ParserDefinition abbrevParserDefinition(Project project) {
-        throw new RuntimeException("Need to implement");
-    }
 }

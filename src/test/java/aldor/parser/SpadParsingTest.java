@@ -29,13 +29,11 @@ public class SpadParsingTest extends LightPlatformCodeInsightTestCase {
     public void testTopLevelStd() {
         PsiElement psi = parseText("++ Some comment\nFoo: with == add\n++ More comment\nQQQ: Category == with\n");
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
-        logPsi(psi);
         Assert.assertEquals(0, errors.size());
     }
 
     public void testTopLevelSysCmd() {
         PsiElement psi = parseText(")a\nX\n");
-        logPsi(psi);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
         Assert.assertEquals(0, errors.size());
     }
@@ -43,21 +41,18 @@ public class SpadParsingTest extends LightPlatformCodeInsightTestCase {
     public void testTopLevelDecl() {
         PsiElement psi = parseText("++ Some comment\nFoo: with == add\n++ More comment\nB == 2");
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
-        logPsi(psi);
         Assert.assertEquals(0, errors.size());
     }
 
     public void testTopLevelTriv() {
         PsiElement psi = parseText("Foo: with == add");
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
-        logPsi(psi);
         Assert.assertEquals(0, errors.size());
     }
 
     public void testTopLevelDocs() {
         PsiElement psi = parseText("++ Foo\n++More\nFoo: with == add\n++ Bar\n++ More Bar\nBar: with == add\n");
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
-        logPsi(psi);
         Assert.assertEquals(0, errors.size());
     }
 
@@ -66,7 +61,6 @@ public class SpadParsingTest extends LightPlatformCodeInsightTestCase {
         System.out.println("Tokens: " + LexerFunctions.tokens(Spad, text).values());
         PsiElement psi = parseText(text);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
-        logPsi(psi);
         Assert.assertEquals(0, errors.size());
     }
 
@@ -79,7 +73,6 @@ public class SpadParsingTest extends LightPlatformCodeInsightTestCase {
 
     public void testTopLevelSeq() {
         PsiElement psi = parseText("++ Foo\nFoo: with == add\n++ Bar\nBar: with == add\n");
-        logPsi(psi);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
         Assert.assertEquals(0, errors.size());
     }
@@ -87,7 +80,6 @@ public class SpadParsingTest extends LightPlatformCodeInsightTestCase {
     public void testTopLevelCategory() {
         PsiElement psi = parseText("QQQ(): Category == X with\n  foo: %a\n add\n  foo: % == 1\n   bar: % == 3\n");
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
-        logPsi(psi);
         Assert.assertEquals(0, errors.size());
     }
 
@@ -95,7 +87,6 @@ public class SpadParsingTest extends LightPlatformCodeInsightTestCase {
         // See efupxs.spad; no idea where the doc should go in this case.
         PsiElement psi = parseText("++ doc1\nF: _\n Exports == Implementation where\n  ++ doc2\n  foo: F\n");
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
-        logPsi(psi);
         Assert.assertEquals(0, errors.size());
     }
 
@@ -103,21 +94,18 @@ public class SpadParsingTest extends LightPlatformCodeInsightTestCase {
     public void testDefine() {
         PsiElement psi = parseText("(x : % - y : %): %", AldorTypes.SPAD_INFIXED);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
-        logPsi(psi);
         Assert.assertEquals(0, errors.size());
     }
 
     public void testFnCall() {
         PsiElement psi = parseText("f x", AldorTypes.SPAD_INFIXED);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
-        logPsi(psi);
         Assert.assertEquals(0, errors.size());
     }
 
     public void testDot() {
         PsiElement psi = parseText("f.x", AldorTypes.SPAD_INFIXED);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
-        logPsi(psi);
         Assert.assertEquals(0, errors.size());
     }
 
@@ -125,7 +113,6 @@ public class SpadParsingTest extends LightPlatformCodeInsightTestCase {
     public void testBrackets() {
         PsiElement psi = parseText("A := [foo x for x in 1..10]", AldorTypes.SPAD_TOP_LEVEL);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
-        logPsi(psi);
         Assert.assertEquals(0, errors.size());
     }
 
@@ -134,14 +121,12 @@ public class SpadParsingTest extends LightPlatformCodeInsightTestCase {
     public void testDefine2() {
         PsiElement psi = parseText("QQQ(): A == add \n (x : % - y : %) : % == x+(-y)");
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
-        logPsi(psi);
         Assert.assertEquals(0, errors.size());
     }
 
     public void testDefine3() {
         PsiElement psi = parseText("QQQ(): A == with\n  foo: %\n  bar: %\n");
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
-        logPsi(psi);
         Assert.assertEquals(0, errors.size());
     }
 
@@ -149,56 +134,48 @@ public class SpadParsingTest extends LightPlatformCodeInsightTestCase {
     public void testDefine4() {
         PsiElement psi = parseText("QQQ(): A == with\n  foo: %\n  ++ qq\n  bar: %\n");
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
-        logPsi(psi);
         Assert.assertEquals(0, errors.size());
     }
 
     public void testWith() {
         PsiElement psi = parseText("with\n  foo: %\n  ++ foo\n");
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
-        logPsi(psi);
         Assert.assertEquals(0, errors.size());
     }
 
     public void testWith2() {
         PsiElement psi = parseText("with\n  foo: %\n  ++ foo\n  bar: %\n");
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
-        logPsi(psi);
         Assert.assertEquals(0, errors.size());
     }
 
     public void testWith3() {
         PsiElement psi = parseText("with\n  foo: %\n  ++ foo\n  ++ more foo\n  bar: %\n");
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
-        logPsi(psi);
         Assert.assertEquals(0, errors.size());
     }
 
     public void testDubiousDocco() {
         PsiElement psi = parseText("Foo where \n  ++ this comment must die \n  Something\n");
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
-        logPsi(psi);
         Assert.assertEquals(0, errors.size());
     }
 
     public void testCoerce() {
         PsiElement psi = parseText("(p1 exquo monomial(1, e1))::SUP %");
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
-        logPsi(psi);
         Assert.assertEquals(0, errors.size());
     }
 
     public void testUnaryArrow() {
         PsiElement psi = parseText("foo: -> X");
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
-        logPsi(psi);
         Assert.assertEquals(0, errors.size());
     }
 
     public void testEndInInfix() {
         PsiElement psi = parseText("fq:= a + foo(a,\n    b) *\n  c\nbar := 2\n");
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
-        logPsi(psi);
         Assert.assertEquals(0, errors.size());
     }
 
@@ -206,7 +183,6 @@ public class SpadParsingTest extends LightPlatformCodeInsightTestCase {
     public void testLongLine() {
         PsiElement psi = parseText("add\n  x := [foo\n   ]$List\n");
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
-        logPsi(psi);
         Assert.assertEquals(0, errors.size());
     }
 
@@ -214,7 +190,6 @@ public class SpadParsingTest extends LightPlatformCodeInsightTestCase {
     public void testPlusSlash() {
         PsiElement psi = parseText("new(+/[#s for s in l], space$C)\n");
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
-        logPsi(psi);
         Assert.assertEquals(0, errors.size());
     }
 
@@ -223,14 +198,19 @@ public class SpadParsingTest extends LightPlatformCodeInsightTestCase {
     public void testIfStatement() {
         PsiElement psi = parseText("if R has X\n then\n  foo\n else\n  bar\nZZZ\n");
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
-        logPsi(psi);
         Assert.assertEquals(0, errors.size());
     }
 
     public void testIfStatement2() {
         PsiElement psi = parseText("if R has X\nthen\n  foo\nelse\n bar\nZZZ\n");
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
+        Assert.assertEquals(0, errors.size());
+    }
+
+    public void testAbbrevAfterIndent() {
+        PsiElement psi = parseText("Foo == add\n  blah\n    blah\n)abbrev domain BBB CCC\nBBB == 2");
         logPsi(psi);
+        final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
         Assert.assertEquals(0, errors.size());
     }
 

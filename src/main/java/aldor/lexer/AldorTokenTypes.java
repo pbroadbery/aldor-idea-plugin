@@ -8,10 +8,11 @@ import com.intellij.psi.tree.TokenSet;
 import java.util.Map;
 
 public final class AldorTokenTypes {
-    private static final Map<String, AldorTokenType> tokenTypeForString = Maps.newHashMap();
-    private static final Map<String, AldorTokenType> tokenTypeForName = Maps.newHashMap();
+    private static final Map<String, IElementType> tokenTypeForString = Maps.newHashMap();
+    private static final Map<String, IElementType> tokenTypeForName = Maps.newHashMap();
     public static final IElementType WHITE_SPACE = TokenType.WHITE_SPACE;
     public static final IElementType BAD_CHARACTER = TokenType.BAD_CHARACTER;
+    public static final AldorTokenTypeFactory tokenTypeFactory = new AldorTokenTypeFactoryImpl();
     /*
 	 * [A] TokenTag tag
 	 * [B] Symbol	sym
@@ -28,7 +29,7 @@ public final class AldorTokenTypes {
 	 * [M] Byte	isDisabled   i.e., non-zero means disabled
 	 *
 	 */
-	//                                                                 [A]		 [B]     [C]		   [D][E][F][G][H][I][J][K] [L] [M]
+	//                                                                               [A]		 [B]     [C]              [D][E][F][G][H][I][J][K] [L] [M]
     public static final AldorTokenType TK_Id        = createTokenType("TK_Id", new AldorTokenAttributes(0, "TK_Id", 0, 0, 0, 0, 0, 0, 1, 0, 170, 0));
     public static final AldorTokenType TK_Blank     = createTokenType("TK_Blank", new AldorTokenAttributes(0, "TK_Blank", 0, 0, 0, 0, 0, 0, 1, 0, 170, 0));
     public static final AldorTokenType TK_Int       = createTokenType("TK_Int", new AldorTokenAttributes(0, "TK_Int", 1, 0, 0, 0, 0, 0, 1, 0, 170, 0));
@@ -37,7 +38,10 @@ public final class AldorTokenTypes {
     public static final AldorTokenType TK_PreDoc    = createTokenType("TK_PreDoc", new AldorTokenAttributes(0, "TK_PreDoc", 1, 1, 0, 0, 0, 0, 1, 0, 170, 0));
     public static final AldorTokenType TK_PostDoc   = createTokenType("TK_PostDoc", new AldorTokenAttributes(0, "TK_PostDoc", 1, 1, 0, 0, 0, 0, 1, 0, 170, 0));
     public static final AldorTokenType TK_Comment   = createTokenType("TK_Comment", new AldorTokenAttributes(0, "TK_Comment", 1, 1, 0, 0, 0, 0, 1, 0, 170, 0));
+
     public static final AldorTokenType TK_SysCmd    = createTokenType("TK_SysCmd", new AldorTokenAttributes(0, "TK_SysCmd", 1, 1, 0, 0, 0, 0, 1, 0, 170, 0));
+
+    public static final AldorTokenType TK_SysCmdAbbrev  = createTokenType("TK_SysCmdAbbrev", new AldorTokenAttributes(0, "TK_SysCmdAbbrev", 1, 1, 0, 0, 0, 0, 1, 0, 170, 0));
     public static final AldorTokenType TK_SysCmdIf  = createTokenType("TK_SysCmdIf", new AldorTokenAttributes(0, "TK_SysCmdIf", 1, 1, 0, 0, 0, 0, 1, 0, 170, 0));
     public static final AldorTokenType TK_SysCmdEndIf  = createTokenType("TK_SysCmdEndIf", new AldorTokenAttributes(0, "TK_SysCmdEndIf", 1, 1, 0, 0, 0, 0, 1, 0, 170, 0));
     public static final AldorTokenType TK_SysCmdIncude = createTokenType("TK_SysCmdInclude", new AldorTokenAttributes(0, "TK_SysCmdInclude", 1, 1, 0, 0, 0, 0, 1, 0, 170, 0));
@@ -191,21 +195,21 @@ public final class AldorTokenTypes {
     public static final TokenSet WHITESPACE_TOKENS = TokenSet.create(TK_PreDoc, TK_PostDoc, TK_Comment, TK_SysCmdEndIf, TK_SysCmdIf, TK_IfLine, TK_SysCmd);
     public static final TokenSet NEWLINE_TOKENS = TokenSet.create(KW_NewLine, KW_BlkNext, KW_BlkStart, KW_BlkEnd);
     public static final TokenSet PARSER_WHITESPACE_TOKENS = TokenSet.create(TokenType.WHITE_SPACE, KW_NewLine,
-    TK_Comment,
-    TK_SysCmdIf, TK_SysCmdEndIf,
-    TK_IfLine,
-    KW_Indent, TK_SysCmd);
+                                                                                TK_Comment,
+                                                                                TK_SysCmdIf, TK_SysCmdEndIf,
+                                                                                TK_IfLine,
+                                                                                KW_Indent, TK_SysCmd);
 
     private static AldorTokenType createTokenType(String name, AldorTokenAttributes aldorTokenAttributes) {
-        AldorTokenType tokenType = AldorTokenTypeFactory.instance.createToken(name, aldorTokenAttributes);
+        AldorTokenType tokenType = tokenTypeFactory.createTokenType(name, aldorTokenAttributes);
         tokenTypeForString.put(name, tokenType);
         tokenTypeForName.put(aldorTokenAttributes.getText(), tokenType);
         return tokenType;
     }
 
     /* Used by parsers */
-    public static AldorTokenType createToken(String token) {
-        AldorTokenType tokenType = tokenTypeForString.get(token);
+    public static IElementType createTokenType(String token) {
+        IElementType tokenType = tokenTypeForString.get(token);
         if (tokenType == null) {
             throw new IllegalArgumentException("Unknown token: " + token);
         }
@@ -213,7 +217,7 @@ public final class AldorTokenTypes {
         return tokenType;
     }
 
-    public static Iterable<AldorTokenType> all() {
+    public static Iterable<IElementType> all() {
         return tokenTypeForString.values();
     }
 
@@ -229,7 +233,7 @@ public final class AldorTokenTypes {
         return ((eltType instanceof AldorTokenType) && ((AldorTokenType) eltType).isFollower());
     }
 
-    public static AldorTokenType forText(String text) {
+    public static IElementType forText(String text) {
         return tokenTypeForName.get(text);
     }
 
@@ -239,5 +243,9 @@ public final class AldorTokenTypes {
 
     public static boolean isNewLine(IElementType t) {
         return NEWLINE_TOKENS.contains(t);
+    }
+
+    public static boolean isLangWord(IElementType eltType) {
+        return ((eltType instanceof AldorTokenType) && ((AldorTokenType) eltType).isLangWord());
     }
 }

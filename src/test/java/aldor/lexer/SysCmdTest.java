@@ -11,4 +11,5 @@ public class SysCmdTest {
         assertEquals(SysCmd.SysCommandType.Pile, cmd.type());
         assertEquals(1, cmd.text().size());
     }
+
 }

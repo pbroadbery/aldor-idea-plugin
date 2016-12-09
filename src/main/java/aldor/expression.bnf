@@ -8,7 +8,7 @@
   elementTypeFactory="aldor.expression.ExpressionTypeFactory.createElement"
 
   tokenTypeClass="aldor.lexer.AldorTokenType"
-  tokenTypeFactory = "aldor.lexer.AldorTokenTypes.createToken"
+  tokenTypeFactory = "aldor.lexer.AldorTokenTypes.createTokenType"
 
   psiClassPrefix="Expression"
   psiImplClassSuffix="Impl"

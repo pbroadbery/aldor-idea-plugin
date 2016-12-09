@@ -23,6 +23,7 @@ import static aldor.lexer.AldorTokenTypes.TK_Int;
 import static aldor.lexer.AldorTokenTypes.TK_PostDoc;
 import static aldor.lexer.AldorTokenTypes.TK_String;
 import static aldor.lexer.AldorTokenTypes.TK_SysCmd;
+import static aldor.lexer.AldorTokenTypes.TK_SysCmdAbbrev;
 import static aldor.lexer.AldorTokenTypes.TK_SysCmdEndIf;
 import static aldor.lexer.AldorTokenTypes.TK_SysCmdIf;
 import static aldor.lexer.AldorTokenTypes.WHITE_SPACE;
@@ -143,7 +144,8 @@ public class AldorLexerTest {
         String text = ")abbrev Foo bar\nA: with == add\n";
         lla.start(text);
         List<IElementType> tokens = LexerFunctions.readTokens(lla);
-        assertEquals(Lists.newArrayList(TK_SysCmd, KW_NewLine, TK_Id, KW_Colon, WHITE_SPACE, KW_With, WHITE_SPACE, KW_2EQ, WHITE_SPACE, KW_Add, KW_NewLine), tokens);
+        assertEquals(Lists.newArrayList(TK_SysCmdAbbrev, KW_NewLine,
+                TK_Id, KW_Colon, WHITE_SPACE, KW_With, WHITE_SPACE, KW_2EQ, WHITE_SPACE, KW_Add, KW_NewLine), tokens);
     }
 
     @Test
@@ -152,7 +154,10 @@ public class AldorLexerTest {
         String text = ")abbrev Foo bar\n++ Foo\nA: with == add\n";
         lla.start(text);
         List<IElementType> tokens = LexerFunctions.readTokens(lla);
-        assertEquals(Lists.newArrayList(TK_SysCmd, KW_NewLine, TK_PostDoc, KW_NewLine, TK_Id, KW_Colon, WHITE_SPACE, KW_With, WHITE_SPACE, KW_2EQ, WHITE_SPACE, KW_Add, KW_NewLine), tokens);
+        assertEquals(Lists.newArrayList(TK_SysCmdAbbrev, KW_NewLine,
+                TK_PostDoc, KW_NewLine,
+                TK_Id, KW_Colon, WHITE_SPACE, KW_With, WHITE_SPACE, KW_2EQ, WHITE_SPACE, KW_Add, KW_NewLine),
+                tokens);
     }
 
     @Test

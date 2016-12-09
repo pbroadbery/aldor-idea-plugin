@@ -4,6 +4,7 @@ import groovy.json.internal.Charsets;
 import org.junit.Test;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 
 import static org.junit.Assert.assertEquals;
@@ -11,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 public class ProcessBuilderTest {
 
     @Test
-    public void testOne() throws Exception {
+    public void testOne() throws IOException, InterruptedException {
         ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.command("echo", "hello");
         processBuilder.redirectOutput(ProcessBuilder.Redirect.PIPE);
@@ -19,11 +20,12 @@ public class ProcessBuilderTest {
         Process process = processBuilder.start();
         Thread.sleep(1000);
         InputStreamReader reader = new InputStreamReader(process.getInputStream(), Charsets.US_ASCII);
-        BufferedReader bufferedReader = new BufferedReader(reader);
-        String line;
-        int count = 0;
-        while ( (line = bufferedReader.readLine()) != null) {
-            count++;
+        int count;
+        try (BufferedReader bufferedReader = new BufferedReader(reader)) {
+            count = 0;
+            while (bufferedReader.readLine() != null) {
+                count++;
+            }
         }
         assertEquals(1, count);
     }

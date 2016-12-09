@@ -39,6 +39,7 @@ import static aldor.lexer.AldorTokenTypes.TK_IfLine;
 import static aldor.lexer.AldorTokenTypes.TK_Int;
 import static aldor.lexer.AldorTokenTypes.TK_PostDoc;
 import static aldor.lexer.AldorTokenTypes.TK_PreDoc;
+import static aldor.lexer.AldorTokenTypes.TK_SysCmdAbbrev;
 import static aldor.lexer.AldorTokenTypes.TK_SysCmdEndIf;
 import static aldor.lexer.AldorTokenTypes.TK_SysCmdIf;
 import static aldor.lexer.AldorTokenTypes.WHITE_SPACE;
@@ -692,5 +693,30 @@ public class AldorIndentLexerTest {
                 KW_Indent, TK_Id, KW_Assign, TK_Int, KW_BlkEnd,
                 TK_Id, KW_NewLine
         ), tokens);
+    }
+
+    @Test
+    public void spadAbbrevAfterDef() {
+        AldorIndentLexer unit = new AldorIndentLexer(new AldorLexerAdapter(Spad, null));
+        String text = "Foo == add\n  blah\n    blah\n)abbrev domain BBB CCC\nBBB == 2";
+        unit.start(text);
+        List<IElementType> tokens = LexerFunctions.readTokens(unit);
+        assertEquals(Lists.newArrayList(
+                TK_Id, WHITE_SPACE, KW_2EQ, WHITE_SPACE, KW_Add, KW_BlkStart,
+                KW_Indent, TK_Id, KW_NewLine,
+                KW_Indent, TK_Id, KW_BlkEnd,
+                TK_SysCmdAbbrev, KW_NewLine,
+                TK_Id, WHITE_SPACE, KW_2EQ, WHITE_SPACE, TK_Int
+        ), tokens);
+    }
+
+    @Test
+    public void spadShortFile() {
+        AldorIndentLexer unit = new AldorIndentLexer(new AldorLexerAdapter(Spad, null));
+        String text = ")abbrev foo foo";
+        unit.start(text);
+        List<IElementType> tokens = LexerFunctions.readTokens(unit);
+        assertEquals(Lists.newArrayList(TK_SysCmdAbbrev), tokens);
+
     }
 }

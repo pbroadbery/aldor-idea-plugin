@@ -40,6 +40,7 @@ import static aldor.lexer.AldorTokenTypes.KW_Where;
 import static aldor.lexer.AldorTokenTypes.KW_With;
 import static aldor.lexer.AldorTokenTypes.TK_PostDoc;
 import static aldor.lexer.AldorTokenTypes.TK_SysCmd;
+import static aldor.lexer.AldorTokenTypes.TK_SysCmdAbbrev;
 import static aldor.lexer.AldorTokenTypes.WHITE_SPACE;
 import static aldor.lexer.LexMode.Spad;
 
@@ -55,14 +56,15 @@ public class Linearise {
 
     public void linearise(AldorLexerAdapter lexer) {
         if (lexer.mode() == Spad) {
-            sections = Collections.singletonList(parsePiledSection(lexer));
+            PiledSection whole = parsePiledSection(lexer);
+            sections = whole.lines().isEmpty() ? Collections.emptyList() : Collections.singletonList(whole);
         } else {
             sections = scanForPiledSections(lexer);
         }
         for (PiledSection section : sections) {
             IndentNode indentNode = scan(section, 0);
             (new BlockMarker(section)).markBlocks(indentNode);
-
+/*
             System.out.println("Scanned for newlines: " + indentNode);
             System.out.println("Scanned for newlines: " + section);
             int index = 0;
@@ -70,6 +72,7 @@ public class Linearise {
                 System.out.println("LINE: " + index + " " + line);
                 index++;
             }
+    */
         }
 
     }
@@ -105,7 +108,7 @@ public class Linearise {
 
     private static boolean isSysCommand(SysCommandType command, AldorLexerAdapter lexer) {
         IElementType eltType = lexer.getTokenType();
-        if (Objects.equals(eltType, TK_SysCmd)) {
+        if (Objects.equals(eltType, TK_SysCmd) || Objects.equals(eltType, TK_SysCmdAbbrev)) {
             SysCmd sysCmd = SysCmd.parse(lexer.getTokenText());
             if (sysCmd.type() == command) {
                 return true;
@@ -259,7 +262,7 @@ public class Linearise {
         }
 
         private boolean isBackSetRequired1(SrcLine thisLine, SrcLine nextLine) {
-            if (thisLine.isPreDocument()) {
+            if (thisLine.isPreDocument() || thisLine.firstToken().equals(TK_SysCmdAbbrev)) {
                 return false;
             }
         /* 1. *//*
@@ -502,7 +505,7 @@ public class Linearise {
                     line.bracketCount(bracketCount);
                     joinedLines.add(line);
                     lastLine = line;
-                }//noinspection StatementWithEmptyBody
+                }
                 else if (!line.isPreDocument() && line.isPostDoc()) {
                     lastLine.join(line);
                 }

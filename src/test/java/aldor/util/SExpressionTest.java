@@ -29,7 +29,6 @@ public class SExpressionTest {
     @Test
     public void testReadIncomplete() throws FileNotFoundException {
         try {
-            //noinspection unused
             @SuppressWarnings("UnusedAssignment") SExpression sx = SExpression.read(new StringReader("(Hello there"));
             fail("Expected an exception");
         }

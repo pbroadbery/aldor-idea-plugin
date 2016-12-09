@@ -15,7 +15,7 @@ import java.util.Collections;
 public class Literal extends Syntax {
     private final AldorLiteral literal;
 
-    public Literal(@SuppressWarnings("UnusedParameters") String text, AldorLiteral literal) {
+    public Literal(String text, AldorLiteral literal) {
         this.literal = literal;
     }
 

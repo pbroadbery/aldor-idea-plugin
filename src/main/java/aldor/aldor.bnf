@@ -8,7 +8,7 @@
   elementTypeFactory="aldor.psi.elements.AldorElementTypeFactory.createElement"
 
   tokenTypeClass="aldor.lexer.AldorTokenType"
-  tokenTypeFactory = "aldor.lexer.AldorTokenTypes.createToken"
+  tokenTypeFactory = "aldor.lexer.AldorTokenTypes.createTokenType"
 
   psiClassPrefix="Aldor"
   psiImplClassSuffix="Impl"
@@ -51,15 +51,20 @@
   mixin("SpadTopLevelExpression")='aldor.psi.AldorDocumentedMixin'
 
   // These are definitions
-  stubClass(".*_Define")='aldor.psi.AldorDefine.AldorDefineStub'
-  implements(".*_Define")='aldor.psi.AldorDefine'
+  stubClass(".*_Define")='aldor.psi.AldorDefineStubbing.AldorDefineStub'
+  implements(".*_Define")='aldor.psi.AldorDefineStubbing.AldorDefine'
+
+  // Abbreviations
+  stubClass("SpadAbbrev")='aldor.psi.SpadAbbrevStubbing.SpadAbbrevStub'
+  implements("SpadAbbrev")='aldor.psi.SpadAbbrevStubbing.SpadAbbrev'
+  mixin("SpadAbbrev")="aldor.psi.impl.SpadAbbrevStubbingImpl.SpadAbbrevMixin"
 
   // Declarations (should be with body only...)
   // Version 2, I think.
 
   tokens = [
           TK_Id TK_Blank TK_Int TK_Float TK_String TK_PreDoc TK_PostDoc
-          TK_Comment TK_SysCmd TK_Error
+          TK_Comment TK_SysCmd TK_SysCmdAbbrev TK_Error
 
           KW_Add KW_And KW_Always KW_Assert KW_Break KW_But KW_By
           KW_Case KW_Catch KW_Default KW_Define KW_Delay KW_Do KW_Else
@@ -654,8 +659,9 @@ PreDocument ::= TK_PreDoc*
 
 SpadTopLevel ::= <<parsePiledContent "SpadTopLevel">>
 // NB: All spad comments are '++'.  Guess that top level is pre - anything else is post.
-SpadTopLevelExpression ::= PreDocument Expression //{pin=PreDocument} {recoverWhile="TopLevel_Recover"}
+SpadTopLevelExpression ::= SpadAbbrev* PreDocument Expression //{pin=PreDocument} {recoverWhile="TopLevel_Recover"}
 SpadDocument ::= TK_PostDoc*
+SpadAbbrev ::= TK_SysCmdAbbrev
 
 //private TopLevel_Recover ::= !(TK_PreDoc)
 

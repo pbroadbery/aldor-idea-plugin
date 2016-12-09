@@ -3,7 +3,7 @@ package aldor.syntax;
 import aldor.psi.AldorAddPart;
 import aldor.psi.AldorBracketed;
 import aldor.psi.AldorDeclPart;
-import aldor.psi.AldorDefine;
+import aldor.psi.AldorDefineStubbing.AldorDefine;
 import aldor.psi.AldorE14;
 import aldor.psi.AldorId;
 import aldor.psi.AldorInfixedExpr;
@@ -173,8 +173,7 @@ public final class SyntaxPsiParser {
 
         @Override
         public void visitDeclPart(@NotNull AldorDeclPart decl) {
-            PsiElement psi = decl;
-            List<Syntax> last = buildChildren(psi);
+            List<Syntax> last = buildChildren(decl);
             Syntax result = new Declare(decl, last);
             visitStack.peek().add(result);
         }

@@ -1,7 +1,8 @@
 package aldor.psi.elements;
 
 import aldor.language.AldorLanguage;
-import aldor.psi.AldorDefine;
+import aldor.psi.AldorDefineStubbing.AldorDefine;
+import aldor.psi.AldorDefineStubbing.AldorDefineStub;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.stubs.IStubElementType;
@@ -14,27 +15,25 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
-public class AldorDefineElementType extends IStubElementType<AldorDefine.AldorDefineStub, AldorDefine> {
+public class AldorDefineElementType extends IStubElementType<AldorDefineStub, AldorDefine> {
     private static final Logger LOG = Logger.getInstance(AldorDefineElementType.class);
     public static final StubIndexKey<String, AldorDefine> DEFINE_NAME_INDEX = StubIndexKey.createIndexKey("Aldor.Define.Name");
     public static final StubIndexKey<String, AldorDefine> DEFINE_TOPLEVEL_INDEX = StubIndexKey.createIndexKey("Aldor.Define.TopLevel");
-    private static final IndexCodec<AldorDefineInfo> infoCodec = new AldorDefineInfoIndexCodec();
-
-    private final AldorStubFactory stubFactory;
+    private final PsiStubCodec<AldorDefineStub, AldorDefine> defineCodec;
 
     public AldorDefineElementType(AldorStubFactory stubFactory) {
         super("Define", AldorLanguage.INSTANCE);
-        this.stubFactory = stubFactory;
+        defineCodec = stubFactory.defineCodec();
     }
 
     @Override
-    public AldorDefine createPsi(@NotNull AldorDefine.AldorDefineStub stub) {
+    public AldorDefine createPsi(@NotNull AldorDefineStub stub) {
         return stub.createPsi(this);
     }
 
     @NotNull
     @Override
-    public AldorDefine.AldorDefineStub createStub(@NotNull AldorDefine psi, @SuppressWarnings("rawtypes") StubElement parentStub) {
+    public AldorDefineStub createStub(@NotNull AldorDefine psi, @SuppressWarnings("rawtypes") StubElement parentStub) {
         return psi.createStub(this, parentStub);
     }
 
@@ -45,24 +44,23 @@ public class AldorDefineElementType extends IStubElementType<AldorDefine.AldorDe
     }
 
     @Override
-    public void serialize(@NotNull AldorDefine.AldorDefineStub stub, @NotNull StubOutputStream dataStream) throws IOException {
-        // TODO: stub factory becomes a codec store, this becomes codecStore.encode(AldorDefine.class, stub, dataStream)
-        String defineId = stub.defineId();
-        dataStream.writeBoolean(defineId != null);
-        if (defineId != null) {
-            dataStream.writeUTFFast(defineId);
-        }
-        infoCodec.encode(dataStream, stub.defineInfo());
+    public boolean shouldCreateStub(ASTNode node) {
+        return true;
+    }
+
+    @Override
+    public void serialize(@NotNull AldorDefineStub stub, @NotNull StubOutputStream dataStream) throws IOException {
+        defineCodec.encode(stub, dataStream);
     }
 
     @NotNull
     @Override
-    public AldorDefine.AldorDefineStub deserialize(@NotNull StubInputStream dataStream, @SuppressWarnings("rawtypes") StubElement parentStub) throws IOException {
-        return stubFactory.createStub(AldorDefine.class, this, dataStream, parentStub);
+    public AldorDefineStub deserialize(@NotNull StubInputStream dataStream, @SuppressWarnings("rawtypes") StubElement parentStub) throws IOException {
+        return defineCodec.decode(this, dataStream, parentStub);
     }
 
     @Override
-    public void indexStub(@NotNull AldorDefine.AldorDefineStub stub, @NotNull IndexSink sink) {
+    public void indexStub(@NotNull AldorDefineStub stub, @NotNull IndexSink sink) {
         if (stub.defineId() != null) {
             sink.occurrence(DEFINE_NAME_INDEX, stub.defineId());
             if (stub.defineInfo().level() == AldorDefineInfo.Level.TOP) {
@@ -71,8 +69,4 @@ public class AldorDefineElementType extends IStubElementType<AldorDefine.AldorDe
         }
     }
 
-    @Override
-    public boolean shouldCreateStub(ASTNode node) {
-        return true;
-    }
 }

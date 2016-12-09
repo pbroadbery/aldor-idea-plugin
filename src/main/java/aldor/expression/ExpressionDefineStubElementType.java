@@ -24,6 +24,7 @@ public class ExpressionDefineStubElementType extends IStubElementType<Expression
         return new ExpressionDefineStubImpl(stub, this);
     }
 
+    @NotNull
     @Override
     public ExpressionDefineStub createStub(@NotNull ExpressionDefine psi, @SuppressWarnings("rawtypes") StubElement parentStub) {
         return new ExpressionDefineConcreteStub(parentStub, psi.getText(), "nope");

@@ -1,7 +1,7 @@
 package aldor.psi.index;
 
 import aldor.build.module.AldorModuleType;
-import aldor.psi.AldorDefine;
+import aldor.psi.AldorDefineStubbing;
 import aldor.util.JUnits;
 import aldor.util.VirtualFileTests;
 import com.google.common.collect.Sets;
@@ -106,12 +106,12 @@ public class AldorDefineNameIndexTest extends LightPlatformCodeInsightFixtureTes
             Project project = getProject();
 
             file = createFile(getSourceRoot(), "foo.as", "Something(x: Wibble): with == stuff; aNumber == " + System.currentTimeMillis());
-
+            FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
             FileBasedIndex.getInstance().ensureUpToDate(StubUpdatingIndex.INDEX_ID, project, null);
             Collection<String> ll = AldorDefineNameIndex.instance.getAllKeys(project);
             Assert.assertEquals(Sets.newHashSet("Something", "aNumber"), new HashSet<>(ll));
 
-            Collection<AldorDefine> items = AldorDefineNameIndex.instance.get("Something", getProject(), GlobalSearchScope.allScope(getProject()));
+            Collection<AldorDefineStubbing.AldorDefine> items = AldorDefineNameIndex.instance.get("Something", getProject(), GlobalSearchScope.allScope(getProject()));
             System.out.println("Items: " + items + " " + items.iterator().next().getText());
             Assert.assertEquals(1, items.size());
             Assert.assertTrue(items.iterator().next().getText().startsWith("Something"));

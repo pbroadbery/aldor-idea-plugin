@@ -1,4 +1,4 @@
-<!--suppress XmlHighlighting, XmlHighlighting -->
+<!--suppress XmlHighlighting -->
 <idea-plugin version="2">
     <id>pab.aldor</id>
     <name>Aldor Plugin</name>
@@ -65,6 +65,9 @@
         <!-- Spad extras -->
         <fileTypeFactory implementation="aldor.file.SpadFileTypeFactory"/>
         <lang.parserDefinition language="Spad" implementationClass="aldor.parser.SpadParserDefinition"/>
+        <stubIndex implementation="aldor.psi.index.AbbrevNameIndex"/>
+        <stubIndex implementation="aldor.psi.index.AbbrevAbbrevIndex"/>
+        <gotoClassContributor implementation="aldor.editor.SpadGotoClassContributor"/>
 
         <!-- Test language -->
         <fileTypeFactory implementation="aldor.expression.ExpressionFileTypeFactory"/>

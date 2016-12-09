@@ -1,9 +1,10 @@
 package aldor.syntax.components;
 
 import aldor.lexer.AldorTokenType;
-import aldor.lexer.AldorTokenTypes;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.Nullable;
+
+import static aldor.lexer.AldorTokenTypes.forText;
 
 public abstract class SyntaxRepresentation<T extends PsiElement> {
 
@@ -32,7 +33,7 @@ public abstract class SyntaxRepresentation<T extends PsiElement> {
 
         @Override
         public AldorTokenType tokenType() {
-            return AldorTokenTypes.forText(element.getText());
+            return (AldorTokenType) forText(element.getText());
         }
 
         @Override
