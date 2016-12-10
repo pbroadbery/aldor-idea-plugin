@@ -44,6 +44,7 @@ import static aldor.lexer.AldorTokenTypes.TK_SysCmdAbbrev;
 import static aldor.lexer.AldorTokenTypes.TK_SysCmdEndIf;
 import static aldor.lexer.AldorTokenTypes.TK_SysCmdIf;
 import static aldor.lexer.AldorTokenTypes.WHITE_SPACE;
+import static aldor.lexer.LexMode.Aldor;
 import static aldor.lexer.LexMode.Spad;
 import static org.junit.Assert.assertEquals;
 
@@ -691,6 +692,19 @@ public class AldorIndentLexerTest {
         ), tokens);
     }
 
+    @Test
+    public void spadInfixStart2() {
+        AldorIndentLexer unit = new AldorIndentLexer(new AldorLexerAdapter(Aldor, null));
+        String text = "#pile\nfoo(h: %): Foo == h\n" +
+                "\n" +
+                "-(h: %): % == 0 - h\n";
+        unit.start(text);
+        List<IElementType> tokens = LexerFunctions.readTokens(unit);
+        assertEquals(Lists.newArrayList(
+                TK_Id, WHITE_SPACE, KW_2EQ, WHITE_SPACE, TK_Int, KW_BlkNext,
+                KW_Minus, TK_Id, KW_2EQ, TK_Id, KW_NewLine
+        ), tokens);
+    }
 
     @Test
     public void spadLexerCommentsInMid() {

@@ -1,11 +1,9 @@
 package aldor.psi.impl;
 
-import aldor.psi.AldorAssign;
 import aldor.psi.AldorDefineStubbing.AldorDefine;
 import aldor.psi.AldorDefineStubbing.AldorDefineStub;
 import aldor.psi.AldorIdentifier;
 import aldor.psi.AldorPsiUtils;
-import aldor.psi.AldorRecursiveVisitor;
 import aldor.psi.elements.AldorDefineInfo;
 import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxPsiParser;
@@ -96,23 +94,6 @@ public class AldorDefineMixin extends StubBasedPsiElementBase<AldorDefineStub> i
             }
         }
 
-        PsiElement rhs = this.getLastChild();
-
-        rhs.accept(new AldorRecursiveVisitor() {
-            @Override
-            public void visitElement(PsiElement o) {
-                //noinspection ObjectEquality
-                if (o == lastParent) {
-                    return;
-                }
-                o.acceptChildren(this);
-            }
-
-            @Override
-            public void visitAssign(@NotNull AldorAssign assign) {
-
-            }
-        });
         return true;
     }
 

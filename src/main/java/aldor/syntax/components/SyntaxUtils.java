@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public final class SyntaxUtils {
@@ -31,6 +32,18 @@ public final class SyntaxUtils {
             }
         }
         return scopes;
+    }
+
+    public static Iterable<Syntax> childScopesForLambdaLhs(@NotNull Syntax syntax) {
+        Syntax inner = syntax;
+        if (inner.is(DeclareNode.class)) {
+            inner = inner.as(DeclareNode.class).lhs();
+        }
+
+        if (inner.is(Comma.class)) {
+            return inner.as(Comma.class).children();
+        }
+        return Collections.singleton(inner);
     }
 
 }

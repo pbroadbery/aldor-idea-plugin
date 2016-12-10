@@ -31,6 +31,7 @@
   implements("Collection") = "aldor.psi.AldorAnyCollection"
   implements("AnyStatement_Collection") = "aldor.psi.AldorAnyCollection"
   implements(".*_Assign") = "aldor.psi.AldorAssign"
+  implements(".*_Lambda") = "aldor.psi.AldorLambda"
 
   mixin("Id")="aldor.psi.impl.AldorIdentifierMixin"
   mixin("InfixedTok")="aldor.psi.impl.AldorIdentifierMixin"
@@ -38,10 +39,12 @@
   mixin("DeclPart")="aldor.psi.impl.AldorDeclMixin"
   mixin(".*_Define")="aldor.psi.impl.AldorDefineMixin"
   mixin(".*_Assign")="aldor.psi.impl.AldorAssignMixin"
+  mixin(".*_Lambda")="aldor.psi.impl.AldorLambdaMixin"
   mixin("IterRepeatStatement.*")="aldor.psi.impl.AldorIterStatementMixin"
   mixin("Iterator")="aldor.psi.impl.AldorIteratorMixin"
   mixin("Collection")="aldor.psi.impl.AldorCollectionMixin"
   mixin("AnyStatement_Collection")="aldor.psi.impl.AldorCollectionMixin"
+  mixin("Comma")="aldor.psi.impl.AldorCommaMixin"
 
 
   mixin("ColonExpr")="aldor.psi.impl.AldorColonExprMixin"
@@ -154,7 +157,7 @@ left DeclPart ::= KW_Colon Type | KW_ColonStar Type
 
 Comma ::= enlist1_CommaItem_KW_Comma
 // isSpadMode here is for the rather dubious ... "where \n++ xyz" which shows up in a few spad files
-private CommaItem ::= Binding_AnyStatement  WhereBlock?
+CommaItem ::= Binding_AnyStatement  WhereBlock?
 left WhereBlock ::= KW_Where (<<isSpadMode>> SpadPredocWhere)? WhereRhs
 WhereRhs ::= CommaItem
 
@@ -186,7 +189,7 @@ private BindingL_Infixed_AnyStatement ::=
                  Infixed (BindingL_Infixed_AnyStatement_Assign
                           | BindingL_Infixed_AnyStatement_Define
                           | KW_MArrow BindingL_Infixed_AnyStatement
-                          | KW_MapsTo BindingL_Infixed_AnyStatement
+                          | BindingL_Infixed_AnyStatement_Lambda
                           | KW_MapsToStar BindingL_Infixed_AnyStatement
                           | AnyStatement_Collection (KW_Implies Binding_AnyStatement)?
                           | KW_Implies Binding_AnyStatement)?
@@ -194,6 +197,7 @@ private BindingL_Infixed_AnyStatement ::=
 
 left BindingL_Infixed_AnyStatement_Define ::= KW_2EQ BindingL_Infixed_AnyStatement
 left BindingL_Infixed_AnyStatement_Assign ::= KW_Assign BindingL_Infixed_AnyStatement
+left BindingL_Infixed_AnyStatement_Lambda ::= KW_MapsTo BindingL_Infixed_AnyStatement
 left AnyStatement_Collection ::= (Iterator+ <<noRepeatHere>>)
 
 // TODO: Similar left factoring as above.
@@ -201,24 +205,26 @@ private BindingL_Infixed_BalStatement ::=
                  Infixed (BindingL_Infixed_BalStatement_Assign
                           | BindingL_Infixed_BalStatement_Define
                           | KW_MArrow BindingL_Infixed_BalStatement
-                          | KW_MapsTo BindingL_Infixed_BalStatement
+                          | BindingL_Infixed_BalStatement_Lambda
                           | KW_MapsToStar BindingL_Infixed_BalStatement)
                | BalStatement
 
 left BindingL_Infixed_BalStatement_Assign ::= KW_Assign BindingL_Infixed_BalStatement
 left BindingL_Infixed_BalStatement_Define ::= KW_2EQ BindingL_Infixed_BalStatement
+left BindingL_Infixed_BalStatement_Lambda ::= KW_MapsTo BindingL_Infixed_BalStatement
 
 // TODO: Similar left factoring as above.
 private BindingL_Infixed_Collection ::=
                  Infixed (BindingL_Infixed_Collection_Assign
                           | BindingL_Infixed_Collection_Define
                           | KW_MArrow BindingL_Infixed_Collection
-                          | KW_MapsTo BindingL_Infixed_Collection
+                          | BindingL_Infixed_Collection_Lambda
                           | KW_MapsToStar BindingL_Infixed_Collection)
                | Collection
 
-BindingL_Infixed_Collection_Assign ::= KW_Assign BindingL_Infixed_Collection
-BindingL_Infixed_Collection_Define ::= KW_2EQ BindingL_Infixed_Collection
+left BindingL_Infixed_Collection_Assign ::= KW_Assign BindingL_Infixed_Collection
+left BindingL_Infixed_Collection_Define ::= KW_2EQ BindingL_Infixed_Collection
+left BindingL_Infixed_Collection_Lambda ::= KW_MapsTo BindingL_Infixed_Collection
 
 /*
 BindingL_Infixed_InfixedExprsDecl ::=
