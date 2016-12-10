@@ -22,6 +22,7 @@ import static aldor.lexer.AldorTokenTypes.KW_Else;
 import static aldor.lexer.AldorTokenTypes.KW_If;
 import static aldor.lexer.AldorTokenTypes.KW_Implies;
 import static aldor.lexer.AldorTokenTypes.KW_Indent;
+import static aldor.lexer.AldorTokenTypes.KW_Minus;
 import static aldor.lexer.AldorTokenTypes.KW_NewLine;
 import static aldor.lexer.AldorTokenTypes.KW_Not;
 import static aldor.lexer.AldorTokenTypes.KW_OBrack;
@@ -675,6 +676,18 @@ public class AldorIndentLexerTest {
                 KW_Indent, TK_PreDoc, KW_BlkStart,
                 KW_Indent, TK_Id, KW_BlkNext,
                 KW_Indent, TK_Id, KW_NewLine
+        ), tokens);
+    }
+
+    @Test
+    public void spadInfixStart() {
+        AldorIndentLexer unit = new AldorIndentLexer(new AldorLexerAdapter(Spad, null));
+        String text = "f == 1\n-a==b\n";
+        unit.start(text);
+        List<IElementType> tokens = LexerFunctions.readTokens(unit);
+        assertEquals(Lists.newArrayList(
+                TK_Id, WHITE_SPACE, KW_2EQ, WHITE_SPACE, TK_Int, KW_BlkNext,
+                KW_Minus, TK_Id, KW_2EQ, TK_Id, KW_NewLine
         ), tokens);
     }
 

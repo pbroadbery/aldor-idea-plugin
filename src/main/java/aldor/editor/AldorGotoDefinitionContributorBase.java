@@ -17,6 +17,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@SuppressWarnings("AbstractClassWithoutAbstractMethods")
 public abstract class AldorGotoDefinitionContributorBase implements ChooseByNameContributor {
     private final StringStubIndexExtension<AldorDefine> index;
 
@@ -37,7 +38,7 @@ public abstract class AldorGotoDefinitionContributorBase implements ChooseByName
         Collection<AldorDefine> items = index.get(name, project, GlobalSearchScope.allScope(project));
         List<NavigationItem> collect = items.stream()
                 .map(define -> navigationItemForIndexEntry(project, define))
-                .flatMap(identMaybe -> identMaybe.map(Stream::of).orElse(Stream.empty()))
+                .flatMap(navItemMaybe -> navItemMaybe.map(Stream::of).orElse(Stream.empty()))
                 .collect(Collectors.toList());
         return collect.toArray(NavigationItem.EMPTY_NAVIGATION_ITEM_ARRAY);
 

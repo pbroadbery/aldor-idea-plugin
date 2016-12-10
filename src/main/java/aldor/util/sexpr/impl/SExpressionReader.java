@@ -171,6 +171,8 @@ public class SExpressionReader {
                     return 't';
                 case '"':
                     return '\"';
+                case '\\':
+                    return '\\';
                 default:
                     throw new SExpressionReadException("Unknown escape character [" + c + "]");
             }

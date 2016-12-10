@@ -4,6 +4,8 @@ import aldor.language.AldorLanguage;
 import aldor.parser.EnsureParsingTest;
 import aldor.psi.AldorE6;
 import aldor.psi.AldorIdentifier;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiReference;
@@ -11,6 +13,12 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import org.junit.Assert;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
 
 import static aldor.psi.AldorPsiUtils.logPsi;
 
@@ -163,6 +171,64 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
         PsiElement resolved = ref.resolve();
         Assert.assertNotNull(resolved);
         Assert.assertEquals(text.indexOf("x :="), resolved.getTextOffset());
+    }
+
+    public void testOneReference() {
+        String text = "foo(x: I): I == x + 1";
+        Map<String, String> nameRefToMap = ImmutableMap.<String, String>builder()
+                .put("x + 1", "x: I")
+                .build();
+        Set<String> nulls = Collections.singleton("x: I");
+        assertReferences(text, nameRefToMap, nulls);
+    }
+
+    public void testSequenceReferencesFn() {
+        String text = "#pile\n"+
+                "f(h: A): % == h + 1\n" +
+                "g(h: B): % == h + 2";
+
+        Map<String, String> nameRefToMap = ImmutableMap.<String, String>builder()
+                .put("h + 1", "h: A")
+                .put("h + 2", "h: B")
+                .build();
+        Collection<String> nulls = Arrays.asList("h: A", "h: B");
+        assertReferences(text, nameRefToMap, nulls);
+    }
+
+    public void testSequenceOp() {
+        String text = "#pile\n"+
+                "f(h: A): % == h + 1\n" +
+                "-(h: B): % == h + 2";
+
+        Map<String, String> nameRefToMap = ImmutableMap.<String, String>builder()
+                .put("h + 1", "h: A")
+                .put("h + 2", "h: B")
+                .build();
+        Collection<String> nulls = Arrays.asList("h: A", "h: B");
+        assertReferences(text, nameRefToMap, nulls);
+     }
+
+    private void assertReferences(String text, Map<String, String> nameRefToMap, Iterable<String> nulls) {
+        PsiFile file = createAldorFile(text);
+        Map<String, PsiElement> refMap = Maps.newHashMap();
+        for (Map.Entry<String, String> entry: nameRefToMap.entrySet()) {
+            PsiReference ref = file.findReferenceAt(text.indexOf(entry.getKey()));
+            Assert.assertNotNull("Failed: " + entry.getValue(), ref);
+            PsiElement resolved = ref.resolve();
+
+            refMap.put(entry.getKey(), resolved);
+        }
+
+        for (Map.Entry<String, String> entry: nameRefToMap.entrySet()) {
+            Assert.assertEquals(text.indexOf(entry.getValue()), refMap.get(entry.getKey()).getTextOffset());
+        }
+
+        for (String txt: nulls) {
+            PsiReference ref = file.findReferenceAt(text.indexOf(txt));
+            Assert.assertNotNull(ref);
+            PsiElement resolved = ref.resolve();
+            Assert.assertNull(resolved);
+        }
     }
 
     private PsiFile createAldorFile(String text) {

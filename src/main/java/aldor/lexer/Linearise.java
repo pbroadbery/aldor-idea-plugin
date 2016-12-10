@@ -29,7 +29,6 @@ import static aldor.lexer.AldorTokenTypes.KW_Else;
 import static aldor.lexer.AldorTokenTypes.KW_Finally;
 import static aldor.lexer.AldorTokenTypes.KW_Indent;
 import static aldor.lexer.AldorTokenTypes.KW_NewLine;
-import static aldor.lexer.AldorTokenTypes.KW_Not;
 import static aldor.lexer.AldorTokenTypes.KW_OCurly;
 import static aldor.lexer.AldorTokenTypes.KW_OParen;
 import static aldor.lexer.AldorTokenTypes.KW_Repeat;
@@ -289,11 +288,6 @@ public class Linearise {
                 return false;
             }
 
-            if (AldorTokenTypes.isMaybeInfix(nextLine.firstToken())
-                    && (!Objects.equals(nextLine.firstToken(), KW_Not))
-                    && (!Objects.equals(nextLine.secondToken(), KW_Slash))) {
-                return false;
-            }
             if (AldorTokenTypes.isMaybeInfix(thisLine.lastToken())
                     ) {
                 return false;
