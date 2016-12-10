@@ -3,7 +3,7 @@ package aldor.syntax;
 import aldor.lexer.AldorTokenType;
 import aldor.syntax.components.Apply;
 import aldor.syntax.components.Comma;
-import aldor.syntax.components.Declare;
+import aldor.syntax.components.DeclareNode;
 import aldor.syntax.components.EnumList;
 import aldor.syntax.components.Id;
 import aldor.syntax.components.Other;
@@ -55,7 +55,7 @@ public final class SyntaxPrinter {
         }
 
         @Override
-        public Void visitDeclaration(Declare node) {
+        public Void visitDeclaration(DeclareNode<?> node) {
             printDeclaration(this, node);
             return null;
         }
@@ -95,7 +95,7 @@ public final class SyntaxPrinter {
         visitor.write("'");
     }
 
-    private void printDeclaration(SyntaxPrintVisitor visitor, Declare node) {
+    private void printDeclaration(SyntaxPrintVisitor visitor, DeclareNode<?> node) {
         node.lhs().accept(visitor);
         visitor.write(": ");
         node.rhs().accept(visitor);

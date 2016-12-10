@@ -2,7 +2,7 @@ package aldor.syntax;
 
 import aldor.syntax.components.Apply;
 import aldor.syntax.components.Comma;
-import aldor.syntax.components.Declare;
+import aldor.syntax.components.DeclareNode;
 import aldor.syntax.components.EnumList;
 import aldor.syntax.components.Id;
 import aldor.syntax.components.Other;
@@ -21,7 +21,7 @@ public abstract class SyntaxVisitor<T> {
         return visitSyntax(node);
     }
 
-    public T visitDeclaration(Declare node) {
+    public T visitDeclaration(DeclareNode<?> node) {
         return visitSyntaxNode(node);
     }
 

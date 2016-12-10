@@ -7,8 +7,6 @@ import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import org.junit.Assert;
 
-import static aldor.psi.AldorPsiUtils.logPsi;
-
 public class SpadLanguageTest extends LightPlatformCodeInsightFixtureTestCase {
 
     public void testFoo() {
@@ -16,7 +14,6 @@ public class SpadLanguageTest extends LightPlatformCodeInsightFixtureTestCase {
                 "Aa: Category ==  B\n" +
                 ")abbrev category B Bb\n++Bb is good too\n" +
                 "Bb: Category == C\n");
-        logPsi(file);
 
         Assert.assertEquals(0, ParserFunctions.getPsiErrorElements(file).size());
     }

@@ -153,8 +153,7 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
         Assert.assertEquals(text.indexOf("x in"), resolved.getTextOffset());
     }
 
-
-    public void testLookupAssignment() {
+    public void disabled_testLookupAssignment() {
         String text = "foo(): () == { x := 1; x}";
         PsiFile file = createAldorFile(text);
 
@@ -165,9 +164,6 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
         Assert.assertNotNull(resolved);
         Assert.assertEquals(text.indexOf("x :="), resolved.getTextOffset());
     }
-
-
-
 
     private PsiFile createAldorFile(String text) {
         return createLightFile("foo.as", AldorLanguage.INSTANCE, text);

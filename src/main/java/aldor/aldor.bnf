@@ -43,6 +43,8 @@
   mixin("Collection")="aldor.psi.impl.AldorCollectionMixin"
   mixin("AnyStatement_Collection")="aldor.psi.impl.AldorCollectionMixin"
 
+
+  mixin("ColonExpr")="aldor.psi.impl.AldorColonExprMixin"
   extends(".*Expr")=Expr
 
   // These things are documented

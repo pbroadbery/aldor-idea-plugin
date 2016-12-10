@@ -2,6 +2,7 @@ package aldor.syntax;
 
 import aldor.psi.AldorAddPart;
 import aldor.psi.AldorBracketed;
+import aldor.psi.AldorColonExpr;
 import aldor.psi.AldorDeclPart;
 import aldor.psi.AldorDefineStubbing.AldorDefine;
 import aldor.psi.AldorE14;
@@ -17,14 +18,15 @@ import aldor.psi.AldorWithPart;
 import aldor.psi.JxrightElement;
 import aldor.psi.NegationElement;
 import aldor.syntax.components.Add;
+import aldor.syntax.components.AldorDeclare;
 import aldor.syntax.components.Apply;
 import aldor.syntax.components.Comma;
-import aldor.syntax.components.Declare;
 import aldor.syntax.components.Define;
 import aldor.syntax.components.EnumList;
 import aldor.syntax.components.Id;
 import aldor.syntax.components.Literal;
 import aldor.syntax.components.Other;
+import aldor.syntax.components.SpadDeclare;
 import aldor.syntax.components.With;
 import com.google.common.collect.Lists;
 import com.intellij.openapi.diagnostic.Logger;
@@ -174,9 +176,18 @@ public final class SyntaxPsiParser {
         @Override
         public void visitDeclPart(@NotNull AldorDeclPart decl) {
             List<Syntax> last = buildChildren(decl);
-            Syntax result = new Declare(decl, last);
+            Syntax result = new AldorDeclare(decl, last);
             visitStack.peek().add(result);
         }
+
+
+        @Override
+        public void visitColonExpr(@NotNull AldorColonExpr colonExpr) {
+            List<Syntax> last = buildChildren(colonExpr);
+            Syntax result = new SpadDeclare(colonExpr, last);
+            visitStack.peek().add(result);
+        }
+
 
         @Override
         public void visitWithPart(@NotNull AldorWithPart o) {

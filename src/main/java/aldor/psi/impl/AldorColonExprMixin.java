@@ -1,9 +1,8 @@
 package aldor.psi.impl;
 
-import aldor.psi.AldorDeclaration;
+import aldor.psi.AldorColonExpr;
 import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxPsiParser;
-import aldor.syntax.components.SyntaxUtils;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
@@ -12,9 +11,9 @@ import com.intellij.psi.scope.PsiScopeProcessor;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("AbstractClassExtendsConcreteClass")
-public abstract class AldorDeclarationMixin extends ASTWrapperPsiElement implements AldorDeclaration {
+public abstract class AldorColonExprMixin extends ASTWrapperPsiElement implements AldorColonExpr {
 
-    protected AldorDeclarationMixin(@NotNull ASTNode node) {
+    protected AldorColonExprMixin(@NotNull ASTNode node) {
         super(node);
     }
 
@@ -24,20 +23,16 @@ public abstract class AldorDeclarationMixin extends ASTWrapperPsiElement impleme
         if (!processor.execute(this, state)) {
             return false;
         }
-
-        if (getSig() == null) {
-            return true;
-        }
-        Syntax syntax = SyntaxPsiParser.parse(getSig());
-        if (syntax != null) {
-            Iterable<Syntax> scopes = SyntaxUtils.childScopesForDefineLhs(syntax);
-            for (Syntax childScope : scopes) {
-                if (!childScope.psiElement().processDeclarations(processor, state, this, place)) {
+        PsiElement lhs = this.getFirstChild();
+        //noinspection ObjectEquality
+        if (lastParent != lhs) {
+            Syntax lhsSyntax = SyntaxPsiParser.parse(lhs);
+            if (lhsSyntax != null) {
+                if (!lhsSyntax.psiElement().processDeclarations(processor, state, this, place)) {
                     return false;
                 }
             }
         }
         return true;
     }
-
 }
