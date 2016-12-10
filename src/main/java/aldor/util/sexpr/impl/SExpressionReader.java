@@ -1,18 +1,49 @@
 package aldor.util.sexpr.impl;
 
+import aldor.util.CharacterSet;
 import aldor.util.ReaderCharacterStream;
 import aldor.util.Stream;
 import aldor.util.Strings;
 import aldor.util.sexpr.SExpression;
 import aldor.util.sexpr.SymbolPolicy;
+import com.google.common.collect.Sets;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Reader;
 import java.util.Locale;
+import java.util.Set;
 
 public class SExpressionReader {
-
+    private static final CharacterSet tokenCharacters;
     private final ITokeniser tokeniser;
+
+    static {
+        Set<Character> tokenChars = Sets.newHashSet();
+        for (char i=0; i<256; i++) {
+            if (Character.isAlphabetic(i)) {
+                tokenChars.add(i);
+            }
+            if (Character.isDigit(i)) {
+                tokenChars.add(i);
+            }
+        }
+
+        tokenChars.add('\\');
+        tokenChars.add('?');
+        tokenChars.add('=');
+        tokenChars.add('<');
+        tokenChars.add('>');
+        tokenChars.add('-');
+        tokenChars.add('+');
+        tokenChars.add('!');
+        tokenChars.add('*');
+        tokenChars.add('/');
+        tokenChars.add('^');
+        tokenChars.add('%');
+        tokenChars.add('~');
+
+        tokenCharacters = CharacterSet.create(tokenChars);
+    }
 
     public SExpressionReader(Reader reader, SymbolPolicy symbolPolicy) {
         tokeniser = new WhitespaceFilter(new Tokeniser(reader, symbolPolicy));
@@ -216,28 +247,9 @@ public class SExpressionReader {
             return false;
         }
 
-        private boolean isSymbolCharacter(char c) {
-            if (Character.isWhitespace(c)) {
-                return false;
-            }
-            if (Character.isDigit(c)
-                    || Character.isAlphabetic(c)
-                    || (c == '\\')
-                    || (c == '?')
-                    || (c == '=')
-                    || (c == '<')
-                    || (c == '>')
-                    || (c == '-')
-                    || (c == '+')
-                    || (c == '!')
-                    || (c == '*')
-                    || (c == '/')
-                    || (c == '^')
-                    || (c == '%')
-                    || (c == '~')) {
-                return true;
-            }
-            return false;
+
+        private static boolean isSymbolCharacter(char c) {
+            return tokenCharacters.contains(c);
         }
 
 
