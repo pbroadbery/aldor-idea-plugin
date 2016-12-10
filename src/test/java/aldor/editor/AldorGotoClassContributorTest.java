@@ -24,7 +24,7 @@ public class AldorGotoClassContributorTest extends LightPlatformCodeInsightFixtu
 
     public void testGotoClass() throws IOException {
         Project project = getProject();
-        createFile(getSourceRoot(), "foo.as", "Something(x: Wibble): with == stuff; aNumber == " + System.currentTimeMillis());
+        VirtualFile file = createFile(getSourceRoot(), "foo.as", "Something(x: Wibble): with == stuff; aNumber == " + System.currentTimeMillis());
 
         FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
         FileBasedIndex.getInstance().ensureUpToDate(StubUpdatingIndex.INDEX_ID, project, null);
@@ -38,6 +38,7 @@ public class AldorGotoClassContributorTest extends LightPlatformCodeInsightFixtu
         Assert.assertEquals(1, items.length);
         NavigationItem item = items[0];
         Assert.assertEquals("Something", item.getName());
+        VirtualFileTests.deleteFile(file);
     }
 
     public void testGotoClass2() throws IOException {

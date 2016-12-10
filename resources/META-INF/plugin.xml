@@ -52,6 +52,7 @@
         <!-- Not useful: <externalAnnotator language="Aldor" implementationClass="aldor.editor.TypeAndRefAnnotator"/> -->
 
         <gotoClassContributor implementation="aldor.editor.AldorGotoClassContributor"/>
+        <gotoSymbolContributor implementation="aldor.editor.AldorGotoSymbolContributor"/>
         <stubElementTypeHolder class="aldor.psi.elements.AldorTypes"/>
         <stubIndex implementation="aldor.psi.index.AldorDefineNameIndex"/>
         <stubIndex implementation="aldor.psi.index.AldorDefineTopLevelIndex"/>
@@ -67,7 +68,7 @@
         <lang.parserDefinition language="Spad" implementationClass="aldor.parser.SpadParserDefinition"/>
         <stubIndex implementation="aldor.psi.index.AbbrevNameIndex"/>
         <stubIndex implementation="aldor.psi.index.AbbrevAbbrevIndex"/>
-        <gotoClassContributor implementation="aldor.editor.SpadGotoClassContributor"/>
+        <gotoClassContributor implementation="aldor.editor.SpadAbbrevGotoClassContributor"/>
 
         <!-- Test language -->
         <fileTypeFactory implementation="aldor.expression.ExpressionFileTypeFactory"/>
@@ -78,6 +79,14 @@
 
     <actions>
         <!-- Add your actions here -->
+        <action id="aldor.actions.CreateNewAldorFileAction" class="aldor.actions.CreateNewAldorFileAction"
+                text="Create New Aldor File" description="Creates a new aldor file">
+            <add-to-group group-id="NewGroup" anchor="after" relative-to-action="NewFile"/>
+        </action>
+        <action id="aldor.actions.CreateNewSpadFileAction" class="aldor.actions.CreateNewSpadFileAction"
+                text="Create New SPAD File" description="Creates a new SPAD file">
+            <add-to-group group-id="NewGroup" anchor="after" relative-to-action="NewFile"/>
+        </action>
     </actions>
 
     <application-components>
