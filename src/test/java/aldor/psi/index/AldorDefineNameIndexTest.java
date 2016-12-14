@@ -2,7 +2,7 @@ package aldor.psi.index;
 
 import aldor.build.module.AldorModuleType;
 import aldor.psi.AldorDefineStubbing;
-import aldor.util.JUnits;
+import aldor.test_util.JUnits;
 import aldor.util.VirtualFileTests;
 import com.google.common.collect.Sets;
 import com.intellij.openapi.module.ModuleType;

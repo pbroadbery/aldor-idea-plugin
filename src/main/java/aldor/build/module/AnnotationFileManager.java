@@ -37,6 +37,7 @@ import java.util.NavigableMap;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 public class AnnotationFileManager implements Disposable {
@@ -114,6 +115,10 @@ public class AnnotationFileManager implements Disposable {
         else {
             VirtualFile buildFile = vfs.findFileByPath(buildFilePath);
             if (buildFile == null) {
+                buildFile = vfs.refreshAndFindFileByPath(buildFilePath);
+            }
+
+            if (buildFile == null) {
                 return new MissingAnnotationFile(virtualFile, "Missing .abn file: "+ buildFilePath);
             }
             try (LineNumberReader reader = new LineNumberReader(new InputStreamReader(buildFile.getInputStream(), StandardCharsets.US_ASCII))) {
@@ -154,8 +159,8 @@ public class AnnotationFileManager implements Disposable {
         return map.findPsiElementForSrcPos(file, srcPos.lineNumber(), srcPos.columnNumber());
     }
 
-    public void requestRebuild(PsiFile psiFile) {
-        annotationFileBuilder.invokeAnnotationBuild(psiFile);
+    public Future<Void> requestRebuild(PsiFile psiFile) {
+        return annotationFileBuilder.invokeAnnotationBuild(psiFile);
     }
 
     private class LineNumberMap {

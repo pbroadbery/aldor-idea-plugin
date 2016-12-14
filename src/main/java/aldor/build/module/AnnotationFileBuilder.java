@@ -1,5 +1,6 @@
 package aldor.build.module;
 
+import com.google.common.util.concurrent.SettableFuture;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompileStatusNotification;
@@ -13,10 +14,12 @@ import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 
+import java.util.concurrent.Future;
+
 /** Maybe make this an interface */
 public interface AnnotationFileBuilder {
 
-    void invokeAnnotationBuild(PsiFile psiFile);
+    Future<Void> invokeAnnotationBuild(PsiFile psiFile);
 
     final class CompilerResult {
         private final boolean aborted;
@@ -35,10 +38,11 @@ public interface AnnotationFileBuilder {
         private static final Logger LOG = Logger.getInstance(AnnotationFileBuilderImpl.class);
 
         @Override
-        public void invokeAnnotationBuild(PsiFile psiFile) {
+        public Future<Void> invokeAnnotationBuild(PsiFile psiFile) {
 
             final VirtualFile file = psiFile.getVirtualFile();
             final Project project = psiFile.getProject();
+            final SettableFuture<Void> completion = SettableFuture.create();
             ApplicationManager.getApplication().invokeLater(new Runnable() {
                 @Override
                 public void run() {
@@ -56,44 +60,15 @@ public interface AnnotationFileBuilder {
                                 assert annotationManager != null;
                                 annotationManager.invalidate(file);
                                 compileContext.getMessages(CompilerMessageCategory.ERROR);
+                                completion.set(null);
                             }
                         }
                     });
                 }
             });
+            return completion;
         }
 
-
-        /*
-        try {
-            String buildPath = collectedInfo.buildPath();
-            LOG.info("Reading file: " + buildPath);
-            assert buildPath !=  null;
-            TypeAndRefAnnotator.CompilerResult result = resultLater.poll(COMPILE_TIMEOUT, TimeUnit.SECONDS);
-            if (result == null) {
-                return new TypeAndRefAnnotator.FullInfo(collectedInfo, "Time out while compiling " + file.getPresentableName());
-            }
-
-            VirtualFile buildFile = vfs.findFileByPath(buildPath);
-            if (buildFile == null) {
-                return new TypeAndRefAnnotator.FullInfo(collectedInfo, "Compile succeeded, but file apparently doesn't exist (" + buildPath + ")");
-            }
-            else if (!buildFile.exists()) {
-                return new TypeAndRefAnnotator.FullInfo(collectedInfo, "Compile succeeded, but file " + buildFile + " not created");
-            }
-            BufferedReader reader = new BufferedReader(new InputStreamReader(buildFile.getInputStream(), StandardCharsets.US_ASCII));
-            PopulatedAnnotationFile annotation = new PopulatedAnnotationFile(file.getPath(), SExpression.read(reader));
-            return new TypeAndRefAnnotator.FullInfo(collectedInfo, annotation);
-        } catch (InterruptedException ignored) {
-            Thread.currentThread().interrupt();
-            return new TypeAndRefAnnotator.FullInfo(collectedInfo, "Interrupt while waiting for the build");
-        } catch (IOException e) {
-            return new TypeAndRefAnnotator.FullInfo(collectedInfo, "Failed to read annotation file: " + e.getMessage());
-        }
-        catch (SExpressionReadException e) {
-            return new TypeAndRefAnnotator.FullInfo(collectedInfo, "Failed to parse annotation file: "+ e.getMessage());
-        }
-        */
     }
 
 }

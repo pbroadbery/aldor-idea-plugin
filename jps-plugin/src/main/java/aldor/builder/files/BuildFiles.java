@@ -14,7 +14,6 @@ public final class BuildFiles {
 
     @Nullable
     public static File buildDirectoryForFile(Collection<File> contentRoots, File file) {
-        System.out.println("R: " + contentRoots + " " + file);
         Optional<File> maybeRoot = contentRoots.stream().filter(root -> FileUtil.isAncestor(root, file, false)).findFirst();
         if (!maybeRoot.isPresent()) {
             return null;
@@ -28,15 +27,18 @@ public final class BuildFiles {
     private static File buildDirectoryFor(File buildRootDirectory, final File directory) {
         // TODO: This should match AldorModuleManager
         if (directory == null) {
-            return null;
+            return buildRootDirectory.getParentFile();
         }
         File configScript = new File(directory, "configure.ac");
-        if (!configScript.exists()) {
-            File parentBuild = buildDirectoryFor(buildRootDirectory, directory.getParentFile());
-            return (parentBuild == null) ? null : new File(parentBuild, directory.getName());
+        if (configScript.exists()) {
+            return buildRootDirectory;
+        }
+        else if (new File(directory, "Makefile").exists()) {
+            return directory;
         }
         else {
-            return buildRootDirectory;
+            File parentBuild = buildDirectoryFor(buildRootDirectory, directory.getParentFile());
+            return (parentBuild == null) ? null : new File(parentBuild, directory.getName());
         }
     }
 

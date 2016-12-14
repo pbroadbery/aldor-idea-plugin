@@ -27,6 +27,7 @@ public class AldorBuildTargetTypes {
     public final AldorFileBuildTargetType fileBuildTargetType;
 
     AldorBuildTargetTypes(AldorBuilderService service) {
+        LOG.info("Builder: " + service);
         this.fileBuildTargetType = new AldorFileBuildTargetType(service);
     }
 

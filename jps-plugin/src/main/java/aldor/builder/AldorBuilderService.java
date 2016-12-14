@@ -17,7 +17,13 @@ public class AldorBuilderService extends BuilderService {
     private final ExecutorService executorService = Executors.newCachedThreadPool();
     private final AldorBuildTargetTypes targetTypes;
 
+    @Override
+    public String toString() {
+        return "{AldorBuildService}";
+    }
+
     public AldorBuilderService() {
+        LOG.info("Creating builder service...");
         //noinspection ThisEscapedInObjectConstruction
         targetTypes = new AldorBuildTargetTypes(this);
     }

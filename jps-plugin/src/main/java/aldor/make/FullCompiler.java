@@ -37,7 +37,7 @@ public class FullCompiler implements AldorFileTargetBuilder.Compiler {
         ExecutorService service = AldorFileBuildTargetType.executorFor(descriptor);
         File buildDirectory = descriptor.buildDirectoryForFile(file);
         if (buildDirectory == null) {
-            context.processMessage(new CompilerMessage(ALDOR_COMPILER, BuildMessage.Kind.ERROR, "Missing configuration"));
+            context.processMessage(new CompilerMessage(ALDOR_COMPILER, BuildMessage.Kind.ERROR, "Missing configuration for " + file));
             return false;
         }
         if (!buildDirectory.exists()) {

@@ -1,4 +1,4 @@
-package aldor.util;
+package aldor.test_util;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.testFramework.TestLoggerFactory;

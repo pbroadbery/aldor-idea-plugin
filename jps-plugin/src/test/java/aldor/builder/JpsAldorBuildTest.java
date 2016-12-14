@@ -68,9 +68,9 @@ public class JpsAldorBuildTest extends AldorJpsTestCase {
         Assert.assertFalse(result.isSuccessful());
     }
 
-    class AldorFixture {
-        final String projectName = "aldor-codebase";
-        final AldorJpsTestCase testCase;
+    private class AldorFixture {
+        private final String projectName = "aldor-codebase";
+        private final AldorJpsTestCase testCase;
 
         AldorFixture(AldorJpsTestCase testCase) {
             this.testCase = testCase;

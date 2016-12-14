@@ -16,10 +16,11 @@ import java.util.Set;
 public class SExpressionReader {
     private static final CharacterSet tokenCharacters;
     private final ITokeniser tokeniser;
+    private static final int MAX_ASCII = 256;
 
     static {
         Set<Character> tokenChars = Sets.newHashSet();
-        for (char i=0; i<256; i++) {
+        for (char i=0; i<MAX_ASCII; i++) {
             if (Character.isAlphabetic(i)) {
                 tokenChars.add(i);
             }

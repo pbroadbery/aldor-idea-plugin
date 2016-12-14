@@ -25,7 +25,7 @@ import javax.swing.JPanel;
 public class AldorCodeStylePanel extends CodeStyleAbstractPanel {
 
     public static final String ALIGNMENT_SAMPLE = "THINK OF SOMETHING FUN TO WRITE HERE";
-
+    private static final int RIGHT_MARGIN_DEFAULT = 80;
     private JPanel myPreviewPanel;
     private JPanel myPanel;
     private JCheckBox useLigatures;
@@ -38,7 +38,7 @@ public class AldorCodeStylePanel extends CodeStyleAbstractPanel {
 
     @Override
     protected int getRightMargin() {
-        return 80;
+        return RIGHT_MARGIN_DEFAULT;
     }
 
     @Nullable

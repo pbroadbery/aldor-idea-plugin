@@ -51,12 +51,13 @@ public class AldorCompilationServiceImpl extends AldorCompilationService {
         }
     }
 
-    static class CompileState {}
+    private static class CompileState {}
 
-    static class InProgressCompileState extends CompileState {
+    private static class InProgressCompileState extends CompileState {
 
     }
-    static class FinishedCompileState extends CompileState {
+
+    private static class FinishedCompileState extends CompileState {
         private final List<CompilerMessage> messages;
 
         FinishedCompileState(Collection<CompilerMessage> messages) {
