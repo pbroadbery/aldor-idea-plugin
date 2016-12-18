@@ -14,6 +14,7 @@ import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 
+import java.util.Optional;
 import java.util.concurrent.Future;
 
 /** Maybe make this an interface */
@@ -56,9 +57,9 @@ public interface AnnotationFileBuilder {
                                 for (CompilerMessage message : compileContext.getMessages(CompilerMessageCategory.ERROR)) {
                                     LOG.info("Message: " + message);
                                 }
-                                AnnotationFileManager annotationManager = AnnotationFileManager.getAnnotationFileManager(module);
-                                assert annotationManager != null;
-                                annotationManager.invalidate(file);
+                                Optional<AnnotationFileManager> annotationManager = AnnotationFileManager.getAnnotationFileManager(module);
+                                assert annotationManager.isPresent();
+                                annotationManager.get().invalidate(file);
                                 compileContext.getMessages(CompilerMessageCategory.ERROR);
                                 completion.set(null);
                             }

@@ -1,5 +1,6 @@
 package aldor.build.module;
 
+import aldor.util.AnnotatedOptional;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleType;
@@ -16,6 +17,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static aldor.util.AnnotatedOptional.missing;
 
 public final class AldorModuleManager {
     private static final Key<AldorModuleManager> key = new Key<>(AldorModuleManager.class.getName());
@@ -57,6 +60,19 @@ public final class AldorModuleManager {
 
         return Optional.ofNullable(module).filter(mod -> ModuleType.is(mod, AldorModuleType.instance()));
     }
+
+
+    @NotNull
+    public AnnotatedOptional<AnnotationFileManager, String> annotationFileManagerForFile(@NotNull Project project, @NotNull VirtualFile virtualFile) {
+        Optional<Module> moduleMaybe = aldorModuleForFile(virtualFile);
+        if (!moduleMaybe.isPresent()) {
+            return missing("No module for file " + virtualFile.getName());
+        }
+        Module module = moduleMaybe.get();
+        Optional<AnnotationFileManager> qq = AnnotationFileManager.getAnnotationFileManager(module);
+        return AnnotatedOptional.fromOptional(qq, () -> "missing module");
+    }
+
 
     private boolean isParent(VirtualFile root, VirtualFile containingFile) {
         VirtualFile file = containingFile;

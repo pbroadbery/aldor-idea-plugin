@@ -1,89 +1,86 @@
 package aldor.editor;
 
-import aldor.build.module.AldorModuleType;
 import aldor.psi.AldorIdentifier;
-import aldor.util.VirtualFileTests;
-import aldor.util.sexpr.SExpression;
-import aldor.util.sexpr.SymbolPolicy;
+import aldor.symbolfile.AldorRoundTripProjectDescriptor;
+import aldor.symbolfile.AnnotationFileTestFixture;
+import aldor.test_util.ExecutablePresentRule;
+import aldor.test_util.JUnits;
 import com.intellij.codeInsight.documentation.DocumentationManager;
-import com.intellij.openapi.module.ModuleType;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiManager;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
+import junit.framework.AssertionFailedError;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
+import org.junit.Rule;
 
-import java.io.IOException;
-import java.util.Collection;
-
-import static aldor.symbolfile.AnnotationFileTests.name;
-import static aldor.symbolfile.AnnotationFileTests.srcpos;
-import static aldor.symbolfile.AnnotationFileTests.syme;
-import static aldor.symbolfile.AnnotationFileTests.type;
-import static aldor.symbolfile.SymbolFileSymbols.Id;
-import static aldor.util.VirtualFileTests.createFile;
-import static aldor.util.sexpr.SExpressions.list;
+import static java.util.Optional.ofNullable;
 
 public class AldorDocumentationProviderTest extends LightPlatformCodeInsightFixtureTestCase {
 
-    /*
-    * TODO: Make sure that this matches generated .abn files.
-     */
-    public void testDocProvider() throws IOException {
-        VirtualFile root = VirtualFileTests.getProjectRoot(getProject());
-        //FIXME: Need to recreate the correct markup
-        VirtualFile virtualFile = createFile(root, "foo.as", "a; b; c; d;");
-        createFile(root, "foo.abn", createMockTypeMarkup().toString(SymbolPolicy.ALLCAPS));
-        PsiFile file = getPsiManager().findFile(virtualFile);
+    private static final Logger LOG = Logger.getInstance(AldorDocumentationProviderTest.class);
+    private final AnnotationFileTestFixture annotationTextFixture = new AnnotationFileTestFixture();
+    @Rule
+    public final ExecutablePresentRule aldorExecutableRule = new ExecutablePresentRule.Aldor();
 
-        Collection<AldorIdentifier> ids = PsiTreeUtil.findChildrenOfType(file, AldorIdentifier.class);
-
-        for (AldorIdentifier id : ids) {
-            Assert.assertNotNull(id.getContainingFile());
-            String docco = docForElement(id);
-            System.out.println("Doc is: " + docco);
-        }
-
-        String firstDoc = docForElement(ids.iterator().next());
-        Assert.assertTrue(firstDoc.contains("> T<"));
-    }
-
-    private String docForElement(PsiElement id) {
-        return DocumentationManager.getProviderFromElement(id).generateDoc(id, null);
-    }
-
-    private SExpression createMockTypeMarkup() {
-        String file = "foo";
-        return list(
-                list(//Syntax
-                        list(Id, srcpos(file, 1, 1), syme(0)),
-                        list(Id, srcpos(file, 1, 4), syme(1)),
-                        list(Id, srcpos(file, 1, 7), syme(2))),
-                list(//Symbols
-                        list(name("a"), type(0)),
-                        list(name("b"), type(1)),
-                        list(name("c"), type(1)),
-                        list(name("T"))),
-                list(//Types
-                        list(Id, syme(3)),
-                        list(Id, syme(3))));
-
+    @Override
+    protected boolean shouldRunTest() {
+        return super.shouldRunTest() && aldorExecutableRule.shouldRunTest();
     }
 
     @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        JUnits.setLogToDebug();
+    }
+
+    public void testDocumentationLocal() throws Exception {
+        annotationTextFixture.project(getProject());
+        Project project = getProject();
+
+        String program = "#include \"aldor\"\n"
+                + "+++ This is a domain\n"
+                + "Dom: with == add;\n"
+                + "f(x: Dom): Dom == x;\n";
+        VirtualFile sourceFile = annotationTextFixture.createFile("foo.as", program);
+        annotationTextFixture.createFile("Makefile", "foo.abn: foo.as\n\t" + aldorExecutableRule.executable() + " -Fabn=foo.abn foo.as");
+
+        annotationTextFixture.compileFile(sourceFile);
+
+        ApplicationManager.getApplication().invokeAndWait(() -> {
+            PsiFile psiFile = ofNullable(PsiManager.getInstance(getProject()).findFile(sourceFile)).orElseThrow(() -> new AssertionFailedError(""));
+            String docs = docForElement(PsiTreeUtil.findElementOfClassAtOffset(psiFile, program.indexOf("Dom)"), AldorIdentifier.class, true));
+            LOG.info("Docs are: " + docs);
+            Assert.assertNotNull(docs);
+            Assert.assertTrue(docs.contains("This is a domain"));
+        });
+
+    }
+
+    private String docForElement(PsiElement id) {
+        return DocumentationManager.getProviderFromElement(id).generateDoc(id, id);
+    }
+
+    @Override
+    protected void invokeTestRunnable(@NotNull Runnable runnable) throws Exception {
+        runnable.run();
+    }
+
+    @Override
+    protected boolean runInDispatchThread() {
+        return false;
+    }
+
+
+    @Override
     protected LightProjectDescriptor getProjectDescriptor() {
-        //noinspection ReturnOfInnerClass
-        return new LightProjectDescriptor() {
-
-            @Override
-            @NotNull
-            public ModuleType<?> getModuleType() {
-                return AldorModuleType.instance();
-            }
-
-        };
+       return new AldorRoundTripProjectDescriptor();
     }
 }

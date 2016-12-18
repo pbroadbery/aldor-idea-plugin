@@ -129,7 +129,7 @@ public class PopulatedAnnotationFile implements AnnotationFile {
 
     @Override
     @Nullable
-    public Syme lookupSyme(SrcPos srcPos) {
+    public Syme lookupSyme(@NotNull SrcPos srcPos) {
         SExpression sx = sxForSrcPos.get(srcPos);
         if (sx == null) {
             return null;

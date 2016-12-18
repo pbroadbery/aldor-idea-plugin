@@ -7,6 +7,7 @@ import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/** Creates navigation items for aldor Psi Elements */
 public final class NavigatorFactory {
     public static final NavigatorFactory instance = new NavigatorFactory();
     @Nullable

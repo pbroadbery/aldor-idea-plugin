@@ -51,9 +51,9 @@
   extends(".*Expr")=Expr
 
   // These things are documented
-  mixin("Doc_Expression")='aldor.psi.AldorDocumentedMixin'
-  mixin("Documented_Labelled")='aldor.psi.AldorDocumentedMixin'
-  mixin("SpadTopLevelExpression")='aldor.psi.AldorDocumentedMixin'
+  implements("Doc_Expression")='aldor.psi.AldorDocumented'
+  implements("Documented_Labelled")='aldor.psi.AldorDocumented'
+  implements("SpadTopLevelExpression")='aldor.psi.AldorDocumented'
 
   // These are definitions
   stubClass(".*_Define")='aldor.psi.AldorDefineStubbing.AldorDefineStub'

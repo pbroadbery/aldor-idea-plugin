@@ -16,6 +16,7 @@ import org.junit.Assert;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -41,7 +42,7 @@ public class AnnotationFileTestFixture {
         return fileForName.get(name);
     }
 
-    void project(Project project) {
+    public void project(Project project) {
         this.project = project;
     }
 
@@ -55,10 +56,10 @@ public class AnnotationFileTestFixture {
         ApplicationManager.getApplication().invokeAndWait(() -> {
             Module module = AldorModuleManager.getInstance(project).aldorModules().stream().findFirst().orElseThrow(()->new RuntimeException("no module for " + file));
             PsiFile psiFile = PsiManager.getInstance(project).findFile(file);
-            AnnotationFileManager manager = AnnotationFileManager.getAnnotationFileManager(module);
-            assert manager != null;
+            Optional<AnnotationFileManager> manager = AnnotationFileManager.getAnnotationFileManager(module);
+            assert manager.isPresent();
 
-            Future<Void> fut = manager.requestRebuild(psiFile);
+            Future<Void> fut = manager.get().requestRebuild(psiFile);
             result.add(fut);
         });
 

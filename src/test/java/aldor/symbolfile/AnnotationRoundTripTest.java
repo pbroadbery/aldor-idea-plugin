@@ -1,6 +1,5 @@
 package aldor.symbolfile;
 
-import aldor.build.module.AldorModuleType;
 import aldor.build.module.AnnotationFileManager;
 import aldor.psi.AldorIdentifier;
 import aldor.syntax.SyntaxPrinter;
@@ -8,16 +7,8 @@ import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.JUnits;
 import com.intellij.codeInsight.documentation.DocumentationManager;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.JavaSdk;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.CompilerModuleExtension;
-import com.intellij.openapi.roots.ContentEntry;
-import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -31,6 +22,7 @@ import org.junit.Rule;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class AnnotationRoundTripTest extends LightPlatformCodeInsightFixtureTestCase {
@@ -61,15 +53,15 @@ public class AnnotationRoundTripTest extends LightPlatformCodeInsightFixtureTest
 
         ApplicationManager.getApplication().invokeAndWait(() -> {
             PsiFile psiFile = PsiManager.getInstance(project).findFile(sourceFile);
-            AnnotationFileManager annotationManager = AnnotationFileManager.getAnnotationFileManager(myModule);
-            Assert.assertNotNull(annotationManager);
-            AnnotationFile annotationFile = annotationManager.annotationFile(psiFile);
+            Optional<AnnotationFileManager> annotationManager = AnnotationFileManager.getAnnotationFileManager(myModule);
+            Assert.assertTrue(annotationManager.isPresent());
+            AnnotationFile annotationFile = annotationManager.get().annotationFile(psiFile);
             Assert.assertNull(annotationFile.errorMessage());
             Collection<AldorIdentifier> elts = PsiTreeUtil.findChildrenOfType(psiFile, AldorIdentifier.class);
             List<AldorIdentifier> nInstances = elts.stream().filter(id -> "n".equals(id.getText())).collect(Collectors.toList());
             Assert.assertFalse(nInstances.isEmpty());
             Assert.assertTrue(nInstances.stream()
-                                        .map(annotationManager::findSrcPosForElement)
+                                        .map(annotationManager.get()::findSrcPosForElement)
                                         .map(annotationFile::lookupSyme)
                     .allMatch(syme -> {
                                     if (syme == null) {
@@ -100,39 +92,7 @@ public class AnnotationRoundTripTest extends LightPlatformCodeInsightFixtureTest
     @Override
     protected LightProjectDescriptor getProjectDescriptor() {
         //noinspection ReturnOfInnerClass
-        return new AldorLightProjectDescriptor();
+        return new AldorRoundTripProjectDescriptor();
     }
 
-    private static class AldorLightProjectDescriptor extends LightProjectDescriptor {
-        @Override
-        public void setUpProject(@NotNull Project project, @NotNull SetupHandler handler) throws Exception {
-            super.setUpProject(project, handler);
-            ApplicationManagerEx.getApplicationEx().doNotSave(false);
-            project.save();
-        }
-
-        @Override
-        protected void configureModule(@NotNull Module module, @NotNull ModifiableRootModel model, @NotNull ContentEntry contentEntry) {
-            super.configureModule(module, model, contentEntry);
-            CompilerModuleExtension compilerModuleExtension = model.getModuleExtension(CompilerModuleExtension.class);
-            compilerModuleExtension.setCompilerOutputPath("file:///tmp");
-            compilerModuleExtension.inheritCompilerOutputPath(false);
-        }
-
-        // Not needed, except that the compile driver insists on it.
-        @Override public Sdk getSdk() {
-            return JavaSdk.getInstance().createJdk("java", "/usr/lib/jvm/default-java");
-        }
-
-        @Override
-        @NotNull
-        public ModuleType<?> getModuleType() {
-            return AldorModuleType.instance();
-        }
-
-        @Override
-        protected VirtualFile createSourceRoot(@NotNull Module module, String srcPath) {
-            return module.getProject().getBaseDir();
-        }
-    }
 }

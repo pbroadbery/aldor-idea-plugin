@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Optional;
 
 import static com.intellij.AppTopics.FILE_DOCUMENT_SYNC;
 
@@ -69,10 +70,10 @@ public class AldorApplicationComponent implements ApplicationComponent {
             for (PsiFile psiFile: psiFiles) {
                 Project project = psiFile.getProject();
                 for (Module module: AldorModuleManager.getInstance(project).aldorModules()) {
-                    AnnotationFileManager manager = AnnotationFileManager.getAnnotationFileManager(module);
-                    assert manager != null;
+                    Optional<AnnotationFileManager> manager = AnnotationFileManager.getAnnotationFileManager(module);
+                    assert manager.isPresent();
                     LOG.info("Would like to build: " + psiFile.getName());
-                    manager.requestRebuild(psiFile);
+                    manager.get().requestRebuild(psiFile);
                 }
             }
         }
