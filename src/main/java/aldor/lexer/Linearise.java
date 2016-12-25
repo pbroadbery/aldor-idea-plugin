@@ -116,9 +116,6 @@ public class Linearise {
         return false;
     }
 
-    private void scan(PiledSection section) {
-        scan(section, 0);
-    }
 
     private IndentNode scan(PiledSection section, final int startIndex) {
         List<IndentNode> children = Lists.newArrayList();
@@ -288,8 +285,7 @@ public class Linearise {
                 return false;
             }
 
-            if (AldorTokenTypes.isMaybeInfix(thisLine.lastToken())
-                    ) {
+            if (AldorTokenTypes.isMaybeInfix(thisLine.lastToken())) {
                 return false;
             }
 
