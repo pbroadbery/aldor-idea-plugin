@@ -31,6 +31,7 @@ import java.util.Set;
 
 import static aldor.parser.ParserFunctions.parseLibrary;
 import static aldor.psi.AldorPsiUtils.logPsi;
+import static aldor.test_util.TestFiles.existingFile;
 
 /**
  * Lexer Test. Created by pab on 30/08/16.
@@ -288,79 +289,14 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
         Assert.assertTrue(ParserFunctions.getPsiErrorElements(parsed.getPsi()).isEmpty());
     }
 
-    public void testParseLang() {
-        Assert.assertNotNull(getProject());
 
-        Project project = getProject();
-        File file = new File("/home/pab/Work/aldorgit/aldor/aldor/lib/aldor/src/lang/sal_lang.as");
-        final List<PsiErrorElement> errors = parseFile(project, file);
-        Assert.assertEquals(0, errors.size());
+    private PsiElement parseText(CharSequence text) {
+        return ParserFunctions.parseAldorText(getProject(), text, AldorTypes.TOP_LEVEL);
     }
 
-    public void testParseITools() {
-        Assert.assertNotNull(getProject());
-
-        Project project = getProject();
-        File file = new File("/home/pab/Work/aldorgit/aldor/aldor/lib/aldor/src/arith/sal_itools.as");
-        final List<PsiErrorElement> errors = parseFile(project, file);
-        Assert.assertEquals(0, errors.size());
-    }
-
-    public void testParseSalSSet() {
-        Assert.assertNotNull(getProject());
-
-        Project project = getProject();
-        File file = new File("/home/pab/Work/aldorgit/aldor/aldor/lib/aldor/src/datastruc/sal_sset.as");
-        final List<PsiErrorElement> errors = parseFile(project, file);
-        Assert.assertEquals(0, errors.size());
-    }
-
-    public void testParseFold() {
-        Assert.assertNotNull(getProject());
-
-        Project project = getProject();
-        File file = new File("/home/pab/Work/aldorgit/aldor/aldor/lib/aldor/src/datastruc/sal_fold.as");
-        final List<PsiErrorElement> errors = parseFile(project, file);
-        Assert.assertEquals(0, errors.size());
-    }
-
-    public void testParseBSearch() {
-        Assert.assertNotNull(getProject());
-
-        Project project = getProject();
-        File file = new File("/home/pab/Work/aldorgit/aldor/aldor/lib/aldor/src/arith/sal_bsearch.as");
-        final List<PsiErrorElement> errors = parseFile(project, file);
-        Assert.assertEquals(0, errors.size());
-    }
-
-    public void testParseUPMod() {
-        Assert.assertNotNull(getProject());
-
-        Project project = getProject();
-        File file = new File("/home/pab/Work/aldorgit/aldor/aldor/lib/algebra/src/algext/sit_upmod.as");
-        final List<PsiErrorElement> errors = parseFile(project, file);
-        Assert.assertEquals(0, errors.size());
-    }
-
-    public void testParseSExpr() {
-        Assert.assertNotNull(getProject());
-
-        Project project = getProject();
-        File file = new File("/home/pab/Work/aldorgit/aldor/aldor/lib/aldor/src/lisp/sal_sexpr.as");
-        final List<PsiErrorElement> errors = parseFile(project, file);
-        Assert.assertEquals(0, errors.size());
-    }
-
-    public void testParseAxiomPrime() {
-        Assert.assertNotNull(getProject());
-
-        Project project = getProject();
-        File file = new File("/home/pab/Work/aldorgit/aldor/aldor/lib/algebra/src/categories/sit_axiomprime.as");
-        final List<PsiErrorElement> errors = parseFile(project, file);
-        Assert.assertEquals(0, errors.size());
-    }
-
-    @NotNull
+    private PsiElement parseText(CharSequence text, IElementType eltType) {
+        return ParserFunctions.parseAldorText(getProject(), text, eltType);
+    }    @NotNull
     private List<PsiErrorElement> parseFile(Project project, File file) {
         Assert.assertTrue(file.exists());
         VirtualFile vf = LocalFileSystem.getInstance().findFileByIoFile(file);
@@ -374,18 +310,11 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
         return ParserFunctions.getPsiErrorElements(psi);
     }
 
-    private PsiElement parseText(CharSequence text) {
-        return ParserFunctions.parseAldorText(getProject(), text, AldorTypes.TOP_LEVEL);
-    }
-
-    private PsiElement parseText(CharSequence text, IElementType eltType) {
-        return ParserFunctions.parseAldorText(getProject(), text, eltType);
-    }
 
     public void testAldorLibrary() {
         Assert.assertNotNull(getProject());
 
-        File base = new File("/home/pab/Work/aldorgit/aldor/aldor/lib/aldor/src");
+        File base = existingFile("/home/pab/Work/aldorgit/aldor/aldor/lib/aldor/src");
         Multimap<ParserFunctions.FailReason, File> badFiles = parseLibrary(getProject(), base, Sets.newHashSet());
 
         for (Map.Entry<ParserFunctions.FailReason, File> ent: badFiles.entries()) {
@@ -398,7 +327,7 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
     public void testAlgebraLibrary() {
         Assert.assertNotNull(getProject());
 
-        File base = new File("/home/pab/Work/aldorgit/aldor/aldor/lib/algebra/src");
+        File base = existingFile("/home/pab/Work/aldorgit/aldor/aldor/lib/algebra/src");
         Set<String> blackList = Sets.newHashSet("tst_dup.as", "tst_fold.as",
                 "sit_upolc0.as", "sit_upolc.as");
         Multimap<ParserFunctions.FailReason, File> badFiles = parseLibrary(getProject(), base, blackList);

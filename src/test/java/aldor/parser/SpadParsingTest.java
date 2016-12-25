@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 import static aldor.lexer.LexMode.Spad;
 import static aldor.parser.ParserFunctions.parseLibrary;
 import static aldor.psi.AldorPsiUtils.logPsi;
+import static aldor.test_util.TestFiles.existingFile;
 
 public class SpadParsingTest extends LightPlatformCodeInsightTestCase {
 
@@ -218,17 +219,18 @@ public class SpadParsingTest extends LightPlatformCodeInsightTestCase {
     public void testParseCatDef() throws IOException {
         Assert.assertNotNull(getProject());
 
-        File file = new File("/home/pab/Work/fricas/fricas/src/algebra/catdef.spad");
+        File file = existingFile("/home/pab/Work/fricas/fricas/src/algebra/catdef.spad");
         PsiElement psi = parseFile(file);
         logPsi(psi);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
         Assert.assertEquals(0, errors.size());
     }
 
+
     public void testParseCDen() throws IOException {
         Assert.assertNotNull(getProject());
 
-        File file = new File("/home/pab/Work/fricas/fricas/src/algebra/cden.spad");
+        File file = existingFile("/home/pab/Work/fricas/fricas/src/algebra/cden.spad");
         PsiElement psi = parseFile(file);
         logPsi(psi);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
@@ -238,7 +240,7 @@ public class SpadParsingTest extends LightPlatformCodeInsightTestCase {
     public void testParseAggCat() throws IOException {
         Assert.assertNotNull(getProject());
         // Fails: Line 722      "++ to become an in order iterator" seems misplaced
-        File file = new File("/home/pab/Work/fricas/fricas/src/algebra/aggcat.spad");
+        File file = existingFile("/home/pab/Work/fricas/fricas/src/algebra/aggcat.spad");
         PsiElement psi = parseFile(file);
         logPsi(psi);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
@@ -248,7 +250,7 @@ public class SpadParsingTest extends LightPlatformCodeInsightTestCase {
     public void testParseFR() throws IOException {
         Assert.assertNotNull(getProject());
 
-        File file = new File("/home/pab/Work/fricas/fricas/src/algebra/fr.spad");
+        File file = existingFile("/home/pab/Work/fricas/fricas/src/algebra/fr.spad");
         PsiElement psi = parseFile(file);
         logPsi(psi);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
@@ -258,7 +260,7 @@ public class SpadParsingTest extends LightPlatformCodeInsightTestCase {
     public void testParseFMod() throws IOException {
         Assert.assertNotNull(getProject());
 
-        File file = new File("/home/pab/Work/fricas/fricas/src/algebra/fmod.spad");
+        File file = existingFile("/home/pab/Work/fricas/fricas/src/algebra/fmod.spad");
         PsiElement psi = parseFile(file);
         logPsi(psi);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
@@ -267,7 +269,7 @@ public class SpadParsingTest extends LightPlatformCodeInsightTestCase {
 
     public void testParseSuchThat() throws IOException {
         Assert.assertNotNull(getProject());
-        File file = new File("/home/pab/Work/fricas/fricas/src/algebra/suchthat.spad");
+        File file = existingFile("/home/pab/Work/fricas/fricas/src/algebra/suchthat.spad");
         PsiElement psi = parseFile(file);
         logPsi(psi);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
@@ -277,7 +279,7 @@ public class SpadParsingTest extends LightPlatformCodeInsightTestCase {
     public void testParseNumeric() throws IOException {
         Assert.assertNotNull(getProject());
 
-        File file = new File("/home/pab/Work/fricas/fricas/src/algebra/numeric.spad");
+        File file = existingFile("/home/pab/Work/fricas/fricas/src/algebra/numeric.spad");
         PsiElement psi = parseFile(file);
         logPsi(psi);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
@@ -287,7 +289,7 @@ public class SpadParsingTest extends LightPlatformCodeInsightTestCase {
     public void testParseAlgFact() throws IOException {
         Assert.assertNotNull(getProject());
 
-        File file = new File("/home/pab/Work/fricas/fricas/src/algebra/algfact.spad");
+        File file = existingFile("/home/pab/Work/fricas/fricas/src/algebra/algfact.spad");
         PsiElement psi = parseFile(file);
         logPsi(psi);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
@@ -297,7 +299,7 @@ public class SpadParsingTest extends LightPlatformCodeInsightTestCase {
     public void testParseMultPoly() throws IOException {
         Assert.assertNotNull(getProject());
 
-        File file = new File("/home/pab/Work/fricas/fricas/src/algebra/multpoly.spad");
+        File file = existingFile("/home/pab/Work/fricas/fricas/src/algebra/multpoly.spad");
         PsiElement psi = parseFile(file);
         logPsi(psi);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
@@ -307,7 +309,7 @@ public class SpadParsingTest extends LightPlatformCodeInsightTestCase {
     public void testRadEigen() throws IOException {
         Assert.assertNotNull(getProject());
 
-        File file = new File("/home/pab/Work/fricas/fricas/src/algebra/radeigen.spad");
+        File file = existingFile("/home/pab/Work/fricas/fricas/src/algebra/radeigen.spad");
         PsiElement psi = parseFile(file);
         logPsi(psi);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
@@ -318,7 +320,7 @@ public class SpadParsingTest extends LightPlatformCodeInsightTestCase {
     public void testR() throws IOException {
         Assert.assertNotNull(getProject());
 
-        File file = new File("/home/pab/Work/fricas/fricas/src/algebra/r.spad");
+        File file = existingFile("/home/pab/Work/fricas/fricas/src/algebra/r.spad");
         PsiElement psi = parseFile(file);
         logPsi(psi);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
@@ -328,7 +330,7 @@ public class SpadParsingTest extends LightPlatformCodeInsightTestCase {
     public void testParseXHash() throws IOException {
         Assert.assertNotNull(getProject());
 
-        File file = new File("/home/pab/Work/fricas/fricas/src/algebra/xhash.spad");
+        File file = existingFile("/home/pab/Work/fricas/fricas/src/algebra/xhash.spad");
         PsiElement psi = parseFile(file);
         logPsi(psi);
 
@@ -339,7 +341,7 @@ public class SpadParsingTest extends LightPlatformCodeInsightTestCase {
     public void testParsePlotTool() throws IOException {
         Assert.assertNotNull(getProject());
 
-        File file = new File("/home/pab/Work/fricas/fricas/src/algebra/plottool.spad");
+        File file = existingFile("/home/pab/Work/fricas/fricas/src/algebra/plottool.spad");
         PsiElement psi = parseFile(file);
         logPsi(psi);
 
@@ -350,7 +352,7 @@ public class SpadParsingTest extends LightPlatformCodeInsightTestCase {
     public void testXLPoly() throws IOException {
         Assert.assertNotNull(getProject());
 
-        File file = new File("/home/pab/Work/fricas/fricas/src/algebra/xlpoly.spad");
+        File file = existingFile("/home/pab/Work/fricas/fricas/src/algebra/xlpoly.spad");
         PsiElement psi = parseFile(file);
         logPsi(psi);
 
@@ -361,7 +363,7 @@ public class SpadParsingTest extends LightPlatformCodeInsightTestCase {
     public void testJet() throws IOException {
         Assert.assertNotNull(getProject());
 
-        File file = new File("/home/pab/Work/fricas/fricas/src/algebra/jet.spad");
+        File file = existingFile("/home/pab/Work/fricas/fricas/src/algebra/jet.spad");
         PsiElement psi = parseFile(file);
         logPsi(psi);
 
@@ -372,7 +374,7 @@ public class SpadParsingTest extends LightPlatformCodeInsightTestCase {
     public void testLodof() throws IOException {
         Assert.assertNotNull(getProject());
 
-        File file = new File("/home/pab/Work/fricas/fricas/src/algebra/lodof.spad");
+        File file = existingFile("/home/pab/Work/fricas/fricas/src/algebra/lodof.spad");
         PsiElement psi = parseFile(file);
         logPsi(psi);
 
@@ -383,7 +385,7 @@ public class SpadParsingTest extends LightPlatformCodeInsightTestCase {
     public void testParseOmCat() throws IOException {
         Assert.assertNotNull(getProject());
 
-        File file = new File("/home/pab/Work/fricas/fricas/src/algebra/omcat.spad");
+        File file = existingFile("/home/pab/Work/fricas/fricas/src/algebra/omcat.spad");
         PsiElement psi = parseFile(file);
         logPsi(psi);
 
@@ -394,7 +396,7 @@ public class SpadParsingTest extends LightPlatformCodeInsightTestCase {
     public void testParseFree() throws IOException {
         Assert.assertNotNull(getProject());
 
-        File file = new File("/home/pab/Work/fricas/fricas/src/algebra/free.spad");
+        File file = existingFile("/home/pab/Work/fricas/fricas/src/algebra/free.spad");
         PsiElement psi = parseFile(file);
         logPsi(psi);
 
@@ -405,7 +407,7 @@ public class SpadParsingTest extends LightPlatformCodeInsightTestCase {
     public void testParseString() throws IOException {
         Assert.assertNotNull(getProject());
 
-        File file = new File("/home/pab/Work/fricas/fricas/src/algebra/string.spad");
+        File file = existingFile("/home/pab/Work/fricas/fricas/src/algebra/string.spad");
         PsiElement psi = parseFile(file);
         logPsi(psi);
 
@@ -416,7 +418,7 @@ public class SpadParsingTest extends LightPlatformCodeInsightTestCase {
     public void testParseFortran() throws IOException {
         Assert.assertNotNull(getProject());
 
-        File file = new File("/home/pab/Work/fricas/fricas/src/algebra/fortran.spad");
+        File file = existingFile("/home/pab/Work/fricas/fricas/src/algebra/fortran.spad");
         PsiElement psi = parseFile(file);
         logPsi(psi);
 
@@ -437,7 +439,7 @@ public class SpadParsingTest extends LightPlatformCodeInsightTestCase {
     public void testAlgebraLibrary() {
         Assert.assertNotNull(getProject());
 
-        File base = new File("/home/pab/Work/fricas/fricas/src/algebra");
+        File base = existingFile("/home/pab/Work/fricas/fricas/src/algebra");
         Multimap<FailReason, File> badFiles = parseLibrary(getProject(), base, Sets.newHashSet(
                 "texmacs.spad" // Contains markup
         ));
