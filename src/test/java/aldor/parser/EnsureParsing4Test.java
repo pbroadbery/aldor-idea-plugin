@@ -1,6 +1,8 @@
 package aldor.parser;
 
 import aldor.psi.elements.AldorTypes;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -18,12 +20,14 @@ import org.junit.rules.TestRule;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import static aldor.parser.ParserFunctions.parseLibrary;
 import static aldor.psi.AldorPsiUtils.logPsi;
 import static aldor.test_util.TestFiles.existingFile;
 
 public class EnsureParsing4Test {
-
     private final CodeInsightTestFixture testFixture = LightPlatformJUnit4TestRule.createFixture(null);
 
     @Rule
@@ -138,6 +142,34 @@ public class EnsureParsing4Test {
         PsiElement psi = parseText(text);
         logPsi(psi);
         return ParserFunctions.getPsiErrorElements(psi);
+    }
+
+    @Test
+    public void testAldorLibrary() {
+        Assert.assertNotNull(getProject());
+
+        File base = existingFile("/home/pab/Work/aldorgit/aldor/aldor/lib/aldor/src");
+        Multimap<ParserFunctions.FailReason, File> badFiles = parseLibrary(getProject(), base, Sets.newHashSet());
+
+        for (Map.Entry<ParserFunctions.FailReason, File> ent: badFiles.entries()) {
+            System.out.println("Failed: " + ent.getKey() + " --> " + ent.getValue());
+        }
+        Assert.assertTrue(badFiles.isEmpty());
+    }
+
+    @Test
+    public void testAlgebraLibrary() {
+        Assert.assertNotNull(getProject());
+
+        File base = existingFile("/home/pab/Work/aldorgit/aldor/aldor/lib/algebra/src");
+        Set<String> blackList = Sets.newHashSet("tst_dup.as", "tst_fold.as",
+                "sit_upolc0.as", "sit_upolc.as");
+        Multimap<ParserFunctions.FailReason, File> badFiles = parseLibrary(getProject(), base, blackList);
+
+        for (Map.Entry<ParserFunctions.FailReason, File> ent: badFiles.entries()) {
+            System.out.println("Failed: " + ent.getKey() + " --> " + ent.getValue());
+        }
+        Assert.assertTrue(badFiles.isEmpty());
     }
 
 

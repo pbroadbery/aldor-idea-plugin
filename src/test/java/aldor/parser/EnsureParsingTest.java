@@ -310,34 +310,6 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
         return ParserFunctions.getPsiErrorElements(psi);
     }
 
-
-    public void testAldorLibrary() {
-        Assert.assertNotNull(getProject());
-
-        File base = existingFile("/home/pab/Work/aldorgit/aldor/aldor/lib/aldor/src");
-        Multimap<ParserFunctions.FailReason, File> badFiles = parseLibrary(getProject(), base, Sets.newHashSet());
-
-        for (Map.Entry<ParserFunctions.FailReason, File> ent: badFiles.entries()) {
-            System.out.println("Failed: " + ent.getKey() + " --> " + ent.getValue());
-        }
-        Assert.assertTrue(badFiles.isEmpty());
-    }
-
-
-    public void testAlgebraLibrary() {
-        Assert.assertNotNull(getProject());
-
-        File base = existingFile("/home/pab/Work/aldorgit/aldor/aldor/lib/algebra/src");
-        Set<String> blackList = Sets.newHashSet("tst_dup.as", "tst_fold.as",
-                "sit_upolc0.as", "sit_upolc.as");
-        Multimap<ParserFunctions.FailReason, File> badFiles = parseLibrary(getProject(), base, blackList);
-
-        for (Map.Entry<ParserFunctions.FailReason, File> ent: badFiles.entries()) {
-            System.out.println("Failed: " + ent.getKey() + " --> " + ent.getValue());
-        }
-        Assert.assertTrue(badFiles.isEmpty());
-    }
-
     public static class AldorProjectDescriptor extends LightProjectDescriptor {
 
     }
