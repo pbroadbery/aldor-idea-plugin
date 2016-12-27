@@ -4,8 +4,6 @@ import aldor.psi.AldorDefineStubbing.AldorDefine;
 import aldor.psi.AldorPsiUtils;
 import aldor.psi.AldorRecursiveVisitor;
 import aldor.psi.elements.AldorTypes;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Sets;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.ParserDefinition;
 import com.intellij.lang.PsiBuilder;
@@ -26,12 +24,8 @@ import org.junit.Assert;
 
 import java.io.File;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-import static aldor.parser.ParserFunctions.parseLibrary;
 import static aldor.psi.AldorPsiUtils.logPsi;
-import static aldor.test_util.TestFiles.existingFile;
 
 /**
  * Lexer Test. Created by pab on 30/08/16.
