@@ -63,7 +63,7 @@ public class Linearise {
         for (PiledSection section : sections) {
             IndentNode indentNode = scan(section, 0);
             (new BlockMarker(section)).markBlocks(indentNode);
-/*
+
             System.out.println("Scanned for newlines: " + indentNode);
             System.out.println("Scanned for newlines: " + section);
             int index = 0;
@@ -71,7 +71,6 @@ public class Linearise {
                 System.out.println("LINE: " + index + " " + line);
                 index++;
             }
-    */
         }
 
     }
@@ -150,7 +149,6 @@ public class Linearise {
         return new IndentNode(startIndex, index-1, children);
     }
 
-
     /*
      * "isPileRequired" decides whether a SetTab/BackTab empiling is needed
      *  for the line which is to be joined added
@@ -183,6 +181,10 @@ public class Linearise {
 
         void markBlocks(IndentNode node) {
             boolean hadBackSet = false;
+            for (IndentNode child: node.children()) {
+                markBlocks(child);
+            }
+
             for (int lineIndex : node.localLineEnds()) {
                 if (isBackSetRequired(lineIndex)) {
                     section.setBackSetLine(lineIndex);
@@ -192,9 +194,6 @@ public class Linearise {
 
             if ((node.startLine() > 0) && (hadBackSet || isBlockStart(node))) {
                 section.setBlock(node.startLine(), node.endLine());
-            }
-            for (IndentNode child: node.children()) {
-                markBlocks(child);
             }
         }
 
@@ -594,10 +593,12 @@ public class Linearise {
         }
 
         public void setBackSetLine(int i) {
+            System.out.println("Backset: " + i);
             backSets.add(i);
         }
 
         public void setBlock(int startLine, int endLine) {
+            System.out.println("Range: " + startLine + " " + endLine);
             startLines.add(startLine);
             endLines.add(endLine);
         }

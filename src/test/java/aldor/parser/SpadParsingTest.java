@@ -254,6 +254,14 @@ public class SpadParsingTest {
     }
 
     @Test
+    public void testIndentedDeclaration() {
+        PsiElement psi = parseText("Foo:\n   Category == with\n    XYZ\n");
+        logPsi(psi);
+        final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
+        Assert.assertEquals(0, errors.size());
+    }
+
+    @Test
     public void testParseCatDef() throws IOException {
         Assert.assertNotNull(getProject());
 
