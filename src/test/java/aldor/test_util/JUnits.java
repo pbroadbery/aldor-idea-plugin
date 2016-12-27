@@ -7,6 +7,7 @@ import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.PatternLayout;
+import org.junit.runners.model.Statement;
 
 import static org.apache.log4j.Level.DEBUG;
 import static org.apache.log4j.helpers.UtilLoggingLevel.INFO;
@@ -31,6 +32,22 @@ public final class JUnits {
         LogManager.getRootLogger().addAppender(appender);
         LogManager.getRootLogger().setLevel(level);
         Logger.setFactory(TestLoggerFactory.class);
+    }
+
+    public static Statement prePostStatement(UnsafeRunnable pre, UnsafeRunnable post, Statement statement) {
+        return new Statement() {
+
+            @Override
+            public void evaluate() throws Throwable {
+                pre.run();
+                try {
+                    statement.evaluate();
+                }
+                finally {
+                    post.run();
+                }
+            }
+        };
     }
 
 }

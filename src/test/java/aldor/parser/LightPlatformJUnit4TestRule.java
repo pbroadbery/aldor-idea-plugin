@@ -1,5 +1,6 @@
 package aldor.parser;
 
+import aldor.test_util.JUnits;
 import com.intellij.openapi.project.Project;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.PlatformTestUtil;
@@ -38,8 +39,7 @@ public class LightPlatformJUnit4TestRule implements TestRule {
 
     @Override
     public Statement apply(Statement statement, Description description) {
-        //noinspection ReturnOfInnerClass
-        return new FixtureStatement(statement);
+        return JUnits.prePostStatement(this::setUp, this::tearDown, statement);
     }
 
     private void tearDown() throws Exception {
@@ -57,22 +57,4 @@ public class LightPlatformJUnit4TestRule implements TestRule {
         return IdeaTestFixtureFactory.getFixtureFactory().createCodeInsightFixture(fixture, new LightTempDirTestFixtureImpl(true));
     }
 
-    private final class FixtureStatement extends Statement {
-        private final Statement statement;
-
-        private FixtureStatement(Statement statement) {
-            this.statement = statement;
-        }
-
-        @Override
-        public void evaluate() throws Throwable {
-            setUp();
-            try {
-                statement.evaluate();
-            }
-            finally {
-                tearDown();
-            }
-        }
-    }
 }
