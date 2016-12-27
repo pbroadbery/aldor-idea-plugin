@@ -173,13 +173,13 @@ public class AldorParserUtil extends GeneratedParserUtilBase {
     }
 
 
-    static boolean checkCurrentIndent(@NotNull PsiBuilder builder, int indentLevel) {
+    private static boolean checkCurrentIndent(@NotNull PsiBuilder builder, int indentLevel) {
         int currentIndentLevel = currentIndentLevel(builder);
         //System.out.println("Check level: " + builder.getCurrentOffset() + " " + indentLevel + " " + currentIndentLevel);
         return currentIndentLevel == indentLevel;
     }
 
-    public static int currentIndentLevel(@NotNull PsiBuilder builder) {
+    private static int currentIndentLevel(@NotNull PsiBuilder builder) {
         AldorIndentLexer lexer = (AldorIndentLexer) ((Builder) builder).getLexer();
         int level = lexer.indentLevel(builder.getCurrentOffset());
         if (level < 0) {
@@ -188,13 +188,12 @@ public class AldorParserUtil extends GeneratedParserUtilBase {
         return level;
     }
 
-
-    static boolean isSpadMode(@NotNull PsiBuilder builder, @SuppressWarnings("UnusedParameters") int indentLevel) {
+    static boolean isSpadMode(@NotNull PsiBuilder builder, int indentLevel) {
         AldorIndentLexer lexer = (AldorIndentLexer) ((Builder) builder).getLexer();
         return lexer.isSpadMode();
     }
 
-    static boolean isAldorMode(@NotNull PsiBuilder builder, @SuppressWarnings("UnusedParameters") int indentLevel) {
+    static boolean isAldorMode(@NotNull PsiBuilder builder, int indentLevel) {
         AldorIndentLexer lexer = (AldorIndentLexer) ((Builder) builder).getLexer();
         return lexer.isAldorMode();
     }

@@ -16,7 +16,6 @@ public interface AldorDocumented extends PsiElement {
                 docNodes.add(child);
             }
         }
-        //noinspection unchecked
         return docNodes;
     }
 }

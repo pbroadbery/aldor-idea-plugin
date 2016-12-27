@@ -21,7 +21,7 @@ import javax.swing.JPanel;
  * Random style settings for Aldor.
  * Can't think of much at the moment...
  */
-@SuppressWarnings({"InstanceVariableMayNotBeInitialized", "InstanceVariableUsedBeforeInitialized"})
+@SuppressWarnings({"InstanceVariableUsedBeforeInitialized"})
 public class AldorCodeStylePanel extends CodeStyleAbstractPanel {
 
     public static final String ALIGNMENT_SAMPLE = "THINK OF SOMETHING FUN TO WRITE HERE";

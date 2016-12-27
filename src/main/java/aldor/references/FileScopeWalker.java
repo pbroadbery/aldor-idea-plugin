@@ -41,9 +41,7 @@ public final class FileScopeWalker {
         ProjectRootManager rootManager = ProjectRootManager.getInstance(element.getProject());
         Optional<PsiFile> fileMaybe = Optional.ofNullable(element.getContainingFile());
         Optional<VirtualFile> vfMaybe = fileMaybe.flatMap(psiFile -> Optional.ofNullable(psiFile.getVirtualFile()));
-        Optional<Module> moduleMaybe = vfMaybe.flatMap(vf -> {
-            return Optional.ofNullable(rootManager.getFileIndex().getModuleForFile(vf));
-        });
+        Optional<Module> moduleMaybe = vfMaybe.flatMap(vf -> Optional.ofNullable(rootManager.getFileIndex().getModuleForFile(vf)));
         Optional<AnnotationFileManager> fileManagerMaybe = moduleMaybe.flatMap(AnnotationFileManager::getAnnotationFileManager);
         if (!fileManagerMaybe.isPresent()) {
             return null;
