@@ -457,6 +457,12 @@ public class AldorIndentLexerTest {
 
         List<IElementType> tokens = LexerFunctions.readTokens(unit);
         assertEquals(Lists.newArrayList(
+                TK_SysCmdAbbrev, KW_NewLine,
+                TK_PreDoc, KW_NewLine,
+                TK_Id, KW_OParen, TK_Id, WHITE_SPACE, KW_Colon, WHITE_SPACE, TK_Id, KW_CParen, KW_Colon, KW_NewLine,
+                KW_Indent, TK_Id, KW_OParen, TK_Id, KW_Comma, WHITE_SPACE, TK_Id, KW_CParen, KW_NewLine,
+                KW_Indent, KW_2EQ, WHITE_SPACE, TK_Id, KW_OParen, TK_Id, KW_Comma, WHITE_SPACE, TK_Id, KW_Comma, WHITE_SPACE, TK_Int, KW_CParen, KW_BlkNext,
+                TK_SysCmdAbbrev, KW_NewLine
         ), tokens);
 
     }

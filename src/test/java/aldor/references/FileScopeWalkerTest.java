@@ -14,6 +14,7 @@ import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
+import org.junit.Ignore;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -32,6 +33,7 @@ import static aldor.util.VirtualFileTests.createFile;
 import static aldor.util.sexpr.SExpressions.list;
 
 @SuppressWarnings("MagicNumber")
+@Ignore("Too much hardcoding.. maybe the round trip tests are better")
 public class FileScopeWalkerTest extends LightPlatformCodeInsightFixtureTestCase {
 
     @Override

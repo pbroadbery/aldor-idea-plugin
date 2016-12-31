@@ -1,7 +1,5 @@
 package aldor.util.sexpr;
 
-import aldor.util.AssociationList;
-import aldor.util.Iterators;
 import aldor.util.sexpr.impl.SExpressionReader;
 import aldor.util.sexpr.impl.SExpressionTypes;
 import org.jetbrains.annotations.NotNull;
@@ -10,12 +8,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.AbstractSequentialList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 
 import static aldor.util.sexpr.SymbolPolicy.NORMAL;
@@ -147,11 +141,11 @@ public abstract class SExpression {
     }
 
     public List<SExpression> asList() {
-        return new SExpressionList(this);
+        throw typeConversionException(SxType.Cons);
     }
 
     public Map<SExpression, SExpression> asAssociationList() {
-        return new AssociationList(this);
+        throw typeConversionException(SxType.Cons);
     }
 
     public SExpression nth(int i) {
@@ -165,72 +159,6 @@ public abstract class SExpression {
             result = result.cdr();
         }
         return result.car();
-    }
-
-    /**
-     * Just enough to turn SExpression into a list.
-     * Don't expect it to be efficient, especially with random access queries.
-     *
-     * @author pab
-     */
-    private static final class SExpressionList extends AbstractSequentialList<SExpression> {
-        private int size = -1;
-        private final SExpression sx;
-
-        SExpressionList(SExpression sx) {
-            this.sx = sx;
-        }
-
-        @NotNull
-        @Override
-        public ListIterator<SExpression> listIterator(int index) {
-            SExpression startSx = sx;
-            for (int i = 0; i < index; i++) {
-                startSx = startSx.cdr();
-            }
-            return Iterators.listIterator(new SExpressionIterator(startSx));
-        }
-
-        @Override
-        public int size() {
-            if (size == -1) {
-                int count = 0;
-                for (@SuppressWarnings("unused") SExpression elt : this) {
-                    count++;
-                }
-                size = count;
-            }
-            return size;
-        }
-    }
-
-    private static final class SExpressionIterator implements Iterator<SExpression> {
-        private SExpression sx;
-
-        SExpressionIterator(SExpression sx) {
-            this.sx = sx;
-        }
-
-        @Override
-        public boolean hasNext() {
-            return !sx.isNull();
-        }
-
-        @Override
-        public SExpression next() {
-            if (sx.isNull()) {
-                throw new NoSuchElementException("SExpression: next on nil");
-            }
-            SExpression item = sx.car();
-            sx = sx.cdr();
-            return item;
-        }
-
-        @Override
-        public void remove() {
-            throw new UnsupportedOperationException("nope");
-        }
-
     }
 
     UnsupportedOperationException typeConversionException(SxType<?> expected) {

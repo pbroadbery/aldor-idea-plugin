@@ -1,5 +1,6 @@
 package aldor.util.sexpr.impl;
 
+import aldor.util.AssociationList;
 import aldor.util.sexpr.SExpression;
 import aldor.util.sexpr.SxType;
 import aldor.util.sexpr.SymbolPolicy;
@@ -7,6 +8,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 public final class SExpressionTypes {
     @SuppressWarnings("FieldHasSetterButNoGetter")
@@ -53,6 +57,16 @@ public final class SExpressionTypes {
         @Override
         public void setCdr(@NotNull SExpression cdr) {
             this.cdr = cdr;
+        }
+
+        @Override
+        public List<SExpression> asList() {
+            return new SExpressionList(this);
+        }
+
+        @Override
+        public Map<SExpression, SExpression> asAssociationList() {
+            return new AssociationList(this.asList());
         }
 
         @Override
@@ -192,6 +206,16 @@ public final class SExpressionTypes {
         @Override
         protected boolean innerEqual(SExpression other) {
             return true;
+        }
+
+        @Override
+        public List<SExpression> asList() {
+            return Collections.emptyList();
+        }
+
+        @Override
+        public Map<SExpression, SExpression> asAssociationList() {
+            return Collections.emptyMap();
         }
 
     }

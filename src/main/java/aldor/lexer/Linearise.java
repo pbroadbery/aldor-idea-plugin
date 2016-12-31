@@ -63,7 +63,7 @@ public class Linearise {
         for (PiledSection section : sections) {
             IndentNode indentNode = scan(section, 0);
             (new BlockMarker(section)).markBlocks(indentNode);
-
+/*
             System.out.println("Scanned for newlines: " + indentNode);
             System.out.println("Scanned for newlines: " + section);
             int index = 0;
@@ -71,6 +71,7 @@ public class Linearise {
                 System.out.println("LINE: " + index + " " + line);
                 index++;
             }
+            */
         }
 
     }
@@ -597,12 +598,10 @@ public class Linearise {
         }
 
         public void setBackSetLine(int i) {
-            System.out.println("Backset: " + i);
             backSets.add(i);
         }
 
         public void setBlock(int startLine, int endLine) {
-            System.out.println("Range: " + startLine + " " + endLine);
             startLines.add(startLine);
             endLines.add(endLine);
         }

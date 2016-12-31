@@ -14,12 +14,7 @@ public final class AldorPsiUtils {
     public static final int MAX_INDENT_DEPTH = 20;
 
     public static void logPsi(PsiElement psi) {
-        logPsi(psi, 0);
-    }
-
-    // TODO: Remove most uses of this method
-    static void logPsi(PsiElement psi, int i) {
-        logPsi(psi, i, "");
+        logPsi(psi, 0, "");
     }
 
     static void logPsi(PsiElement psi, int depth, String lastStuff) {
