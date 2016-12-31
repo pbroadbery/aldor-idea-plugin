@@ -180,11 +180,11 @@ public class Linearise {
         }
 
         void markBlocks(IndentNode node) {
-            boolean hadBackSet = false;
             for (IndentNode child: node.children()) {
                 markBlocks(child);
             }
 
+            boolean hadBackSet = false;
             for (int lineIndex : node.localLineEnds()) {
                 if (isBackSetRequired(lineIndex)) {
                     section.setBackSetLine(lineIndex);
@@ -280,6 +280,10 @@ public class Linearise {
                     return false;
                 }
             }
+            if (Objects.equals(KW_Add, nextLine.firstToken())) {
+                return false;
+            }
+
             if (AldorTokenTypes.isCloser(nextLine.firstToken())) {
                 return false;
             }

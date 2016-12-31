@@ -9,6 +9,8 @@ import com.intellij.lang.ParserDefinition;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiBuilderFactory;
 import com.intellij.lang.PsiParser;
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -25,12 +27,14 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 import static org.junit.Assert.assertNotNull;
 
 public final class ParserFunctions {
     public static final int NOT_INTERACTIVE_MILLIS = 1000;
+    private static final Logger LOG = Logger.getInstance(ParserFunctions.class);
 
     public static PsiElement parseAldorText(Project project, CharSequence text) {
         return parseAldorText(project, text, AldorTypes.CURLY_CONTENTS_LABELLED);
@@ -93,17 +97,20 @@ public final class ParserFunctions {
 
 
     @NotNull
-    public static Multimap<FailReason, File> parseLibrary(Project project, File base, Collection<String> blackList) {
+    public static Multimap<FailReason, File> parseLibrary(Project project, File base, FileType fileType, Collection<String> blackList) {
         List<File> files = findAllSource(base);
         Multimap<FailReason, File> badFiles = ArrayListMultimap.create();
         for (File file: files) {
             long start = System.currentTimeMillis();
-            System.out.println("Reading: " + file);
+            LOG.info("Reading: " + file);
             if (blackList.contains(file.getName())) {
                 continue;
             }
             VirtualFile vf = LocalFileSystem.getInstance().findFileByIoFile(file);
             assertNotNull(vf);
+            if ((fileType != null) && (!Objects.equals(vf.getFileType(), fileType))) {
+                continue;
+            }
             PsiFile psiFile = PsiManager.getInstance(project).findFile(vf);
             assertNotNull(psiFile);
             String text = psiFile.getText();
@@ -119,7 +126,7 @@ public final class ParserFunctions {
             final List<PsiErrorElement> errors = getPsiErrorElements(psi);
             long duration = System.currentTimeMillis() - start;
             //noinspection StringConcatenationMissingWhitespace
-            System.out.println("... File " + file + " took " + duration + "ms");
+            LOG.info("... File " + file + " took " + duration + "ms");
             if (!errors.isEmpty()) {
                 badFiles.put(FailReason.NoCompile, file);
             }
@@ -127,7 +134,7 @@ public final class ParserFunctions {
                 badFiles.put(FailReason.Slow, file);
             }
         }
-        System.out.println("Compiled: " + files.size() + " " + badFiles.size() + " failed");
+        LOG.info("Compiled: " + files.size() + " " + badFiles.size() + " failed");
         return badFiles;
     }
 

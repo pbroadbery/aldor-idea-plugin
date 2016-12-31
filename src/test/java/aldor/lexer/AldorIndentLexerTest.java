@@ -434,13 +434,31 @@ public class AldorIndentLexerTest {
     @Test
     public void testPiledDeclaration() {
         AldorIndentLexer unit = new AldorIndentLexer(new AldorLexerAdapter());
-        // Currently a bit broken.. needs to be fixed somehow.
         unit.start("#pile\nFoo:\n  Category == with");
 
         List<IElementType> tokens = LexerFunctions.readTokens(unit);
         assertEquals(Lists.newArrayList(KW_StartPile, KW_NewLine, TK_Id, KW_Colon, KW_NewLine,
                 KW_Indent, TK_Id, WHITE_SPACE, KW_2EQ, WHITE_SPACE, KW_With
         ), tokens);
+    }
+
+    @Test
+    public void testIndentedDefinition() {
+        String text =
+                ")abbrev A B C\n" +
+                        "++ Foo\n" +
+                        "FreeAbelianMonoid(S : SetCategory):\n" +
+                        "  FreeAbelianMonoidCategory(S, NonNegativeInteger)\n" +
+                        "    == InnerFreeAbelianMonoid(S, NonNegativeInteger, 1)\n" +
+                        ")abbrev A B C\n";
+        AldorIndentLexer unit = new AldorIndentLexer(new AldorLexerAdapter(Spad, null));
+        // Currently a bit broken.. needs to be fixed somehow.
+        unit.start(text);
+
+        List<IElementType> tokens = LexerFunctions.readTokens(unit);
+        assertEquals(Lists.newArrayList(
+        ), tokens);
+
     }
 
     @Test
@@ -695,14 +713,15 @@ public class AldorIndentLexerTest {
     @Test
     public void spadInfixStart2() {
         AldorIndentLexer unit = new AldorIndentLexer(new AldorLexerAdapter(Aldor, null));
-        String text = "#pile\nfoo(h: %): Foo == h\n" +
+        String text = "#pile\nfoo: Foo == h\n" +
                 "\n" +
-                "-(h: %): % == 0 - h\n";
+                "-(h: %): % == 0\n";
         unit.start(text);
         List<IElementType> tokens = LexerFunctions.readTokens(unit);
-        assertEquals(Lists.newArrayList(
-                TK_Id, WHITE_SPACE, KW_2EQ, WHITE_SPACE, TK_Int, KW_BlkNext,
-                KW_Minus, TK_Id, KW_2EQ, TK_Id, KW_NewLine
+        assertEquals(Lists.newArrayList(KW_StartPile, KW_NewLine,
+                TK_Id, KW_Colon, WHITE_SPACE, TK_Id, WHITE_SPACE, KW_2EQ, WHITE_SPACE, TK_Id, KW_BlkNext,
+                KW_NewLine, KW_Minus, KW_OParen, TK_Id, KW_Colon, WHITE_SPACE, TK_Id, KW_CParen, KW_Colon,
+                    WHITE_SPACE, TK_Id, WHITE_SPACE, KW_2EQ, WHITE_SPACE, TK_Int, KW_NewLine
         ), tokens);
     }
 
@@ -734,6 +753,23 @@ public class AldorIndentLexerTest {
                 KW_Indent, TK_Id, KW_BlkEnd,
                 TK_SysCmdAbbrev, KW_NewLine,
                 TK_Id, WHITE_SPACE, KW_2EQ, WHITE_SPACE, TK_Int
+        ), tokens);
+    }
+
+    @Test
+    public void spadSplitDeclaration() {
+        // Currently broken, needs fixing
+        AldorIndentLexer unit = new AldorIndentLexer(new AldorLexerAdapter(Spad, null));
+        unit.start("Foo:\n  Category == with\n    Ring\n   add\n    ZZZ\nQQQ()");
+        List<IElementType> tokens = LexerFunctions.readTokens(unit);
+        assertEquals(Lists.newArrayList(
+                TK_Id, KW_Colon, KW_NewLine,
+                KW_Indent, TK_Id, WHITE_SPACE, KW_2EQ, WHITE_SPACE, KW_With, KW_BlkStart,
+                KW_Indent, TK_Id, KW_BlkEnd,
+                KW_Indent, KW_Add, KW_BlkStart,
+                KW_Indent, TK_Id, KW_BlkEnd,
+                TK_Id, KW_OParen, KW_CParen
+
         ), tokens);
     }
 

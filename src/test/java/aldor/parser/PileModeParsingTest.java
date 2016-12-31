@@ -97,7 +97,7 @@ public class PileModeParsingTest extends LightPlatformCodeInsightTestCase {
         // Currently broken, needs fixing
         PsiElement psi = parseText("" +
                 "#pile\n" +
-                "Foo:\n  Category == with\n  aa: () -> ()\nBar(X: String): with == add\n");
+                "Foo:\n  Category == with\n  aa: X\nBar: with == add\n");
         logPsi(psi);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
         Assert.assertEquals(0, errors.size());

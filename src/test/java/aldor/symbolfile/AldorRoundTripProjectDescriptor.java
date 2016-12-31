@@ -33,7 +33,8 @@ public class AldorRoundTripProjectDescriptor extends LightProjectDescriptor {
     // Not needed, except that the compile driver insists on it.
     @Override
     public Sdk getSdk() {
-        return JavaSdk.getInstance().createJdk("java", "/usr/lib/jvm/default-java");
+        JavaSdk x = JavaSdk.getInstance();
+        return JavaSdk.getInstance().createJdk("java", "/home/pab/Work/intellij/jdk1.8.0_101");
     }
 
     @Override

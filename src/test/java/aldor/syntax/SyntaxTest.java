@@ -95,6 +95,13 @@ public class SyntaxTest extends LightPlatformCodeInsightFixtureTestCase {
         Assert.assertEquals("(Enum a b c)", syntax.toString());
     }
 
+    public void testQuote() {
+        PsiElement psi = parseSpadText("'index");
+        Syntax syntax = parse(psi);
+        Assert.assertNotNull(syntax);
+        Assert.assertEquals("(Quote index)", syntax.toString());
+    }
+
     public void testComplexCall() {
         PsiElement psi = parseText("DM(R: Join(A, E))");
         Syntax syntax = parse(psi);

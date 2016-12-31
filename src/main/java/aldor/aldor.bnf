@@ -722,7 +722,8 @@ UnaryAddExpr ::= KW_Add Expr?
 BinaryAddExpr ::= Expr KW_Add Expr?
 
 SharpExpr ::= KW_Sharp Qual Expr
-QuoteExpr ::= KW_Quote <<spadAnySym>>
+QuoteExpr ::= KW_Quote QuotedSym
+QuotedSym ::= <<spadAnySym>>
 
 ColonExpr ::= Expr KW_Colon Expr
 DoubleColonExpr ::= Expr KW_2Colon Expr

@@ -5,6 +5,7 @@ import aldor.psi.AldorDefineStubbing;
 import aldor.test_util.JUnits;
 import aldor.util.VirtualFileTests;
 import com.google.common.collect.Sets;
+import com.google.common.io.Files;
 import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.FileIndexFacade;
@@ -15,9 +16,12 @@ import com.intellij.psi.stubs.StubUpdatingIndex;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import com.intellij.util.indexing.FileBasedIndex;
+import groovy.json.internal.Charsets;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
+import org.junit.Assume;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
@@ -115,6 +119,30 @@ public class AldorDefineNameIndexTest extends LightPlatformCodeInsightFixtureTes
             System.out.println("Items: " + items + " " + items.iterator().next().getText());
             Assert.assertEquals(1, items.size());
             Assert.assertTrue(items.iterator().next().getText().startsWith("Something"));
+        }
+        finally {
+            if (file != null) {
+                VirtualFileTests.deleteFile(file);
+            }
+        }
+    }
+
+    public void testDefineFRA() throws IOException {
+        Assume.assumeTrue(new File("/home/pab/IdeaProjects/fricas-codebase/fricas/src/algebra/algcat.spad").exists());
+        String fraText = Files.toString(new File("/home/pab/IdeaProjects/fricas-codebase/fricas/src/algebra/algcat.spad"), Charsets.US_ASCII);
+        VirtualFile file = null;
+        try {
+            Project project = getProject();
+
+            file = createFile(getSourceRoot(), "algcat.spad", fraText);
+            FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
+            FileBasedIndex.getInstance().ensureUpToDate(StubUpdatingIndex.INDEX_ID, project, null);
+            Collection<String> ll = AldorDefineNameIndex.instance.getAllKeys(project);
+
+            System.out.println("Words: "+ ll);
+            Collection<String> topLevel = AldorDefineTopLevelIndex.instance.getAllKeys(project);
+
+            System.out.println("Top: "+ topLevel);
         }
         finally {
             if (file != null) {

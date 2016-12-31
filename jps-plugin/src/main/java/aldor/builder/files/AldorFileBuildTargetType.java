@@ -1,5 +1,6 @@
 package aldor.builder.files;
 
+import aldor.builder.AldorBuildTargetTypes;
 import aldor.builder.AldorBuilderService;
 import aldor.builder.AldorTargetIds;
 import com.intellij.openapi.diagnostic.Logger;
@@ -66,7 +67,7 @@ public class AldorFileBuildTargetType extends BuildTargetType<AldorFileBuildTarg
     @NotNull
     @Override
     public BuildTargetLoader<AldorFileBuildTarget> createLoader(@NotNull JpsModel model) {
-        return buildService.targetTypes().createLoader(this, model);
+        return AldorBuildTargetTypes.createLoader(this, model);
     }
 
     public static ExecutorService executorFor(AldorFileRootDescriptor descriptor) {

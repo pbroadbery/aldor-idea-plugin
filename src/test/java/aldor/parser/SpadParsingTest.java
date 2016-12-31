@@ -1,5 +1,6 @@
 package aldor.parser;
 
+import aldor.file.SpadFileType;
 import aldor.lexer.AldorTokenTypes;
 import aldor.lexer.LexerFunctions;
 import aldor.parser.ParserFunctions.FailReason;
@@ -113,7 +114,6 @@ public class SpadParsingTest {
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
         Assert.assertEquals(0, errors.size());
     }
-
 
     @Test
     public void testDefine() {
@@ -260,6 +260,21 @@ public class SpadParsingTest {
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
         Assert.assertEquals(0, errors.size());
     }
+
+    @Test
+    public void testBrokenLineDef() {
+        String text =
+                ")abbrev A B C\n" +
+                "++ Foo\n" +
+                "FreeAbelianMonoid(S : SetCategory):\n" +
+                "  FreeAbelianMonoidCategory(S, NonNegativeInteger)\n" +
+                "    == InnerFreeAbelianMonoid(S, NonNegativeInteger, 1)\n";
+                PsiElement psi = parseText(text);
+        logPsi(psi);
+        final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
+        Assert.assertEquals(0, errors.size());
+    }
+
 
     @Test
     public void testParseCatDef() throws IOException {
@@ -506,8 +521,10 @@ public class SpadParsingTest {
         Assert.assertNotNull(getProject());
 
         File base = existingFile("/home/pab/Work/fricas/fricas/src/algebra");
-        Multimap<FailReason, File> badFiles = parseLibrary(getProject(), base, Sets.newHashSet(
-                "texmacs.spad" // Contains markup
+        Multimap<FailReason, File> badFiles = parseLibrary(getProject(), base, SpadFileType.INSTANCE, Sets.newHashSet(
+                "texmacs.spad", // Contains markup
+                "unittest.spad", // Contains markup
+                "pinterp.spad" // Contains markup
         ));
 
         for (Map.Entry<FailReason, File> ent: badFiles.entries()) {

@@ -12,6 +12,7 @@ import aldor.psi.AldorInfixedTok;
 import aldor.psi.AldorJxleftAtom;
 import aldor.psi.AldorLiteral;
 import aldor.psi.AldorParened;
+import aldor.psi.AldorQuoteExpr;
 import aldor.psi.AldorQuotedIds;
 import aldor.psi.AldorRecursiveVisitor;
 import aldor.psi.AldorWithPart;
@@ -26,6 +27,7 @@ import aldor.syntax.components.EnumList;
 import aldor.syntax.components.Id;
 import aldor.syntax.components.Literal;
 import aldor.syntax.components.Other;
+import aldor.syntax.components.QuotedSymbol;
 import aldor.syntax.components.SpadDeclare;
 import aldor.syntax.components.With;
 import com.google.common.collect.Lists;
@@ -250,6 +252,10 @@ public final class SyntaxPsiParser {
             return visitStack.pop();
         }
 
+        @Override
+        public void visitQuoteExpr(@NotNull AldorQuoteExpr o) {
+            visitStack.peek().add(new QuotedSymbol(o));
+        }
     }
 
     public static String prettyPrint(Syntax syntax) {
