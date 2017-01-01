@@ -6,7 +6,6 @@ import aldor.syntax.SyntaxPrinter;
 import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.JUnits;
 import com.intellij.codeInsight.documentation.DocumentationManager;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -51,10 +50,11 @@ public class AnnotationRoundTripTest extends LightPlatformCodeInsightFixtureTest
 
         annotationTextFixture.compileFile(sourceFile);
 
-        ApplicationManager.getApplication().invokeAndWait(() -> {
+       annotationTextFixture.runInEdtAndWait(() -> {
             PsiFile psiFile = PsiManager.getInstance(project).findFile(sourceFile);
             Optional<AnnotationFileManager> annotationManager = AnnotationFileManager.getAnnotationFileManager(myModule);
             Assert.assertTrue(annotationManager.isPresent());
+            Assert.assertNotNull(psiFile);
             AnnotationFile annotationFile = annotationManager.get().annotationFile(psiFile);
             Assert.assertNull(annotationFile.errorMessage());
             Collection<AldorIdentifier> elts = PsiTreeUtil.findChildrenOfType(psiFile, AldorIdentifier.class);
@@ -91,7 +91,6 @@ public class AnnotationRoundTripTest extends LightPlatformCodeInsightFixtureTest
 
     @Override
     protected LightProjectDescriptor getProjectDescriptor() {
-        //noinspection ReturnOfInnerClass
         return new AldorRoundTripProjectDescriptor();
     }
 

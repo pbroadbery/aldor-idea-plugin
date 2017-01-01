@@ -65,4 +65,21 @@ public final class AnnotatedOptional<T, X> {
     public T get() {
         return value;
     }
+
+    public T orElseThrow(Function<X, RuntimeException> exceptionSupplier) {
+        if (isPresent()) {
+            return get();
+        }
+        //noinspection ProhibitedExceptionThrown
+        throw exceptionSupplier.apply(failInfo());
+    }
+
+    public T orElseThrowError(Function<X, Error> errorSupplier) {
+        if (isPresent()) {
+            return get();
+        }
+        //noinspection ProhibitedExceptionThrown
+        throw errorSupplier.apply(failInfo());
+    }
+
 }

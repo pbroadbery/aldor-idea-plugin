@@ -11,6 +11,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
+import com.intellij.testFramework.EdtTestUtilKt;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.Assert;
 
@@ -25,7 +27,7 @@ public class AnnotationFileTestFixture {
     @Nullable
     private Project project;
 
-    AnnotationFileTestFixture(Project project) {
+    AnnotationFileTestFixture(@Nullable Project project) {
         this.project = project;
     }
 
@@ -64,6 +66,14 @@ public class AnnotationFileTestFixture {
         });
 
         result.get(0).get();
+    }
+
+    public void runInEdtAndWait(@NotNull Runnable runnable) throws Exception {
+        EdtTestUtilKt.runInEdtAndWait(() -> {
+            runnable.run();
+            //noinspection ReturnOfNull
+            return null;
+        });
     }
 
 }

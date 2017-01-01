@@ -215,6 +215,9 @@ public final class SyntaxPrinter {
                 }
                 return false;
             }
+            if (inner.is(Comma.class) && (inner.children().size() < 2)) {
+                return false;
+            }
             return true;
         }
     }

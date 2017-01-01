@@ -13,22 +13,19 @@ import com.intellij.testFramework.LightVirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 /**
  * Random style settings for Aldor.
  * Can't think of much at the moment...
  */
-@SuppressWarnings({"InstanceVariableUsedBeforeInitialized"})
 public class AldorCodeStylePanel extends CodeStyleAbstractPanel {
 
     public static final String ALIGNMENT_SAMPLE = "THINK OF SOMETHING FUN TO WRITE HERE";
     private static final int RIGHT_MARGIN_DEFAULT = 80;
-    private JPanel myPreviewPanel;
-    private JPanel myPanel;
-    private JCheckBox useLigatures;
+    private JPanel myPreviewPanel = null;
+    private JPanel myPanel = null;
+    private JCheckBox useLigatures = null;
 
     public AldorCodeStylePanel(@NotNull CodeStyleSettings settings) {
         super(AldorLanguage.INSTANCE, null, settings);

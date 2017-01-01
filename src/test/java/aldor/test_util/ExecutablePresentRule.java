@@ -85,7 +85,7 @@ public class ExecutablePresentRule implements TestRule {
 
     /**
      * For JUnit3/LightPlatformTestCase
-     * @return
+     * @return true if test is runnable
      */
     public boolean shouldRunTest() {
         return findExecutable().isPresent();

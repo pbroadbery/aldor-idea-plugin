@@ -6,8 +6,6 @@ import aldor.psi.AldorDefineStubbing.AldorDefine;
 import aldor.psi.AldorDocumented;
 import aldor.psi.AldorIdentifier;
 import aldor.psi.index.AldorDefineTopLevelIndex;
-import aldor.symbolfile.AnnotationFile;
-import aldor.symbolfile.SrcPos;
 import aldor.symbolfile.Syme;
 import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxPrinter;
@@ -52,12 +50,13 @@ public class AldorDocumentationProvider extends DocumentationProviderEx {
 
         if (symeMaybe.isPresent()) {
             SyntaxPrinter printer = SyntaxPrinter.instance();
-            Syntax exporter = symeMaybe.get().exporter();
-            Syntax type = symeMaybe.get().type();
+            Syme syme = symeMaybe.get();
+            Syntax exporter = syme.exporter();
+            Syntax type = syme.type();
 
             String typeText = "<p><b>exporter:</b> " + printer.toString(exporter) + "</b></p>" + "\n<p><b>type:</b> " + printer.toString(type) + "</p>";
 
-            String docString = aldorDocString(symeMaybe.get(), element, originalElement);
+            String docString = aldorDocString(syme, element, originalElement);
             if (docString == null) {
                 docString = aldorDocStringFromIndex(element, originalElement);
             }
@@ -116,28 +115,17 @@ public class AldorDocumentationProvider extends DocumentationProviderEx {
         return Joiner.on("<br/>\n").join(documented.documentationNodes().stream().map((psiElement) -> NewLine.matcher(psiElement.getText()).replaceAll(Matcher.quoteReplacement("<br/>\n"))).collect(Collectors.toList()));
     }
 
-
     AnnotatedOptional<Syme, String> symeForElement(PsiElement element) {
-        AnnotatedOptional<Syme, String> result;
         VirtualFile virtualFile = element.getContainingFile().getVirtualFile();
+        Project project = element.getProject();
         if (virtualFile == null) {
             return missing("No file for element");
         }
-        AldorModuleManager moduleManager = AldorModuleManager.getInstance(element.getProject());
-        AnnotatedOptional<AnnotationFileManager, String> annotationManager = moduleManager.annotationFileManagerForFile(element.getProject(), element.getContainingFile().getVirtualFile());
-        AnnotatedOptional<AnnotationFile, String> file = annotationManager.map(mgr -> mgr.annotationFile(element.getContainingFile()));
+        AldorModuleManager moduleManager = AldorModuleManager.getInstance(project);
+        AnnotatedOptional<AnnotationFileManager, String> annotationManager = moduleManager.annotationFileManagerForFile(project, virtualFile);
 
-        SrcPos srcPos = annotationManager.get().findSrcPosForElement(element);
-        //noinspection VariableNotUsedInsideIf
-        file = file.flatMap(af -> (srcPos == null) ? missing("No annotated source found") : AnnotatedOptional.of(af));
-        return file.flatMap(annotationFile -> {
-            Syme syme = annotationFile.lookupSyme(srcPos);
-            if (syme == null) {
-                return missing("no information");
-            }
+        return annotationManager.flatMap(am -> am.symeForElement(element));
 
-            return AnnotatedOptional.of(syme);
-        });
     }
 
     private boolean isInterestingElement(PsiElement element) {

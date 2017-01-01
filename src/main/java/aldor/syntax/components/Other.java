@@ -5,6 +5,7 @@ import aldor.syntax.Syntax;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.Collections;
 
 /**
@@ -28,7 +29,7 @@ public class Other extends Syntax {
     }
 
     @Override
-    public Iterable<Syntax> children() {
+    public Collection<Syntax> children() {
         return Collections.emptyList();
     }
 

@@ -5,6 +5,8 @@ import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
+
 /**
  * Core representation of Syntax.. We don't use PSI as it's probably too heavyweight,
  * and somewhat subject to change.
@@ -15,7 +17,7 @@ public abstract class Syntax {
 
     public abstract PsiElement psiElement();
 
-    public abstract Iterable<Syntax> children();
+    public abstract Collection<Syntax> children();
 
     @NotNull
     public <T extends Syntax> T as(@NotNull Class<T> clzz) {

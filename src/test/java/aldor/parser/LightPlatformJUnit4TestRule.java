@@ -20,7 +20,7 @@ public class LightPlatformJUnit4TestRule implements TestRule {
     private final String basePath;
     private CodeInsightTestFixture myFixture = null;
 
-    LightPlatformJUnit4TestRule(CodeInsightTestFixture fixture, String basePath) {
+    public LightPlatformJUnit4TestRule(CodeInsightTestFixture fixture, String basePath) {
         this.myFixture = fixture;
         this.basePath = basePath;
     }

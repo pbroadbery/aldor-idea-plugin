@@ -6,9 +6,7 @@ import aldor.symbolfile.AnnotationFileTestFixture;
 import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.JUnits;
 import com.intellij.codeInsight.documentation.DocumentationManager;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -43,7 +41,6 @@ public class AldorDocumentationProviderTest extends LightPlatformCodeInsightFixt
 
     public void testDocumentationLocal() throws Exception {
         annotationTextFixture.project(getProject());
-        Project project = getProject();
 
         String program = "#include \"aldor\"\n"
                 + "+++ This is a domain\n"
@@ -54,7 +51,7 @@ public class AldorDocumentationProviderTest extends LightPlatformCodeInsightFixt
 
         annotationTextFixture.compileFile(sourceFile);
 
-        ApplicationManager.getApplication().invokeAndWait(() -> {
+        annotationTextFixture.runInEdtAndWait(() -> {
             PsiFile psiFile = ofNullable(PsiManager.getInstance(getProject()).findFile(sourceFile)).orElseThrow(() -> new AssertionFailedError(""));
             String docs = docForElement(PsiTreeUtil.findElementOfClassAtOffset(psiFile, program.indexOf("Dom)"), AldorIdentifier.class, true));
             LOG.info("Docs are: " + docs);
@@ -63,6 +60,48 @@ public class AldorDocumentationProviderTest extends LightPlatformCodeInsightFixt
         });
 
     }
+
+    public void testExportDocco() throws Exception {
+        annotationTextFixture.project(getProject());
+
+        String program = "#include \"aldor\"\n"
+                + "Dom: with { foo: () -> % } == add { foo(): % == never }\n"
+                + "f(): Dom == foo();\n";
+        VirtualFile sourceFile = annotationTextFixture.createFile("foo.as", program);
+        annotationTextFixture.createFile("Makefile", "foo.abn: foo.as\n\t" + aldorExecutableRule.executable() + " -Fabn=foo.abn foo.as");
+
+        annotationTextFixture.compileFile(sourceFile);
+
+        annotationTextFixture.runInEdtAndWait(() -> {
+            PsiFile psiFile = ofNullable(PsiManager.getInstance(getProject()).findFile(sourceFile)).orElseThrow(() -> new AssertionFailedError("Missing file!"));
+            String docs = docForElement(PsiTreeUtil.findElementOfClassAtOffset(psiFile, program.indexOf("foo();"), AldorIdentifier.class, true));
+            LOG.info("Docs are: " + docs);
+            Assert.assertNotNull(docs);
+            Assert.assertTrue("Doc is " + docs, docs.contains("This is a domain"));
+        });
+    }
+
+
+    public void testImportDocco() throws Exception {
+        annotationTextFixture.project(getProject());
+
+        String program = "#include \"aldor\"\n"
+                + "import from Integer;\n"
+                + "myabs := abs;\n";
+        VirtualFile sourceFile = annotationTextFixture.createFile("foo.as", program);
+        annotationTextFixture.createFile("Makefile", "foo.abn: foo.as\n\t" + aldorExecutableRule.executable() + " -Fabn=foo.abn foo.as");
+
+        annotationTextFixture.compileFile(sourceFile);
+
+        annotationTextFixture.runInEdtAndWait(() -> {
+            PsiFile psiFile = ofNullable(PsiManager.getInstance(getProject()).findFile(sourceFile)).orElseThrow(() -> new AssertionFailedError("Missing file!"));
+            String docs = docForElement(PsiTreeUtil.findElementOfClassAtOffset(psiFile, program.indexOf("abs;"), AldorIdentifier.class, true));
+            LOG.info("Docs are: " + docs);
+            Assert.assertNotNull(docs);
+            Assert.assertTrue("Doc is " + docs, docs.contains("This is a domain"));
+        });
+    }
+
 
     private String docForElement(PsiElement id) {
         return DocumentationManager.getProviderFromElement(id).generateDoc(id, id);

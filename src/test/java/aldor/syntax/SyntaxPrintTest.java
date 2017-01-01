@@ -21,18 +21,18 @@ public class SyntaxPrintTest extends LightPlatformCodeInsightFixtureTestCase {
         Assert.assertEquals("f f x", parseAndPrint("f f x"));
         Assert.assertEquals("(f a) x", parseAndPrint("(f a) x"));
         Assert.assertEquals("foo(x: Int)", parseAndPrint("foo(x: Int)"));
-         Assert.assertEquals("'a, b'", parseAndPrint("'a, b'"));
+        Assert.assertEquals("'a, b'", parseAndPrint("'a, b'"));
     }
 
     public void testApplyMap() {
         Assert.assertEquals("A -> B", parseAndPrint("A -> B"));
+        Assert.assertEquals("() -> Dom", parseAndPrint("() -> Dom"));
     }
 
     private String parseAndPrint(CharSequence text) {
         PsiElement psi = parseText(text);
         Syntax syntax = parse(psi);
         Assert.assertNotNull(syntax);
-        System.out.println("Syntax: " + syntax);
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
         SyntaxPrinter.instance().print(pw, syntax);

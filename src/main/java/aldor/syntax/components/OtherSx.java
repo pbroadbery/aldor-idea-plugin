@@ -4,6 +4,7 @@ import aldor.syntax.Syntax;
 import aldor.util.sexpr.SExpression;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.Collections;
 
 /**
@@ -24,7 +25,7 @@ public class OtherSx extends Other {
 
     @Override
     @Nullable
-    public Iterable<Syntax> children() {
+    public Collection<Syntax> children() {
         return Collections.emptyList();
     }
 

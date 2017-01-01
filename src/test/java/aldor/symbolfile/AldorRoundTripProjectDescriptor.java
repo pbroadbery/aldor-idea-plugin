@@ -26,14 +26,13 @@ public class AldorRoundTripProjectDescriptor extends LightProjectDescriptor {
     protected void configureModule(@NotNull Module module, @NotNull ModifiableRootModel model, @NotNull ContentEntry contentEntry) {
         super.configureModule(module, model, contentEntry);
         CompilerModuleExtension compilerModuleExtension = model.getModuleExtension(CompilerModuleExtension.class);
-        compilerModuleExtension.setCompilerOutputPath("file:///tmp");
+        compilerModuleExtension.setCompilerOutputPath("file:///tmp/test_output");
         compilerModuleExtension.inheritCompilerOutputPath(false);
     }
 
     // Not needed, except that the compile driver insists on it.
     @Override
     public Sdk getSdk() {
-        JavaSdk x = JavaSdk.getInstance();
         return JavaSdk.getInstance().createJdk("java", "/home/pab/Work/intellij/jdk1.8.0_101");
     }
 

@@ -7,6 +7,7 @@ import aldor.symbolfile.MissingAnnotationFile;
 import aldor.symbolfile.PopulatedAnnotationFile;
 import aldor.symbolfile.SrcPos;
 import aldor.symbolfile.Syme;
+import aldor.util.AnnotatedOptional;
 import aldor.util.sexpr.SExpression;
 import aldor.util.sexpr.SymbolPolicy;
 import aldor.util.sexpr.impl.SExpressionReadException;
@@ -15,6 +16,8 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleType;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
@@ -65,6 +68,12 @@ public class AnnotationFileManager implements Disposable {
         annotationFileBuilder = new AnnotationFileBuilder.AnnotationFileBuilderImpl();
         widthCalculator = new IndentWidthCalculator();
         this.module = module;
+    }
+
+    @NotNull
+    public static Optional<AnnotationFileManager> getAnnotationFileManager(Project project, @NotNull VirtualFile virtualFile) {
+        Optional<Module> aModule = Optional.ofNullable(ProjectRootManager.getInstance(project).getFileIndex().getModuleForFile(virtualFile));
+        return aModule.flatMap(AnnotationFileManager::getAnnotationFileManager);
     }
 
     @NotNull
@@ -166,6 +175,14 @@ public class AnnotationFileManager implements Disposable {
 
     public Future<Void> requestRebuild(PsiFile psiFile) {
         return annotationFileBuilder.invokeAnnotationBuild(psiFile);
+    }
+
+    public AnnotatedOptional<Syme,String> symeForElement(PsiElement element) {
+        AnnotationFile annotationFile = annotationFile(element.getContainingFile());
+
+        AnnotatedOptional<SrcPos, String> srcPosMaybe = AnnotatedOptional.ofNullable(findSrcPosForElement(element), () -> "No source found");
+
+        return srcPosMaybe.flatMap(srcPos -> AnnotatedOptional.ofNullable(annotationFile.lookupSyme(srcPos), () -> "Failed to find symbol"));
     }
 
     private class LineNumberMap {

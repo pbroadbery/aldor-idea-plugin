@@ -17,7 +17,7 @@ public abstract class DeclareNode<T extends PsiElement> extends SyntaxNode<T> {
     public abstract Syntax rhs();
 
     @Override
-    public <T> T accept(SyntaxVisitor<T> syntaxVisitor) {
+    public <R> R accept(SyntaxVisitor<R> syntaxVisitor) {
         return syntaxVisitor.visitDeclaration(this);
     }
 
