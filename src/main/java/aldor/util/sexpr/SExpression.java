@@ -1,11 +1,9 @@
 package aldor.util.sexpr;
 
-import aldor.util.sexpr.impl.SExpressionReader;
 import aldor.util.sexpr.impl.SExpressionTypes;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.List;
@@ -24,15 +22,6 @@ public abstract class SExpression {
 
     public SxType<?> type() {
         return type;
-    }
-
-    public static SExpression read(Reader reader, SymbolPolicy symbolPolicy) {
-        SExpressionReader rdr = new SExpressionReader(reader, symbolPolicy);
-        return rdr.read();
-    }
-
-    public static SExpression read(Reader reader) {
-        return read(reader, NORMAL);
     }
 
     public <T extends SExpression> T asType(SxType<T> type) {

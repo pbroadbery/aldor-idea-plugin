@@ -8,7 +8,7 @@ import aldor.symbolfile.PopulatedAnnotationFile;
 import aldor.symbolfile.SrcPos;
 import aldor.symbolfile.Syme;
 import aldor.util.AnnotatedOptional;
-import aldor.util.sexpr.SExpression;
+import aldor.util.sexpr.SExpressions;
 import aldor.util.sexpr.SymbolPolicy;
 import aldor.util.sexpr.impl.SExpressionReadException;
 import com.google.common.collect.Maps;
@@ -138,7 +138,7 @@ public class AnnotationFileManager implements Disposable {
             try (LineNumberReader reader = new LineNumberReader(new InputStreamReader(buildFile.getInputStream(), StandardCharsets.US_ASCII))) {
 
                 try {
-                    return new PopulatedAnnotationFile(virtualFile.getPath(), SExpression.read(reader, SymbolPolicy.ALLCAPS));
+                    return new PopulatedAnnotationFile(virtualFile.getPath(), SExpressions.read(reader, SymbolPolicy.ALLCAPS));
                 }
                 catch (SExpressionReadException e) {
                     LOG.error("When reading file: " + buildFilePath + ": " + reader.getLineNumber(), e);

@@ -1,8 +1,13 @@
 package aldor.util.sexpr;
 
+import aldor.util.sexpr.impl.SExpressionReader;
+
+import java.io.Reader;
 import java.io.StringReader;
 import java.util.Arrays;
 import java.util.List;
+
+import static aldor.util.sexpr.SymbolPolicy.NORMAL;
 
 public final class SExpressions {
 
@@ -20,6 +25,16 @@ public final class SExpressions {
     }
 
     public static SExpression readFromString(String s) {
-        return SExpression.read(new StringReader(s));
+        return read(new StringReader(s));
     }
+
+    public static SExpression read(Reader reader, SymbolPolicy symbolPolicy) {
+        SExpressionReader rdr = new SExpressionReader(reader, symbolPolicy);
+        return rdr.read();
+    }
+
+    public static SExpression read(Reader reader) {
+        return read(reader, NORMAL);
+    }
+
 }

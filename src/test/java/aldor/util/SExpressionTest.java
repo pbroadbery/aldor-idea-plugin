@@ -1,6 +1,7 @@
 package aldor.util;
 
 import aldor.util.sexpr.SExpression;
+import aldor.util.sexpr.SExpressions;
 import aldor.util.sexpr.SymbolPolicy;
 import aldor.util.sexpr.impl.SExpressionReadException;
 import org.junit.Test;
@@ -15,13 +16,13 @@ public class SExpressionTest {
 
     @Test
     public void testReadPolicy() throws FileNotFoundException {
-        SExpression sx = SExpression.read(new StringReader("foo"), SymbolPolicy.ALLCAPS);
+        SExpression sx = SExpressions.read(new StringReader("foo"), SymbolPolicy.ALLCAPS);
         assertEquals(sx, SExpression.symbol("FOO"));
     }
 
     @Test
     public void testReadNice() throws FileNotFoundException {
-        SExpression sx = SExpression.read(new StringReader("(Hello there)"));
+        SExpression sx = SExpressions.read(new StringReader("(Hello there)"));
         assertEquals(sx, SExpression.cons(SExpression.symbol("Hello"),
                 SExpression.cons(SExpression.symbol("there"), SExpression.nil())));
     }
@@ -29,7 +30,7 @@ public class SExpressionTest {
     @Test
     public void testReadIncomplete() throws FileNotFoundException {
         try {
-            SExpression.read(new StringReader("(Hello there"));
+            SExpressions.read(new StringReader("(Hello there"));
             fail("Expected an exception");
         }
         catch (SExpressionReadException ignored) {
@@ -40,7 +41,7 @@ public class SExpressionTest {
 
     @Test
     public void testList() {
-        SExpression sx = SExpression.read(new StringReader("(1 2 3 4)"));
+        SExpression sx = SExpressions.read(new StringReader("(1 2 3 4)"));
         assertEquals(SExpression.integer(1), sx.asList().get(0));
         assertEquals(SExpression.integer(2), sx.asList().get(1));
         assertEquals(SExpression.integer(3), sx.asList().get(2));

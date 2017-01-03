@@ -2,6 +2,7 @@ package aldor.symbolfile;
 
 import aldor.syntax.Syntax;
 import aldor.util.sexpr.SExpression;
+import aldor.util.sexpr.SExpressions;
 import aldor.util.sexpr.SymbolPolicy;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -17,7 +18,7 @@ public class PopulatedAnnotationFileTest {
     @Ignore
     public void testFile() throws FileNotFoundException {
         @SuppressWarnings("ImplicitDefaultCharsetUsage")
-        SExpression sx = SExpression.read(new FileReader("/tmp/sal_array.abn"));
+        SExpression sx = SExpressions.read(new FileReader("/tmp/sal_array.abn"));
 
         PopulatedAnnotationFile file = new PopulatedAnnotationFile("array", sx);
 
@@ -34,7 +35,7 @@ public class PopulatedAnnotationFileTest {
     @Ignore
     public void testFile2() throws FileNotFoundException {
         @SuppressWarnings("ImplicitDefaultCharsetUsage")
-        SExpression sx = SExpression.read(new FileReader("/tmp/alg_serpoly.abn"), SymbolPolicy.ALLCAPS);
+        SExpression sx = SExpressions.read(new FileReader("/tmp/alg_serpoly.abn"), SymbolPolicy.ALLCAPS);
 
         PopulatedAnnotationFile file = new PopulatedAnnotationFile("array", sx);
 
