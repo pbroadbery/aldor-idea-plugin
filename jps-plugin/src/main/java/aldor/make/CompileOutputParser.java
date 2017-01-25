@@ -85,7 +85,7 @@ public class CompileOutputParser {
     }
 
     @Nullable
-    private CompilerMessage processErrorLocations(String text) {
+    private CompilerMessage processErrorLocations(CharSequence text) {
         Matcher matcher = locatorLine.matcher(text);
         if (matcher.matches()) {
             state = ErrorLocations;
