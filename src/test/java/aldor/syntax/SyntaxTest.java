@@ -138,6 +138,12 @@ public class SyntaxTest extends LightPlatformCodeInsightFixtureTestCase {
         Assert.assertEquals("(Apply foo (Comma (SDecl a S) (SDecl b T)))", syntax.toString());
     }
 
+    public void testSpadExpr() {
+        PsiElement psi = parseSpadText("a + b");
+        Syntax syntax = parse(psi);
+        Assert.assertNotNull(syntax);
+        Assert.assertEquals("(Apply + a b)", syntax.toString());
+    }
 
     private PsiElement parseText(CharSequence text) {
         return ParserFunctions.parseAldorText(getProject(), text);

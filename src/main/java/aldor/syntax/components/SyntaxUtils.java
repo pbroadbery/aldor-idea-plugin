@@ -25,10 +25,13 @@ public final class SyntaxUtils {
                     for (Syntax commaElt : child.children()) {
                         scopes.add(commaElt);
                     }
-                } else if (child.is(DeclareNode.class)) {
+                }
+                else if (child.is(DeclareNode.class)) {
                     scopes.add(child);
                 }
-
+                else if (child.is(Id.class)) {
+                    scopes.add(child);
+                }
             }
         }
         return scopes;

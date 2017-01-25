@@ -47,6 +47,10 @@ public class SpadAbbrevStubbingImpl {
 
         @Override
         public AbbrevInfo abbrevInfo() {
+            if (this.getStub() != null) {
+                return getStub().info();
+            }
+
             String content = this.getText();
             Matcher match = pattern.matcher(content);
             if (!match.matches()) {

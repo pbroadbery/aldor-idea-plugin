@@ -1,11 +1,13 @@
 package aldor.references;
 
 import aldor.language.AldorLanguage;
+import aldor.language.SpadLanguage;
 import aldor.parser.EnsureParsingTest;
 import aldor.psi.AldorE6;
 import aldor.psi.AldorIdentifier;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import com.intellij.lang.Language;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiReference;
@@ -100,6 +102,16 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
     }
 
 
+    public void testLookupInfix() {
+        String text = "(n: Integer) + (m: Integer): Integer == n+m";
+        PsiFile file = createAldorFile(text);
+        PsiReference ref = file.findReferenceAt(text.indexOf("n+m"));
+        Assert.assertNotNull(ref);
+        PsiElement resolved = ref.resolve();
+        Assert.assertNotNull(resolved);
+        Assert.assertEquals(text.indexOf("n:"), resolved.getTextOffset());
+    }
+
 
     public void testLookupNotPresent() {
         String text = "f(n: Integer): Integer == foo";
@@ -113,14 +125,23 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
 
 
     public void testLookupInfix2Arg() {
-        String text = "(n: Integer) + (m: Integer): Integer == n+m";
-        PsiFile file = createAldorFile(text);
-        PsiReference ref = file.findReferenceAt(text.indexOf("n+m"));
-        Assert.assertNotNull(ref);
-        PsiElement resolved = ref.resolve();
+        String text = "(n: Integer) + (m: Integer): Integer == n+m+1";
+        Map<String, String> nameRefToMap = ImmutableMap.<String, String>builder()
+                .put("n+", "n:")
+                .put("m+", "m:")
+                .build();
+        Collection<String> nulls = Arrays.asList("n", "m:");
+        assertReferences(text, nameRefToMap, nulls);
+    }
 
-        Assert.assertNotNull(resolved);
-        Assert.assertEquals(text.indexOf("n:"), resolved.getTextOffset());
+    public void testLookupInfix2ArgSpad() {
+        String text = "n+m == n+1+m+1";
+        Map<String, String> nameRefToMap = ImmutableMap.<String, String>builder()
+                .put("n+1", "n+m")
+                .put("m+1", "m ")
+                .build();
+        Collection<String> nulls = Arrays.asList("n+m", "m ");
+        assertReferences(text, nameRefToMap, nulls, SpadLanguage.INSTANCE);
     }
 
     public void testLookupCurriedArg() {
@@ -258,9 +279,37 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
         assertReferences(text, nameRefToMap, nulls);
     }
 
+    public void testSeqRef() {
+        String text = "#pile\n"
+                + "f(a: A): X == a+1\n"
+                + "g(a: B): X == a+2";
+
+        Map<String, String> nameRefToMap = ImmutableMap.<String, String>builder()
+                .put("a+1", "a: A")
+                .put("a+2", "a: B")
+                .build();
+        Collection<String> nulls = Arrays.asList("a: A", "a: B");
+        assertReferences(text, nameRefToMap, nulls);
+    }
+
+    public void testDefaultedParamRef() {
+        String text = "#pile\n"
+                + "foo(x): I == x+1\n";
+
+        Map<String, String> nameRefToMap = ImmutableMap.<String, String>builder()
+                .put("x+1", "x)")
+                .build();
+        Collection<String> nulls = Arrays.asList("x");
+        assertReferences(text, nameRefToMap, nulls);
+
+    }
 
     private void assertReferences(String text, Map<String, String> nameRefToMap, Iterable<String> nulls) {
-        PsiFile file = createAldorFile(text);
+        assertReferences(text, nameRefToMap, nulls, AldorLanguage.INSTANCE);
+    }
+
+    private void assertReferences(String text, Map<String, String> nameRefToMap, Iterable<String> nulls, Language language) {
+        PsiFile file = createFile(text, language);
         logPsi(file);
         Map<String, PsiElement> refMap = Maps.newHashMap();
         for (Map.Entry<String, String> entry: nameRefToMap.entrySet()) {
@@ -285,7 +334,12 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
     }
 
     private PsiFile createAldorFile(String text) {
-        return createLightFile("foo.as", AldorLanguage.INSTANCE, text);
+        AldorLanguage language = AldorLanguage.INSTANCE;
+        return createFile(text, language);
+    }
+
+    private PsiFile createFile(String text, Language language) {
+        return createLightFile("foo.as", language, text);
     }
 
     @Override

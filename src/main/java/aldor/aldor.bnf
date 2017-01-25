@@ -46,8 +46,9 @@
   mixin("AnyStatement_Collection")="aldor.psi.impl.AldorCollectionMixin"
   mixin("Comma")="aldor.psi.impl.AldorCommaMixin"
 
-
   mixin("ColonExpr")="aldor.psi.impl.AldorColonExprMixin"
+  mixin("Expr")="aldor.psi.impl.AldorSpadExprMixin"
+
   extends(".*Expr")=Expr
 
   // These things are documented
@@ -63,6 +64,16 @@
   stubClass("SpadAbbrev")='aldor.psi.SpadAbbrevStubbing.SpadAbbrevStub'
   implements("SpadAbbrev")='aldor.psi.SpadAbbrevStubbing.SpadAbbrev'
   mixin("SpadAbbrev")="aldor.psi.impl.SpadAbbrevStubbingImpl.SpadAbbrevMixin"
+
+  // Spad expressions
+  implements("ExpPrecedenceExpr") = 'aldor.psi.SpadBinaryOp'
+  implements("TimesPrecedenceExpr") = 'aldor.psi.SpadBinaryOp'
+  implements("AddPrecedenceExpr") = 'aldor.psi.SpadBinaryOp'
+  implements("RelExpr") = 'aldor.psi.SpadBinaryOp'
+  mixin("ExpPrecedenceExpr") = 'aldor.psi.impl.SpadBinaryOpMixin'
+  mixin("TimesPrecedenceExpr") = 'aldor.psi.impl.SpadBinaryOpMixin'
+  mixin("AddPrecedenceExpr") = 'aldor.psi.impl.SpadBinaryOpMixin'
+  mixin("RelExpr") = 'aldor.psi.impl.SpadBinaryOpMixin'
 
   // Declarations (should be with body only...)
   // Version 2, I think.
@@ -683,7 +694,7 @@ Expr ::=
          Rel_400_Group |
          Add_700_Group |
          Mult_800_Group |
-         Exp_901_Group |
+         ExpPrecedenceExpr |
          Misc_995_Group |
          Decl_996_Group |
          Misc_999_Group |
@@ -703,9 +714,8 @@ private Type_2000_Group ::= UnaryWithExpr | BinaryWithExpr | UnaryAddExpr | Bina
 private Misc_999_Group ::= SharpExpr | QuoteExpr
 private Decl_996_Group ::= ColonExpr | DoubleColonExpr | RestrictExpr
 private Misc_995_Group ::= PretendExpr | MapsToExpr
-private Exp_901_Group ::= ExpExpr | DoubleStarExpr
-private Mult_800_Group ::= TimesExpr | DivideExpr | RemExpr | QuoExpr | ExquoExpr | ReduceExpr
-private Add_700_Group ::= PlusExpr | MinusExpr | NegateExpr
+private Mult_800_Group ::= TimesPrecedenceExpr | ReduceExpr
+private Add_700_Group ::= AddPrecedenceExpr | NegateExpr
 private Rel_400_Group ::= RelExpr | SegExpr
 private Not_260_Group ::= /*NotExpr | */TildeExpr
 private And_250_Group ::= AndExpr | WedgeExpr
@@ -732,23 +742,22 @@ RestrictExpr ::= Expr KW_At Expr
 PretendExpr ::= Expr KW_Pretend Expr
 MapsToExpr ::= Expr KW_MapsTo Expr
 
-ExpExpr ::= Expr KW_Hat Qual Expr
-DoubleStarExpr ::= Expr KW_2Star Qual Expr
+ExpPrecedenceExpr ::= Expr ExpPrecedenceOp Expr
+ExpPrecedenceOp ::= (KW_Hat | KW_2Star) Qual
 
-TimesExpr ::= Expr KW_Star Qual Expr
-DivideExpr ::= Expr KW_Slash Qual Expr
-RemExpr ::= Expr KW_Rem Qual Expr
-QuoExpr ::= Expr KW_Quo Qual Expr
-ExquoExpr ::= Expr KW_Exquo Qual Expr
+TimesPrecedenceExpr ::= Expr TimesPrecedenceOp Expr
 ReduceExpr ::= (KW_Plus | KW_Star | KW_And | KW_Or) KW_Slash Expr
+TimesPrecedenceOp ::= SpadTimesTok Qual
+SpadTimesTok ::= (KW_Star | KW_Slash | KW_Rem | KW_Quo | KW_Exquo)
 
-PlusExpr ::= Expr KW_Plus Qual Expr
-MinusExpr ::= Expr KW_Minus Qual Expr
+AddPrecedenceExpr ::= Expr AddPrecedenceOp Expr
+AddPrecedenceOp ::= SpadAddTok Qual
+SpadAddTok ::= (KW_Plus | KW_Minus)
 NegateExpr ::= KW_Minus Qual Expr
 
-RelExpr ::= Expr (KW_LT  | KW_GT | KW_2LT | KW_2GT | KW_LE | KW_GE | KW_EQ |
+RelExpr ::= Expr SpadRelTok Qual Expr
+SpadRelTok ::= (KW_LT  | KW_GT | KW_2LT | KW_2GT | KW_LE | KW_GE | KW_EQ |
                   KW_HatE | KW_TildeE | KW_Case | KW_Has | KW_Is | KW_Isnt)
-                  Qual Expr
 
 private Qual ::= (KW_Dollar Molecule)?
 SegExpr ::= Expr (KW_2Dot | KW_By) Qual Expr?

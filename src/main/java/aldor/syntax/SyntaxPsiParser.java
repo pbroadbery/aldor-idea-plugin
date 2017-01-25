@@ -1,11 +1,13 @@
 package aldor.syntax;
 
 import aldor.psi.AldorAddPart;
+import aldor.psi.AldorAddPrecedenceExpr;
 import aldor.psi.AldorBracketed;
 import aldor.psi.AldorColonExpr;
 import aldor.psi.AldorDeclPart;
 import aldor.psi.AldorDefineStubbing.AldorDefine;
 import aldor.psi.AldorE14;
+import aldor.psi.AldorExpPrecedenceExpr;
 import aldor.psi.AldorId;
 import aldor.psi.AldorInfixedExpr;
 import aldor.psi.AldorInfixedTok;
@@ -15,9 +17,12 @@ import aldor.psi.AldorParened;
 import aldor.psi.AldorQuoteExpr;
 import aldor.psi.AldorQuotedIds;
 import aldor.psi.AldorRecursiveVisitor;
+import aldor.psi.AldorRelExpr;
+import aldor.psi.AldorTimesPrecedenceExpr;
 import aldor.psi.AldorWithPart;
 import aldor.psi.JxrightElement;
 import aldor.psi.NegationElement;
+import aldor.psi.SpadBinaryOp;
 import aldor.syntax.components.Add;
 import aldor.syntax.components.AldorDeclare;
 import aldor.syntax.components.Apply;
@@ -244,6 +249,37 @@ public final class SyntaxPsiParser {
             visitStack.peek().add(new Apply(brackets, last));
         }
 
+
+        @Override
+        public void visitExpPrecedenceExpr(@NotNull AldorExpPrecedenceExpr expPrecedenceExpr) {
+            visitBinaryOp(expPrecedenceExpr);
+        }
+
+        @Override
+        public void visitTimesPrecedenceExpr(@NotNull AldorTimesPrecedenceExpr addPrecedenceExpr) {
+            visitBinaryOp(addPrecedenceExpr);
+        }
+
+        @Override
+        public void visitAddPrecedenceExpr(@NotNull AldorAddPrecedenceExpr addPrecedenceExpr) {
+            visitBinaryOp(addPrecedenceExpr);
+        }
+
+        @Override
+        public void visitRelExpr(@NotNull AldorRelExpr addPrecedenceExpr) {
+            visitBinaryOp(addPrecedenceExpr);
+        }
+
+        public void visitBinaryOp(SpadBinaryOp expr) {
+            List<Syntax> args = Lists.newArrayList();
+            visitStack.push(args);
+            expr.getOp().accept(this);
+            for (PsiElement elt: expr.getExprList()) {
+                elt.accept(this);
+            }
+            visitStack.pop();
+            visitStack.peek().add(new Apply(expr, args));
+        }
 
         private List<Syntax> buildChildren(PsiElement psi) {
             List<Syntax> parenContent = Lists.newArrayList();
