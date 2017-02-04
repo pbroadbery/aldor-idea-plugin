@@ -1,12 +1,15 @@
 package aldor.make;
 
+import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.jps.incremental.messages.BuildMessage;
 import org.jetbrains.jps.incremental.messages.CompilerMessage;
 
 import java.io.File;
-import java.util.regex.MatchResult;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,7 +19,7 @@ import static aldor.make.CompileOutputParser.State.NoError;
 import static java.util.regex.Pattern.compile;
 
 public class CompileOutputParser {
-    private static final Pattern firstLine = compile("\"([^\"]*)\", line (\\d+): $");
+    private static final Pattern firstLine = compile("\"([^\"]*)\", line (\\d+): .*$");
     private static final int     firstLine_grp_1_file = 1;
     private static final int     firstLine_grp_2_file = 2;
     private static final Pattern locatorLine = compile("^\\[L(\\d+) C(\\d+)] #(\\d+) \\((\\w+)\\) (.*)$");
@@ -30,6 +33,8 @@ public class CompileOutputParser {
 
     @NotNull
     private State state;
+    private List<String> messageBody;
+
     private final Listener listener;
     @Nullable
     private String file;
@@ -40,6 +45,7 @@ public class CompileOutputParser {
         this.listener = listener;
         this.baseDirectory = baseDirectory;
         this.file = null;
+        this.messageBody = Lists.newArrayList();
     }
 
     void newMessage(String text) {
@@ -62,6 +68,13 @@ public class CompileOutputParser {
         }
     }
 
+    void close() {
+        CompilerMessage message = this.errorMessageForText(messageBody);
+        if (message != null) {
+            this.listener.messageReceived(message);
+        }
+    }
+
     @SuppressWarnings("SameReturnValue")
     @Nullable
     private CompilerMessage processNoError(CharSequence text) {
@@ -75,31 +88,66 @@ public class CompileOutputParser {
     }
 
     @Nullable
-    private CompilerMessage processErrorBody(CharSequence text) {
+    private CompilerMessage processErrorBody(String text) {
         Matcher matcher = locatorLine.matcher(text);
         if (matcher.matches()) {
             state = ErrorLocations;
-            return errorMessageForText(text, matcher);
+            return addErrorMessage(text);
         }
         return null;
     }
 
     @Nullable
-    private CompilerMessage processErrorLocations(CharSequence text) {
+    private CompilerMessage processErrorLocations(String text) {
         Matcher matcher = locatorLine.matcher(text);
         if (matcher.matches()) {
             state = ErrorLocations;
-            return errorMessageForText(text, matcher);
+            return addErrorMessage(text);
+        }
+        else if (firstLine.matcher(text).matches()) {
+            CompilerMessage message = errorMessageForText(this.messageBody);
+            messageBody = new ArrayList<>();
+            this.processNoError(text);
+            return message;
+        }
+        else if (!text.isEmpty() && Character.isWhitespace(text.charAt(0))) {
+            this.state = ErrorLocations;
+            messageBody.add(text);
+            return null;
+        }
+        else if (!this.messageBody.isEmpty()){
+            CompilerMessage message = errorMessageForText(this.messageBody);
+            this.messageBody = new ArrayList<>();
+            return message;
         }
         else {
-            this.file = null;
-            this.state = NoError;
             return null;
         }
     }
 
+    @Nullable
+    CompilerMessage addErrorMessage(String text) {
+        CompilerMessage message = errorMessageForText(messageBody);
+        messageBody = Lists.newArrayList();
+        messageBody.add(text);
+        return message;
+    }
 
-    private CompilerMessage errorMessageForText(CharSequence text, MatchResult matcher) {
+    @Nullable
+    private CompilerMessage errorMessageForText(List<String> lines) {
+        if (lines.isEmpty()) {
+            return null;
+        }
+
+        Matcher matcher = locatorLine.matcher(lines.get(0));
+        if (!matcher.matches()) {
+            return new CompilerMessage(compilerName, BuildMessage.Kind.ERROR, "ERR: " +
+                    Joiner.on("\n").join(lines.subList(0, Math.min(20, lines.size()))));
+        }
+        String body = Joiner.on("\n").join(lines.subList(1, Math.min(lines.size(), 20)));
+        if (lines.size() > 20) {
+            body = body + "\n...";
+        }
         String lineNumberText = matcher.group(locatorLine_grp_1_line);
         String columnNumberText = matcher.group(locatorLine_grp_2_column);
         //String messageNumberText = matcher.group(locatorLine_grp_3_errNo);
@@ -107,6 +155,7 @@ public class CompileOutputParser {
         String errorMessageText = matcher.group(locatorLine_grp_5_msg);
         BuildMessage.Kind kind = AldorErrorKind.valueOf(messageKindText).buildMessageKind();
 
+        errorMessageText = errorMessageText + (body.isEmpty() ? "": "\n") + body;
         if (file == null) {
             return new CompilerMessage(compilerName, kind, errorMessageText);
         } else {
@@ -119,6 +168,7 @@ public class CompileOutputParser {
 
         }
     }
+
     public interface Listener {
         void messageReceived(CompilerMessage message);
     }

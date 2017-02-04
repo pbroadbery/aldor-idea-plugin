@@ -109,6 +109,7 @@ public class FullCompiler implements AldorFileTargetBuilder.Compiler {
             LOG.info("Error while reading stdout: " + e.getMessage());
         }
         finally {
+            errorParser.close();
             LOG.info("Reached end of file " + target);
         }
     }
