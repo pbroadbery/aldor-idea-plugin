@@ -40,6 +40,9 @@ public class AldorModuleTest extends UsefulTestCase {
         project = fixture.getProject();
     }
 
+    public void testModule2() throws IOException {
+        testModule();
+    }
     public void testModule() throws IOException {
 
         AldorModuleManager manager = AldorModuleManager.getInstance(project);

@@ -72,11 +72,12 @@ public class AldorApplicationComponent implements ApplicationComponent {
             for (PsiFile psiFile: psiFiles) {
                 Project project = psiFile.getProject();
                 Module module = ProjectFileIndex.getInstance(project).getModuleForFile(psiFile.getVirtualFile());
-                if ((module == null) || ModuleType.get(module).equals(AldorModuleType.instance())) {
+                if ((module == null) || !ModuleType.get(module).equals(AldorModuleType.instance())) {
                     continue;
                 }
                 Optional<AnnotationFileManager> manager = AnnotationFileManager.getAnnotationFileManager(module);
                 LOG.info("Would like to build: " + psiFile.getName());
+                assert manager.isPresent();
                 manager.get().requestRebuild(psiFile);
             }
         }

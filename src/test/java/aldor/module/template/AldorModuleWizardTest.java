@@ -34,5 +34,6 @@ public class AldorModuleWizardTest extends PlatformTestCase {
         VirtualFile[] roots = ModuleRootManager.getInstance(module).getContentRoots();
         VirtualFile mf = roots[0].findChild("Makefile");
         Assert.assertNotNull(mf);
+        disposable.dispose();
     }
 }
