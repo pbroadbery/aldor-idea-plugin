@@ -1,5 +1,6 @@
 package aldor.build.module;
 
+import aldor.ui.AldorIcons;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.util.projectWizard.ModuleBuilder;
 import com.intellij.openapi.module.ModuleType;
@@ -41,7 +42,7 @@ public class AldorModuleType extends ModuleType<ModuleBuilder> {
 
     @Override
     public Icon getBigIcon() {
-        return AllIcons.FileTypes.Custom;
+        return AldorIcons.MODULE;
     }
 
     @Override
@@ -62,6 +63,11 @@ public class AldorModuleType extends ModuleType<ModuleBuilder> {
         }
 
         @Override
+        protected boolean isAvailable() {
+            return false;
+        }
+
+        @Override
         public void setupRootModel(ModifiableRootModel modifiableRootModel) throws ConfigurationException {
             doAddContentEntry(modifiableRootModel);
         }
@@ -71,5 +77,6 @@ public class AldorModuleType extends ModuleType<ModuleBuilder> {
         public ModuleType<?> getModuleType() {
             return type;
         }
+
     }
 }

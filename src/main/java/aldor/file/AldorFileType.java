@@ -1,7 +1,7 @@
 package aldor.file;
 
 import aldor.language.AldorLanguage;
-import com.intellij.icons.AllIcons;
+import aldor.ui.AldorIcons;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -38,6 +38,6 @@ public final class AldorFileType extends LanguageFileType {
   @Nullable
   @Override
   public Icon getIcon() {
-    return AllIcons.FileTypes.Custom;
+    return AldorIcons.FILE;
   }
 }

@@ -75,6 +75,9 @@
         <lang.parserDefinition language="Expression" implementationClass="aldor.expression.ExpressionParserDefinition"/>
         <stubElementTypeHolder class="aldor.expression.ExpressionTypes"/>
         <stubIndex implementation="aldor.expression.ExpressionDefineStubIndex"/>
+
+        <!-- Project Templates -->
+        <projectTemplatesFactory implementation="aldor.module.template.AldorGitTemplateFactory"/>
     </extensions>
 
     <actions>
