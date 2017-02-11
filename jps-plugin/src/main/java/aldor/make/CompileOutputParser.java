@@ -28,6 +28,7 @@ public class CompileOutputParser {
     private static final int     locatorLine_grp_3_errNo = 3;
     private static final int     locatorLine_grp_4_kind = 4;
     private static final int     locatorLine_grp_5_msg = 5;
+    public static final int MAX_ERROR_MESSAGE_LINES = 20;
     private final String compilerName;
     private final File baseDirectory;
 
@@ -142,12 +143,9 @@ public class CompileOutputParser {
         Matcher matcher = locatorLine.matcher(lines.get(0));
         if (!matcher.matches()) {
             return new CompilerMessage(compilerName, BuildMessage.Kind.ERROR, "ERR: " +
-                    Joiner.on("\n").join(lines.subList(0, Math.min(20, lines.size()))));
+                    truncate(MAX_ERROR_MESSAGE_LINES, lines));
         }
-        String body = Joiner.on("\n").join(lines.subList(1, Math.min(lines.size(), 20)));
-        if (lines.size() > 20) {
-            body = body + "\n...";
-        }
+        String body = truncate(MAX_ERROR_MESSAGE_LINES, lines.subList(1, lines.size()));
         String lineNumberText = matcher.group(locatorLine_grp_1_line);
         String columnNumberText = matcher.group(locatorLine_grp_2_column);
         //String messageNumberText = matcher.group(locatorLine_grp_3_errNo);
@@ -168,6 +166,14 @@ public class CompileOutputParser {
                     Integer.parseInt(columnNumberText));
 
         }
+    }
+
+    private String truncate(int maxLines, List<String> lines) {
+        String text = Joiner.on("\n").join(lines.subList(0, Math.min(maxLines, lines.size())));
+        if (lines.size() > maxLines) {
+            text = text + "\n...";
+        }
+        return text;
     }
 
     public interface Listener {

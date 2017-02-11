@@ -46,7 +46,7 @@ public class AldorDocumentationProvider extends DocumentationProviderEx {
             return null;
         }
 
-        AnnotatedOptional<Syme, String> symeMaybe = symeForElement(originalElement);
+        AnnotatedOptional<Syme, String> symeMaybe = symeForElement(element);
 
         if (symeMaybe.isPresent()) {
             SyntaxPrinter printer = SyntaxPrinter.instance();

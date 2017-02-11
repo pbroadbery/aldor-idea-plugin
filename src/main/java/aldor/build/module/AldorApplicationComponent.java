@@ -8,6 +8,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManagerAdapter;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.roots.ProjectFileIndex;
@@ -71,11 +72,10 @@ public class AldorApplicationComponent implements ApplicationComponent {
             for (PsiFile psiFile: psiFiles) {
                 Project project = psiFile.getProject();
                 Module module = ProjectFileIndex.getInstance(project).getModuleForFile(psiFile.getVirtualFile());
-                if (module == null) {
+                if ((module == null) || ModuleType.get(module).equals(AldorModuleType.instance())) {
                     continue;
                 }
                 Optional<AnnotationFileManager> manager = AnnotationFileManager.getAnnotationFileManager(module);
-                assert manager.isPresent();
                 LOG.info("Would like to build: " + psiFile.getName());
                 manager.get().requestRebuild(psiFile);
             }

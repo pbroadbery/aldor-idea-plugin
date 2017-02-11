@@ -667,7 +667,7 @@ Semicolon ::= <<semicolonOrCloseBraceNearby>>
 //CurlyContentB_E ::= PreDocument E PostDocument
 Documented_Labelled ::= PreDocument Labelled PostDocument
 
-Doc_Expression ::= Expression PostDocument
+Doc_Expression ::= PreDocument Expression PostDocument
 
 PostDocument ::= TK_PostDoc*
 PreDocument ::= TK_PreDoc*

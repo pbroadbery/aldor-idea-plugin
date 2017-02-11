@@ -3,14 +3,20 @@ package aldor.editor;
 import aldor.psi.AldorIdentifier;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
+import com.intellij.navigation.PsiElementNavigationItem;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.DataProvider;
+import com.intellij.psi.PsiElement;
 import com.intellij.util.IconUtil;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
 
-public class AldorIdentifierNavigationItem extends AbstractTreeNode<AldorIdentifier> {
-
+public class AldorIdentifierNavigationItem extends AbstractTreeNode<AldorIdentifier>
+        implements PsiElementNavigationItem, DataProvider {
     @SuppressWarnings("AssignmentToSuperclassField")
     public AldorIdentifierNavigationItem(AldorIdentifier ident) {
         super(ident.getProject(), ident);
@@ -44,5 +50,21 @@ public class AldorIdentifierNavigationItem extends AbstractTreeNode<AldorIdentif
         return new PresentationData(this.getValue().getText(),
                 getValue().getContainingFile().getName(), IconUtil.getMoveUpIcon(), null);
     }
+
+    @Nullable
+    @Override
+    public PsiElement getTargetElement() {
+        return super.getValue();
+    }
+
+    @Nullable
+    @Override
+    public Object getData(@NonNls String dataId) {
+        if (CommonDataKeys.PSI_ELEMENT.is(dataId)) {
+            return getValue();
+        }
+        return null;
+    }
+
 
 }

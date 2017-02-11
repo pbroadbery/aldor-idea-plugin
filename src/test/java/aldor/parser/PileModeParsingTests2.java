@@ -146,6 +146,12 @@ public class PileModeParsingTests2 extends LightPlatformTestCase {
         Assert.assertEquals(0, errors.size());
     }
 
+    public void testPreDocument() {
+        final List<PsiErrorElement> errors = parseForErrors(AldorTypes.TOP_LEVEL,
+                "#pile\n+++ Some documentation\nA == B\n");
+
+        Assert.assertEquals(0, errors.size());
+    }
 
     @NotNull
     private List<PsiErrorElement> parseForErrors(IElementType type, CharSequence text) {
