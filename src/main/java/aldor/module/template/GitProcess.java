@@ -15,7 +15,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 public class GitProcess {
-    private static final Logger LOG = Logger.getInstance(GitProcess.class);;
+    private static final Logger LOG = Logger.getInstance(GitProcess.class);
     ExecutorService executorService;
 
     public GitProcess() {

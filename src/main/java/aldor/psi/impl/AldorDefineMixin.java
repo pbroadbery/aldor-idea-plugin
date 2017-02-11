@@ -22,6 +22,7 @@ import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubBase;
 import com.intellij.psi.stubs.StubElement;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -110,6 +111,7 @@ public class AldorDefineMixin extends StubBasedPsiElementBase<AldorDefineStub> i
     }
 
     public static class AldorDefineConcreteStub extends StubBase<AldorDefine> implements AldorDefineStub {
+        @Nullable
         private final Syntax syntax;
         private final String defineId;
         private final AldorDefineInfo defineInfo;

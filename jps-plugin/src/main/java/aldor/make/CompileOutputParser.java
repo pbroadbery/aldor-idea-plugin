@@ -155,6 +155,7 @@ public class CompileOutputParser {
         String errorMessageText = matcher.group(locatorLine_grp_5_msg);
         BuildMessage.Kind kind = AldorErrorKind.valueOf(messageKindText).buildMessageKind();
 
+        //noinspection StringConcatenationMissingWhitespace
         errorMessageText = errorMessageText + (body.isEmpty() ? "": "\n") + body;
         if (file == null) {
             return new CompilerMessage(compilerName, kind, errorMessageText);

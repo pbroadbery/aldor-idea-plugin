@@ -99,6 +99,7 @@ public class AldorGitTemplateFactory extends ProjectTemplatesFactory {
         return AldorIcons.MODULE;
     }
 
+    @Nullable
     @Override
     public String getParentGroup(String group) {
         return null;
@@ -147,11 +148,10 @@ public class AldorGitTemplateFactory extends ProjectTemplatesFactory {
 
     private static class AldorEmptyModuleBuilder extends AldorModuleBuilder {}
 
-    private class AldorGitModuleBuilder extends AldorModuleBuilder {
+    private final class AldorGitModuleBuilder extends AldorModuleBuilder {
         private final String name;
 
-        public AldorGitModuleBuilder(String name) {
-            super();
+        private AldorGitModuleBuilder(String name) {
             this.name = name;
         }
 
@@ -198,6 +198,7 @@ public class AldorGitTemplateFactory extends ProjectTemplatesFactory {
                 createFileLayout(contentRootDir, modifiableRootModel);
             }
             catch (IOException e) {
+                LOG.error("Creating module", e);
                 throw new ConfigurationException("oops");
             }
         }
@@ -250,6 +251,7 @@ public class AldorGitTemplateFactory extends ProjectTemplatesFactory {
                 lineSeparator = CodeStyleSettingsManager.getSettings(ProjectManagerEx.getInstanceEx().getDefaultProject()).getLineSeparator();
             }
             final String existingText = StringUtil.trimTrailing(VfsUtilCore.loadText(file));
+            @SuppressWarnings("StringConcatenationMissingWhitespace")
             String content = (StringUtil.isNotEmpty(existingText) ? existingText + lineSeparator : "") +
                     StringUtil.convertLineSeparators(text, lineSeparator);
             VfsUtil.saveText(file, content);
