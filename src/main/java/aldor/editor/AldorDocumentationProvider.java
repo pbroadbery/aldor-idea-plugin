@@ -2,9 +2,13 @@ package aldor.editor;
 
 import aldor.build.module.AldorModuleManager;
 import aldor.build.module.AnnotationFileManager;
+import aldor.psi.AldorColonExpr;
+import aldor.psi.AldorDeclareStubbing;
 import aldor.psi.AldorDefineStubbing.AldorDefine;
 import aldor.psi.AldorDocumented;
 import aldor.psi.AldorIdentifier;
+import aldor.psi.AldorVisitor;
+import aldor.psi.SpadAbbrevStubbing;
 import aldor.psi.index.AldorDefineTopLevelIndex;
 import aldor.symbolfile.Syme;
 import aldor.syntax.Syntax;
@@ -18,6 +22,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
@@ -28,12 +33,9 @@ import java.util.stream.Collectors;
 import static aldor.util.AnnotatedOptional.missing;
 
 /**
-
- Fixme: Explore ways of adding some documentation.
+ * Fixme: Explore ways of adding some documentation.
  * Note that doc strings can be any html
  * <b>this is bold</b>
- *
- *
  */
 public class AldorDocumentationProvider extends DocumentationProviderEx {
     private static final Logger LOG = Logger.getInstance(AldorDocumentationProvider.class);
@@ -41,11 +43,22 @@ public class AldorDocumentationProvider extends DocumentationProviderEx {
 
     @Override
     @Nullable
-    public String generateDoc(PsiElement element, @Nullable PsiElement originalElement) {
-        if (!isInterestingElement(element)) {
-            return null;
-        }
+    public  String generateDoc(PsiElement element, PsiElement originalElement) {
+        LOG.info("Getting documentation for: " + element);
+        DocumentationVisitor visitor = new DocumentationVisitor(originalElement);
+        element.accept(visitor);
+        return visitor.result();
+    }
 
+    @Nullable
+    @Override
+    public String getQuickNavigateInfo(PsiElement element, PsiElement originalElement) {
+        //Ctrl-Hover stuff.. should be the type for simple identifiers
+        return null;
+    }
+
+
+    public String generateIdentifierDoc(PsiElement element, @Nullable PsiElement originalElement) {
         AnnotatedOptional<Syme, String> symeMaybe = symeForElement(element);
 
         if (symeMaybe.isPresent()) {
@@ -61,8 +74,7 @@ public class AldorDocumentationProvider extends DocumentationProviderEx {
                 docString = aldorDocStringFromIndex(element, originalElement);
             }
             return typeText + "<code>" + docString + "</code>";
-        }
-        else {
+        } else {
             String docString = "File lookup failed: " + symeMaybe.failInfo();
             String indexDoc = aldorDocStringFromIndex(element, originalElement);
             if (indexDoc != null) {
@@ -71,6 +83,8 @@ public class AldorDocumentationProvider extends DocumentationProviderEx {
             return docString;
         }
     }
+
+
 
     private String aldorDocStringFromIndex(PsiElement element, PsiElement originalElement) {
         AldorDefine definitionForName = findTopLevelDefine(element);
@@ -128,7 +142,62 @@ public class AldorDocumentationProvider extends DocumentationProviderEx {
 
     }
 
-    private boolean isInterestingElement(PsiElement element) {
-        return element instanceof AldorIdentifier;
+    private String generateSpadAbbrevDoc(SpadAbbrevStubbing.SpadAbbrev abbrev, PsiElement originalElement) {
+        SpadAbbrevStubbing.AbbrevInfo info = abbrev.abbrevInfo();
+        if (info.isError()) {
+            return "Badly formed abbrev expression: " + abbrev.getText();
+        }
+        return "Abbreviation for the " + info.kind().value() + " <b>" + info.name() + "</b>";
+    }
+
+    private String generateDeclareDoc(AldorDeclareStubbing.AldorDeclare o, PsiElement originalElement) {
+        return "I'm a declaration";
+    }
+
+    private String generateDefineDoc(AldorDefine o, PsiElement originalElement) {
+        return "I'm a definition";
+    }
+
+    private final class DocumentationVisitor extends AldorVisitor {
+        private String result = null;
+        private final PsiElement originalElement;
+
+        private DocumentationVisitor(PsiElement originalElement) {
+            this.originalElement = originalElement;
+        }
+
+        @Override
+        public void visitIdentifier(@NotNull AldorIdentifier o) {
+            result = (generateIdentifierDoc(o, originalElement));
+        }
+
+        @Override
+        public void visitDefine(@NotNull AldorDefine o) {
+            result = (generateDefineDoc(o, originalElement));
+        }
+
+        @Override
+        public void visitDeclare(@NotNull AldorDeclareStubbing.AldorDeclare o) {
+            result = (generateDeclareDoc(o, originalElement));
+        }
+
+        @Override
+        public void visitColonExpr(@NotNull AldorColonExpr o) {
+            result = (generateDeclareDoc(o, originalElement));
+        }
+
+        @Override
+        public void visitSpadAbbrev(@NotNull SpadAbbrevStubbing.SpadAbbrev o) {
+            result = (generateSpadAbbrevDoc(o, originalElement));
+        }
+
+        @Override
+        public void visitPsiElement(@NotNull PsiElement o) {
+            LOG.info("No documentation for " + o.getClass() + " " + o);
+        }
+
+        public String result() {
+            return result;
+        }
     }
 }

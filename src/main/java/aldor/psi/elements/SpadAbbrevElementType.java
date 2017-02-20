@@ -50,7 +50,7 @@ public class SpadAbbrevElementType extends IStubElementType<SpadAbbrevStub, Spad
     @NotNull
     @Override
     public SpadAbbrevStub deserialize(@NotNull StubInputStream dataStream, @SuppressWarnings("rawtypes") StubElement parentStub) throws IOException {
-        return abbrevCodec.decode(this, dataStream, parentStub);
+        return abbrevCodec.decode(dataStream, this, parentStub);
     }
 
     @Override

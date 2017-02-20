@@ -9,8 +9,12 @@ import com.intellij.psi.stubs.StubOutputStream;
 import java.io.IOException;
 
 public interface PsiStubCodec<StubElt extends StubElement<PsiElt>, PsiElt extends PsiElement> {
-        void encode(StubElt stub, StubOutputStream dataStream) throws IOException;
 
-        StubElt decode(IStubElementType<StubElt, PsiElt> eltType,
-                       StubInputStream dataStream, StubElement<?> parentStub) throws IOException;
+    void encode(StubElt stub, StubOutputStream dataStream) throws IOException;
+
+    StubElt decode(StubInputStream dataStream, IStubElementType<StubElt, PsiElt> eltType, StubElement<?> parentStub) throws IOException;
+
+    PsiElt createPsi(IStubElementType<StubElt, PsiElt> eltType, StubElt stub);
+
+    StubElt createStub(StubElement<?> parentStub, IStubElementType<StubElt, PsiElt> eltType, PsiElt psiElt);
 }

@@ -16,6 +16,10 @@ public class Apply extends SyntaxNode<PsiElement> {
         super(element, arguments);
     }
 
+    public Apply(@NotNull List<Syntax> arguments) {
+        super(SyntaxRepresentation.createMissing(), arguments);
+    }
+
     public Syntax operator() {
         return arguments.get(0);
     }

@@ -26,6 +26,16 @@ public abstract class SyntaxNode<SyntaxPsiElement extends PsiElement> extends Sy
         }
     }
 
+
+    protected SyntaxNode(SyntaxRepresentation<SyntaxPsiElement> rep, List<Syntax> arguments) {
+        this.representation = rep;
+        this.arguments = new ArrayList<>(arguments);
+        if (arguments.stream().anyMatch(Objects::isNull)) {
+            throw new IllegalArgumentException("Found a null: " + arguments);
+        }
+    }
+
+
     @Override
     public String toString() {
         return "(" + name() + " " + Joiner.on(" ").join(arguments) + ")";

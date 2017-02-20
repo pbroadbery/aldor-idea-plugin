@@ -12,6 +12,10 @@ public abstract class SyntaxRepresentation<T extends PsiElement> {
         return new PsiSyntaxRepresentation<>(element);
     }
 
+    public static <T extends PsiElement> SyntaxRepresentation<T> createMissing() {
+        return new MissingSyntaxRepresentation<>();
+    }
+
     @Nullable
     public abstract T element();
 
@@ -42,4 +46,21 @@ public abstract class SyntaxRepresentation<T extends PsiElement> {
         }
     }
 
+    private static class MissingSyntaxRepresentation<T extends PsiElement> extends SyntaxRepresentation<T> {
+        @Nullable
+        @Override
+        public T element() {
+            return null;
+        }
+
+        @Override
+        public AldorTokenType tokenType() {
+            return null;
+        }
+
+        @Override
+        public String text() {
+            return null;
+        }
+    }
 }

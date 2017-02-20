@@ -1,6 +1,6 @@
 package aldor.editor;
 
-import aldor.psi.AldorIdentifier;
+import aldor.psi.AldorDefineStubbing;
 import aldor.ui.AldorIcons;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
@@ -15,12 +15,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 
-public class AldorIdentifierNavigationItem extends AbstractTreeNode<AldorIdentifier>
-        implements PsiElementNavigationItem, DataProvider {
-    @SuppressWarnings("AssignmentToSuperclassField")
-    public AldorIdentifierNavigationItem(AldorIdentifier ident) {
-        super(ident.getProject(), ident);
-        myName = ident.getName();
+public class AldorDefineNavigationItem  extends AbstractTreeNode<AldorDefineStubbing.AldorDefine>  implements PsiElementNavigationItem, DataProvider {
+
+    public AldorDefineNavigationItem(AldorDefineStubbing.AldorDefine define) {
+        super(define.getProject(), define);
     }
 
     @NotNull
@@ -34,27 +32,10 @@ public class AldorIdentifierNavigationItem extends AbstractTreeNode<AldorIdentif
         getPresentation();
     }
 
-    @Override
-    public boolean isAlwaysLeaf() {
-        return true;
-    }
-
-    @Override
-    public void navigate(boolean requestFocus) {
-        getValue().navigate(requestFocus);
-    }
-
-    @NotNull
-    @Override
-    protected PresentationData createPresentation() {
-        return new PresentationData(this.getValue().getText(),
-                getValue().getContainingFile().getName(), AldorIcons.IDENTIFIER, null);
-    }
-
     @Nullable
     @Override
     public PsiElement getTargetElement() {
-        return super.getValue();
+        return getValue();
     }
 
     @Nullable
@@ -64,6 +45,13 @@ public class AldorIdentifierNavigationItem extends AbstractTreeNode<AldorIdentif
             return getValue();
         }
         return null;
+    }
+
+    @NotNull
+    @Override
+    protected PresentationData createPresentation() {
+        return new PresentationData(this.getValue().defineIdentifier().get().getText(),
+                getValue().getContainingFile().getName(), AldorIcons.IDENTIFIER, null);
     }
 
 

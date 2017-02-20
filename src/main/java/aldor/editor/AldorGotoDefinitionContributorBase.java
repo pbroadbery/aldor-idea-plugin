@@ -2,7 +2,6 @@ package aldor.editor;
 
 import aldor.parser.NavigatorFactory;
 import aldor.psi.AldorDefineStubbing.AldorDefine;
-import aldor.psi.AldorIdentifier;
 import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.project.Project;
@@ -13,9 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @SuppressWarnings("AbstractClassWithoutAbstractMethods")
 public abstract class AldorGotoDefinitionContributorBase implements ChooseByNameContributor {
@@ -38,16 +35,12 @@ public abstract class AldorGotoDefinitionContributorBase implements ChooseByName
         Collection<AldorDefine> items = index.get(name, project, GlobalSearchScope.allScope(project));
         List<NavigationItem> collect = items.stream()
                 .map(define -> navigationItemForIndexEntry(project, define))
-                .flatMap(navItemMaybe -> navItemMaybe.map(Stream::of).orElse(Stream.empty()))
                 .collect(Collectors.toList());
         return collect.toArray(NavigationItem.EMPTY_NAVIGATION_ITEM_ARRAY);
-
     }
 
-    Optional<NavigationItem> navigationItemForIndexEntry(Project project, AldorDefine define) {
-        Optional<AldorIdentifier> identMaybe = define.defineIdentifier();
-
-        return identMaybe.map(ident -> NavigatorFactory.get(project).getNavigationItem(ident));
+    NavigationItem navigationItemForIndexEntry(Project project, AldorDefine define) {
+        return NavigatorFactory.get(project).getNavigationItem(define);
     }
 
 }

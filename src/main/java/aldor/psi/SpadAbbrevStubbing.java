@@ -28,7 +28,7 @@ public class SpadAbbrevStubbing {
             return null;
         }
 
-        private String value() {
+        public String value() {
             return name;
         }
     }

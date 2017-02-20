@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 
-public class SpadAbbrevNavigationItem extends AbstractTreeNode<SpadAbbrevStubbing.SpadAbbrev> implements PsiElementNavigationItem, DataProvider{
+public class SpadAbbrevNavigationItem extends AbstractTreeNode<SpadAbbrevStubbing.SpadAbbrev> implements PsiElementNavigationItem, DataProvider {
 
     @SuppressWarnings("AssignmentToSuperclassField")
     public SpadAbbrevNavigationItem(SpadAbbrevStubbing.SpadAbbrev abbrev) {

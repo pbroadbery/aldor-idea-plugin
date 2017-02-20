@@ -3,11 +3,13 @@ package aldor.psi.elements;
 import aldor.psi.SpadAbbrevStubbing.AbbrevInfo;
 import aldor.psi.SpadAbbrevStubbing.Classifier;
 import aldor.psi.impl.SpadAbbrevStubbingImpl;
+import aldor.util.StubCodec;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
 import com.intellij.util.io.StringRef;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
@@ -15,7 +17,11 @@ import static aldor.psi.SpadAbbrevStubbing.SpadAbbrev;
 import static aldor.psi.SpadAbbrevStubbing.SpadAbbrevStub;
 
 public class SpadAbbrevStubCodec implements PsiStubCodec<SpadAbbrevStub, SpadAbbrev> {
-    static final IndexCodec<AbbrevInfo> infoCodec = new AbbrevInfoCodec();
+    static final StubCodec<AbbrevInfo> infoCodec = new AbbrevInfoCodec();
+
+    SpadAbbrevStubCodec() {
+
+    }
 
     @Override
     public void encode(SpadAbbrevStub stub, StubOutputStream dataStream) throws IOException {
@@ -23,13 +29,29 @@ public class SpadAbbrevStubCodec implements PsiStubCodec<SpadAbbrevStub, SpadAbb
     }
 
     @Override
-    public SpadAbbrevStub decode(IStubElementType<SpadAbbrevStub, SpadAbbrev> eltType,
-                                 StubInputStream dataStream, StubElement<?> parentStub) throws IOException {
+    public SpadAbbrevStub decode(StubInputStream dataStream, IStubElementType<SpadAbbrevStub, SpadAbbrev> eltType, StubElement<?> parentStub) throws IOException {
         AbbrevInfo info = infoCodec.decode(dataStream);
         return new SpadAbbrevStubbingImpl.SpadAbbrevConcreteStub(parentStub, eltType, info);
     }
 
-    private static class AbbrevInfoCodec implements IndexCodec<AbbrevInfo> {
+    @Override
+    public SpadAbbrev createPsi(IStubElementType<SpadAbbrevStub, SpadAbbrev> eltType, SpadAbbrevStub stub) {
+        return new SpadAbbrevStubbingImpl.SpadAbbrevMixin(stub, eltType);
+    }
+
+    @Override
+    public SpadAbbrevStub createStub(StubElement<?> parentStub, IStubElementType<SpadAbbrevStub, SpadAbbrev> eltType, SpadAbbrev spadAbbrev) {
+        AbbrevInfo abbrevInfo = spadAbbrev.abbrevInfo();
+        return new SpadAbbrevStubbingImpl.SpadAbbrevConcreteStub(parentStub, eltType, abbrevInfo);
+    }
+
+    private static class AbbrevInfoCodec implements StubCodec<AbbrevInfo> {
+        @NotNull
+        @Override
+        public Class<AbbrevInfo> clzz() {
+            return AbbrevInfo.class;
+        }
+
         @Override
         public void encode(StubOutputStream stream, AbbrevInfo abbrevInfo) throws IOException {
             stream.writeInt(abbrevInfo.kind().ordinal());

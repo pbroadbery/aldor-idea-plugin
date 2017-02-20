@@ -1,5 +1,7 @@
 package aldor.psi.elements;
 
+import aldor.impl.AldorColonExprImpl;
+import aldor.impl.AldorDeclPartImpl;
 import aldor.language.AldorLanguage;
 import aldor.language.SpadLanguage;
 import com.google.common.collect.Maps;
@@ -18,15 +20,17 @@ public class AldorElementTypeFactory {
     private static final AldorStubFactory stubFactory = new AldorStubFactoryImpl();
     public static final IElementType DEFINE_ELEMENT_TYPE = new AldorDefineElementType(stubFactory);
     public static final IElementType SPAD_ABBREV_ELEMENT_TYPE = new SpadAbbrevElementType(stubFactory);
-    public static final FileStubElementType ALDOR_FILE_ELEMENT_TYPE = new FileStubElementType(AldorLanguage.INSTANCE);
-    public static final FileStubElementType SPAD_FILE_ELEMENT_TYPE = new FileStubElementType(SpadLanguage.INSTANCE);
+    public static final FileStubElementType ALDOR_FILE_ELEMENT_TYPE = new FileStubElementType(AldorLanguage.INSTANCE, stubFactory.getVersion());
+    public static final FileStubElementType SPAD_FILE_ELEMENT_TYPE = new FileStubElementType(SpadLanguage.INSTANCE, stubFactory.getVersion());
     private static final AldorElementTypeFactory instance = new AldorElementTypeFactory();
 
     private final Map<String, IElementType> factoryForName = Maps.newHashMap();
 
     AldorElementTypeFactory() {
         factoryForName.put(".*_DEFINE", DEFINE_ELEMENT_TYPE);
-        factoryForName.put("SPAD_ABBREV", SPAD_ABBREV_ELEMENT_TYPE);
+        factoryForName.put("COLON_EXPR", new AldorDeclareElementType(stubFactory, "SpadDeclare", stubFactory.declareCodec( (stub, eltType) -> new AldorColonExprImpl(stub, eltType))));
+        factoryForName.put("DECL_PART", new AldorDeclareElementType(stubFactory, "AldorDeclare", stubFactory.declareCodec( (stub, eltType) -> new AldorDeclPartImpl(stub, eltType))));
+        factoryForName.put("SPAD_ABBREV_CMD", SPAD_ABBREV_ELEMENT_TYPE);
         factoryForName.put("ALDOR_FILE", ALDOR_FILE_ELEMENT_TYPE);
         factoryForName.put("SPAD_FILE", SPAD_FILE_ELEMENT_TYPE);
     }
@@ -47,14 +51,17 @@ public class AldorElementTypeFactory {
     }
 
     public static final class FileStubElementType extends IStubFileElementType<PsiFileStub<PsiFile>> {
-        private FileStubElementType(Language language) {
+        private final int stubVersion;
+
+        private FileStubElementType(Language language, int stubVersion) {
             super("aldorFile", language);
+            this.stubVersion = stubVersion;
 
         }
 
         @Override
         public int getStubVersion() {
-            return stubFactory.getVersion();
+            return stubVersion;
         }
 
     }

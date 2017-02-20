@@ -28,6 +28,7 @@ public class AldorScopeProcessor implements PsiScopeProcessor {
         }
         AldorIdentifier id = (AldorIdentifier) element;
         if (this.name.equals(id.getText())) {
+            // FIXME: This should work upwards...
             this.myResultList.add(id);
             return false;
         }

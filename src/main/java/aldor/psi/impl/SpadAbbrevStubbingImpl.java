@@ -1,5 +1,6 @@
 package aldor.psi.impl;
 
+import aldor.impl.AldorSpadAbbrevCmdImpl;
 import aldor.lexer.AldorTokenTypes;
 import aldor.lexer.SysCmd;
 import aldor.psi.AldorElementFactory;
@@ -113,7 +114,7 @@ public class SpadAbbrevStubbingImpl {
 
         @Override
         public SpadAbbrev createPsi(IStubElementType<SpadAbbrevStub, SpadAbbrev> elementType) {
-            return new SpadAbbrevMixin(this, elementType);
+            return new AldorSpadAbbrevCmdImpl(this, elementType);
         }
     }
 

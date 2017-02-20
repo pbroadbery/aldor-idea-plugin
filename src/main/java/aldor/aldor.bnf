@@ -35,8 +35,6 @@
 
   mixin("Id")="aldor.psi.impl.AldorIdentifierMixin"
   mixin("InfixedTok")="aldor.psi.impl.AldorIdentifierMixin"
-  mixin("Declaration")="aldor.psi.impl.AldorDeclarationMixin"
-  mixin("DeclPart")="aldor.psi.impl.AldorDeclMixin"
   mixin(".*_Define")="aldor.psi.impl.AldorDefineMixin"
   mixin(".*_Assign")="aldor.psi.impl.AldorAssignMixin"
   mixin(".*_Lambda")="aldor.psi.impl.AldorLambdaMixin"
@@ -45,9 +43,8 @@
   mixin("Collection")="aldor.psi.impl.AldorCollectionMixin"
   mixin("AnyStatement_Collection")="aldor.psi.impl.AldorCollectionMixin"
   mixin("Comma")="aldor.psi.impl.AldorCommaMixin"
+  mixin("Declaration")="aldor.psi.impl.AldorDeclarationMixin"
 
-  mixin("ColonExpr")="aldor.psi.impl.AldorColonExprMixin"
-  mixin("Expr")="aldor.psi.impl.AldorSpadExprMixin"
 
   extends(".*Expr")=Expr
 
@@ -56,14 +53,22 @@
   implements("Documented_Labelled")='aldor.psi.AldorDocumented'
   implements("SpadTopLevelExpression")='aldor.psi.AldorDocumented'
 
+  // Abbreviations
+  mixin("SpadAbbrevCmd")="aldor.psi.impl.SpadAbbrevStubbingImpl.SpadAbbrevMixin"
+  stubClass("SpadAbbrevCmd")='aldor.psi.SpadAbbrevStubbing.SpadAbbrevStub'
+  implements("SpadAbbrevCmd")='aldor.psi.SpadAbbrevStubbing.SpadAbbrev'
+
   // These are definitions
   stubClass(".*_Define")='aldor.psi.AldorDefineStubbing.AldorDefineStub'
   implements(".*_Define")='aldor.psi.AldorDefineStubbing.AldorDefine'
 
-  // Abbreviations
-  stubClass("SpadAbbrev")='aldor.psi.SpadAbbrevStubbing.SpadAbbrevStub'
-  implements("SpadAbbrev")='aldor.psi.SpadAbbrevStubbing.SpadAbbrev'
-  mixin("SpadAbbrev")="aldor.psi.impl.SpadAbbrevStubbingImpl.SpadAbbrevMixin"
+  // These are declarations
+  mixin("DeclPart")="aldor.psi.impl.AldorDeclMixin"
+  stubClass("DeclPart")='aldor.psi.AldorDeclareStubbing.AldorDeclareStub'
+  implements("DeclPart") = 'aldor.psi.AldorDeclareStubbing.AldorDeclare'
+  mixin("ColonExpr")="aldor.psi.impl.AldorColonExprMixin"
+  stubClass("ColonExpr")='aldor.psi.AldorDeclareStubbing.AldorDeclareStub'
+  implements("ColonExpr") = 'aldor.psi.AldorDeclareStubbing.AldorDeclare'
 
   // Spad expressions
   implements("ExpPrecedenceExpr") = 'aldor.psi.SpadBinaryOp'
@@ -164,7 +169,8 @@ MacroBody ::= Sig | ExportDecl | KW_Import Sig opt_FromPart
 
 Sig ::= Block | DeclBinding
 
-left DeclPart ::= KW_Colon Type | KW_ColonStar Type
+left DeclPart ::= DeclOp Type
+DeclOp ::= (KW_Colon | KW_ColonStar)
 
 Comma ::= enlist1_CommaItem_KW_Comma
 // isSpadMode here is for the rather dubious ... "where \n++ xyz" which shows up in a few spad files
@@ -393,8 +399,8 @@ ForLhs ::= Infixed
 SuchThatPart ::= KW_Bar Infixed
 
 Infixed ::= <<isAldorMode>> AldorInfixed | <<isSpadMode>> SpadInfixed
-private AldorInfixed ::= Block | InfixedExpr DeclPart?
-
+private AldorInfixed ::= Block | InfixAndDecl
+InfixAndDecl ::= InfixedExpr DeclPart?
 InfixedExpr ::= E3 | E11_Op
 
 //E3 ::= E4 | E3 KW_And E4 | E3 KW_Or E4 | E3 LatticeOp E4
@@ -678,9 +684,9 @@ PreDocument ::= TK_PreDoc*
 
 SpadTopLevel ::= <<parsePiledContent "SpadTopLevel">>
 // NB: All spad comments are '++'.  Guess that top level is pre - anything else is post.
-SpadTopLevelExpression ::= SpadAbbrev* PreDocument Expression //{pin=PreDocument} {recoverWhile="TopLevel_Recover"}
+SpadTopLevelExpression ::= SpadAbbrevCmd* PreDocument Expression //{pin=PreDocument} {recoverWhile="TopLevel_Recover"}
 SpadDocument ::= TK_PostDoc*
-SpadAbbrev ::= TK_SysCmdAbbrev
+SpadAbbrevCmd ::= TK_SysCmdAbbrev
 
 //private TopLevel_Recover ::= !(TK_PreDoc)
 

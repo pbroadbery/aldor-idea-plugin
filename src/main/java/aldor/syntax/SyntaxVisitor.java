@@ -25,6 +25,7 @@ public abstract class SyntaxVisitor<T> {
         return visitSyntaxNode(node);
     }
 
+    @Nullable
     public T visitApply(Apply apply) {
         return visitSyntaxNode(apply);
     }
@@ -33,6 +34,7 @@ public abstract class SyntaxVisitor<T> {
         return visitSyntaxNode(comma);
     }
 
+    @Nullable
     public T visitId(Id id) {
         return visitSyntax(id);
     }

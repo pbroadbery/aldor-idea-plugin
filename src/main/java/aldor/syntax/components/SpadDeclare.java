@@ -14,6 +14,10 @@ public class SpadDeclare extends DeclareNode<AldorColonExpr> {
         super(element, arguments);
     }
 
+    public SpadDeclare(List<Syntax> children) {
+        super(SyntaxRepresentation.createMissing(), children);
+    }
+
     @Override
     public Syntax lhs() {
         return child(0);

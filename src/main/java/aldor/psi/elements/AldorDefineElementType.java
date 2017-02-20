@@ -28,13 +28,13 @@ public class AldorDefineElementType extends IStubElementType<AldorDefineStub, Al
 
     @Override
     public AldorDefine createPsi(@NotNull AldorDefineStub stub) {
-        return stub.createPsi(this);
+        return defineCodec.createPsi(this, stub);
     }
 
     @NotNull
     @Override
     public AldorDefineStub createStub(@NotNull AldorDefine psi, @SuppressWarnings("rawtypes") StubElement parentStub) {
-        return psi.createStub(this, parentStub);
+        return defineCodec.createStub(parentStub, this, psi);
     }
 
     @NotNull
@@ -56,7 +56,7 @@ public class AldorDefineElementType extends IStubElementType<AldorDefineStub, Al
     @NotNull
     @Override
     public AldorDefineStub deserialize(@NotNull StubInputStream dataStream, @SuppressWarnings("rawtypes") StubElement parentStub) throws IOException {
-        return defineCodec.decode(this, dataStream, parentStub);
+        return defineCodec.decode(dataStream, this, parentStub);
     }
 
     @Override

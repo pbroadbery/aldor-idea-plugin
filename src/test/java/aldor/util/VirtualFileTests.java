@@ -25,6 +25,13 @@ public final class VirtualFileTests {
     }
 
     public static VirtualFile createFile(VirtualFile dir, String name, String content) {
+        byte[] bytes = content.getBytes(Charset.defaultCharset());
+
+        return createFile(dir, name, bytes);
+    }
+
+    @SuppressWarnings("MethodCanBeVariableArityMethod")
+    public static VirtualFile createFile(VirtualFile dir, String name, byte[] bytes) {
         ApplicationManager.getApplication().runWriteAction(() -> {
             try {
                 VirtualFile existingFile = dir.findChild(name);
@@ -34,7 +41,7 @@ public final class VirtualFileTests {
                 VirtualFile file = dir.createChildData(null, name);
                 //noinspection NestedTryStatement
                 try (OutputStream stream = file.getOutputStream(null)) {
-                    stream.write(content.getBytes(Charset.defaultCharset()));
+                    stream.write(bytes);
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);

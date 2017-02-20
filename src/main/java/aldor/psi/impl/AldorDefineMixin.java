@@ -3,7 +3,6 @@ package aldor.psi.impl;
 import aldor.psi.AldorDefineStubbing.AldorDefine;
 import aldor.psi.AldorDefineStubbing.AldorDefineStub;
 import aldor.psi.AldorIdentifier;
-import aldor.psi.AldorPsiUtils;
 import aldor.psi.elements.AldorDefineInfo;
 import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxPsiParser;
@@ -35,18 +34,8 @@ public class AldorDefineMixin extends StubBasedPsiElementBase<AldorDefineStub> i
         super(node);
     }
 
-    public AldorDefineMixin(AldorDefineStub stub, @SuppressWarnings("rawtypes") IStubElementType type) {
+    public AldorDefineMixin(AldorDefineStub stub, IStubElementType<AldorDefineStub, AldorDefine> type) {
         super(stub, type);
-    }
-
-    @Override
-    public AldorDefineStub createStub(IStubElementType<AldorDefineStub, AldorDefine> elementType, StubElement<?> parentStub) {
-        String defineId = defineId().map(Id::symbol).orElse(null);
-        boolean isTopLevelDefine = AldorPsiUtils.isTopLevel(getParent());
-        AldorDefineInfo info = AldorDefineInfo.info(
-                isTopLevelDefine ? AldorDefineInfo.Level.TOP: AldorDefineInfo.Level.INNER,
-                AldorDefineInfo.Classification.OTHER);
-        return new AldorDefineConcreteStub(parentStub, elementType, defineId, info);
     }
 
     @Override
@@ -123,11 +112,6 @@ public class AldorDefineMixin extends StubBasedPsiElementBase<AldorDefineStub> i
             syntax = null; // TODO: This one will be tricky
             this.defineId = defineId;
             this.defineInfo = defineInfo;
-        }
-
-        @Override
-        public AldorDefine createPsi(IStubElementType<AldorDefineStub, AldorDefine> elementType) {
-            return new AldorDefineMixin(this, elementType);
         }
 
         @Override

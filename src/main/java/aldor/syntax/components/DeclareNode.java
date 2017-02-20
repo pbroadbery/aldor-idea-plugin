@@ -12,6 +12,10 @@ public abstract class DeclareNode<T extends PsiElement> extends SyntaxNode<T> {
         super(element, arguments);
     }
 
+    protected DeclareNode(SyntaxRepresentation<T> representation, List<Syntax> arguments) {
+        super(representation, arguments);
+    }
+
     public abstract Syntax lhs();
 
     public abstract Syntax rhs();

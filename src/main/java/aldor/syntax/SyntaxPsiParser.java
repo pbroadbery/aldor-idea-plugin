@@ -49,7 +49,7 @@ import static aldor.psi.AldorPsiUtils.logPsi;
 import static aldor.syntax.components.Id.createImplicitId;
 
 /**
- * Turns Psi into syntax
+ * Turns Psi into lhsSyntax
  */
 public final class SyntaxPsiParser {
     private static final Logger LOG = Logger.getInstance(SyntaxPsiParser.class);

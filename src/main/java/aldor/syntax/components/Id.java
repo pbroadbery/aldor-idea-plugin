@@ -22,7 +22,13 @@ public class Id extends Syntax {
         this.rep = SyntaxRepresentation.create(id);
     }
 
+    // For things like 'bracket'
     public static Id createImplicitId(String name) {
+        return createMissingId(name);
+    }
+
+    // For when we don't have the PsiElement available.
+    public static Id createMissingId(String name) {
         return new Id(new SyntaxRepresentation<AldorIdentifier>() {
             @Nullable
             @Override

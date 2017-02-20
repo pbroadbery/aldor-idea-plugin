@@ -12,6 +12,10 @@ public class Define extends SyntaxNode<AldorDefine> {
         super(element, arguments);
     }
 
+    public Define(List<Syntax> l) {
+        super(SyntaxRepresentation.createMissing(), l);
+    }
+
     @Override
     public String name() {
         return "Define";

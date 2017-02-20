@@ -2,14 +2,22 @@ package aldor.psi.elements;
 
 import aldor.psi.elements.AldorDefineInfo.Classification;
 import aldor.psi.elements.AldorDefineInfo.Level;
+import aldor.util.StubCodec;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
 import com.intellij.util.io.StringRef;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.Optional;
 
-public class AldorDefineInfoIndexCodec implements IndexCodec<AldorDefineInfo> {
+public class AldorDefineInfoStubCodec implements StubCodec<AldorDefineInfo> {
+
+    @NotNull
+    @Override
+    public Class<AldorDefineInfo> clzz() {
+        return AldorDefineInfo.class;
+    }
 
     @Override
     public void encode(StubOutputStream stream, AldorDefineInfo aldorDefineInfo) throws IOException {
