@@ -2,6 +2,7 @@ package aldor.psi.impl;
 
 import aldor.lexer.AldorTokenTypes;
 import aldor.lexer.SysCmd;
+import aldor.psi.AbbrevClassifier;
 import aldor.psi.AldorElementFactory;
 import aldor.psi.SpadAbbrev;
 import aldor.psi.stub.AbbrevInfo;
@@ -47,7 +48,7 @@ public class SpadAbbrevMixin extends StubBasedPsiElementBase<SpadAbbrevStub> imp
             return new AbbrevInfo();
         } else {
             String classifierText = match.group(1);
-            Classifier classifier = Classifier.forText(classifierText);
+            AbbrevClassifier classifier = AbbrevClassifier.forText(classifierText);
             if (classifier == null) {
                 return new AbbrevInfo();
             }

@@ -1,6 +1,6 @@
 package aldor.syntax;
 
-@SuppressWarnings({"SerializableHasSerializationMethods", "serial"})
+@SuppressWarnings({"serial"})
 public class GuardedException extends RuntimeException {
     public GuardedException(Exception e) {
     }

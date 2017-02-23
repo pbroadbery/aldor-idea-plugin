@@ -1,7 +1,7 @@
 package aldor.psi.elements;
 
+import aldor.psi.AbbrevClassifier;
 import aldor.psi.SpadAbbrev;
-import aldor.psi.SpadAbbrev.Classifier;
 import aldor.psi.impl.SpadAbbrevMixin;
 import aldor.psi.stub.AbbrevInfo;
 import aldor.psi.stub.SpadAbbrevStub;
@@ -62,7 +62,7 @@ public class SpadAbbrevStubCodec implements PsiStubCodec<SpadAbbrevStub, SpadAbb
 
         @Override
         public AbbrevInfo decode(StubInputStream stream) throws IOException {
-            Classifier kind = SpadAbbrev.Classifier.values()[stream.readInt()];
+            AbbrevClassifier kind = AbbrevClassifier.values()[stream.readInt()];
             StringRef abbrev = stream.readName();
             StringRef name = stream.readName();
             int nameIndex = stream.readInt();

@@ -39,7 +39,10 @@ public class AldorGotoClassContributorTest extends LightPlatformCodeInsightFixtu
         NavigationItem item = items[0];
 
         Assert.assertEquals("Something", item.getName());
+        Assert.assertTrue(item.canNavigate());
         VirtualFileTests.deleteFile(file);
+
+
     }
 
     public void testGotoClass2() throws IOException {
@@ -58,6 +61,8 @@ public class AldorGotoClassContributorTest extends LightPlatformCodeInsightFixtu
         Assert.assertEquals(1, items.length);
         NavigationItem item = items[0];
         Assert.assertEquals("Something", item.getName());
+        Assert.assertTrue(item.canNavigate());
+
         VirtualFileTests.deleteFile(file);
     }
 

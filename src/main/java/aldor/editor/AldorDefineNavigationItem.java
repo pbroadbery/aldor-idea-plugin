@@ -17,6 +17,7 @@ import java.util.Collections;
 
 public class AldorDefineNavigationItem  extends AbstractTreeNode<AldorDefine>  implements PsiElementNavigationItem, DataProvider {
 
+    @SuppressWarnings("AssignmentToSuperclassField")
     public AldorDefineNavigationItem(AldorDefine define) {
         super(define.getProject(), define);
         this.myName = define.defineIdentifier().map(PsiElement::getText).orElse("(Unknown)");
@@ -32,6 +33,23 @@ public class AldorDefineNavigationItem  extends AbstractTreeNode<AldorDefine>  i
     protected void update(PresentationData presentation) {
         getPresentation();
     }
+
+    @Override
+    public void navigate(boolean requestFocus) {
+        getValue().navigate(requestFocus);
+    }
+
+
+    @Override
+    public boolean canNavigate() {
+        return true;
+    }
+
+    @Override
+    public boolean canNavigateToSource() {
+        return true;
+    }
+
 
     @Nullable
     @Override
@@ -57,3 +75,4 @@ public class AldorDefineNavigationItem  extends AbstractTreeNode<AldorDefine>  i
 
 
 }
+

@@ -123,7 +123,7 @@ public class SyntaxCodec implements StubCodec<Syntax> {
         @Override
         public T decode(StubInputStream stream) throws IOException {
             int size = stream.readVarInt();
-            List<Syntax> children = new ArrayList<Syntax>();
+            List<Syntax> children = new ArrayList<>();
             for (int i=0; i<size; i++) {
                 children.add(SyntaxCodec.this.decode(stream));
             }

@@ -80,6 +80,10 @@
   mixin("AddPrecedenceExpr") = 'aldor.psi.impl.SpadBinaryOpMixin'
   mixin("RelExpr") = 'aldor.psi.impl.SpadBinaryOpMixin'
 
+  // where expressions
+  stubClass("WhereBlock")='aldor.psi.stub.AldorWhereStub'
+
+
   // Declarations (should be with body only...)
   // Version 2, I think.
 

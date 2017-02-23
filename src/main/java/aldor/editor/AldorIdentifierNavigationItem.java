@@ -44,6 +44,16 @@ public class AldorIdentifierNavigationItem extends AbstractTreeNode<AldorIdentif
         getValue().navigate(requestFocus);
     }
 
+    @Override
+    public boolean canNavigate() {
+        return true;
+    }
+
+    @Override
+    public boolean canNavigateToSource() {
+        return true;
+    }
+
     @NotNull
     @Override
     protected PresentationData createPresentation() {
