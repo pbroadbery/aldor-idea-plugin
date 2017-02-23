@@ -5,13 +5,10 @@ import aldor.psi.stub.SpadAbbrevStub;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.StubBasedPsiElement;
-import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.stubs.StubElement;
 
 import java.util.Objects;
 
 public interface SpadAbbrev extends StubBasedPsiElement<SpadAbbrevStub>, Navigatable {
-    SpadAbbrevStub createStub(IStubElementType<SpadAbbrevStub, SpadAbbrev> elementType, StubElement<?> parentStub);
 
     AbbrevInfo abbrevInfo();
 

@@ -27,13 +27,13 @@ public class SpadAbbrevElementType extends IStubElementType<SpadAbbrevStub, Spad
 
     @Override
     public SpadAbbrev createPsi(@NotNull SpadAbbrevStub stub) {
-        return stub.createPsi(this);
+        return abbrevCodec.createPsi(this, stub);
     }
 
     @NotNull
     @Override
     public SpadAbbrevStub createStub(@NotNull SpadAbbrev psi, @SuppressWarnings("rawtypes") StubElement parentStub) {
-        return psi.createStub(this, parentStub);
+        return abbrevCodec.createStub(parentStub, this, psi);
     }
 
     @NotNull

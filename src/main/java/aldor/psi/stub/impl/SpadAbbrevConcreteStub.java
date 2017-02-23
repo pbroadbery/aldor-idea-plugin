@@ -1,6 +1,5 @@
 package aldor.psi.stub.impl;
 
-import aldor.impl.AldorSpadAbbrevCmdImpl;
 import aldor.psi.SpadAbbrev;
 import aldor.psi.stub.AbbrevInfo;
 import aldor.psi.stub.SpadAbbrevStub;
@@ -23,8 +22,4 @@ public class SpadAbbrevConcreteStub extends StubBase<SpadAbbrev> implements Spad
         return info;
     }
 
-    @Override
-    public SpadAbbrev createPsi(IStubElementType<SpadAbbrevStub, SpadAbbrev> elementType) {
-        return new AldorSpadAbbrevCmdImpl(this, elementType);
-    }
 }

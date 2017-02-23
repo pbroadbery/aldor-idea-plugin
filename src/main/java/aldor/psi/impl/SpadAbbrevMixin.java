@@ -6,7 +6,6 @@ import aldor.psi.AldorElementFactory;
 import aldor.psi.SpadAbbrev;
 import aldor.psi.stub.AbbrevInfo;
 import aldor.psi.stub.SpadAbbrevStub;
-import aldor.psi.stub.impl.SpadAbbrevConcreteStub;
 import aldor.references.SpadAbbrevReference;
 import com.intellij.extapi.psi.StubBasedPsiElementBase;
 import com.intellij.lang.ASTNode;
@@ -14,7 +13,6 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry;
 import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.stubs.StubElement;
 import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,11 +27,6 @@ public class SpadAbbrevMixin extends StubBasedPsiElementBase<SpadAbbrevStub> imp
 
     public SpadAbbrevMixin(SpadAbbrevStub stub, @SuppressWarnings("rawtypes") IStubElementType type) {
         super(stub, type);
-    }
-
-    @Override
-    public SpadAbbrevStub createStub(IStubElementType<SpadAbbrevStub, SpadAbbrev> elementType, StubElement<?> parentStub) {
-        return new SpadAbbrevConcreteStub(parentStub, elementType, abbrevInfo());
     }
 
     SysCmd sysCmd() {
