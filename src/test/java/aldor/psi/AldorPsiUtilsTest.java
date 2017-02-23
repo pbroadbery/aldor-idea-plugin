@@ -2,7 +2,6 @@ package aldor.psi;
 
 import aldor.build.module.AldorModuleType;
 import aldor.file.AldorFileType;
-import aldor.psi.AldorDefineStubbing.AldorDefine;
 import com.intellij.openapi.module.ModuleType;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;

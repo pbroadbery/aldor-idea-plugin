@@ -1,7 +1,7 @@
 package aldor.references;
 
 import aldor.psi.AldorId;
-import aldor.psi.SpadAbbrevStubbing;
+import aldor.psi.SpadAbbrev;
 import com.intellij.lang.refactoring.RefactoringSupportProvider;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
@@ -13,7 +13,7 @@ public class AldorRefactoringSupportProvider extends RefactoringSupportProvider 
         if (element instanceof AldorId) {
             return true;
         }
-        if (element instanceof SpadAbbrevStubbing.SpadAbbrev) {
+        if (element instanceof SpadAbbrev) {
             return true;
         }
         return false;

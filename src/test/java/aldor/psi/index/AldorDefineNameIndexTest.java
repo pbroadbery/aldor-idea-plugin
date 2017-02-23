@@ -1,7 +1,7 @@
 package aldor.psi.index;
 
 import aldor.build.module.AldorModuleType;
-import aldor.psi.AldorDefineStubbing;
+import aldor.psi.AldorDefine;
 import aldor.test_util.JUnits;
 import aldor.util.VirtualFileTests;
 import com.google.common.collect.Sets;
@@ -115,7 +115,7 @@ public class AldorDefineNameIndexTest extends LightPlatformCodeInsightFixtureTes
             Collection<String> ll = AldorDefineNameIndex.instance.getAllKeys(project);
             Assert.assertEquals(Sets.newHashSet("Something", "aNumber"), new HashSet<>(ll));
 
-            Collection<AldorDefineStubbing.AldorDefine> items = AldorDefineNameIndex.instance.get("Something", getProject(), GlobalSearchScope.allScope(getProject()));
+            Collection<AldorDefine> items = AldorDefineNameIndex.instance.get("Something", getProject(), GlobalSearchScope.allScope(getProject()));
             System.out.println("Items: " + items + " " + items.iterator().next().getText());
             Assert.assertEquals(1, items.size());
             Assert.assertTrue(items.iterator().next().getText().startsWith("Something"));

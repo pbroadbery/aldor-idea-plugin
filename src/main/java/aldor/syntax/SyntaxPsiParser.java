@@ -5,7 +5,7 @@ import aldor.psi.AldorAddPrecedenceExpr;
 import aldor.psi.AldorBracketed;
 import aldor.psi.AldorColonExpr;
 import aldor.psi.AldorDeclPart;
-import aldor.psi.AldorDefineStubbing.AldorDefine;
+import aldor.psi.AldorDefine;
 import aldor.psi.AldorE14;
 import aldor.psi.AldorExpPrecedenceExpr;
 import aldor.psi.AldorId;

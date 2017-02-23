@@ -1,9 +1,10 @@
 package aldor.psi.elements;
 
-import aldor.psi.AldorDefineStubbing.AldorDefine;
-import aldor.psi.AldorDefineStubbing.AldorDefineStub;
+import aldor.psi.AldorDefine;
 import aldor.psi.AldorPsiUtils;
 import aldor.psi.impl.AldorDefineMixin;
+import aldor.psi.stub.AldorDefineStub;
+import aldor.psi.stub.impl.AldorDefineConcreteStub;
 import aldor.util.StubCodec;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
@@ -35,7 +36,7 @@ class AldorDefineStubCodec implements PsiStubCodec<AldorDefineStub, AldorDefine>
         boolean nonNull = dataStream.readBoolean();
         String name = nonNull? dataStream.readUTFFast() : null;
         AldorDefineInfo defineInfo = infoCodec.decode(dataStream);
-        return new AldorDefineMixin.AldorDefineConcreteStub(parentStub, elementType, name, defineInfo);
+        return new AldorDefineConcreteStub(parentStub, elementType, name, defineInfo);
     }
 
     @Override
@@ -51,7 +52,7 @@ class AldorDefineStubCodec implements PsiStubCodec<AldorDefineStub, AldorDefine>
         AldorDefineInfo info = AldorDefineInfo.info(
                 isTopLevelDefine ? AldorDefineInfo.Level.TOP: AldorDefineInfo.Level.INNER,
                 AldorDefineInfo.Classification.OTHER);
-        return new AldorDefineMixin.AldorDefineConcreteStub(parentStub, elementType, defineId, info);
+        return new AldorDefineConcreteStub(parentStub, elementType, defineId, info);
     }
 
 }

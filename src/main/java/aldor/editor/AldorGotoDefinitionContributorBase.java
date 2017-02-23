@@ -1,7 +1,7 @@
 package aldor.editor;
 
 import aldor.parser.NavigatorFactory;
-import aldor.psi.AldorDefineStubbing.AldorDefine;
+import aldor.psi.AldorDefine;
 import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.project.Project;

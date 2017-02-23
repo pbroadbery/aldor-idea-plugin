@@ -54,21 +54,21 @@
   implements("SpadTopLevelExpression")='aldor.psi.AldorDocumented'
 
   // Abbreviations
-  mixin("SpadAbbrevCmd")="aldor.psi.impl.SpadAbbrevStubbingImpl.SpadAbbrevMixin"
-  stubClass("SpadAbbrevCmd")='aldor.psi.SpadAbbrevStubbing.SpadAbbrevStub'
-  implements("SpadAbbrevCmd")='aldor.psi.SpadAbbrevStubbing.SpadAbbrev'
+  mixin("SpadAbbrevCmd")="aldor.psi.impl.SpadAbbrevMixin"
+  stubClass("SpadAbbrevCmd")='aldor.psi.stub.SpadAbbrevStub'
+  implements("SpadAbbrevCmd")='aldor.psi.SpadAbbrev'
 
   // These are definitions
-  stubClass(".*_Define")='aldor.psi.AldorDefineStubbing.AldorDefineStub'
-  implements(".*_Define")='aldor.psi.AldorDefineStubbing.AldorDefine'
+  stubClass(".*_Define")='aldor.psi.stub.AldorDefineStub'
+  implements(".*_Define")='aldor.psi.AldorDefine'
 
   // These are declarations
   mixin("DeclPart")="aldor.psi.impl.AldorDeclMixin"
-  stubClass("DeclPart")='aldor.psi.AldorDeclareStubbing.AldorDeclareStub'
-  implements("DeclPart") = 'aldor.psi.AldorDeclareStubbing.AldorDeclare'
+  stubClass("DeclPart")='aldor.psi.stub.AldorDeclareStub'
+  implements("DeclPart") = 'aldor.psi.AldorDeclare'
   mixin("ColonExpr")="aldor.psi.impl.AldorColonExprMixin"
-  stubClass("ColonExpr")='aldor.psi.AldorDeclareStubbing.AldorDeclareStub'
-  implements("ColonExpr") = 'aldor.psi.AldorDeclareStubbing.AldorDeclare'
+  stubClass("ColonExpr")='aldor.psi.stub.AldorDeclareStub'
+  implements("ColonExpr") = 'aldor.psi.AldorDeclare'
 
   // Spad expressions
   implements("ExpPrecedenceExpr") = 'aldor.psi.SpadBinaryOp'

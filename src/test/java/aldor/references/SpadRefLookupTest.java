@@ -3,7 +3,7 @@ package aldor.references;
 import aldor.language.SpadLanguage;
 import aldor.parser.EnsureParsingTest;
 import aldor.psi.AldorIdentifier;
-import aldor.psi.AldorPlusExpr;
+import aldor.psi.SpadBinaryOp;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -18,7 +18,7 @@ public class SpadRefLookupTest extends LightPlatformCodeInsightFixtureTestCase {
 
     public void testReference() {
         PsiElement whole = createSpadFile("f(n: Integer): Integer == n+1");
-        PsiElement theRhs = PsiTreeUtil.findChildOfType(whole, AldorPlusExpr.class);
+        PsiElement theRhs = PsiTreeUtil.findChildOfType(whole, SpadBinaryOp.class);
         AldorIdentifier theRhsN = PsiTreeUtil.findChildOfType(theRhs, AldorIdentifier.class);
         Assert.assertNotNull(theRhsN);
         Assert.assertNotNull(theRhsN.getReference());

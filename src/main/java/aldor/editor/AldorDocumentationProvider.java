@@ -3,13 +3,14 @@ package aldor.editor;
 import aldor.build.module.AldorModuleManager;
 import aldor.build.module.AnnotationFileManager;
 import aldor.psi.AldorColonExpr;
-import aldor.psi.AldorDeclareStubbing;
-import aldor.psi.AldorDefineStubbing.AldorDefine;
+import aldor.psi.AldorDeclare;
+import aldor.psi.AldorDefine;
 import aldor.psi.AldorDocumented;
 import aldor.psi.AldorIdentifier;
 import aldor.psi.AldorVisitor;
-import aldor.psi.SpadAbbrevStubbing;
+import aldor.psi.SpadAbbrev;
 import aldor.psi.index.AldorDefineTopLevelIndex;
+import aldor.psi.stub.AbbrevInfo;
 import aldor.symbolfile.Syme;
 import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxPrinter;
@@ -142,15 +143,15 @@ public class AldorDocumentationProvider extends DocumentationProviderEx {
 
     }
 
-    private String generateSpadAbbrevDoc(SpadAbbrevStubbing.SpadAbbrev abbrev, PsiElement originalElement) {
-        SpadAbbrevStubbing.AbbrevInfo info = abbrev.abbrevInfo();
+    private String generateSpadAbbrevDoc(SpadAbbrev abbrev, PsiElement originalElement) {
+        AbbrevInfo info = abbrev.abbrevInfo();
         if (info.isError()) {
             return "Badly formed abbrev expression: " + abbrev.getText();
         }
         return "Abbreviation for the " + info.kind().value() + " <b>" + info.name() + "</b>";
     }
 
-    private String generateDeclareDoc(AldorDeclareStubbing.AldorDeclare o, PsiElement originalElement) {
+    private String generateDeclareDoc(AldorDeclare o, PsiElement originalElement) {
         return "I'm a declaration";
     }
 
@@ -177,7 +178,7 @@ public class AldorDocumentationProvider extends DocumentationProviderEx {
         }
 
         @Override
-        public void visitDeclare(@NotNull AldorDeclareStubbing.AldorDeclare o) {
+        public void visitDeclare(@NotNull AldorDeclare o) {
             result = (generateDeclareDoc(o, originalElement));
         }
 
@@ -187,7 +188,7 @@ public class AldorDocumentationProvider extends DocumentationProviderEx {
         }
 
         @Override
-        public void visitSpadAbbrev(@NotNull SpadAbbrevStubbing.SpadAbbrev o) {
+        public void visitSpadAbbrev(@NotNull SpadAbbrev o) {
             result = (generateSpadAbbrevDoc(o, originalElement));
         }
 

@@ -1,9 +1,9 @@
 package aldor.psi.elements;
 
-import aldor.psi.AldorDeclareStubbing.AldorDeclare;
-import aldor.psi.AldorDeclareStubbing.AldorDeclareStub;
+import aldor.psi.AldorDeclare;
 import aldor.psi.elements.AldorStubFactory.PsiElementFactory;
-import aldor.psi.impl.AldorDeclareStubbingImpl;
+import aldor.psi.stub.AldorDeclareStub;
+import aldor.psi.stub.impl.AldorDeclareConcreteStub;
 import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxCodec;
 import aldor.syntax.SyntaxPsiParser;
@@ -42,10 +42,10 @@ public class AldorDeclareStubCodec implements PsiStubCodec<AldorDeclareStub, Ald
         if (isDeclareOfId) {
             StringRef id = dataStream.readName();
             Syntax syntax = syntaxCodec.decode(dataStream);
-            return new AldorDeclareStubbingImpl.AldorDeclareConcreteStub(parentStub, eltType, syntax);
+            return new AldorDeclareConcreteStub(parentStub, eltType, syntax);
         }
         else {
-            return new AldorDeclareStubbingImpl.AldorDeclareConcreteStub(parentStub, eltType, null);
+            return new AldorDeclareConcreteStub(parentStub, eltType, null);
         }
     }
 
@@ -57,7 +57,7 @@ public class AldorDeclareStubCodec implements PsiStubCodec<AldorDeclareStub, Ald
     @Override
     public AldorDeclareStub createStub(StubElement<?> parentStub,
                                        IStubElementType<AldorDeclareStub, AldorDeclare> eltType, AldorDeclare aldorDeclare) {
-        return new AldorDeclareStubbingImpl.AldorDeclareConcreteStub(parentStub, eltType, SyntaxPsiParser.parse(aldorDeclare.lhs()));
+        return new AldorDeclareConcreteStub(parentStub, eltType, SyntaxPsiParser.parse(aldorDeclare.lhs()));
     }
 
 }

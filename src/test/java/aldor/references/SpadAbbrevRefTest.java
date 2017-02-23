@@ -1,7 +1,7 @@
 package aldor.references;
 
 import aldor.parser.EnsureParsingTest;
-import aldor.psi.SpadAbbrevStubbing;
+import aldor.psi.SpadAbbrev;
 import aldor.util.VirtualFileTests;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
@@ -27,7 +27,7 @@ public class SpadAbbrevRefTest extends LightPlatformCodeInsightFixtureTestCase {
 
         PsiFile whole = PsiManager.getInstance(getProject()).findFile(file);
 
-        PsiElement theAbbrev = PsiTreeUtil.findChildOfType(whole, SpadAbbrevStubbing.SpadAbbrev.class);
+        PsiElement theAbbrev = PsiTreeUtil.findChildOfType(whole, SpadAbbrev.class);
         Assert.assertNotNull(theAbbrev);
         PsiReference[] refs = theAbbrev.getReferences();
         PsiReference ref = refs[0];

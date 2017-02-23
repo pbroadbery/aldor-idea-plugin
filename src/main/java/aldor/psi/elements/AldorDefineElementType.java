@@ -1,8 +1,8 @@
 package aldor.psi.elements;
 
 import aldor.language.AldorLanguage;
-import aldor.psi.AldorDefineStubbing.AldorDefine;
-import aldor.psi.AldorDefineStubbing.AldorDefineStub;
+import aldor.psi.AldorDefine;
+import aldor.psi.stub.AldorDefineStub;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.stubs.IStubElementType;

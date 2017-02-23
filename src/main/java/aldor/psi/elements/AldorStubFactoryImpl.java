@@ -1,12 +1,11 @@
 package aldor.psi.elements;
 
-import aldor.psi.AldorDeclareStubbing.AldorDeclare;
-import aldor.psi.AldorDeclareStubbing.AldorDeclareStub;
-import aldor.psi.SpadAbbrevStubbing.SpadAbbrev;
-import aldor.psi.SpadAbbrevStubbing.SpadAbbrevStub;
-
-import static aldor.psi.AldorDefineStubbing.AldorDefine;
-import static aldor.psi.AldorDefineStubbing.AldorDefineStub;
+import aldor.psi.AldorDeclare;
+import aldor.psi.AldorDefine;
+import aldor.psi.SpadAbbrev;
+import aldor.psi.stub.AldorDeclareStub;
+import aldor.psi.stub.AldorDefineStub;
+import aldor.psi.stub.SpadAbbrevStub;
 
 /**
  *

@@ -1,6 +1,6 @@
 package aldor.psi.index;
 
-import aldor.psi.SpadAbbrevStubbing.SpadAbbrev;
+import aldor.psi.SpadAbbrev;
 import aldor.psi.elements.SpadAbbrevElementType;
 import com.intellij.psi.stubs.StringStubIndexExtension;
 import com.intellij.psi.stubs.StubIndexKey;

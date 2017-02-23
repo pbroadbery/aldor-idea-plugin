@@ -1,8 +1,8 @@
 package aldor.psi.impl;
 
 import aldor.psi.AldorDeclPart;
-import aldor.psi.AldorDeclareStubbing.AldorDeclare;
-import aldor.psi.AldorDeclareStubbing.AldorDeclareStub;
+import aldor.psi.AldorDeclare;
+import aldor.psi.stub.AldorDeclareStub;
 import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxPsiParser;
 import com.intellij.lang.ASTNode;
@@ -13,7 +13,7 @@ import com.intellij.psi.stubs.IStubElementType;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings({"AbstractClassExtendsConcreteClass", "AbstractClassWithOnlyOneDirectInheritor"})
-public abstract class AldorDeclMixin extends AldorDeclareStubbingImpl.AldorDeclareImpl implements AldorDeclPart {
+public abstract class AldorDeclMixin extends AldorDeclareImpl implements AldorDeclPart {
 
     protected AldorDeclMixin(@NotNull ASTNode node) {
         super(node);

@@ -37,6 +37,7 @@ public class AldorGotoClassContributorTest extends LightPlatformCodeInsightFixtu
         NavigationItem[] items = gotoClassContributor.getItemsByName("Something", "Something", project, false);
         Assert.assertEquals(1, items.length);
         NavigationItem item = items[0];
+
         Assert.assertEquals("Something", item.getName());
         VirtualFileTests.deleteFile(file);
     }

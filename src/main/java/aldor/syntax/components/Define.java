@@ -1,6 +1,6 @@
 package aldor.syntax.components;
 
-import aldor.psi.AldorDefineStubbing.AldorDefine;
+import aldor.psi.AldorDefine;
 import aldor.syntax.Syntax;
 
 import java.util.List;

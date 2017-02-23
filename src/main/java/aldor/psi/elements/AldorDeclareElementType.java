@@ -1,7 +1,8 @@
 package aldor.psi.elements;
 
 import aldor.language.AldorLanguage;
-import aldor.psi.AldorDeclareStubbing.AldorDeclareStub;
+import aldor.psi.AldorDeclare;
+import aldor.psi.stub.AldorDeclareStub;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.IndexSink;
@@ -12,8 +13,6 @@ import com.intellij.psi.stubs.StubOutputStream;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-
-import static aldor.psi.AldorDeclareStubbing.AldorDeclare;
 
 public class AldorDeclareElementType extends IStubElementType<AldorDeclareStub, AldorDeclare> {
     public static final StubIndexKey<String, AldorDeclare> DECLARE_NAME_INDEX = StubIndexKey.createIndexKey("Aldor.Declare.Name");

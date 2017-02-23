@@ -1,8 +1,9 @@
 package aldor.references;
 
-import aldor.psi.AldorDefineStubbing.AldorDefine;
-import aldor.psi.SpadAbbrevStubbing.SpadAbbrev;
+import aldor.psi.AldorDefine;
+import aldor.psi.SpadAbbrev;
 import aldor.psi.index.AldorDefineTopLevelIndex;
+import aldor.psi.stub.AbbrevInfo;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
@@ -13,8 +14,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
-
-import static aldor.psi.SpadAbbrevStubbing.AbbrevInfo;
 
 public class SpadAbbrevReference extends PsiReferenceBase<SpadAbbrev> {
     private static final Object [] NO_VARIANTS = new Object[0];

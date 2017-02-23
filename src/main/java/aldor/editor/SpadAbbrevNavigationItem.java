@@ -1,6 +1,6 @@
 package aldor.editor;
 
-import aldor.psi.SpadAbbrevStubbing;
+import aldor.psi.SpadAbbrev;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.navigation.PsiElementNavigationItem;
@@ -15,10 +15,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 
-public class SpadAbbrevNavigationItem extends AbstractTreeNode<SpadAbbrevStubbing.SpadAbbrev> implements PsiElementNavigationItem, DataProvider {
+public class SpadAbbrevNavigationItem extends AbstractTreeNode<SpadAbbrev> implements PsiElementNavigationItem, DataProvider {
 
     @SuppressWarnings("AssignmentToSuperclassField")
-    public SpadAbbrevNavigationItem(SpadAbbrevStubbing.SpadAbbrev abbrev) {
+    public SpadAbbrevNavigationItem(SpadAbbrev abbrev) {
         super(abbrev.getProject(), abbrev);
         myName = abbrev.abbrevInfo().name();
     }

@@ -1,0 +1,5 @@
+<root>
+    <item name='com.intellij.platform.ProjectTemplatesFactory javax.swing.Icon getGroupIcon(java.lang.String)'>
+        <annotation name='org.jetbrains.annotations.Nullable'/>
+    </item>
+</root>

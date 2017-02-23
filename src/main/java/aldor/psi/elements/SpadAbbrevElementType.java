@@ -1,8 +1,8 @@
 package aldor.psi.elements;
 
 import aldor.language.SpadLanguage;
-import aldor.psi.SpadAbbrevStubbing.SpadAbbrev;
-import aldor.psi.SpadAbbrevStubbing.SpadAbbrevStub;
+import aldor.psi.SpadAbbrev;
+import aldor.psi.stub.SpadAbbrevStub;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubElement;

@@ -1,6 +1,6 @@
 package aldor.editor;
 
-import aldor.psi.AldorDefineStubbing;
+import aldor.psi.AldorDefine;
 import aldor.ui.AldorIcons;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
@@ -15,10 +15,11 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 
-public class AldorDefineNavigationItem  extends AbstractTreeNode<AldorDefineStubbing.AldorDefine>  implements PsiElementNavigationItem, DataProvider {
+public class AldorDefineNavigationItem  extends AbstractTreeNode<AldorDefine>  implements PsiElementNavigationItem, DataProvider {
 
-    public AldorDefineNavigationItem(AldorDefineStubbing.AldorDefine define) {
+    public AldorDefineNavigationItem(AldorDefine define) {
         super(define.getProject(), define);
+        this.myName = define.defineIdentifier().map(PsiElement::getText).orElse("(Unknown)");
     }
 
     @NotNull

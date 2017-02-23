@@ -1,6 +1,6 @@
 package aldor.psi.index;
 
-import aldor.psi.AldorDefineStubbing.AldorDefine;
+import aldor.psi.AldorDefine;
 import aldor.psi.elements.AldorDefineElementType;
 import com.intellij.psi.stubs.StringStubIndexExtension;
 import com.intellij.psi.stubs.StubIndexKey;

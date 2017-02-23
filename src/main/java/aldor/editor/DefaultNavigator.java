@@ -1,15 +1,15 @@
 package aldor.editor;
 
 import aldor.parser.Navigator;
-import aldor.psi.AldorDefineStubbing;
+import aldor.psi.AldorDefine;
 import aldor.psi.AldorIdentifier;
-import aldor.psi.SpadAbbrevStubbing;
+import aldor.psi.SpadAbbrev;
 import com.intellij.navigation.NavigationItem;
 
 public class DefaultNavigator implements Navigator {
 
     @Override
-    public NavigationItem getNavigationItem(SpadAbbrevStubbing.SpadAbbrev abbrev) {
+    public NavigationItem getNavigationItem(SpadAbbrev abbrev) {
         return new SpadAbbrevNavigationItem(abbrev);
     }
 
@@ -19,7 +19,7 @@ public class DefaultNavigator implements Navigator {
     }
 
     @Override
-    public NavigationItem getNavigationItem(AldorDefineStubbing.AldorDefine define) {
+    public NavigationItem getNavigationItem(AldorDefine define) {
         return new AldorDefineNavigationItem(define);
     }
 }

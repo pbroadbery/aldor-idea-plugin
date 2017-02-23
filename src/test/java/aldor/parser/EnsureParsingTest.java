@@ -1,6 +1,6 @@
 package aldor.parser;
 
-import aldor.psi.AldorDefineStubbing.AldorDefine;
+import aldor.psi.AldorDefine;
 import aldor.psi.AldorPsiUtils;
 import aldor.psi.AldorRecursiveVisitor;
 import aldor.psi.elements.AldorTypes;

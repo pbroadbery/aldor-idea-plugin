@@ -1,8 +1,8 @@
 package aldor.psi.impl;
 
 import aldor.psi.AldorColonExpr;
-import aldor.psi.AldorDeclareStubbing.AldorDeclare;
-import aldor.psi.AldorDeclareStubbing.AldorDeclareStub;
+import aldor.psi.AldorDeclare;
+import aldor.psi.stub.AldorDeclareStub;
 import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxPsiParser;
 import com.intellij.lang.ASTNode;
@@ -13,7 +13,7 @@ import com.intellij.psi.stubs.IStubElementType;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("AbstractClassExtendsConcreteClass")
-public abstract class AldorColonExprMixin extends AldorDeclareStubbingImpl.AldorDeclareImpl implements AldorColonExpr {
+public abstract class AldorColonExprMixin extends AldorDeclareImpl implements AldorColonExpr {
 
     @SuppressWarnings("ConstructorNotProtectedInAbstractClass")
     public AldorColonExprMixin(AldorDeclareStub stub, IStubElementType<AldorDeclareStub, AldorDeclare> elementType) {

@@ -1,9 +1,8 @@
 package aldor.psi.impl;
 
-import aldor.psi.AldorDefineStubbing.AldorDefine;
-import aldor.psi.AldorDefineStubbing.AldorDefineStub;
+import aldor.psi.AldorDefine;
 import aldor.psi.AldorIdentifier;
-import aldor.psi.elements.AldorDefineInfo;
+import aldor.psi.stub.AldorDefineStub;
 import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxPsiParser;
 import aldor.syntax.components.Apply;
@@ -18,10 +17,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.stubs.StubBase;
-import com.intellij.psi.stubs.StubElement;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -97,38 +93,6 @@ public class AldorDefineMixin extends StubBasedPsiElementBase<AldorDefineStub> i
             this.putUserDataIfAbsent(cachedLhsSyntax, syntax);
         }
         return syntax;
-    }
-
-    public static class AldorDefineConcreteStub extends StubBase<AldorDefine> implements AldorDefineStub {
-        @Nullable
-        private final Syntax syntax;
-        private final String defineId;
-        private final AldorDefineInfo defineInfo;
-
-        public AldorDefineConcreteStub(StubElement<?> parent,
-                                       IStubElementType<AldorDefineStub, AldorDefine> type,
-                                       String defineId, AldorDefineInfo defineInfo) {
-            super(parent, type);
-            syntax = null; // TODO: This one will be tricky
-            this.defineId = defineId;
-            this.defineInfo = defineInfo;
-        }
-
-        @Override
-        public String defineId() {
-            return defineId;
-        }
-
-        @Override
-        public Syntax syntax() {
-            return syntax;
-        }
-
-        @Override
-        public AldorDefineInfo defineInfo() {
-            return defineInfo;
-        }
-
     }
 
 }
