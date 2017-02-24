@@ -2,6 +2,7 @@ package aldor.psi.stub.impl;
 
 import aldor.psi.AldorDeclare;
 import aldor.psi.stub.AldorDeclareStub;
+import aldor.psi.stub.AldorDefineStub;
 import aldor.syntax.Syntax;
 import aldor.syntax.components.Apply;
 import aldor.syntax.components.Id;
@@ -46,5 +47,10 @@ public class AldorDeclareConcreteStub extends StubBase<AldorDeclare> implements 
     @Override
     public boolean isDeclareOfId() {
         return lhsSyntax.is(Id.class);
+    }
+
+    @Override
+    public Optional<AldorDefineStub> definingForm() {
+        return Optional.empty();
     }
 }

@@ -28,11 +28,13 @@ public class AldorElementTypeFactory {
 
     AldorElementTypeFactory() {
         factoryForName.put(".*_DEFINE", DEFINE_ELEMENT_TYPE);
-        factoryForName.put("COLON_EXPR", new AldorDeclareElementType(stubFactory, "SpadDeclare", stubFactory.declareCodec(AldorColonExprImpl::new)));
-        factoryForName.put("DECL_PART", new AldorDeclareElementType(stubFactory, "AldorDeclare", stubFactory.declareCodec(AldorDeclPartImpl::new)));
+        factoryForName.put(".*_MACRO", DEFINE_ELEMENT_TYPE);
+        factoryForName.put("COLON_EXPR", new AldorDeclareElementType("SpadDeclare", stubFactory.declareCodec(AldorColonExprImpl::new)));
+        factoryForName.put("DECL_PART", new AldorDeclareElementType("AldorDeclare", stubFactory.declareCodec(AldorDeclPartImpl::new)));
         factoryForName.put("SPAD_ABBREV_CMD", SPAD_ABBREV_ELEMENT_TYPE);
         factoryForName.put("ALDOR_FILE", ALDOR_FILE_ELEMENT_TYPE);
         factoryForName.put("SPAD_FILE", SPAD_FILE_ELEMENT_TYPE);
+        factoryForName.put("WHERE_BLOCK", new AldorWhereElementType("Where", stubFactory.whereCodec()));
         //factoryForName.put("WHERE_BLOCK", new AldorWhereElementType, "AldorWhere");
     }
 

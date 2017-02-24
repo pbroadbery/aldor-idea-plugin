@@ -16,5 +16,7 @@ public interface AldorDeclareStub extends StubElement<AldorDeclare> {
 
     boolean isDeclareOfId();
 
+    Optional<AldorDefineStub> definingForm();
+
     //AldorDefineInfo defineInfo();
 }

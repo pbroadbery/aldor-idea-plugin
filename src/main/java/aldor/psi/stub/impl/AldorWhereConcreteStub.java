@@ -12,7 +12,7 @@ import java.util.List;
 
 public class AldorWhereConcreteStub extends StubBase<AldorWhereBlock> implements AldorWhereStub {
 
-    protected AldorWhereConcreteStub(StubElement<?> parent, IStubElementType<AldorWhereStub, AldorWhereBlock> elementType) {
+    public AldorWhereConcreteStub(StubElement<?> parent, IStubElementType<AldorWhereStub, AldorWhereBlock> elementType) {
         super(parent, elementType);
     }
 
