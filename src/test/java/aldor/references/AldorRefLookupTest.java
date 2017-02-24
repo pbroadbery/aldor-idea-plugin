@@ -299,7 +299,7 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
         Map<String, String> nameRefToMap = ImmutableMap.<String, String>builder()
                 .put("x+1", "x)")
                 .build();
-        Collection<String> nulls = Arrays.asList("x");
+        Collection<String> nulls = Collections.singletonList("x");
         assertReferences(text, nameRefToMap, nulls);
 
     }

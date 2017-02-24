@@ -64,7 +64,7 @@ public class SyntaxCodecTest {
     }
 
 
-    private static class SimpleStringEnumerator implements AbstractStringEnumerator {
+    private static final class SimpleStringEnumerator implements AbstractStringEnumerator {
         private final BiMap<Integer, String> stringForIndex;
 
         private SimpleStringEnumerator() {
@@ -87,7 +87,7 @@ public class SyntaxCodecTest {
         }
 
         @Override
-        public int enumerate(@Nullable String value) throws IOException {
+        public int enumerate(@Nullable String value) {
             if (stringForIndex.inverse().containsKey(value)) {
                 return stringForIndex.inverse().get(value);
             }
@@ -99,13 +99,12 @@ public class SyntaxCodecTest {
 
         @Nullable
         @Override
-        public String valueOf(int idx) throws IOException {
-            System.out.println("Value: " + idx + " " + stringForIndex.get(idx));
+        public String valueOf(int idx) {
             return stringForIndex.get(idx);
         }
 
         @Override
-        public void close() throws IOException {
+        public void close() {
 
         }
     }

@@ -32,7 +32,8 @@ public class AldorCompilationServiceImpl extends AldorCompilationService {
         LOG.info("Getting compile results for: " + file);
     }
 
-    private class Listener implements CompilationStatusListener {
+    private static class Listener implements CompilationStatusListener {
+        private static final Logger LOG = Logger.getInstance(Listener.class);
 
         @Override
         public void compilationFinished(boolean aborted, int errors, int warnings, CompileContext compileContext) {

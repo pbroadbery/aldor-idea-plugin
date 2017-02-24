@@ -156,7 +156,7 @@ public class AldorGitTemplateFactory extends ProjectTemplatesFactory {
         }
 
         @Override
-        public void setupRootModel(ModifiableRootModel modifiableRootModel) throws ConfigurationException {
+        public void setupRootModel(ModifiableRootModel modifiableRootModel) {
             createContentRoot(modifiableRootModel);
 
 
@@ -193,17 +193,11 @@ public class AldorGitTemplateFactory extends ProjectTemplatesFactory {
             }
 
             createContentRoot(modifiableRootModel);
-            try {
-                File contentRootDir = new File(contentEntryPath);
-                createFileLayout(contentRootDir, modifiableRootModel);
-            }
-            catch (IOException e) {
-                LOG.error("Creating module", e);
-                throw new ConfigurationException("oops");
-            }
+            File contentRootDir = new File(contentEntryPath);
+            createFileLayout(contentRootDir, modifiableRootModel);
         }
 
-        private void createFileLayout(File contentRootDir, ModifiableRootModel model) throws IOException, ConfigurationException {
+        private void createFileLayout(File contentRootDir, ModifiableRootModel model) throws ConfigurationException {
             VirtualFile file = getOrCreateExternalProjectConfigFile(contentRootDir.getPath(), "Makefile");
             if (file == null) {
                 return;

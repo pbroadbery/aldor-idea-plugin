@@ -34,7 +34,7 @@ import static com.intellij.testFramework.LightPlatformTestCase.getSourceRoot;
 @SuppressWarnings("JUnitTestCaseWithNonTrivialConstructors")
 public class AldorDefineNameIndexTest extends LightPlatformCodeInsightFixtureTestCase {
 
-    {
+    static {
         JUnits.setLogToInfo();
     }
 
@@ -143,7 +143,7 @@ public class AldorDefineNameIndexTest extends LightPlatformCodeInsightFixtureTes
             Collection<String> topLevel = AldorDefineTopLevelIndex.instance.getAllKeys(project);
 
             System.out.println("Top: "+ topLevel);
-            assertTrue(ll.contains("FramedAlgebra"));
+            Assert.assertTrue(ll.contains("FramedAlgebra"));
         }
         finally {
             if (file != null) {

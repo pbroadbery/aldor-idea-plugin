@@ -1,6 +1,5 @@
 package aldor.builder.files;
 
-import aldor.builder.files.AldorFileBuildTargetType.AldorFileBuildTarget;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileUtil;
 import org.jetbrains.annotations.NotNull;

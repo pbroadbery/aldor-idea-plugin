@@ -6,9 +6,9 @@ import com.intellij.psi.StubBasedPsiElement;
 
 import java.util.Optional;
 
-/**
- * Created by pab on 21/02/17.
- */
 public interface AldorDefine extends StubBasedPsiElement<AldorDefineStub>, Navigatable {
     Optional<AldorIdentifier> defineIdentifier();
+    DefinitionType definitionType();
+
+    enum DefinitionType { CONSTANT, MACRO ; }
 }

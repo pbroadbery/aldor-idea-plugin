@@ -1,5 +1,6 @@
 package aldor.make;
 
+import aldor.builder.files.AldorFileBuildTarget;
 import aldor.builder.files.AldorFileBuildTargetType;
 import aldor.builder.files.AldorFileRootDescriptor;
 import aldor.builder.files.AldorFileTargetBuilder;
@@ -28,12 +29,12 @@ public class FullCompiler implements AldorFileTargetBuilder.Compiler {
     public static final String ALDOR_COMPILER = "aldor compiler";
     private final CompileContext context;
 
-    public FullCompiler(DirtyFilesHolder<AldorFileRootDescriptor, AldorFileBuildTargetType.AldorFileBuildTarget> holder, BuildOutputConsumer outputConsumer, CompileContext context) {
+    public FullCompiler(DirtyFilesHolder<AldorFileRootDescriptor, AldorFileBuildTarget> holder, BuildOutputConsumer outputConsumer, CompileContext context) {
         this.context = context;
     }
 
     @Override
-    public boolean compileOneFile(AldorFileBuildTargetType.AldorFileBuildTarget target, File file, AldorFileRootDescriptor descriptor) {
+    public boolean compileOneFile(AldorFileBuildTarget target, File file, AldorFileRootDescriptor descriptor) {
         ExecutorService service = AldorFileBuildTargetType.executorFor(descriptor);
         File buildDirectory = descriptor.buildDirectoryForFile(file);
         if (buildDirectory == null) {

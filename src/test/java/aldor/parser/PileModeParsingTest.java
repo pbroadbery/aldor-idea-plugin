@@ -9,7 +9,6 @@ import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.testFramework.LightPlatformCodeInsightTestCase;
 import org.junit.Assert;
-import org.junit.Ignore;
 
 import java.util.List;
 
@@ -94,8 +93,8 @@ public class PileModeParsingTest extends LightPlatformCodeInsightTestCase {
         Assert.assertEquals(0, errors.size());
     }
 
-    @Ignore("Still broken - ignoring (might work in spad..)")
-    public void testPiledDeclaration() {
+    ///@Ignore("Still broken - ignoring (might work in spad..)")
+    public void ignoredTestPiledDeclaration() {
         // Currently broken, needs fixing
         PsiElement psi = parseText("" +
                 "#pile\n" +

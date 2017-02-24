@@ -64,7 +64,7 @@ public class AldorIdentifierNavigationItem extends AbstractTreeNode<AldorIdentif
     @Nullable
     @Override
     public PsiElement getTargetElement() {
-        return super.getValue();
+        return getValue();
     }
 
     @Nullable

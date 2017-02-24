@@ -7,6 +7,7 @@ import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubBase;
 import com.intellij.psi.stubs.StubElement;
 
+import java.util.Collections;
 import java.util.List;
 
 public class AldorWhereConcreteStub extends StubBase<AldorWhereBlock> implements AldorWhereStub {
@@ -17,6 +18,6 @@ public class AldorWhereConcreteStub extends StubBase<AldorWhereBlock> implements
 
     @Override
     public List<AldorDefineStub> definitions() {
-        return null;
+        return Collections.emptyList();
     }
 }

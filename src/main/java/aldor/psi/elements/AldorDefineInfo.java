@@ -24,7 +24,7 @@ public class AldorDefineInfo {
     }
 
     public enum Level { TOP, INNER }
-    public enum Classification { DOMAIN, CATEGORY, OTHER }
+    public enum Classification { DOMAIN, CATEGORY, MACRO, OTHER }
 
     static {
         infoForDetail = Maps.newHashMap();

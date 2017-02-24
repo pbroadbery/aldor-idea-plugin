@@ -18,7 +18,7 @@ import java.util.Collections;
 /**
  * Builder for aldor files - really just knows about .abn files.
  */
-public class AldorFileTargetBuilder extends TargetBuilder<AldorFileRootDescriptor, AldorFileBuildTargetType.AldorFileBuildTarget> {
+public class AldorFileTargetBuilder extends TargetBuilder<AldorFileRootDescriptor, AldorFileBuildTarget> {
     private static final Logger LOG = Logger.getInstance(AldorFileTargetBuilder.class);
 
     public AldorFileTargetBuilder(AldorFileBuildTargetType type) {
@@ -38,8 +38,8 @@ public class AldorFileTargetBuilder extends TargetBuilder<AldorFileRootDescripto
 
 
     @Override
-    public void build(@NotNull final AldorFileBuildTargetType.AldorFileBuildTarget target,
-                      final DirtyFilesHolder<AldorFileRootDescriptor, AldorFileBuildTargetType.AldorFileBuildTarget> holder,
+    public void build(@NotNull final AldorFileBuildTarget target,
+                      final DirtyFilesHolder<AldorFileRootDescriptor, AldorFileBuildTarget> holder,
                       @NotNull final BuildOutputConsumer outputConsumer, @NotNull final CompileContext context) throws ProjectBuildException, IOException {
         LOG.info("Building " + target + " " + holder.hasDirtyFiles());
 
@@ -57,15 +57,15 @@ public class AldorFileTargetBuilder extends TargetBuilder<AldorFileRootDescripto
     }
 
     public interface Compiler {
-        boolean compileOneFile(AldorFileBuildTargetType.AldorFileBuildTarget target, File file, AldorFileRootDescriptor descriptor);
+        boolean compileOneFile(AldorFileBuildTarget target, File file, AldorFileRootDescriptor descriptor);
     }
 
     private static class LocalCompiler implements Compiler {
-        private final DirtyFilesHolder<AldorFileRootDescriptor, AldorFileBuildTargetType.AldorFileBuildTarget> holder;
+        private final DirtyFilesHolder<AldorFileRootDescriptor, AldorFileBuildTarget> holder;
         private final BuildOutputConsumer outputConsumer;
         private final CompileContext context;
 
-        LocalCompiler(DirtyFilesHolder<AldorFileRootDescriptor, AldorFileBuildTargetType.AldorFileBuildTarget> holder, BuildOutputConsumer outputConsumer, CompileContext context) {
+        LocalCompiler(DirtyFilesHolder<AldorFileRootDescriptor, AldorFileBuildTarget> holder, BuildOutputConsumer outputConsumer, CompileContext context) {
             this.holder = holder;
             this.outputConsumer = outputConsumer;
             this.context = context;
@@ -73,7 +73,7 @@ public class AldorFileTargetBuilder extends TargetBuilder<AldorFileRootDescripto
 
         @Override
         @SuppressWarnings("SameReturnValue")
-        public boolean compileOneFile(AldorFileBuildTargetType.AldorFileBuildTarget target, File file, AldorFileRootDescriptor root) {
+        public boolean compileOneFile(AldorFileBuildTarget target, File file, AldorFileRootDescriptor root) {
             boolean created = target.outputLocation().getParentFile().mkdirs();
             if (created) {
                 LOG.info("Created output location: " + target.outputLocation().getParentFile());
