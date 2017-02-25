@@ -31,18 +31,20 @@ import javax.swing.Icon;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 public class AldorGitTemplateFactory extends ProjectTemplatesFactory {
     private static final ProjectTemplate[] EMPTY_TEMPLATES = new ProjectTemplate[0];
+    public static final int ALDOR_GROUP_WEIGHT = 1200;
 
-    static class TemplateRegisty {
-        String name;
-        List<ProjectTemplate> templates;
+    private static class TemplateRegistry {
+        private final String name;
+        private final List<ProjectTemplate> templates;
 
-        TemplateRegisty(String name, List<ProjectTemplate> templates) {
+        TemplateRegistry(String name, List<ProjectTemplate> templates) {
             this.name = name;
             this.templates = new ArrayList<>(templates);
         }
@@ -52,22 +54,22 @@ public class AldorGitTemplateFactory extends ProjectTemplatesFactory {
         }
 
         public List<ProjectTemplate> templates() {
-            return templates;
+            return Collections.unmodifiableList(templates);
         }
     }
 
-    private final List<TemplateRegisty> templateRegisties = Lists.newArrayList();
+    private final List<TemplateRegistry> templateRegisties = Lists.newArrayList();
 
     AldorGitTemplateFactory() {
-        templateRegisties.add(new TemplateRegisty("Aldor/Spad", Lists.newArrayList(
+        templateRegisties.add(new TemplateRegistry("Aldor/Spad", Lists.newArrayList(
                 new BuilderBasedTemplate(new AldorEmptyModuleBuilder())
         )));
-        templateRegisties.add(new TemplateRegisty("Aldor", Lists.newArrayList(
+        templateRegisties.add(new TemplateRegistry("Aldor", Lists.newArrayList(
                 new BuilderBasedTemplate(new AldorGitModuleBuilder("Aldor")),
                 new BuilderBasedTemplate(new AldorSimpleModuleBuilder())
                 )));
 
-        templateRegisties.add(new TemplateRegisty("Spad", Lists.newArrayList(
+        templateRegisties.add(new TemplateRegistry("Spad", Lists.newArrayList(
                 new BuilderBasedTemplate(new AldorGitModuleBuilder("Spad"))
                 )));
     }
@@ -76,22 +78,22 @@ public class AldorGitTemplateFactory extends ProjectTemplatesFactory {
     @Override
     public String[] getGroups() {
         List<String> groupNames = Lists.newArrayList();
-        for (TemplateRegisty r: templateRegisties) {
-            groupNames.add(r.name);
+        for (TemplateRegistry r: templateRegisties) {
+            groupNames.add(r.name());
         }
         return groupNames.toArray(new String[templateRegisties.size()]);
     }
 
     @Override
     public int getGroupWeight(String group) {
-        return 1200;
+        return ALDOR_GROUP_WEIGHT;
     }
 
     @NotNull
     @Override
     public ProjectTemplate[] createTemplates(@Nullable String group, WizardContext context) {
-        Optional<TemplateRegisty> registry = templateRegisties.stream().filter(r -> r.name().equals(group)).findFirst();
-        return registry.map(r -> r.templates.toArray(new ProjectTemplate[r.templates.size()])).orElse(EMPTY_TEMPLATES);
+        Optional<TemplateRegistry> registry = templateRegisties.stream().filter(r -> r.name().equals(group)).findFirst();
+        return registry.map(r -> r.templates().toArray(new ProjectTemplate[r.templates().size()])).orElse(EMPTY_TEMPLATES);
     }
 
     @Override
@@ -142,8 +144,6 @@ public class AldorGitTemplateFactory extends ProjectTemplatesFactory {
 
             modifiableRootModel.addContentEntry(modelContentRootDir);
         }
-
-
     }
 
     private static class AldorEmptyModuleBuilder extends AldorModuleBuilder {}
@@ -218,7 +218,7 @@ public class AldorGitTemplateFactory extends ProjectTemplatesFactory {
 
         private VirtualFile getContentRoot() {
             if (getContentEntryPath() == null) {
-                throw new RuntimeException("Missing content root");
+                throw new IllegalStateException("Missing content root");
             }
             LocalFileSystem fileSystem = LocalFileSystem.getInstance();
             return fileSystem.findFileByIoFile(new File(getContentEntryPath()));

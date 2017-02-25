@@ -12,14 +12,12 @@ import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.stubs.IStubElementType;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings("AbstractClassExtendsConcreteClass")
 public abstract class AldorColonExprMixin extends AldorDeclareImpl implements AldorColonExpr {
 
     @SuppressWarnings("ConstructorNotProtectedInAbstractClass")
     public AldorColonExprMixin(AldorDeclareStub stub, IStubElementType<AldorDeclareStub, AldorDeclare> elementType) {
         super(stub, elementType);
     }
-
 
     // grammar code gen forces this
     @SuppressWarnings("ConstructorNotProtectedInAbstractClass")

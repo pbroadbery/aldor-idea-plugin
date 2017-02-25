@@ -20,12 +20,7 @@ public class CompileOutputParserTest {
     @Ignore("just here to test output")
     public void testParser() throws IOException {
         List<CompilerMessage> messages = Lists.newArrayList();
-        CompileOutputParser.Listener listener = new CompileOutputParser.Listener() {
-            @Override
-            public void messageReceived(CompilerMessage message) {
-                messages.add(message);
-            }
-        };
+        CompileOutputParser.Listener listener = messages::add;
         CompileOutputParser parser = new CompileOutputParser("someCompiler", new File("."), listener);
 
         List<String> ll = Files.readAllLines(new File("/tmp/qq.txt").toPath());
@@ -43,12 +38,7 @@ public class CompileOutputParserTest {
     @Test
     public void testErrorMessasges() {
         List<CompilerMessage> messages = Lists.newArrayList();
-        CompileOutputParser.Listener listener = new CompileOutputParser.Listener() {
-            @Override
-            public void messageReceived(CompilerMessage message) {
-                messages.add(message);
-            }
-        };
+        CompileOutputParser.Listener listener = messages::add;
         CompileOutputParser parser = new CompileOutputParser("someCompiler", new File("."), listener);
 
         String text = "\"syntax.as\", line 41:     map(args: TForm, ret): % == never\n"

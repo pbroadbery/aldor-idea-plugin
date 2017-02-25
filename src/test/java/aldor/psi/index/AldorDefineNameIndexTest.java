@@ -30,8 +30,6 @@ import static aldor.psi.AldorPsiUtils.logPsi;
 import static aldor.util.VirtualFileTests.createFile;
 import static com.intellij.testFramework.LightPlatformTestCase.getSourceRoot;
 
-
-@SuppressWarnings("JUnitTestCaseWithNonTrivialConstructors")
 public class AldorDefineNameIndexTest extends LightPlatformCodeInsightFixtureTestCase {
 
     static {

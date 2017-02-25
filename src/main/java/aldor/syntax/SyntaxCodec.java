@@ -90,7 +90,7 @@ public class SyntaxCodec implements StubCodec<Syntax> {
         public Id decode(StubInputStream stream) throws IOException {
             StringRef ref = stream.readName();
             if (ref == null) {
-                throw new RuntimeException("Missing reference");
+                throw new IOException("Missing reference");
             }
             String name = ref.getString();
             return Id.createMissingId(name);

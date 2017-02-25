@@ -54,13 +54,14 @@ public abstract class SyntaxRepresentation<T extends PsiElement> {
         }
 
         @Override
+        @Nullable
         public AldorTokenType tokenType() {
             return null;
         }
 
         @Override
         public String text() {
-            return null;
+            return "Missing";
         }
     }
 }

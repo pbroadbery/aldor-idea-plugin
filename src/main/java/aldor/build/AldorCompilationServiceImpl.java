@@ -1,8 +1,6 @@
 package aldor.build;
 
 import com.google.common.collect.Maps;
-import com.intellij.openapi.compiler.CompilationStatusListener;
-import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.compiler.CompilerMessage;
 import com.intellij.openapi.diagnostic.Logger;
@@ -24,32 +22,12 @@ public class AldorCompilationServiceImpl extends AldorCompilationService {
         LOG.info("New Compiler!");
         this.project = project;
         this.compileStateForFile = Maps.newHashMap();
-        CompilerManager.getInstance(project).addCompilationStatusListener(new Listener());
+        CompilerManager.getInstance(project).addCompilationStatusListener(new AldorCompilationServiceListener());
     }
 
     @Override
     public void compilationResultsFor(VirtualFile file) {
         LOG.info("Getting compile results for: " + file);
-    }
-
-    private static class Listener implements CompilationStatusListener {
-        private static final Logger LOG = Logger.getInstance(Listener.class);
-
-        @Override
-        public void compilationFinished(boolean aborted, int errors, int warnings, CompileContext compileContext) {
-            LOG.info("Compiled ");
-
-        }
-
-        @Override
-        public void automakeCompilationFinished(int errors, int warnings, CompileContext compileContext) {
-            LOG.info("Auto compile finished " + errors);
-        }
-
-        @Override
-        public void fileGenerated(String outputRoot, String relativePath) {
-            LOG.info("Generated file " + outputRoot +  " " + relativePath);
-        }
     }
 
     private static class CompileState {}

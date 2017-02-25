@@ -24,6 +24,7 @@ public class AldorDefineInfo {
     }
 
     public enum Level { TOP, INNER }
+    // NB: Not sure this is useful (or implementable)
     public enum Classification { DOMAIN, CATEGORY, MACRO, OTHER }
 
     static {

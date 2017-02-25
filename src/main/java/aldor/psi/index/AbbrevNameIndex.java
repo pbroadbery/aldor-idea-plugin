@@ -7,10 +7,6 @@ import com.intellij.psi.stubs.StubIndexKey;
 import org.jetbrains.annotations.NotNull;
 
 public final class AbbrevNameIndex extends StringStubIndexExtension<SpadAbbrev> {
-    public static final AbbrevNameIndex instance = new AbbrevNameIndex();
-
-    private AbbrevNameIndex() {
-    }
 
     @NotNull
     @Override

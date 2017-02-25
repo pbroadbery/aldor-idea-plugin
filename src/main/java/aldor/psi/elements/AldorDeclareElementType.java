@@ -11,11 +11,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
-public class AldorDeclareElementType extends StubCodecElementType<AldorDeclareStub, AldorDeclare> {
+public class AldorDeclareElementType extends StubCodecElementType<AldorDeclareStub, AldorDeclare, AldorDeclareElementType> {
     public static final StubIndexKey<String, AldorDeclare> DECLARE_NAME_INDEX = StubIndexKey.createIndexKey("Aldor.Declare.Name");
     public static final StubIndexKey<String, AldorDeclare> DECLARE_TOP_INDEX = StubIndexKey.createIndexKey("Aldor.Declare.Top");
 
-    public AldorDeclareElementType(String debugName, PsiStubCodec<AldorDeclareStub, AldorDeclare> declareCodec) {
+    public AldorDeclareElementType(String debugName, PsiStubCodec<AldorDeclareStub, AldorDeclare, AldorDeclareElementType> declareCodec) {
         super(debugName, AldorLanguage.INSTANCE, declareCodec);
     }
 
@@ -46,4 +46,8 @@ public class AldorDeclareElementType extends StubCodecElementType<AldorDeclareSt
         return true;
     }
 
+    @Override
+    AldorDeclareElementType toElType() {
+        return this;
+    }
 }

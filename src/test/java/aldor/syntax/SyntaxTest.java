@@ -78,7 +78,7 @@ public class SyntaxTest extends LightPlatformCodeInsightFixtureTestCase {
         Syntax syntax = parse(psi);
         Assert.assertNotNull(syntax);
         // FIXME: This is wrong - ought to show full type
-        Assert.assertEquals("{?:Other}", syntax.toString());
+        Assert.assertEquals("{?:With}", syntax.toString());
     }
 
     public void testTupleCross() {

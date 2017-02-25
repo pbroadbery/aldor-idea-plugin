@@ -3,7 +3,6 @@ package aldor.syntax;
 @FunctionalInterface
 public interface GuardedRunnable<E extends Exception> {
 
-    @SuppressWarnings("ProhibitedExceptionDeclared")
     void callInternal() throws E;
 
     default void call() {

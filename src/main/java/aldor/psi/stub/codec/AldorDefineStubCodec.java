@@ -1,24 +1,27 @@
-package aldor.psi.elements;
+package aldor.psi.stub.codec;
 
 import aldor.psi.AldorDefine;
 import aldor.psi.AldorPsiUtils;
-import aldor.psi.impl.AldorDefineMixin;
+import aldor.psi.elements.AldorDefineElementType;
+import aldor.psi.elements.AldorDefineInfo;
+import aldor.psi.elements.AldorStubFactory;
+import aldor.psi.elements.PsiStubCodec;
 import aldor.psi.stub.AldorDefineStub;
 import aldor.psi.stub.impl.AldorDefineConcreteStub;
 import aldor.util.StubCodec;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
 
 import java.io.IOException;
 
-class AldorDefineStubCodec implements PsiStubCodec<AldorDefineStub, AldorDefine> {
+public class AldorDefineStubCodec implements PsiStubCodec<AldorDefineStub, AldorDefine, AldorDefineElementType> {
     private static final StubCodec<AldorDefineInfo> infoCodec = new AldorDefineInfoStubCodec();
+    private final AldorStubFactory.PsiElementFactory<AldorDefineStub, AldorDefine> elementFactory;
 
-    AldorDefineStubCodec() {
-
+    public AldorDefineStubCodec(AldorStubFactory.PsiElementFactory<AldorDefineStub, AldorDefine> psiElementFactory) {
+        this.elementFactory = psiElementFactory;
     }
 
     @Override
@@ -32,7 +35,7 @@ class AldorDefineStubCodec implements PsiStubCodec<AldorDefineStub, AldorDefine>
     }
 
     @Override
-    public AldorDefineStub decode(StubInputStream dataStream, IStubElementType<AldorDefineStub, AldorDefine> elementType, StubElement<?> parentStub) throws IOException {
+    public AldorDefineStub decode(StubInputStream dataStream, AldorDefineElementType elementType, StubElement<?> parentStub) throws IOException {
         boolean nonNull = dataStream.readBoolean();
         String name = nonNull? dataStream.readUTFFast() : null;
         AldorDefineInfo defineInfo = infoCodec.decode(dataStream);
@@ -40,18 +43,19 @@ class AldorDefineStubCodec implements PsiStubCodec<AldorDefineStub, AldorDefine>
     }
 
     @Override
-    public AldorDefine createPsi(IStubElementType<AldorDefineStub, AldorDefine> elementType, AldorDefineStub stub) {
-        // Fixme: Should return the concrete version
-        return new AldorDefineMixin(stub, elementType);
+    public AldorDefine createPsi(AldorDefineElementType elementType, AldorDefineStub stub) {
+        return elementFactory.invoke(stub, elementType);
     }
 
     @Override
-    public AldorDefineStub createStub(StubElement<?> parentStub, IStubElementType<AldorDefineStub, AldorDefine> elementType, AldorDefine aldorDefine) {
+    public AldorDefineStub createStub(StubElement<?> parentStub, AldorDefineElementType elementType, AldorDefine aldorDefine) {
         String defineId = aldorDefine.defineIdentifier().map(PsiElement::getText).orElse(null);
         boolean isTopLevelDefine = AldorPsiUtils.isTopLevel(aldorDefine.getParent());
+        AldorDefine.DefinitionType type = elementType.type();
         AldorDefineInfo info = AldorDefineInfo.info(
                 isTopLevelDefine ? AldorDefineInfo.Level.TOP: AldorDefineInfo.Level.INNER,
-                AldorDefineInfo.Classification.OTHER);
+                (type == AldorDefine.DefinitionType.MACRO) ? AldorDefineInfo.Classification.MACRO : AldorDefineInfo.Classification.OTHER);
+
         return new AldorDefineConcreteStub(parentStub, elementType, defineId, info);
     }
 

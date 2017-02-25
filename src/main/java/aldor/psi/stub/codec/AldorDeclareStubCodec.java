@@ -1,14 +1,15 @@
-package aldor.psi.elements;
+package aldor.psi.stub.codec;
 
 import aldor.psi.AldorDeclare;
+import aldor.psi.elements.AldorDeclareElementType;
 import aldor.psi.elements.AldorStubFactory.PsiElementFactory;
+import aldor.psi.elements.PsiStubCodec;
 import aldor.psi.stub.AldorDeclareStub;
 import aldor.psi.stub.impl.AldorDeclareConcreteStub;
 import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxCodec;
 import aldor.syntax.SyntaxPsiParser;
 import aldor.util.StubCodec;
-import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
@@ -16,7 +17,7 @@ import com.intellij.util.io.StringRef;
 
 import java.io.IOException;
 
-public class AldorDeclareStubCodec implements PsiStubCodec<AldorDeclareStub, AldorDeclare> {
+public class AldorDeclareStubCodec implements PsiStubCodec<AldorDeclareStub, AldorDeclare, AldorDeclareElementType> {
     private static final StubCodec<Syntax> syntaxCodec = new SyntaxCodec();
     private final PsiElementFactory<AldorDeclareStub, AldorDeclare> psiElementFactory;
 
@@ -37,9 +38,10 @@ public class AldorDeclareStubCodec implements PsiStubCodec<AldorDeclareStub, Ald
     }
 
     @Override
-    public AldorDeclareStub decode(StubInputStream dataStream, IStubElementType<AldorDeclareStub, AldorDeclare> eltType, StubElement<?> parentStub) throws IOException {
+    public AldorDeclareStub decode(StubInputStream dataStream, AldorDeclareElementType eltType, StubElement<?> parentStub) throws IOException {
         boolean isDeclareOfId = dataStream.readBoolean();
         if (isDeclareOfId) {
+            //noinspection unused
             StringRef id = dataStream.readName();
             Syntax syntax = syntaxCodec.decode(dataStream);
             return new AldorDeclareConcreteStub(parentStub, eltType, syntax);
@@ -50,13 +52,13 @@ public class AldorDeclareStubCodec implements PsiStubCodec<AldorDeclareStub, Ald
     }
 
     @Override
-    public AldorDeclare createPsi(IStubElementType<AldorDeclareStub, AldorDeclare> eltType, AldorDeclareStub stub) {
+    public AldorDeclare createPsi(AldorDeclareElementType eltType, AldorDeclareStub stub) {
         return psiElementFactory.invoke(stub, eltType);
     }
 
     @Override
     public AldorDeclareStub createStub(StubElement<?> parentStub,
-                                       IStubElementType<AldorDeclareStub, AldorDeclare> eltType, AldorDeclare aldorDeclare) {
+                                       AldorDeclareElementType eltType, AldorDeclare aldorDeclare) {
         return new AldorDeclareConcreteStub(parentStub, eltType, SyntaxPsiParser.parse(aldorDeclare.lhs()));
     }
 

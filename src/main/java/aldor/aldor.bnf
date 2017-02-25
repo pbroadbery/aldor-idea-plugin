@@ -61,6 +61,8 @@
   stubClass(".*_Define")='aldor.psi.stub.AldorDefineStub'
   implements(".*_Define")='aldor.psi.AldorDefine'
   mixin(".*_Define")="aldor.psi.impl.AldorDefineMixin"
+
+  // These are Macros
   stubClass(".*_Macro")='aldor.psi.stub.AldorDefineStub'
   implements(".*_Macro")='aldor.psi.AldorDefine'
   mixin(".*_Macro")="aldor.psi.impl.AldorMacroMixin"
@@ -84,8 +86,11 @@
   mixin("RelExpr") = 'aldor.psi.impl.SpadBinaryOpMixin'
 
   // where expressions
-  stubClass("WhereBlock")='aldor.psi.stub.AldorWhereStub'
+  stubClass("WhereBlock")='com.intellij.psi.stubs.EmptyStub'
 
+  // with/add
+  stubClass("UnaryWith")='com.intellij.psi.stubs.EmptyStub'
+  stubClass("UnaryAdd")='com.intellij.psi.stubs.EmptyStub'
 
   // Declarations (should be with body only...)
   // Version 2, I think.
@@ -194,10 +199,10 @@ InfixedExprsDecl ::= InfixedExprs DeclPart?
 InfixedExprs ::= enlist1_InfixedExpr_KW_Comma
 
 //Binding_E ::= BindingL_Infixed_E
-Binding_AnyStatement ::= BindingL_Infixed_AnyStatement
-Binding_Collection ::= BindingL_Infixed_Collection
+private Binding_AnyStatement ::= BindingL_Infixed_AnyStatement
+private Binding_Collection ::= BindingL_Infixed_Collection
 //Binding_InfixedExprsDecl ::= BindingL_Infixed_InfixedExprsDecl
-Binding_BalStatement ::= BindingL_Infixed_BalStatement
+private Binding_BalStatement ::= BindingL_Infixed_BalStatement
 //BindingL_R_L ::=
 //               | R KW_Assign_BindingL_R_L
 //               | R KW_2EQ BindingL_R_L
@@ -475,10 +480,14 @@ OpQualTail ::= Molecule (KW_Dollar OpQualTail)?
 //| E14 KW_Throw E15
 
 //E14 ::= (KW_With | KW_Add | E15) ((KW_With DeclMolecule) | (KW_Add DeclMolecule) | (KW_Except E15) | (KW_Throw E15))*
-E14 ::= ((E15? (WithPart | AddPart)) | (E15 (KW_Except E15 | KW_Throw E15| Nothing))) (WithPart | AddPart)*
+//E14 ::= ((E15? (WithPart | AddPart)) | (E15 (KW_Except E15 | KW_Throw E15| Nothing))) (WithPart | AddPart)*
 
-WithPart ::= KW_With DeclMolecule
-AddPart ::= KW_Add DeclMolecule
+E14 ::= (UnaryWith | UnaryAdd | (E15 (WithPart | AddPart)) | (E15 (KW_Except E15 | KW_Throw E15| Nothing))) (WithPart | AddPart)*
+
+UnaryAdd ::= KW_Add DeclMolecule
+UnaryWith ::= KW_With DeclMolecule
+left WithPart ::= KW_With DeclMolecule
+left AddPart ::= KW_Add DeclMolecule
 
 private E15 ::= Application
 

@@ -10,5 +10,5 @@ public interface AldorDefine extends StubBasedPsiElement<AldorDefineStub>, Navig
     Optional<AldorIdentifier> defineIdentifier();
     DefinitionType definitionType();
 
-    enum DefinitionType { CONSTANT, MACRO ; }
+    enum DefinitionType { CONSTANT, MACRO }
 }

@@ -1,5 +1,6 @@
-package aldor.psi.elements;
+package aldor.psi.stub.codec;
 
+import aldor.psi.elements.AldorDefineInfo;
 import aldor.psi.elements.AldorDefineInfo.Classification;
 import aldor.psi.elements.AldorDefineInfo.Level;
 import aldor.util.StubCodec;

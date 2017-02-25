@@ -1,13 +1,14 @@
-package aldor.psi.elements;
+package aldor.psi.stub.codec;
 
 import aldor.psi.AbbrevClassifier;
 import aldor.psi.SpadAbbrev;
+import aldor.psi.elements.PsiStubCodec;
+import aldor.psi.elements.SpadAbbrevElementType;
 import aldor.psi.impl.SpadAbbrevMixin;
 import aldor.psi.stub.AbbrevInfo;
 import aldor.psi.stub.SpadAbbrevStub;
 import aldor.psi.stub.impl.SpadAbbrevConcreteStub;
 import aldor.util.StubCodec;
-import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
@@ -16,10 +17,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
-public class SpadAbbrevStubCodec implements PsiStubCodec<SpadAbbrevStub, SpadAbbrev> {
+public class SpadAbbrevStubCodec implements PsiStubCodec<SpadAbbrevStub,SpadAbbrev, SpadAbbrevElementType> {
     static final StubCodec<AbbrevInfo> infoCodec = new AbbrevInfoCodec();
 
-    SpadAbbrevStubCodec() {
+    public SpadAbbrevStubCodec() {
 
     }
 
@@ -29,18 +30,18 @@ public class SpadAbbrevStubCodec implements PsiStubCodec<SpadAbbrevStub, SpadAbb
     }
 
     @Override
-    public SpadAbbrevStub decode(StubInputStream dataStream, IStubElementType<SpadAbbrevStub, SpadAbbrev> eltType, StubElement<?> parentStub) throws IOException {
+    public SpadAbbrevStub decode(StubInputStream dataStream, SpadAbbrevElementType eltType, StubElement<?> parentStub) throws IOException {
         AbbrevInfo info = infoCodec.decode(dataStream);
         return new SpadAbbrevConcreteStub(parentStub, eltType, info);
     }
 
     @Override
-    public SpadAbbrev createPsi(IStubElementType<SpadAbbrevStub, SpadAbbrev> eltType, SpadAbbrevStub stub) {
+    public SpadAbbrev createPsi(SpadAbbrevElementType eltType, SpadAbbrevStub stub) {
         return new SpadAbbrevMixin(stub, eltType);
     }
 
     @Override
-    public SpadAbbrevStub createStub(StubElement<?> parentStub, IStubElementType<SpadAbbrevStub, SpadAbbrev> eltType, SpadAbbrev spadAbbrev) {
+    public SpadAbbrevStub createStub(StubElement<?> parentStub, SpadAbbrevElementType eltType, SpadAbbrev spadAbbrev) {
         AbbrevInfo abbrevInfo = spadAbbrev.abbrevInfo();
         return new SpadAbbrevConcreteStub(parentStub, eltType, abbrevInfo);
     }

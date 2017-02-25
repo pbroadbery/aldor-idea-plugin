@@ -12,7 +12,7 @@ import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.stubs.IStubElementType;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings({"AbstractClassExtendsConcreteClass", "AbstractClassWithOnlyOneDirectInheritor"})
+@SuppressWarnings({"AbstractClassWithOnlyOneDirectInheritor"})
 public abstract class AldorDeclMixin extends AldorDeclareImpl implements AldorDeclPart {
 
     protected AldorDeclMixin(@NotNull ASTNode node) {

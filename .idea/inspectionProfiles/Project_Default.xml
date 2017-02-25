@@ -154,19 +154,19 @@
     <inspection_tool class="ClassUnconnectedToPackage" enabled="true" level="INFO" enabled_by_default="true" />
     <inspection_tool class="ClassWithOnlyPrivateConstructors" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ClassWithTooManyDependencies" enabled="true" level="WARNING" enabled_by_default="true">
-      <option name="limit" value="10" />
+      <option name="limit" value="20" />
     </inspection_tool>
     <inspection_tool class="ClassWithTooManyDependents" enabled="true" level="WARNING" enabled_by_default="true">
-      <option name="limit" value="10" />
+      <option name="limit" value="15" />
     </inspection_tool>
     <inspection_tool class="ClassWithTooManyTransitiveDependencies" enabled="true" level="WARNING" enabled_by_default="true">
       <scope name="Tests" level="WEAK WARNING" enabled="true">
-        <option name="limit" value="50" />
+        <option name="limit" value="80" />
       </scope>
       <option name="limit" value="100" />
     </inspection_tool>
     <inspection_tool class="ClassWithTooManyTransitiveDependents" enabled="true" level="WARNING" enabled_by_default="true">
-      <option name="limit" value="100" />
+      <option name="limit" value="150" />
     </inspection_tool>
     <inspection_tool class="CloneCallsConstructors" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="CloneInNonCloneableClass" enabled="true" level="WARNING" enabled_by_default="true" />

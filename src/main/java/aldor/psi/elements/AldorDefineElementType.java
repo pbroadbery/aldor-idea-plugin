@@ -9,19 +9,26 @@ import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubIndexKey;
 import org.jetbrains.annotations.NotNull;
 
-public class AldorDefineElementType extends StubCodecElementType<AldorDefineStub, AldorDefine> {
+public class AldorDefineElementType extends StubCodecElementType<AldorDefineStub, AldorDefine, AldorDefineElementType> {
     private static final Logger LOG = Logger.getInstance(AldorDefineElementType.class);
     public static final StubIndexKey<String, AldorDefine> DEFINE_NAME_INDEX = StubIndexKey.createIndexKey("Aldor.Define.Name");
     public static final StubIndexKey<String, AldorDefine> DEFINE_TOPLEVEL_INDEX = StubIndexKey.createIndexKey("Aldor.Define.TopLevel");
+    private final AldorDefine.DefinitionType type;
 
-    public AldorDefineElementType(AldorStubFactory stubFactory) {
-        super("Define", AldorLanguage.INSTANCE, stubFactory.defineCodec());
+    public AldorDefineElementType(AldorDefine.DefinitionType type, PsiStubCodec<AldorDefineStub, AldorDefine, AldorDefineElementType> defineCodec) {
+        super("Define" + type, AldorLanguage.INSTANCE, defineCodec);
+        this.type = type;
+    }
+
+    @Override
+    AldorDefineElementType toElType() {
+        return this;
     }
 
     @NotNull
     @Override
     public String getExternalId() {
-        return "Aldor.Define";
+        return "Aldor.Define."+ type;
     }
 
     @Override
@@ -39,4 +46,7 @@ public class AldorDefineElementType extends StubCodecElementType<AldorDefineStub
         }
     }
 
+    public AldorDefine.DefinitionType type() {
+        return type;
+    }
 }

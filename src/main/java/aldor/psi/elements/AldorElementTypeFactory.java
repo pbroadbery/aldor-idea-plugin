@@ -2,8 +2,16 @@ package aldor.psi.elements;
 
 import aldor.impl.AldorColonExprImpl;
 import aldor.impl.AldorDeclPartImpl;
+import aldor.impl.AldorUnaryAddImpl;
+import aldor.impl.AldorUnaryWithImpl;
+import aldor.impl.AldorWhereBlockImpl;
 import aldor.language.AldorLanguage;
 import aldor.language.SpadLanguage;
+import aldor.psi.AldorUnaryAdd;
+import aldor.psi.AldorUnaryWith;
+import aldor.psi.AldorWhereBlock;
+import aldor.psi.impl.AldorDefineMixin;
+import aldor.psi.impl.AldorMacroMixin;
 import com.google.common.collect.Maps;
 import com.intellij.lang.Language;
 import com.intellij.psi.PsiFile;
@@ -13,13 +21,15 @@ import com.intellij.psi.tree.IStubFileElementType;
 
 import java.util.Map;
 
+import static aldor.psi.AldorDefine.DefinitionType.CONSTANT;
+import static aldor.psi.AldorDefine.DefinitionType.MACRO;
+
 /**
  * Aldor element types
  */
 public class AldorElementTypeFactory {
     private static final AldorStubFactory stubFactory = new AldorStubFactoryImpl();
-    public static final IElementType DEFINE_ELEMENT_TYPE = new AldorDefineElementType(stubFactory);
-    public static final IElementType SPAD_ABBREV_ELEMENT_TYPE = new SpadAbbrevElementType(stubFactory);
+    public static final IElementType SPAD_ABBREV_ELEMENT_TYPE = new SpadAbbrevElementType(stubFactory.abbrevCodec());
     public static final FileStubElementType ALDOR_FILE_ELEMENT_TYPE = new FileStubElementType(AldorLanguage.INSTANCE, stubFactory.getVersion());
     public static final FileStubElementType SPAD_FILE_ELEMENT_TYPE = new FileStubElementType(SpadLanguage.INSTANCE, stubFactory.getVersion());
     private static final AldorElementTypeFactory instance = new AldorElementTypeFactory();
@@ -27,15 +37,16 @@ public class AldorElementTypeFactory {
     private final Map<String, IElementType> factoryForName = Maps.newHashMap();
 
     AldorElementTypeFactory() {
-        factoryForName.put(".*_DEFINE", DEFINE_ELEMENT_TYPE);
-        factoryForName.put(".*_MACRO", DEFINE_ELEMENT_TYPE);
+        factoryForName.put(".*_DEFINE", new AldorDefineElementType(CONSTANT, stubFactory.defineCodec(AldorDefineMixin::new)));
+        factoryForName.put(".*_MACRO", new AldorDefineElementType(MACRO, stubFactory.defineCodec(AldorMacroMixin::new)));
         factoryForName.put("COLON_EXPR", new AldorDeclareElementType("SpadDeclare", stubFactory.declareCodec(AldorColonExprImpl::new)));
         factoryForName.put("DECL_PART", new AldorDeclareElementType("AldorDeclare", stubFactory.declareCodec(AldorDeclPartImpl::new)));
         factoryForName.put("SPAD_ABBREV_CMD", SPAD_ABBREV_ELEMENT_TYPE);
         factoryForName.put("ALDOR_FILE", ALDOR_FILE_ELEMENT_TYPE);
         factoryForName.put("SPAD_FILE", SPAD_FILE_ELEMENT_TYPE);
-        factoryForName.put("WHERE_BLOCK", new AldorWhereElementType("Where", stubFactory.whereCodec()));
-        //factoryForName.put("WHERE_BLOCK", new AldorWhereElementType, "AldorWhere");
+        factoryForName.put("WHERE_BLOCK", new EmptyStubElementType<AldorWhereBlock>("Where", AldorLanguage.INSTANCE, AldorWhereBlockImpl::new));
+        factoryForName.put("UNARY_ADD", new EmptyStubElementType<AldorUnaryAdd>("UnaryAdd", AldorLanguage.INSTANCE, AldorUnaryAddImpl::new));
+        factoryForName.put("UNARY_WITH", new EmptyStubElementType<AldorUnaryWith>("UnaryWith", AldorLanguage.INSTANCE, AldorUnaryWithImpl::new));
     }
 
     public static IElementType createElement(String name) {
@@ -68,4 +79,5 @@ public class AldorElementTypeFactory {
         }
 
     }
+
 }
