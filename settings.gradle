@@ -1,0 +1,2 @@
+rootProject.name = 'aldor-idea'
+include 'jps-plugin'

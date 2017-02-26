@@ -1,0 +1,45 @@
+plugins {
+    id 'org.jetbrains.intellij' version "0.2.5"
+}
+
+allprojects {
+    apply plugin: 'java'
+
+    group = 'org.aldor.idea'
+    version = '1.0'
+
+    sourceSets {
+        main.java.srcDirs = ['src/main/java', 'gen']
+        main.resources.srcDir 'resources'
+
+        test.java.srcDir 'test/src/java'
+        test.resources.srcDir 'test/src/resources'
+    }
+    intellij {
+        version 'IC-2016.3.4' //IntelliJ IDEA 2016.3 dependency; for a full list of IntelliJ IDEA releases please see https://www.jetbrains.com/intellij-repository/releases
+        pluginName 'Aldor Plugin'
+
+        plugins = []
+
+        //updateSinceUntilBuild = false// Was in haskell, but..
+
+        sandboxDirectory = project.rootDir.canonicalPath + "/.sandbox"
+    }
+
+    test {
+        testLogging {
+            exceptionFormat = 'full'
+        }
+    }
+}
+
+
+apply plugin: 'org.jetbrains.intellij'
+apply plugin: 'idea'
+tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
+
+dependencies {
+    compile project('jps-plugin')
+}
+
+

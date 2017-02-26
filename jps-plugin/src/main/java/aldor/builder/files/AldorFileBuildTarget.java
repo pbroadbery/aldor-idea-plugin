@@ -2,6 +2,7 @@ package aldor.builder.files;
 
 import aldor.builder.AldorTargetIds;
 import com.intellij.openapi.util.text.StringUtil;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.jps.builders.BuildRootIndex;
@@ -32,8 +33,15 @@ public class AldorFileBuildTarget extends BuildTarget<AldorFileRootDescriptor> {
         File sourceLocation = urlToFile(module.getContentRootsList().getUrls().get(0));
 
         File destination = new File(sourceLocation.getParentFile(), "build");
-        outputLocation = new File(destination, StringUtil.trimExtension(file.getName()) + ".abn"); //FIXME Should be whole path
+        outputLocation = new File(destination, trimExtension(file.getName()) + ".abn"); //FIXME Should be whole path
         assert rootDescriptor.getRootId().equals(file.getPath());
+    }
+
+    @NotNull
+    @Contract(pure = true)
+    public static String trimExtension(@NotNull String name) {
+        int index = name.lastIndexOf('.');
+        return (index < 0) ? name : name.substring(0, index);
     }
 
     public AldorFileBuildTargetType getAldorTargetType() {
@@ -99,7 +107,7 @@ public class AldorFileBuildTarget extends BuildTarget<AldorFileRootDescriptor> {
     }
 
     public String targetForFile(String name) {
-        String trimmedName = StringUtil.trimExtension(name);
+        String trimmedName = trimExtension(name);
         return trimmedName + ".abn";
     }
 }
