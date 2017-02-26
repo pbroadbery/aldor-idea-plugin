@@ -42,7 +42,7 @@ public final class ParserFunctions {
 
     public static PsiElement parseAldorText(Project project, CharSequence text, IElementType elementType) {
         ParserDefinition aldorParserDefinition = new AldorParserDefinition();
-        PsiBuilder psiBuilder = PsiBuilderFactory.getInstance().createBuilder(aldorParserDefinition, aldorParserDefinition.createLexer(null),
+        PsiBuilder psiBuilder = PsiBuilderFactory.getInstance().createBuilder(aldorParserDefinition, aldorParserDefinition.createLexer(project),
                 text);
 
         PsiParser parser = aldorParserDefinition.createParser(project);
@@ -57,7 +57,7 @@ public final class ParserFunctions {
 
     public static PsiElement parseSpadText(Project project, CharSequence text, IElementType elementType) {
         ParserDefinition spadParserDefinition = new SpadParserDefinition();
-        PsiBuilder psiBuilder = PsiBuilderFactory.getInstance().createBuilder(spadParserDefinition, spadParserDefinition.createLexer(null),
+        PsiBuilder psiBuilder = PsiBuilderFactory.getInstance().createBuilder(spadParserDefinition, spadParserDefinition.createLexer(project),
                 text);
 
         PsiParser parser = spadParserDefinition.createParser(project);

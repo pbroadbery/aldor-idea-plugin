@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public class AldorStubUtils {
 
-    Optional<AldorDefineStub> definingForm(StubElement<?> stub) {
+    static Optional<AldorDefineStub> definingForm(StubElement<?> stub) {
         return null;
     }
 
