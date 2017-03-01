@@ -44,8 +44,4 @@ public abstract class AldorColonExprMixin extends AldorDeclareImpl implements Al
         return true;
     }
 
-    @Override
-    public PsiElement lhs() {
-        return this.getExprList().get(0);
-    }
 }

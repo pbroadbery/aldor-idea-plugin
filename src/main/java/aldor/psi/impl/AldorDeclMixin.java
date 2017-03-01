@@ -30,7 +30,7 @@ public abstract class AldorDeclMixin extends AldorDeclareImpl implements AldorDe
         if (!processor.execute(this, state)) {
             return false;
         }
-        PsiElement lhs = this.lhs();
+        PsiElement lhs = this.getFirstChild();
         //noinspection ObjectEquality
         if (lastParent != lhs) {
             Syntax lhsSyntax = SyntaxPsiParser.parse(lhs);
@@ -43,8 +43,4 @@ public abstract class AldorDeclMixin extends AldorDeclareImpl implements AldorDe
         return true;
     }
 
-    @Override
-    public PsiElement lhs() {
-        return getFirstChild();
-    }
 }

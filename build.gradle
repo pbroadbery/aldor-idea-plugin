@@ -1,22 +1,23 @@
 plugins {
     id 'org.jetbrains.intellij' version "0.2.5"
+    id "de.undercouch.download" version "3.2.0"
 }
+
 
 allprojects {
     apply plugin: 'java'
-
     group = 'org.aldor.idea'
     version = '1.0'
 
     sourceSets {
-        main.java.srcDirs = ['src/main/java', 'gen']
+        main.java.srcDirs = ['src/main/java', 'src/gen/jflex', 'src/gen/grammar']
         main.resources.srcDir 'resources'
 
         test.java.srcDir 'test/src/java'
         test.resources.srcDir 'test/src/resources'
     }
     intellij {
-        version 'IC-2016.3.4' //IntelliJ IDEA 2016.3 dependency; for a full list of IntelliJ IDEA releases please see https://www.jetbrains.com/intellij-repository/releases
+        version 'IC-2016.3.4' //IntelliJ IDEA 2016.3 dependency; for releases: https://www.jetbrains.com/intellij-repository/releases
         pluginName 'Aldor Plugin'
 
         plugins = []
@@ -36,10 +37,110 @@ allprojects {
 
 apply plugin: 'org.jetbrains.intellij'
 apply plugin: 'idea'
+apply plugin: 'de.undercouch.download'
+
 tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
+import de.undercouch.gradle.tasks.download.Download
 
 dependencies {
     compile project('jps-plugin')
+}
+
+
+task downloadGrammarKit(type: Download) {
+    src 'https://github.com/JetBrains/Grammar-Kit/releases/download/1.5.1/GrammarKit.zip'
+    dest 'download/GrammarKit.zip'
+    overwrite false
+}
+
+task downloadJFlexSkel(type: Download) {
+    src 'https://raw.githubusercontent.com/JetBrains/intellij-community/master/tools/lexer/idea-flex.skeleton'
+    dest 'lib/jflex/idea-flex.skeleton'
+    overwrite false
+}
+
+task downloadJFlex(type: Download) {
+    src 'https://raw.githubusercontent.com/JetBrains/intellij-community/master/tools/lexer/jflex-1.7.0-SNAPSHOT.jar'
+    dest 'lib/jflex/jflex-1.7.0-SNAPSHOT.jar'
+    overwrite false
+}
+
+task cleanLexer {
+    doLast {
+	for (f in generateLexer.outputs.files) { delete f }
+    }
+}
+
+tasks.clean.dependsOn tasks.cleanLexer
+
+task unzipGrammar(dependsOn: 'downloadGrammarKit', type: Copy) {
+    def zipFile = file('download/GrammarKit.zip')
+    def outputDir = 'lib'
+
+    from zipTree(zipFile)
+    into outputDir
+}
+
+task generateLexer (type: JavaExec) {
+        def dstRoot = "$project.projectDir/src/gen/jflex"
+	def pkg = 'aldor/lexer'
+        def src = "$project.projectDir/src/main/jflex/${pkg}/aldor.jflex"
+        def dst = "src/gen/jflex/" + pkg
+
+	doFirst {
+	    println "(delete output dir"
+            delete file(dst)
+	    println "finished delete output dir)"
+	    println "Args are: " + args
+        }
+
+        main = 'jflex.Main'
+        classpath = files('lib/jflex/jflex-1.7.0-SNAPSHOT.jar')
+
+        args = ['--skel', 'lib/jflex/idea-flex.skeleton', '-d', "${dstRoot}/${pkg}" , file(src)]
+
+        inputs.file file(src)
+        outputs.dir fileTree(dir: "${dst}", include: '**/*.java')
+}
+
+tasks.generateLexer.dependsOn tasks.downloadJFlex
+tasks.generateLexer.dependsOn tasks.downloadJFlexSkel
+tasks.generateLexer.dependsOn task {
+    doLast {
+        println "hello"
+    }
+}
+
+parserTask(project, "Aldor", "aldor.psi")
+parserTask(project, "Expression", "aldor.expression.psi")
+
+tasks.compileJava.dependsOn tasks.generateAldorParser
+tasks.compileJava.dependsOn tasks.generateExpressionParser
+tasks.compileJava.dependsOn tasks.generateLexer
+
+
+def parserTask(project, parserName, pkg) {
+    return tasks.create("generate${parserName}Parser", JavaExec) {
+        def dstRoot = "$project.projectDir/src/gen/grammar"
+        def src = "$project.projectDir/src/main/grammar/${parserName}.bnf"
+	def dst = "$dstRoot/$pkg"
+	main = 'org.intellij.grammar.Main'
+        classpath(configurations.compile + files('lib/GrammarKit/lib/grammar-kit.jar'))
+
+        args = [dstRoot, file(src)]
+
+        inputs.file file(src)
+        outputs.dir fileTree(dir: dst, include: '**/*.java')
+    }
+}
+
+tasks.clean.dependsOn task {
+    outputs.upToDateWhen { false }
+    inputs.file tasks.parserTask.outputs.files
+    doLast {
+        for (f in tasks.parserTask.outputs.files) { print f.name}
+        for (f in tasks.parserTask.outputs.files) { delete f}
+    }
 }
 
 

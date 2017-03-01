@@ -9,7 +9,7 @@ import aldor.psi.AldorDefine;
 import aldor.psi.AldorE14;
 import aldor.psi.AldorExpPrecedenceExpr;
 import aldor.psi.AldorId;
-import aldor.psi.AldorInfixedExpr;
+import aldor.psi.AldorInfixedExpression;
 import aldor.psi.AldorInfixedTok;
 import aldor.psi.AldorJxleftAtom;
 import aldor.psi.AldorLiteral;
@@ -210,7 +210,7 @@ public final class SyntaxPsiParser {
 
 
         @Override
-        public void visitInfixedExpr(@NotNull AldorInfixedExpr expr) {
+        public void visitInfixedExpression(@NotNull AldorInfixedExpression expr) {
             List<Syntax> exprContent = buildChildren(expr);
             Syntax lhs;
             int i=1;

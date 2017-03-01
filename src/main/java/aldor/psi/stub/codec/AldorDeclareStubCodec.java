@@ -59,7 +59,7 @@ public class AldorDeclareStubCodec implements PsiStubCodec<AldorDeclareStub, Ald
     @Override
     public AldorDeclareStub createStub(StubElement<?> parentStub,
                                        AldorDeclareElementType eltType, AldorDeclare aldorDeclare) {
-        return new AldorDeclareConcreteStub(parentStub, eltType, SyntaxPsiParser.parse(aldorDeclare.lhs()));
+        return new AldorDeclareConcreteStub(parentStub, eltType, SyntaxPsiParser.parse(aldorDeclare.getFirstChild()));
     }
 
 }
