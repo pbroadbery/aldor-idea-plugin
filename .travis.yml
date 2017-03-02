@@ -1,4 +1,6 @@
 language: java
+jdk:
+  - oraclejdk8
 
 before_script:
   - gradle wrapper --gradle-version=3.4
