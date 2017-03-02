@@ -1,1 +1,4 @@
 language: java
+
+before_script:
+  - gradle wrapper --gradle-version=3.4

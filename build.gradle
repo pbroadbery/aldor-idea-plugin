@@ -88,10 +88,7 @@ task generateLexer (type: JavaExec) {
         def dst = "src/gen/jflex/" + pkg
 
 	doFirst {
-	    println "(delete output dir"
             delete file(dst)
-	    println "finished delete output dir)"
-	    println "Args are: " + args
         }
 
         main = 'jflex.Main'
@@ -100,19 +97,14 @@ task generateLexer (type: JavaExec) {
         args = ['--skel', 'lib/jflex/idea-flex.skeleton', '-d', "${dstRoot}/${pkg}" , file(src)]
 
         inputs.file file(src)
-        outputs.dir fileTree(dir: "${dst}", include: '**/*.java')
+        outputs.dirs fileTree("${dst}").include('**/*.java')
 }
 
 tasks.generateLexer.dependsOn tasks.downloadJFlex
 tasks.generateLexer.dependsOn tasks.downloadJFlexSkel
-tasks.generateLexer.dependsOn task {
-    doLast {
-        println "hello"
-    }
-}
 
-parserTask(project, "Aldor", "aldor.psi")
-parserTask(project, "Expression", "aldor.expression.psi")
+parserTask(project, "Aldor", "aldor/psi")
+parserTask(project, "Expression", "aldor/expression/psi")
 
 tasks.compileJava.dependsOn tasks.generateAldorParser
 tasks.compileJava.dependsOn tasks.generateExpressionParser
@@ -124,13 +116,12 @@ def parserTask(project, parserName, pkg) {
         def dstRoot = "$project.projectDir/src/gen/grammar"
         def src = "$project.projectDir/src/main/grammar/${parserName}.bnf"
 	def dst = "$dstRoot/$pkg"
-	main = 'org.intellij.grammar.Main'
         classpath(configurations.compile + files('lib/GrammarKit/lib/grammar-kit.jar'))
 
         args = [dstRoot, file(src)]
-
-        inputs.file file(src)
-        outputs.dir fileTree(dir: dst, include: '**/*.java')
+        main = 'org.intellij.grammar.Main'
+        inputs.file src
+        outputs.dirs fileTree(dst).include('**/*.java')
     }
 }
 

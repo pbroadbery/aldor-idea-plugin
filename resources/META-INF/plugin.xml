@@ -28,7 +28,7 @@
         <projectService serviceInterface="aldor.build.AldorCompilationService"
                         serviceImplementation="aldor.build.AldorCompilationServiceImpl"/>
 
-        <compileServer.plugin classpath="aldor-jps-plugin.jar;guava-19.0.jar"/>
+        <compileServer.plugin classpath="aldor-jps-plugin.jar"/>
 
         <compiler.buildTargetScopeProvider implementation="aldor.build.builders.AldorBuildTargetScopeProvider" />
 

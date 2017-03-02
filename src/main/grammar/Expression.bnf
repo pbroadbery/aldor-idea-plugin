@@ -1,0 +1,164 @@
+{
+  parserUtilClass="aldor.expression.ExpressionParserUtil"
+
+  parserClass="aldor.expression.ExpressionParser"
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  elementTypeHolderClass="aldor.expression.ExpressionTypes"
+  elementTypeFactory="aldor.expression.ExpressionTypeFactory.createElement"
+
+  tokenTypeClass="aldor.lexer.AldorTokenType"
+  tokenTypeFactory = "aldor.lexer.AldorTokenTypes.createTokenType"
+
+  psiClassPrefix="Expression"
+  psiImplClassSuffix="Impl"
+  psiPackage="aldor.expression.psi"
+  psiImplPackage="aldor.expression.psi.impl"
+
+  tokens = [
+          TK_Id TK_Blank TK_Int TK_Float TK_String TK_PreDoc TK_PostDoc
+          TK_Comment TK_SysCmd TK_Error
+
+          KW_Add KW_And KW_Always KW_Assert KW_Break KW_But KW_By
+          KW_Case KW_Catch KW_Default KW_Define KW_Delay KW_Do KW_Else
+          KW_Except KW_Export KW_Exquo KW_Extend KW_Finally KW_Fix
+          KW_Except KW_Export KW_Exquo KW_Extend KW_Finally KW_Fix
+          KW_For KW_Fluid KW_Free KW_From KW_Generate KW_Goto KW_Has
+          KW_If KW_Import KW_In KW_Inline KW_Is KW_Isnt KW_Iterate
+          KW_Let KW_Local KW_Macro KW_Mod KW_Never KW_Not KW_Of KW_Or
+          KW_Pretend KW_Quo KW_Reference KW_Rem KW_Repeat KW_Return
+          KW_Rule KW_Select KW_Then KW_Throw KW_To KW_Try KW_Where
+          KW_While KW_With KW_Yield
+
+          KW_Quote KW_Grave KW_Ampersand KW_Comma KW_Semicolon KW_Dollar
+          KW_Sharp KW_At
+
+          KW_Assign KW_Colon KW_ColonStar KW_2Colon
+
+          KW_Star KW_2Star
+
+          KW_Dot KW_2Dot
+
+          KW_EQ KW_2EQ KW_MArrow KW_Implies
+
+          KW_GT KW_2GT KW_GE
+
+          KW_LT KW_2LT KW_LE KW_LArrow
+
+          KW_Hat KW_HatE
+
+          KW_Tilde KW_TildeE
+
+          KW_Plus KW_PlusMinus KW_MapsTo KW_MapsToStar
+
+          KW_Minus KW_RArrow KW_MapStar
+
+          KW_Slash KW_Wedge
+
+          KW_Backslash KW_Vee
+
+          KW_OBrack KW_OBBrack KW_OCurly KW_OBCurly KW_OParen KW_OBParen
+
+          KW_CBrack KW_CCurly KW_CParen
+
+          KW_Bar KW_CBBrack KW_CBCurly KW_CBParen KW_2Bar
+
+          KW_NewLine KW_StartPile KW_EndPile KW_BlkStart KW_BlkNext KW_BlkEnd KW_Juxtapose KW_SysCmd
+
+          TK_LIMIT
+   ]
+  extends(".*Expr")=Expr
+  extends(".*Molecule")=Molecule
+
+  stubClass("DefineStmt")='aldor.expression.ExpressionDefineStub'
+  implements("DefineStmt")='aldor.expression.psi.ExpressionDefine'
+
+}
+
+Goal ::= StatementSequence
+
+StatementSequence ::= StatementItem*
+StatementItem ::= Statement (KW_Semicolon | <<eof>>)
+
+Statement ::= Expr DefineStmt?
+
+left DefineStmt ::= KW_2EQ Expr {pin=1}
+
+Expr ::=
+         Or_200_Group |
+         And_250_Group |
+         Not_260_Group |
+         Rel_400_Group |
+         Add_700_Group |
+         Mult_800_Group |
+         Exp_901_Group |
+         Misc_995_Group |
+         Decl_996_Group |
+         Misc_999_Group |
+         LeftArrow_1001_Expr |
+         RightArrow_1002_Expr |
+         //ApplyExpr |
+         //DotExpr |
+         PrimaryExpr
+
+//DotExpr ::= Expr KW_Dot Expr
+//ApplyExpr ::= Application
+PrimaryExpr ::= MoleculeList
+LeftArrow_1001_Expr ::= Expr KW_LArrow Expr
+RightArrow_1002_Expr ::= Expr KW_RArrow Expr
+
+private Misc_999_Group ::= SharpExpr | QuoteExpr
+private Decl_996_Group ::= ColonExpr | DoubleColonExpr | RestrictExpr
+private Misc_995_Group ::= PretendExpr | MapsToExpr
+private Exp_901_Group ::= ExpExpr | DoubleStarExpr
+private Mult_800_Group ::= TimesExpr | DivideExpr | RemExpr | QuoExpr | ExquoExpr
+private Add_700_Group ::= AddExpr | MinusExpr | NegateExpr
+private Rel_400_Group ::= RelExpr | SegExpr
+private Not_260_Group ::= NotExpr | TildeExpr
+private And_250_Group ::= AndExpr | WedgeExpr
+private Or_200_Group ::= OrExpr | VeeExpr
+
+SharpExpr ::= KW_Sharp Expr
+QuoteExpr ::= KW_Quote Expr
+
+ColonExpr ::= Expr KW_Colon Expr
+DoubleColonExpr ::= Expr KW_2Colon Expr
+RestrictExpr ::= Expr KW_At Expr
+
+PretendExpr ::= Expr KW_Pretend Expr
+MapsToExpr ::= Expr KW_MapsTo Expr
+
+ExpExpr ::= Expr KW_Hat Expr
+DoubleStarExpr ::= Expr KW_2Star Expr
+
+TimesExpr ::= Expr KW_Star Expr
+DivideExpr ::= Expr KW_Slash Expr
+RemExpr ::= Expr KW_Rem Expr
+QuoExpr ::= Expr KW_Quo Expr
+ExquoExpr ::= Expr KW_Exquo Expr
+
+AddExpr ::= Expr KW_Plus Expr
+MinusExpr ::= Expr KW_Minus Expr
+NegateExpr ::= KW_Minus Expr
+
+RelExpr ::= Expr (KW_LT  | KW_GT | KW_2LT | KW_2GT | KW_LE | KW_GE | KW_EQ |
+                  KW_HatE | KW_TildeE | KW_In | KW_Case | KW_Add | KW_Has | KW_Is | KW_Isnt)
+                  Expr
+SegExpr ::= Expr KW_2Dot Expr?
+
+NotExpr ::= KW_Not Expr
+TildeExpr ::= KW_Tilde Expr
+AndExpr ::= Expr KW_And Expr
+WedgeExpr ::= Expr KW_Wedge Expr
+OrExpr ::= Expr KW_Or Expr
+VeeExpr ::= Expr KW_Vee Expr
+
+MoleculeList ::= Molecule+
+Molecule ::=
+             DotMolecule |
+             RefMolecule |
+             ParenMolecule
+
+DotMolecule ::= Molecule KW_Dot Molecule
+RefMolecule ::= TK_Id
+ParenMolecule ::= KW_OParen Expr KW_CParen
