@@ -2,5 +2,7 @@ language: java
 jdk:
   - oraclejdk8
 
-before_install:
+before_script:
+  - touch nada.gradle
+  - gradle -b nada.gradle wrapper --gradle-version=3.4
   - gradle wrapper --gradle-version=3.4
