@@ -3,6 +3,12 @@ jdk:
   - oraclejdk8
 
 before_install:
-  - touch nada.gradle
-  - gradle -b nada.gradle wrapper --gradle-version=3.4
-  - gradle wrapper --gradle-version=3.4
+  - echo "task wrapper (type" ":Wrapper) {gradleVersion='3.4'}" > nada.gradle
+  - cat nada.gradle
+  - gradle -b nada.gradle wrapper
+  - ./gradlew --version
+  
+script:
+  - ./gradlew --version
+  - ./gradlew tasks
+  
