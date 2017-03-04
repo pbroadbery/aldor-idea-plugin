@@ -34,8 +34,13 @@ public class AldorFileBuildTargetType extends BuildTargetType<AldorFileBuildTarg
     @NotNull
     @Override
     public List<AldorFileBuildTarget> computeAllTargets(@NotNull final JpsModel model) {
-        JpsModule module = model.getProject().getModules().get(0);
 
+        return model.getProject().getModules().stream()
+                .flatMap(this::moduleBuildTargets).collect(Collectors.toList());
+    }
+
+    @NotNull
+    private Stream<AldorFileBuildTarget> moduleBuildTargets(JpsModule module) {
         List<String> urls = module.getContentRootsList().getUrls();
 
         LOG.info("URLs: " + urls);
@@ -43,11 +48,7 @@ public class AldorFileBuildTargetType extends BuildTargetType<AldorFileBuildTarg
 
         Stream<File> files = paths.flatMap(path -> findFilesByMask(SOURCE_FILES, path).stream());
 
-        Stream<AldorFileBuildTarget> targets = files.map(file -> new AldorFileBuildTarget(this, module, file));
-        List<AldorFileBuildTarget> targetList = targets.collect(Collectors.toList());
-
-        LOG.info("Created " + targetList.size() + " targets");
-        return targetList;
+        return files.map(file -> new AldorFileBuildTarget(this, module, file));
     }
 
     @NotNull

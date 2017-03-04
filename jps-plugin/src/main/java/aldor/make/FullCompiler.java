@@ -4,7 +4,6 @@ import aldor.builder.files.AldorFileBuildTarget;
 import aldor.builder.files.AldorFileBuildTargetType;
 import aldor.builder.files.AldorFileRootDescriptor;
 import aldor.builder.files.AldorFileTargetBuilder;
-import com.google.common.base.Charsets;
 import com.intellij.openapi.diagnostic.Logger;
 import org.jetbrains.jps.builders.BuildOutputConsumer;
 import org.jetbrains.jps.builders.DirtyFilesHolder;
@@ -20,6 +19,8 @@ import java.io.Reader;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+
+import static com.intellij.util.io.IOUtil.US_ASCII;
 
 /**
  * Simple compiler for aldor - just call make.
@@ -84,7 +85,7 @@ public class FullCompiler implements AldorFileTargetBuilder.Compiler {
     }
 
     private void watchStdError(String target, Process process) {
-        Reader reader = new InputStreamReader(process.getErrorStream(), Charsets.US_ASCII);
+        Reader reader = new InputStreamReader(process.getErrorStream(), US_ASCII);
         try (BufferedReader lineReader = new BufferedReader(reader)) {
             String line;
             while ((line = lineReader.readLine()) != null) {
@@ -98,7 +99,7 @@ public class FullCompiler implements AldorFileTargetBuilder.Compiler {
 
     private void watchStdOut(String target, File baseDirectory, Process process) {
         CompileOutputParser errorParser = new CompileOutputParser(ALDOR_COMPILER, baseDirectory, context::processMessage);
-        Reader reader = new InputStreamReader(process.getInputStream(), Charsets.US_ASCII);
+        Reader reader = new InputStreamReader(process.getInputStream(), US_ASCII);
         try (BufferedReader lineReader = new BufferedReader(reader)) {
             String line;
             while ((line = lineReader.readLine()) != null) {

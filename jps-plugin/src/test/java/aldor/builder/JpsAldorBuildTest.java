@@ -3,14 +3,16 @@ package aldor.builder;
 import aldor.builder.test.AldorJpsTestCase;
 import aldor.builder.test.BuildResult;
 import aldor.builder.test.CompileScopeTestBuilder;
-import com.google.common.io.Files;
 import com.intellij.openapi.diagnostic.Logger;
 import org.jetbrains.jps.incremental.messages.BuildMessage;
 import org.jetbrains.jps.model.module.JpsModule;
 import org.junit.Assert;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 public class JpsAldorBuildTest extends AldorJpsTestCase {
     private static final Logger LOG = Logger.getInstance(JpsAldorBuildTest.class);
@@ -33,18 +35,25 @@ public class JpsAldorBuildTest extends AldorJpsTestCase {
         Assert.assertTrue(fileForProjectPath("aldor-codebase/foo.as").exists());
         Assert.assertTrue(fileForProjectPath("aldor-codebase/build/Makefile").exists());
 
-        Assert.assertTrue(Files.toString(fileForProjectPath("aldor-codebase/build/bar.abn"),
+        Assert.assertTrue(toString(fileForProjectPath("aldor-codebase/build/bar.abn"),
                                                 StandardCharsets.US_ASCII).contains("X: with"));
 
         change("aldor-codebase/bar.as", "Y: with == add");
 
         result = doBuild(CompileScopeTestBuilder.make().all()).assertSuccessful();
         LOG.info("Mappings: " + result.getMappingsDump());
-        Assert.assertTrue(Files.toString(fileForProjectPath("aldor-codebase/bar.as"),
+        Assert.assertTrue(toString(fileForProjectPath("aldor-codebase/bar.as"),
                                             StandardCharsets.US_ASCII).contains("Y: with"));
 
-        Assert.assertTrue(Files.toString(fileForProjectPath("aldor-codebase/build/bar.abn"),
+        Assert.assertTrue(toString(fileForProjectPath("aldor-codebase/build/bar.abn"),
                                             StandardCharsets.US_ASCII).contains("Y: with"));
+    }
+
+    static String toString(File file, Charset encoding)
+            throws IOException
+    {
+        byte[] encoded = Files.readAllBytes(file.toPath());
+        return new String(encoded, encoding);
     }
 
     public void testErrors() throws IOException {

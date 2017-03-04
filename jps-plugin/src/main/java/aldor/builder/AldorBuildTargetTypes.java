@@ -2,7 +2,6 @@ package aldor.builder;
 
 import aldor.builder.files.AldorFileBuildTargetType;
 import aldor.builder.files.AldorFileTargetBuilder;
-import com.google.common.collect.Lists;
 import com.intellij.openapi.diagnostic.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -13,6 +12,7 @@ import org.jetbrains.jps.incremental.TargetBuilder;
 import org.jetbrains.jps.model.JpsModel;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +53,7 @@ public class AldorBuildTargetTypes {
 
 
     public List<BuildTargetType<? extends BuildTarget<?>>> targetTypes() {
-        return Lists.newArrayList(fileBuildTargetType);
+        return Collections.singletonList(fileBuildTargetType);
     }
 
     public List<? extends TargetBuilder<?, ?>> createBuilders() {

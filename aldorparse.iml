@@ -11,6 +11,8 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/gen" isTestSource="false" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/grammar" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/jflex" isTestSource="false" />
     </content>
     <orderEntry type="jdk" jdkName="IntelliJ IDEA Community Edition IC-163.7743.44 - aldor" jdkType="IDEA JDK" />
     <orderEntry type="sourceFolder" forTests="false" />

@@ -1,7 +1,6 @@
 package aldor.make;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
+import one.util.streamex.Joining;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.jps.incremental.messages.BuildMessage;
@@ -46,7 +45,7 @@ public class CompileOutputParser {
         this.listener = listener;
         this.baseDirectory = baseDirectory;
         this.file = null;
-        this.messageBody = Lists.newArrayList();
+        this.messageBody = new ArrayList<>();
     }
 
     void newMessage(String text) {
@@ -129,7 +128,7 @@ public class CompileOutputParser {
     @Nullable
     CompilerMessage addErrorMessage(String text) {
         CompilerMessage message = errorMessageForText(messageBody);
-        messageBody = Lists.newArrayList();
+        messageBody = new ArrayList<>();
         messageBody.add(text);
         return message;
     }
@@ -169,7 +168,7 @@ public class CompileOutputParser {
     }
 
     private String truncate(int maxLines, List<String> lines) {
-        String text = Joiner.on("\n").join(lines.subList(0, Math.min(maxLines, lines.size())));
+        String text = lines.subList(0, Math.min(maxLines, lines.size())).stream().collect(Joining.with("\n"));
         if (lines.size() > maxLines) {
             text = text + "\n...";
         }

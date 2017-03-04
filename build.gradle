@@ -89,7 +89,7 @@ task unzipGrammar(type: Copy) {
 task generateLexer (type: JavaExec) {
         def dstRoot = "$project.projectDir/src/gen/jflex"
 	def pkg = 'aldor/lexer'
-        def src = "$project.projectDir/src/main/jflex/${pkg}/aldor.jflex"
+        def src = "$project.projectDir/src/main/jflex/${pkg}/aldor.flex"
         def dst = "src/gen/jflex/" + pkg
 
 	doFirst {

@@ -1,6 +1,5 @@
 package aldor.make;
 
-import com.google.common.collect.Lists;
 import org.jetbrains.jps.incremental.messages.BuildMessage;
 import org.jetbrains.jps.incremental.messages.CompilerMessage;
 import org.junit.Ignore;
@@ -9,6 +8,7 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -19,7 +19,7 @@ public class CompileOutputParserTest {
     @Test
     @Ignore("just here to test output")
     public void testParser() throws IOException {
-        List<CompilerMessage> messages = Lists.newArrayList();
+        List<CompilerMessage> messages = new ArrayList<>();
         CompileOutputParser.Listener listener = messages::add;
         CompileOutputParser parser = new CompileOutputParser("someCompiler", new File("."), listener);
 
@@ -37,7 +37,7 @@ public class CompileOutputParserTest {
 
     @Test
     public void testErrorMessasges() {
-        List<CompilerMessage> messages = Lists.newArrayList();
+        List<CompilerMessage> messages = new ArrayList<>();
         CompileOutputParser.Listener listener = messages::add;
         CompileOutputParser parser = new CompileOutputParser("someCompiler", new File("."), listener);
 
