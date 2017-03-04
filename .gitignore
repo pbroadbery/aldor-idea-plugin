@@ -7,4 +7,8 @@
 /.gradle
 /.sandbox
 /build
+/download
 /gradle
+/nada.gradle
+/gradlew
+/gradlew.bat

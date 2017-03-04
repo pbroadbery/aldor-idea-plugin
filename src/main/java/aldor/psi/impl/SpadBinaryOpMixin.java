@@ -1,6 +1,6 @@
 package aldor.psi.impl;
 
-import aldor.impl.AldorExprImpl;
+import aldor.psi.impl.AldorExprImpl;
 import aldor.psi.AldorExpr;
 import aldor.psi.SpadBinaryOp;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
