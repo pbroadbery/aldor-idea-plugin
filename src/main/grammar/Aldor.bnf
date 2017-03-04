@@ -13,7 +13,7 @@
   psiClassPrefix="Aldor"
   psiImplClassSuffix="Impl"
   psiPackage="aldor.psi"
-  psiImplPackage="aldor.impl"
+  psiImplPackage="aldor.psi.impl"
 
   name("E[0-9].*")='InfixedExpression'
   extends("E[0-9].*")=InfixedExpression

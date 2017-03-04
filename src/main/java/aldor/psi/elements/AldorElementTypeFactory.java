@@ -1,10 +1,10 @@
 package aldor.psi.elements;
 
-import aldor.impl.AldorColonExprImpl;
-import aldor.impl.AldorDeclPartImpl;
-import aldor.impl.AldorUnaryAddImpl;
-import aldor.impl.AldorUnaryWithImpl;
-import aldor.impl.AldorWhereBlockImpl;
+import aldor.psi.impl.AldorColonExprImpl;
+import aldor.psi.impl.AldorDeclPartImpl;
+import aldor.psi.impl.AldorUnaryAddImpl;
+import aldor.psi.impl.AldorUnaryWithImpl;
+import aldor.psi.impl.AldorWhereBlockImpl;
 import aldor.language.AldorLanguage;
 import aldor.language.SpadLanguage;
 import aldor.psi.AldorUnaryAdd;

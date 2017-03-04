@@ -51,12 +51,14 @@ task downloadGrammarKit(type: Download) {
     src 'https://github.com/JetBrains/Grammar-Kit/releases/download/1.5.1/GrammarKit.zip'
     dest 'download/GrammarKit.zip'
     overwrite false
+    outputs.file file(dest)
 }
 
 task downloadJFlexSkel(type: Download) {
     src 'https://raw.githubusercontent.com/JetBrains/intellij-community/master/tools/lexer/idea-flex.skeleton'
     dest 'lib/jflex/idea-flex.skeleton'
     overwrite false
+    outputs.file 'lib/jflex/idea-flex.skeleton'
 }
 
 task downloadJFlex(type: Download) {
@@ -73,12 +75,15 @@ task cleanLexer {
 
 tasks.clean.dependsOn tasks.cleanLexer
 
-task unzipGrammar(dependsOn: 'downloadGrammarKit', type: Copy) {
+task unzipGrammar(type: Copy) {
     def zipFile = file('download/GrammarKit.zip')
     def outputDir = 'lib'
 
     from zipTree(zipFile)
     into outputDir
+
+    inputs.files tasks.downloadGrammarKit.outputs.files
+    outputs.file file('lib/GrammarKit/lib/grammar-kit.jar')
 }
 
 task generateLexer (type: JavaExec) {
@@ -96,7 +101,7 @@ task generateLexer (type: JavaExec) {
 
         args = ['--skel', 'lib/jflex/idea-flex.skeleton', '-d', "${dstRoot}/${pkg}" , file(src)]
 
-        inputs.file file(src)
+        inputs.files files(['lib/jflex/jflex-1.7.0-SNAPSHOT.jar', 'lib/jflex/idea-flex.skeleton', src])
         outputs.dirs fileTree("${dst}").include('**/*.java')
 }
 
@@ -104,15 +109,14 @@ tasks.generateLexer.dependsOn tasks.downloadJFlex
 tasks.generateLexer.dependsOn tasks.downloadJFlexSkel
 
 parserTask(project, "Aldor", "aldor/psi")
-parserTask(project, "Expression", "aldor/expression/psi")
+parserTask(project, "Expression", "aldor/expression")
 
 tasks.compileJava.dependsOn tasks.generateAldorParser
 tasks.compileJava.dependsOn tasks.generateExpressionParser
 tasks.compileJava.dependsOn tasks.generateLexer
 
-
 def parserTask(project, parserName, pkg) {
-    return tasks.create("generate${parserName}Parser", JavaExec) {
+    def tt = tasks.create("generate${parserName}Parser", JavaExec) {
         def dstRoot = "$project.projectDir/src/gen/grammar"
         def src = "$project.projectDir/src/main/grammar/${parserName}.bnf"
 	def dst = "$dstRoot/$pkg"
@@ -123,15 +127,20 @@ def parserTask(project, parserName, pkg) {
         inputs.file src
         outputs.dirs fileTree(dst).include('**/*.java')
     }
+    def cleaner = tasks.create("clean${parserName}Parser") {
+        outputs.upToDateWhen { false }
+        doLast {
+            for (f in tt.outputs.getFiles()) { delete f }
+	}
+    }
+    tt.dependsOn tasks.unzipGrammar
+    tasks.clean.dependsOn cleaner
+    return tt
 }
 
-tasks.clean.dependsOn task {
-    outputs.upToDateWhen { false }
-    inputs.file tasks.parserTask.outputs.files
-    doLast {
-        for (f in tasks.parserTask.outputs.files) { print f.name}
-        for (f in tasks.parserTask.outputs.files) { delete f}
+test {
+    testLogging {
+        events "failed"
+        exceptionFormat "short"
     }
 }
-
-

@@ -7,8 +7,8 @@ before_install:
   - cat nada.gradle
   - gradle -b nada.gradle wrapper
   - ./gradlew --version
+  - ./gradlew tasks
   
 script:
-  - ./gradlew --version
-  - ./gradlew tasks
+  - ./gradlew check
   
