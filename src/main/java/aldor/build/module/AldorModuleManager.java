@@ -63,7 +63,7 @@ public final class AldorModuleManager {
 
 
     @NotNull
-    public AnnotatedOptional<AnnotationFileManager, String> annotationFileManagerForFile(@NotNull Project project, @NotNull VirtualFile virtualFile) {
+    public AnnotatedOptional<AnnotationFileManager, String> annotationFileManagerForFile(@NotNull VirtualFile virtualFile) {
         Optional<Module> moduleMaybe = aldorModuleForFile(virtualFile);
         if (!moduleMaybe.isPresent()) {
             return missing("No module for file " + virtualFile.getName());

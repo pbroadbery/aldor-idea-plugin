@@ -53,6 +53,7 @@ public class EmptyStubElementType<T extends PsiElement> extends IStubElementType
     @NotNull
     @Override
     public String getExternalId() {
+        //noinspection StringConcatenationMissingWhitespace
         return getLanguage().getID() + toString();
     }
 

@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class AldorStubUtils {
+public final class AldorStubUtils {
 
     static Optional<AldorDefineStub> definingForm(StubElement<?> stub) {
         return null;

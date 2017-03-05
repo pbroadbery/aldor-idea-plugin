@@ -28,10 +28,10 @@ public final class SyntaxPrinter {
         syntax.accept(new SyntaxPrintVisitor(pw));
     }
 
-    public String toString(Syntax exporter) {
+    public String toString(Syntax syntax) {
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
-        print(pw, exporter);
+        print(pw, syntax);
         return sw.toString();
     }
 

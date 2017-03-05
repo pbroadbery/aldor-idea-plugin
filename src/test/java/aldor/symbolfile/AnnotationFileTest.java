@@ -1,11 +1,11 @@
 package aldor.symbolfile;
 
 import aldor.build.module.AnnotationFileManager;
-import aldor.parser.LightPlatformJUnit4TestRule;
 import aldor.psi.AldorIdentifier;
 import aldor.syntax.SyntaxPrinter;
 import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.JUnits;
+import aldor.test_util.LightPlatformJUnit4TestRule;
 import aldor.util.AnnotatedOptional;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;

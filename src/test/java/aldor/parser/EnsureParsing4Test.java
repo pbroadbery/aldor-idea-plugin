@@ -1,6 +1,7 @@
 package aldor.parser;
 
 import aldor.psi.elements.AldorTypes;
+import aldor.test_util.LightPlatformJUnit4TestRule;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import com.intellij.openapi.project.Project;

@@ -82,4 +82,9 @@ public final class AnnotatedOptional<T, X> {
         throw errorSupplier.apply(failInfo());
     }
 
+    @Override
+    public String toString() {
+        return "{" + (this.value == null ? "FAIL: " + failInfo : "OK: " + value) + "}";
+    }
+
 }

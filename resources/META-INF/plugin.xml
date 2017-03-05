@@ -60,7 +60,7 @@
 
         <!-- Aldor extras -->
         <lang.refactoringSupport language="Aldor" implementationClass="aldor.references.AldorRefactoringSupportProvider"/>
-        <documentationProvider implementation="aldor.editor.AldorDocumentationProvider"/>
+        <documentationProvider implementation="aldor.editor.documentation.AldorDocumentationProvider"/>
         <fileTypeFactory implementation="aldor.file.AldorFileTypeFactory"/>
         <lang.parserDefinition language="Aldor" implementationClass="aldor.parser.AldorParserDefinition"/>
 

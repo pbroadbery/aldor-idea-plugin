@@ -16,6 +16,7 @@ public class AldorDefineElementType extends StubCodecElementType<AldorDefineStub
     private final AldorDefine.DefinitionType type;
 
     public AldorDefineElementType(AldorDefine.DefinitionType type, PsiStubCodec<AldorDefineStub, AldorDefine, AldorDefineElementType> defineCodec) {
+        //noinspection StringConcatenationMissingWhitespace
         super("Define" + type, AldorLanguage.INSTANCE, defineCodec);
         this.type = type;
     }

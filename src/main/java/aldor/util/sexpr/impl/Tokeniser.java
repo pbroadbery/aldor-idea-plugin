@@ -13,6 +13,7 @@ import java.util.Set;
 
 class Tokeniser implements ITokeniser {
     private final Stream<Character> stream;
+
     @Nullable
     private Token token;
     private final boolean allCapsSymbols;

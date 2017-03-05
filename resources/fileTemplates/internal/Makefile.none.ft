@@ -12,11 +12,11 @@ ALDOR = aldor
 ALDOR_FILES = {INITIAL_ALDOR_FILE}
 
 $(addsuffix .ao, $(ALDOR_FILES)): %.ao: %.as
-    @$(ALDOR) -Fao=$@ $<
+	@$(ALDOR) -Fao=$@ $<
 
 
 $(addsuffix .abn, $(ALDOR_FILES)): %.abn: %.as
-    @$(ALDOR) -Fao=$@ $<
+	@$(ALDOR) -Fabn=$@ $<
 
 .PHONY: $(addsuffix .run, $(ALDOR_FILES))
 $(addsuffix .run, $(ALDOR_FILES)): %.run: %.as

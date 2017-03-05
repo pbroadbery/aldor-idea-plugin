@@ -44,6 +44,8 @@
   mixin("Comma")="aldor.psi.impl.AldorCommaMixin"
   mixin("Declaration")="aldor.psi.impl.AldorDeclarationMixin"
 
+  // We need to do some gymnastics for Spad expression stubs.
+  // First, all Expressions inherit PsiElementBase, then stubbed expressions use StubbedElementBase.
   extends("Expr")="com.intellij.extapi.psi.PsiElementBase"
   mixin("Expr")="com.intellij.extapi.psi.ASTWrapperPsiElement"
   extends(".*Expr")=Expr
@@ -152,7 +154,6 @@
 
 Goal ::= <<isAldorMode>> TopLevel | <<isSpadMode>> SpadTopLevel
 
-private DeclareStubExpr ::= Expr
 //Goal ::= TopLevel
 //Expression ::= enlist1a(Labelled, KW_SEMICOLON)
 Expression ::= enlist1a_Labelled_SEMICOLON

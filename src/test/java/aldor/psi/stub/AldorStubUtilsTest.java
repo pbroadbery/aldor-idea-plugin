@@ -1,9 +1,9 @@
 package aldor.psi.stub;
 
-import aldor.parser.LightPlatformJUnit4TestRule;
 import aldor.parser.SwingThreadTestRule;
 import aldor.psi.AldorDeclare;
 import aldor.psi.elements.AldorElementTypeFactory;
+import aldor.test_util.LightPlatformJUnit4TestRule;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
@@ -37,7 +37,7 @@ public class AldorStubUtilsTest {
         PsiFile psiFile = PsiManager.getInstance(project).findFile(file);
         Assert.assertNotNull(psiFile);
 
-        StubElement stubTree = AldorElementTypeFactory.ALDOR_FILE_ELEMENT_TYPE.getBuilder().buildStubTree(psiFile);
+        StubElement<?> stubTree = AldorElementTypeFactory.ALDOR_FILE_ELEMENT_TYPE.getBuilder().buildStubTree(psiFile);
 
         AldorDeclare decl = PsiTreeUtil.findElementOfClassAtOffset(psiFile, text.indexOf("x:"), AldorDeclare.class, true);
         Assert.assertNotNull(decl);

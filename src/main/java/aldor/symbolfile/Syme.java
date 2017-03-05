@@ -49,7 +49,7 @@ public class Syme {
         return ofNullable(sx.asAssociationList().get(SymbolFileSymbols.Lib)).map(SExpression::string).orElse(null);
     }
 
-
+    @NotNull
     public Syntax exporter() {
         return ofNullable(sx.asAssociationList().get(SymbolFileSymbols.Exporter)).map(this::getSyntax).orElse(new Other(null));
     }

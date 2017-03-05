@@ -1,7 +1,6 @@
 package aldor.builder.files;
 
 import aldor.builder.AldorTargetIds;
-import com.intellij.openapi.util.text.StringUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

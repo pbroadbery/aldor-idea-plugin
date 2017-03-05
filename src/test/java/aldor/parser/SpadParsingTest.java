@@ -5,6 +5,7 @@ import aldor.lexer.AldorTokenTypes;
 import aldor.lexer.LexerFunctions;
 import aldor.parser.ParserFunctions.FailReason;
 import aldor.psi.elements.AldorTypes;
+import aldor.test_util.LightPlatformJUnit4TestRule;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import com.intellij.openapi.project.Project;

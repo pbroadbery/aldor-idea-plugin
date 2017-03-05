@@ -1,7 +1,7 @@
 package aldor.psi.index;
 
-import aldor.parser.LightPlatformJUnit4TestRule;
 import aldor.parser.SwingThreadTestRule;
+import aldor.test_util.LightPlatformJUnit4TestRule;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.stubs.StubUpdatingIndex;

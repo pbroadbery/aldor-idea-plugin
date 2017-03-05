@@ -1,6 +1,5 @@
-package aldor.parser;
+package aldor.test_util;
 
-import aldor.test_util.JUnits;
 import com.intellij.openapi.project.Project;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.PlatformTestUtil;

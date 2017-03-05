@@ -1,15 +1,14 @@
 package aldor.psi.impl;
 
-import aldor.psi.impl.AldorExprImpl;
 import aldor.psi.AldorExpr;
 import aldor.psi.SpadBinaryOp;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 
 import java.util.List;
 
-public abstract class SpadBinaryOpMixin extends AldorExprImpl implements AldorExpr, SpadBinaryOp {
+public abstract class SpadBinaryOpMixin extends AldorExprImpl implements SpadBinaryOp {
+    @SuppressWarnings("ConstructorNotProtectedInAbstractClass")
     public SpadBinaryOpMixin(ASTNode node) {
         super(node);
     }

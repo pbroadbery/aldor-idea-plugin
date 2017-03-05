@@ -1,9 +1,9 @@
 package aldor.syntax;
 
-import aldor.parser.LightPlatformJUnit4TestRule;
 import aldor.parser.ParserFunctions;
 import aldor.parser.SwingThreadTestRule;
 import aldor.psi.elements.AldorTypes;
+import aldor.test_util.LightPlatformJUnit4TestRule;
 import aldor.util.StubCodec;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;

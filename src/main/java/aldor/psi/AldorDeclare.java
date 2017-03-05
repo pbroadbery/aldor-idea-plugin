@@ -1,7 +1,6 @@
 package aldor.psi;
 
 import aldor.psi.stub.AldorDeclareStub;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.StubBasedPsiElement;
 
 public interface AldorDeclare extends StubBasedPsiElement<AldorDeclareStub> {
