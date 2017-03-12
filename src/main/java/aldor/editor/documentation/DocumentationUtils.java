@@ -39,6 +39,13 @@ public class DocumentationUtils {
     }
 
     @Nullable
+    public String aldorDocStringFromContainingElement(PsiElement element) {
+        AldorDocumented documented = (AldorDocumented) PsiTreeUtil.findFirstParent(element, elt -> elt instanceof AldorDocumented);
+
+        return docString(documented);
+    }
+
+    @Nullable
     public AldorDefine findTopLevelDefine(PsiElement element) {
         // Maybe this should use references
         Project project = element.getProject();
