@@ -1,6 +1,11 @@
 package aldor.editor;
 
 import aldor.build.module.AldorModuleType;
+import aldor.parser.SwingThreadTestRule;
+import aldor.symbolfile.AnnotationFileTestFixture;
+import aldor.test_util.LightPlatformJUnit4TestRule;
+import aldor.test_util.SkipCI;
+import aldor.test_util.SkipOnCIBuildRule;
 import aldor.util.VirtualFileTests;
 import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.navigation.NavigationItem;
@@ -11,10 +16,14 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.stubs.StubUpdatingIndex;
 import com.intellij.testFramework.LightProjectDescriptor;
-import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
+import com.intellij.testFramework.fixtures.CodeInsightTestFixture;
 import com.intellij.util.indexing.FileBasedIndex;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.RuleChain;
+import org.junit.rules.TestRule;
 
 import java.io.IOException;
 
@@ -22,11 +31,23 @@ import static aldor.psi.AldorPsiUtils.logPsi;
 import static aldor.util.VirtualFileTests.createFile;
 import static com.intellij.testFramework.LightPlatformTestCase.getSourceRoot;
 
-public class AldorGotoSymbolContributorTest extends LightPlatformCodeInsightFixtureTestCase {
+public final class AldorGotoSymbolContributorTest {
+    private final CodeInsightTestFixture testFixture = LightPlatformJUnit4TestRule.createFixture(this.getProjectDescriptor());
+    private final AnnotationFileTestFixture annotationTestFixture = new AnnotationFileTestFixture();
 
+    @Rule
+    public final TestRule platformTestRule =
+            RuleChain.emptyRuleChain()
+                    .around(new LightPlatformJUnit4TestRule(testFixture, ""))
+                    .around(annotationTestFixture.rule(testFixture::getProject))
+                    .around(new SwingThreadTestRule());
 
+    @Rule
+    public final TestRule rule = new SkipOnCIBuildRule();
+
+    @Test
     public void testGotoSymbol() throws IOException {
-        Project project = getProject();
+        Project project = testFixture.getProject();
         VirtualFile file = createFile(getSourceRoot(), "foo.as", "Something: with == add { aNumber == " + System.currentTimeMillis() + "}");
 
         FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
@@ -45,9 +66,10 @@ public class AldorGotoSymbolContributorTest extends LightPlatformCodeInsightFixt
         VirtualFileTests.deleteFile(file);
     }
 
-
+    @SkipCI
+    @Test
     public void testGotoSymbolDelareCategory() {
-        Project project = getProject();
+        Project project = testFixture.getProject();
         VirtualFile file = createFile(getSourceRoot(), "foo.as", String.format("Something: Category == with { foo: String_%s }", System.currentTimeMillis()));
 
         FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
@@ -61,8 +83,10 @@ public class AldorGotoSymbolContributorTest extends LightPlatformCodeInsightFixt
         Assert.assertTrue(items[0].canNavigate());
     }
 
+    @SkipCI
+    @Test
     public void testGotoSymbolDelareDomain() {
-        Project project = getProject();
+        Project project = testFixture.getProject();
         VirtualFile file = createFile(getSourceRoot(), "foo.as", String.format("Something: X_%s with { foo: %% }  == add {}", System.currentTimeMillis()));
 
         FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
@@ -77,9 +101,10 @@ public class AldorGotoSymbolContributorTest extends LightPlatformCodeInsightFixt
         Assert.assertTrue(items[0].canNavigate());
     }
 
-
+    @SkipCI
+    @Test
     public void testGotoSymbolDelareMacroDomain() {
-        Project project = getProject();
+        Project project = testFixture.getProject();
         VirtualFile file = createFile(getSourceRoot(), "foo.as", String.format("Something: E == I where E ==> X_%s with { foo: %% } I ==> add", System.currentTimeMillis()));
 
         FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
@@ -95,9 +120,6 @@ public class AldorGotoSymbolContributorTest extends LightPlatformCodeInsightFixt
         Assert.assertTrue(items[0].canNavigate());
     }
 
-
-
-    @Override
     protected LightProjectDescriptor getProjectDescriptor() {
         //noinspection ReturnOfInnerClass
         return new LightProjectDescriptor() {

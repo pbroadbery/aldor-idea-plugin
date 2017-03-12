@@ -2,6 +2,8 @@ package aldor.parser;
 
 import aldor.psi.elements.AldorTypes;
 import aldor.test_util.LightPlatformJUnit4TestRule;
+import aldor.test_util.SkipCI;
+import aldor.test_util.SkipOnCIBuildRule;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import com.intellij.openapi.project.Project;
@@ -30,6 +32,8 @@ import static aldor.test_util.TestFiles.existingFile;
 
 public class EnsureParsing4Test {
     private final CodeInsightTestFixture testFixture = LightPlatformJUnit4TestRule.createFixture(null);
+    @Rule
+    public final TestRule rule = new SkipOnCIBuildRule();
 
     @Rule
     public final TestRule platformTestRule =
@@ -146,6 +150,7 @@ public class EnsureParsing4Test {
     }
 
     @Test
+    @SkipCI
     public void testAldorLibrary() {
         Assert.assertNotNull(getProject());
 
@@ -159,6 +164,7 @@ public class EnsureParsing4Test {
     }
 
     @Test
+    @SkipCI
     public void testAlgebraLibrary() {
         Assert.assertNotNull(getProject());
 

@@ -10,5 +10,5 @@ before_install:
   - ./gradlew tasks
   
 script:
-  - ./gradlew check
+  - ./gradlew check -Daldor.build.skip_ci=true
   

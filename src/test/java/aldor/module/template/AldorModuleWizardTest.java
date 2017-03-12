@@ -1,21 +1,13 @@
 package aldor.module.template;
 
-import com.intellij.ide.util.projectWizard.AbstractModuleBuilder;
-import com.intellij.ide.util.projectWizard.WizardContext;
-import com.intellij.openapi.CompositeDisposable;
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.platform.ProjectTemplate;
 import com.intellij.testFramework.PlatformTestCase;
-import org.junit.Assert;
+import org.junit.Ignore;
 
-import java.util.Arrays;
-import java.util.List;
-
+@Ignore("Need to revisit & turn into junit4")
 public class AldorModuleWizardTest extends PlatformTestCase {
 
+    /*
+    @SkipCI
     public void testCreateProject() {
         Disposable disposable = new CompositeDisposable() {};
         WizardContext context = new WizardContext(getProject(), disposable);
@@ -36,4 +28,5 @@ public class AldorModuleWizardTest extends PlatformTestCase {
         Assert.assertNotNull(mf);
         disposable.dispose();
     }
+    */
 }
