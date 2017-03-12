@@ -18,6 +18,7 @@
       <excludeFolder url="file://$MODULE_DIR$/.sandbox/system/log" />
       <excludeFolder url="file://$MODULE_DIR$/build" />
       <excludeFolder url="file://$MODULE_DIR$/build/reports" />
+      <excludeFolder url="file://$MODULE_DIR$/src/gen" />
     </content>
     <orderEntry type="jdk" jdkName="IntelliJ IDEA Community Edition IC-163.7743.44 - aldor" jdkType="IDEA JDK" />
     <orderEntry type="sourceFolder" forTests="false" />

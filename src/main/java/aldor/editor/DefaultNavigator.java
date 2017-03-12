@@ -1,6 +1,7 @@
 package aldor.editor;
 
 import aldor.parser.Navigator;
+import aldor.psi.AldorDeclare;
 import aldor.psi.AldorDefine;
 import aldor.psi.AldorIdentifier;
 import aldor.psi.SpadAbbrev;
@@ -21,5 +22,10 @@ public class DefaultNavigator implements Navigator {
     @Override
     public NavigationItem getNavigationItem(AldorDefine define) {
         return new AldorDefineNavigationItem(define);
+    }
+
+    @Override
+    public NavigationItem getNavigationItem(AldorDeclare declare) {
+        return new AldorDeclareNavigationItem(declare);
     }
 }

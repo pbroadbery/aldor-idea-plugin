@@ -2,10 +2,10 @@ package aldor.psi.stub.impl;
 
 import aldor.psi.AldorDeclare;
 import aldor.psi.stub.AldorDeclareStub;
-import aldor.psi.stub.AldorDefineStub;
 import aldor.syntax.Syntax;
-import aldor.syntax.components.Apply;
-import aldor.syntax.components.Id;
+import aldor.syntax.components.AbstractId;
+import aldor.syntax.components.DeclareNode;
+import aldor.syntax.components.analysis.DeclareFunctions;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubBase;
 import com.intellij.psi.stubs.StubElement;
@@ -13,44 +13,55 @@ import com.intellij.psi.stubs.StubElement;
 import java.util.Optional;
 
 public class AldorDeclareConcreteStub extends StubBase<AldorDeclare> implements AldorDeclareStub {
-    private final Syntax lhsSyntax;
+    private final Syntax syntax;
+    private final boolean isCategoryDeclaration;
 
-    public AldorDeclareConcreteStub(StubElement<?> parent, IStubElementType<?, ?> elementType, Syntax lhsSyntax) {
+    public AldorDeclareConcreteStub(StubElement<?> parent, IStubElementType<AldorDeclareStub, AldorDeclare> elementType,
+                                    Syntax syntax, @SuppressWarnings("MethodParameterNamingConvention") boolean isCategoryDeclaration) {
         super(parent, elementType);
-        this.lhsSyntax = lhsSyntax;
+        this.syntax = syntax;
+        this.isCategoryDeclaration = isCategoryDeclaration;
     }
 
-    @Override
-    public Optional<Syntax> declareId() {
-        Syntax syntax = lhsSyntax;
-        while (syntax.is(Apply.class)) {
-            syntax = syntax.as(Apply.class).operator();
-        }
-        if (syntax.is(Id.class)) {
-            return Optional.of(syntax.as(Id.class));
+    public Optional<AbstractId> declareId() {
+        if (syntax.is(DeclareNode.class)) {
+            return DeclareFunctions.declareId(syntax.as(DeclareNode.class).lhs());
         }
         return Optional.empty();
     }
 
     @Override
     public Optional<String> declareIdName() {
-        return declareId().filter(idSyntax -> idSyntax.is(Id.class))
-                .map(idSyntax -> idSyntax.as(Id.class))
-                .map(Id::symbol);
-    }
-
-    @Override
-    public Syntax lhsSyntax() {
-        return lhsSyntax;
+        return declareId().map(AbstractId::symbol);
     }
 
     @Override
     public boolean isDeclareOfId() {
-        return lhsSyntax.is(Id.class);
+        if (!syntax.is(DeclareNode.class)) {
+            return false;
+        }
+        return syntax.as(DeclareNode.class).lhs().is(AbstractId.class);
     }
 
     @Override
-    public Optional<AldorDefineStub> definingForm() {
-        return Optional.empty();
+    public boolean isCategoryDeclaration() {
+        return isCategoryDeclaration;
     }
+
+    @Override
+    public Syntax declareType() {
+        return syntax.as(DeclareNode.class).rhs();
+    }
+
+    @Override
+    @Deprecated
+    public Syntax rhsSyntax() {
+        return syntax.as(DeclareNode.class).rhs();
+    }
+
+    @Override
+    public Syntax syntax() {
+        return syntax;
+    }
+
 }

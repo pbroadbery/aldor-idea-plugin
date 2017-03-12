@@ -30,7 +30,12 @@ public abstract class AldorCommaMixin extends ASTWrapperPsiElement implements Al
         if (this.getCommaItemList().size() <= 1) {
             return true;
         }
+
+        // Not sure if diving through syntax to get to definitions is the right approach
         for (AldorCommaItem commaItem: getCommaItemList()) {
+            if (PsiTreeUtil.isAncestor(lastParent, commaItem, false)) {
+                continue;
+            }
             Syntax syntax = SyntaxPsiParser.parse(commaItem);
             if (syntax == null) {
                 continue;
@@ -40,7 +45,7 @@ public abstract class AldorCommaMixin extends ASTWrapperPsiElement implements Al
                 continue;
             }
 
-            if (!syntax.psiElement().processDeclarations(processor, state, this, place)) {
+            if (!syntax.psiElement().processDeclarations(processor, state, null, place)) {
                 return false;
             }
         }

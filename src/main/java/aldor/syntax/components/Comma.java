@@ -15,6 +15,10 @@ public class Comma extends SyntaxNode<AldorParened> {
         super(element, arguments);
     }
 
+    public Comma(List<Syntax> l) {
+        super(SyntaxRepresentation.createMissing(), l);
+    }
+
     @Override
     public String name() {
         return "Comma";

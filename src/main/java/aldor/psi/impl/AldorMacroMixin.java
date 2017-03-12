@@ -7,10 +7,13 @@ import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxPsiParser;
 import aldor.syntax.components.Apply;
 import aldor.syntax.components.Id;
+import aldor.syntax.components.SyntaxUtils;
 import com.intellij.extapi.psi.StubBasedPsiElementBase;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.ResolveState;
+import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.NotNull;
@@ -32,6 +35,25 @@ public class AldorMacroMixin extends StubBasedPsiElementBase<AldorDefineStub> im
         super(stub, nodeType, node);
     }
 
+    @Override
+    public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement place) {
+        PsiElement lhs = getFirstChild();
+
+        if (!processor.execute(this, state)) {
+            return false;
+        }
+
+        //noinspection ObjectEquality
+        if (lastParent == lhs) {
+            return true;
+        }
+        Optional<Syntax> syntaxMaybe = syntax();
+
+        Optional<Syntax> childScope = syntaxMaybe.flatMap(SyntaxUtils::childScopeForMacroLhs);
+        Optional<Boolean> ret = childScope.map(scope -> scope.psiElement().processDeclarations(processor, state, lastParent, place));
+
+        return ret.orElse(true);
+    }
 
     @Override
     public Optional<AldorIdentifier> defineIdentifier() {

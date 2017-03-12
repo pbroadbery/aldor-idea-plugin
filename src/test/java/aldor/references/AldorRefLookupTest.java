@@ -301,8 +301,41 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
                 .build();
         Collection<String> nulls = Collections.singletonList("x");
         assertReferences(text, nameRefToMap, nulls);
-
     }
+
+
+    public void testWhere2() {
+        String text = "foo: bar where { foo == 2; bar == 3}";
+
+        Map<String, String> nameRefToMap = ImmutableMap.<String, String>builder()
+                .put("foo: bar where", "foo ==")
+                .put("bar where", "bar ==")
+                .build();
+        Collection<String> nulls = Collections.singletonList("foo =");
+        assertReferences(text, nameRefToMap, nulls);
+    }
+
+    public void testWhere1() {
+        String text = "foo where foo == 2";
+
+        Map<String, String> nameRefToMap = ImmutableMap.<String, String>builder()
+                .put("foo where", "foo =")
+                .build();
+        Collection<String> nulls = Collections.singletonList("foo =");
+        assertReferences(text, nameRefToMap, nulls);
+    }
+
+    public void testWhereMacro2() {
+        String text = "Foo: E == I where { E ==> with; I ==> add }";
+
+        Map<String, String> nameRefToMap = ImmutableMap.<String, String>builder()
+                .put("E == ", "E ==> ")
+                .put("I where ", "I ==> ")
+                .build();
+        Collection<String> nulls = Arrays.asList("E ==>", "I ==>");
+        assertReferences(text, nameRefToMap, nulls);
+    }
+
 
     private void assertReferences(String text, Map<String, String> nameRefToMap, Iterable<String> nulls) {
         assertReferences(text, nameRefToMap, nulls, AldorLanguage.INSTANCE);
@@ -314,9 +347,9 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
         Map<String, PsiElement> refMap = Maps.newHashMap();
         for (Map.Entry<String, String> entry: nameRefToMap.entrySet()) {
             PsiReference ref = file.findReferenceAt(text.indexOf(entry.getKey()));
-            Assert.assertNotNull("Failed: " + entry.getValue(), ref);
+            Assert.assertNotNull("Failed to find reference: " + entry.getValue(), ref);
             PsiElement resolved = ref.resolve();
-            Assert.assertNotNull("Failed: " + entry, resolved);
+            Assert.assertNotNull("Failed to resolve: " + entry, resolved);
 
             refMap.put(entry.getKey(), resolved);
         }

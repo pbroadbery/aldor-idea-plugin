@@ -43,4 +43,13 @@ public abstract class AldorDeclMixin extends AldorDeclareImpl implements AldorDe
         return true;
     }
 
+    @Override
+    public PsiElement lhs() {
+        return this.getType();
+    }
+
+    @Override
+    public PsiElement rhs() {
+        return this.getFirstChild();
+    }
 }

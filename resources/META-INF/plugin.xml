@@ -53,10 +53,11 @@
 
         <gotoClassContributor implementation="aldor.editor.AldorGotoClassContributor"/>
         <gotoSymbolContributor implementation="aldor.editor.AldorGotoSymbolContributor"/>
+        <gotoSymbolContributor implementation="aldor.editor.AldorGotoWithDeclarationContributor"/>
         <stubElementTypeHolder class="aldor.psi.elements.AldorTypes"/>
         <stubIndex implementation="aldor.psi.index.AldorDefineNameIndex"/>
         <stubIndex implementation="aldor.psi.index.AldorDefineTopLevelIndex"/>
-        <stubIndex implementation="aldor.psi.index.AldorDeclareNameIndex"/>
+        <stubIndex implementation="aldor.psi.index.AldorDeclareTopIndex"/>
 
         <!-- Aldor extras -->
         <lang.refactoringSupport language="Aldor" implementationClass="aldor.references.AldorRefactoringSupportProvider"/>

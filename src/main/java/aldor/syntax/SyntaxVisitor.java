@@ -1,10 +1,12 @@
 package aldor.syntax;
 
+import aldor.syntax.components.AbstractId;
 import aldor.syntax.components.Apply;
 import aldor.syntax.components.Comma;
 import aldor.syntax.components.DeclareNode;
 import aldor.syntax.components.EnumList;
 import aldor.syntax.components.Id;
+import aldor.syntax.components.InfixedId;
 import aldor.syntax.components.Other;
 import aldor.syntax.components.SyntaxNode;
 import org.jetbrains.annotations.Nullable;
@@ -35,9 +37,22 @@ public abstract class SyntaxVisitor<T> {
     }
 
     @Nullable
-    public T visitId(Id id) {
+    public T visitAnyId(AbstractId id) {
         return visitSyntax(id);
     }
+
+    @Nullable
+    public T visitId(Id id) {
+        return visitAnyId(id);
+    }
+
+
+    @Nullable
+    public T visitInfixedId(InfixedId id) {
+        return visitAnyId(id);
+    }
+
+
 
     public T visitOther(Other other) {
         return visitSyntax(other);

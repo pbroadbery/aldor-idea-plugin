@@ -57,4 +57,8 @@ public class AldorScopeProcessor implements PsiScopeProcessor {
         }
     }
 
+    @Override
+    public String toString() {
+        return "{Proc: " + name + " " + myResultList + "}";
+    }
 }

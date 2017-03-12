@@ -1,6 +1,7 @@
 package aldor.syntax;
 
 import aldor.lexer.AldorTokenType;
+import aldor.syntax.components.AbstractId;
 import aldor.syntax.components.Apply;
 import aldor.syntax.components.Comma;
 import aldor.syntax.components.DeclareNode;
@@ -49,7 +50,7 @@ public final class SyntaxPrinter {
         }
 
         @Override
-        public Void visitId(Id id) {
+        public Void visitAnyId(AbstractId id) {
             write(id.symbol());
             return null;
         }

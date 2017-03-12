@@ -11,8 +11,6 @@ import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import org.junit.Assert;
 
-import static aldor.psi.AldorPsiUtils.logPsi;
-
 public class SpadRefLookupTest extends LightPlatformCodeInsightFixtureTestCase {
 
 
@@ -29,7 +27,6 @@ public class SpadRefLookupTest extends LightPlatformCodeInsightFixtureTestCase {
 
     public void testReferenceToDefaultRetFnArg() {
         PsiFile whole = createSpadFile("reduce(x: Fraction UP) == reduce(numer x) exquo 1");
-        logPsi(whole);
         AldorIdentifier rhsX = PsiTreeUtil.findElementOfClassAtOffset(whole, whole.getText().indexOf("x)"), AldorIdentifier.class, true);
         Assert.assertNotNull(rhsX);
         Assert.assertNotNull(rhsX.getReference());

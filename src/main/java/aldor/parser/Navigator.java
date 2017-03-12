@@ -1,5 +1,6 @@
 package aldor.parser;
 
+import aldor.psi.AldorDeclare;
 import aldor.psi.AldorDefine;
 import aldor.psi.AldorIdentifier;
 import aldor.psi.SpadAbbrev;
@@ -14,4 +15,7 @@ public interface Navigator {
     NavigationItem getNavigationItem(AldorIdentifier ident);
 
     NavigationItem getNavigationItem(AldorDefine define);
+
+    NavigationItem getNavigationItem(AldorDeclare declare);
+
 }

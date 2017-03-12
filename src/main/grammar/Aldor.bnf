@@ -49,7 +49,7 @@
   extends("Expr")="com.intellij.extapi.psi.PsiElementBase"
   mixin("Expr")="com.intellij.extapi.psi.ASTWrapperPsiElement"
   extends(".*Expr")=Expr
-  mixin("ColonExpr") ="com.intellij.extapi.psi.StubBasedPsiElementBase<aldor.psi.stub.AldorDeclareStub>"
+
   // These things are documented
   implements("Doc_Expression")='aldor.psi.AldorDocumented'
   implements("Documented_Labelled")='aldor.psi.AldorDocumented'
@@ -74,8 +74,7 @@
   mixin("DeclPart")="aldor.psi.impl.AldorDeclMixin"
   stubClass("DeclPart")='aldor.psi.stub.AldorDeclareStub'
   implements("DeclPart") = 'aldor.psi.AldorDeclare'
-  stubClass("ColonExpr")='aldor.psi.stub.AldorDeclareStub'
-  implements("ColonExpr") = 'aldor.psi.AldorDeclare'
+  // Note: ColonExpr is a declaration, but tricky to to in grammar - fixed in ElementType
 
   // Spad expressions
   implements("ExpPrecedenceExpr") = 'aldor.psi.SpadBinaryOp'
@@ -88,11 +87,24 @@
   mixin("RelExpr") = 'aldor.psi.impl.SpadBinaryOpMixin'
 
   // where expressions
-  stubClass("WhereBlock")='com.intellij.psi.stubs.EmptyStub'
+  stubClass("WhereBlock")='com.intellij.psi.stubs.EmptyStub<aldor.psi.AldorWhereBlock>'
+  mixin("WhereBlock")='aldor.psi.impl.AldorWhereMixin'
+  mixin("WhereRhs")='aldor.psi.impl.AldorWhereRhsMixin'
 
-  // with/add
-  stubClass("UnaryWith")='com.intellij.psi.stubs.EmptyStub'
-  stubClass("UnaryAdd")='com.intellij.psi.stubs.EmptyStub'
+  // with
+  implements("UnaryWith") = 'aldor.psi.AldorWith'
+  implements("WithPart") = 'aldor.psi.AldorWith'
+  implements("UnaryWithExpr") = 'aldor.psi.AldorWith'
+  implements("BinaryWithExpr") = 'aldor.psi.AldorWith'
+  stubClass("UnaryWith")='com.intellij.psi.stubs.EmptyStub<aldor.psi.AldorWith>'
+  stubClass("WithPart")='com.intellij.psi.stubs.EmptyStub<aldor.psi.AldorWith>'
+  stubClass("UnaryWithExpr")='com.intellij.psi.stubs.EmptyStub<aldor.psi.AldorWith>'
+  stubClass("BinaryWithExpr")='com.intellij.psi.stubs.EmptyStub<aldor.psi.AldorWith>'
+  mixin("UnaryWithExpr") ="com.intellij.extapi.psi.StubBasedPsiElementBase<com.intellij.psi.stubs.EmptyStub<aldor.psi.AldorWith>>"
+  mixin("BinaryWithExpr") ="com.intellij.extapi.psi.StubBasedPsiElementBase<com.intellij.psi.stubs.EmptyStub<aldor.psi.AldorWith>>"
+
+  // add
+  stubClass("UnaryAdd")='com.intellij.psi.stubs.EmptyStub<com.intellij.psi.PsiElement>'
 
   // Declarations (should be with body only...)
   // Version 2, I think.

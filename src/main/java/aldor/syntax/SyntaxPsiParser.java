@@ -2,12 +2,14 @@ package aldor.syntax;
 
 import aldor.psi.AldorAddPart;
 import aldor.psi.AldorAddPrecedenceExpr;
+import aldor.psi.AldorBinaryWithExpr;
 import aldor.psi.AldorBracketed;
 import aldor.psi.AldorColonExpr;
 import aldor.psi.AldorDeclPart;
 import aldor.psi.AldorDefine;
 import aldor.psi.AldorE14;
 import aldor.psi.AldorExpPrecedenceExpr;
+import aldor.psi.AldorExpr;
 import aldor.psi.AldorId;
 import aldor.psi.AldorInfixedExpression;
 import aldor.psi.AldorInfixedTok;
@@ -18,8 +20,10 @@ import aldor.psi.AldorQuoteExpr;
 import aldor.psi.AldorQuotedIds;
 import aldor.psi.AldorRecursiveVisitor;
 import aldor.psi.AldorRelExpr;
+import aldor.psi.AldorRightArrow1002Expr;
 import aldor.psi.AldorTimesPrecedenceExpr;
-import aldor.psi.AldorWithPart;
+import aldor.psi.AldorUnaryWithExpr;
+import aldor.psi.AldorWith;
 import aldor.psi.JxrightElement;
 import aldor.psi.NegationElement;
 import aldor.psi.SpadBinaryOp;
@@ -30,11 +34,14 @@ import aldor.syntax.components.Comma;
 import aldor.syntax.components.Define;
 import aldor.syntax.components.EnumList;
 import aldor.syntax.components.Id;
+import aldor.syntax.components.InfixedId;
 import aldor.syntax.components.Literal;
 import aldor.syntax.components.Other;
+import aldor.syntax.components.OtherSx;
 import aldor.syntax.components.QuotedSymbol;
 import aldor.syntax.components.SpadDeclare;
 import aldor.syntax.components.With;
+import aldor.util.sexpr.SExpression;
 import com.google.common.collect.Lists;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiElement;
@@ -42,6 +49,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 
@@ -72,6 +80,7 @@ public final class SyntaxPsiParser {
     @SuppressWarnings("OverlyCoupledClass")
     private static final class AldorPsiSyntaxVisitor extends AldorRecursiveVisitor {
         private final Deque<List<Syntax>> visitStack;
+        private boolean leftOfDeclare = false; // really should be "context"
 
         private AldorPsiSyntaxVisitor(Deque<List<Syntax>> visitStack) {
             this.visitStack = visitStack;
@@ -160,7 +169,9 @@ public final class SyntaxPsiParser {
 
         @Override
         public void visitLiteral(@NotNull AldorLiteral o) {
-            visitStack.peek().add(new Literal(o.getText(), o));
+            String text = o.getText();
+            Syntax elt = leftOfDeclare ? new InfixedId(o) : new Literal(text, o);
+            visitStack.peek().add(elt);
         }
 
         @Override
@@ -180,26 +191,67 @@ public final class SyntaxPsiParser {
             visitStack.peek().add(next);
         }
 
+
+        @Override
+        public void visitColonExpr(@NotNull AldorColonExpr colonExpr) {
+            List<Syntax> content = Lists.newArrayList();
+            visitStack.push(content);
+
+            List<AldorExpr> ll = colonExpr.getExprList();
+            if (ll.size() >= 0) {
+                this.leftOfDeclare = true;
+                ll.get(0).accept(this);
+                this.leftOfDeclare = false;
+            }
+            for (AldorExpr e: ll.subList(1, ll.size())) {
+                e.accept(this);
+            }
+            List<Syntax> last = visitStack.pop();
+            Syntax result;
+            if (last.size() != 2) {
+                logPsi(colonExpr);
+                result = new OtherSx(SExpression.string("Odd declaration. Giving up " + last));
+            }
+            else {
+                result = new SpadDeclare(colonExpr, last);
+            }
+            visitStack.peek().add(result);
+        }
+
         @Override
         public void visitDeclPart(@NotNull AldorDeclPart decl) {
-            List<Syntax> last = buildChildren(decl);
+            List<Syntax> content = Lists.newArrayList();
+            visitStack.push(content);
+
+            this.leftOfDeclare = true;
+            if (decl.getInfixedExpression() != null) {
+                decl.getInfixedExpression().accept(this);
+            }
+            if (decl.getInfixedExprs() != null) {
+                decl.getInfixedExprs().accept(this);
+            }
+            this.leftOfDeclare = false;
+
+            decl.getType().accept(this);
+
+            List<Syntax> last = visitStack.pop();
+
             Syntax result = new AldorDeclare(decl, last);
             visitStack.peek().add(result);
         }
 
-
         @Override
-        public void visitColonExpr(@NotNull AldorColonExpr colonExpr) {
-            List<Syntax> last = buildChildren(colonExpr);
-            Syntax result = new SpadDeclare(colonExpr, last);
-            visitStack.peek().add(result);
+        public void visitBinaryWithExpr(@NotNull AldorBinaryWithExpr o) {
+            visitStack.peek().add(new With(o));
         }
 
+        @Override
+        public void visitUnaryWithExpr(@NotNull AldorUnaryWithExpr o) {
+            visitStack.peek().add(new With(o));
+        }
 
         @Override
-        public void visitWithPart(@NotNull AldorWithPart o) {
-            // This isn't ideal, and we can parse the underlying stuff, but
-            // leave for the moment
+        public void visitWith(@NotNull AldorWith o) {
             visitStack.peek().add(new With(o));
         }
 
@@ -266,6 +318,13 @@ public final class SyntaxPsiParser {
         }
 
         @Override
+        public void visitRightArrow1002Expr(@NotNull AldorRightArrow1002Expr rightArrow1002Expr) {
+            List<Syntax> last = new ArrayList<>(buildChildren(rightArrow1002Expr));
+            last.add(0, createImplicitId(rightArrow1002Expr.getKWRArrow(), "->"));
+            visitStack.peek().add(new Apply(rightArrow1002Expr, last));
+        }
+
+        @Override
         public void visitRelExpr(@NotNull AldorRelExpr addPrecedenceExpr) {
             visitBinaryOp(addPrecedenceExpr);
         }
@@ -282,8 +341,8 @@ public final class SyntaxPsiParser {
         }
 
         private List<Syntax> buildChildren(PsiElement psi) {
-            List<Syntax> parenContent = Lists.newArrayList();
-            visitStack.push(parenContent);
+            List<Syntax> content = Lists.newArrayList();
+            visitStack.push(content);
             psi.acceptChildren(this);
             return visitStack.pop();
         }

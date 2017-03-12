@@ -6,16 +6,16 @@ import com.intellij.psi.stubs.StringStubIndexExtension;
 import com.intellij.psi.stubs.StubIndexKey;
 import org.jetbrains.annotations.NotNull;
 
-public final class AldorDeclareNameIndex extends StringStubIndexExtension<AldorDeclare> {
-    public static final AldorDeclareNameIndex instance = new AldorDeclareNameIndex();
+public final class AldorDeclareTopIndex extends StringStubIndexExtension<AldorDeclare> {
+    public static final AldorDeclareTopIndex instance = new AldorDeclareTopIndex();
 
-    private AldorDeclareNameIndex() {
+    private AldorDeclareTopIndex() {
     }
 
     @NotNull
     @Override
     public StubIndexKey<String, AldorDeclare> getKey() {
-        return AldorDeclareElementType.DECLARE_NAME_INDEX;
+        return AldorDeclareElementType.DECLARE_TOP_INDEX;
     }
 
 }

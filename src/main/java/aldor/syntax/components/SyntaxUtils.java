@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public final class SyntaxUtils {
 
@@ -17,6 +18,9 @@ public final class SyntaxUtils {
             maybeLhs = maybeLhs.as(DeclareNode.class).lhs();
         }
         Collection<Syntax> scopes = new ArrayList<>();
+        if (maybeLhs.is(Id.class)) {
+            scopes.add(maybeLhs);
+        }
         if (maybeLhs.is(Apply.class)) {
             Apply apply = maybeLhs.as(Apply.class);
             List<Syntax> ll = apply.arguments();
@@ -49,4 +53,14 @@ public final class SyntaxUtils {
         return Collections.singleton(inner);
     }
 
+    public static Optional<Syntax> childScopeForMacroLhs(Syntax syntax) {
+        Syntax leftmost = syntax;
+        while (leftmost.is(Apply.class)) {
+            leftmost = leftmost.as(Apply.class).operator();
+        }
+        if (leftmost.is(Id.class)) {
+            return Optional.of(leftmost);
+        }
+        return Optional.empty();
+    }
 }

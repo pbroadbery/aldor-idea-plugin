@@ -35,6 +35,7 @@ public class CompileOutputParserTest {
         assertFalse(messages.isEmpty());
     }
 
+    @SuppressWarnings("MagicNumber")
     @Test
     public void testErrorMessasges() {
         List<CompilerMessage> messages = new ArrayList<>();

@@ -1,6 +1,7 @@
 package aldor.editor;
 
 import aldor.psi.AldorDefine;
+import aldor.psi.AldorIdentifier;
 import aldor.ui.AldorIcons;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
@@ -14,8 +15,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Optional;
 
-public class AldorDefineNavigationItem  extends AbstractTreeNode<AldorDefine>  implements PsiElementNavigationItem, DataProvider {
+public class AldorDefineNavigationItem  extends AbstractTreeNode<AldorDefine> implements PsiElementNavigationItem, DataProvider {
 
     @SuppressWarnings("AssignmentToSuperclassField")
     public AldorDefineNavigationItem(AldorDefine define) {
@@ -69,7 +71,8 @@ public class AldorDefineNavigationItem  extends AbstractTreeNode<AldorDefine>  i
     @NotNull
     @Override
     protected PresentationData createPresentation() {
-        return new PresentationData(this.getValue().defineIdentifier().get().getText(),
+        Optional<AldorIdentifier> identifier = this.getValue().defineIdentifier();
+        return new PresentationData(identifier.isPresent() ? identifier.get().getText() : "(missing)",
                 getValue().getContainingFile().getName(), AldorIcons.IDENTIFIER, null);
     }
 

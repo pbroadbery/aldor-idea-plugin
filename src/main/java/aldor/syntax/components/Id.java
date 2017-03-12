@@ -12,23 +12,25 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 
+import static aldor.lexer.AldorTokenTypes.TK_Id;
+
 /**
- * CAn identifier
+ * An identifier
  */
-public class Id extends Syntax {
+public class Id extends AbstractId {
     private final SyntaxRepresentation<AldorIdentifier> rep;
 
     public Id(AldorIdentifier id) {
-        this.rep = SyntaxRepresentation.create(id);
+        this.rep = SyntaxRepresentation.create((AldorTokenType) AldorTokenTypes.forText(id.getText()), id);
     }
 
     // For things like 'bracket'
     public static Id createImplicitId(String name) {
-        return createMissingId(name);
+        return createMissingId(TK_Id, name);
     }
 
     // For when we don't have the PsiElement available.
-    public static Id createMissingId(String name) {
+    public static Id createMissingId(AldorTokenType tokenType, String name) {
         return new Id(new SyntaxRepresentation<AldorIdentifier>() {
             @Nullable
             @Override
@@ -38,7 +40,7 @@ public class Id extends Syntax {
 
             @Override
             public AldorTokenType tokenType() {
-                return AldorTokenTypes.TK_Id;
+                return tokenType;
             }
 
             @Override
@@ -47,6 +49,11 @@ public class Id extends Syntax {
             }
         });
     }
+
+    public static Syntax createImplicitId(PsiElement elt, String s) {
+        return createMissingId((AldorTokenType) elt.getNode().getElementType(), s);
+    }
+
 
     public Id(SyntaxRepresentation<AldorIdentifier> syntaxRepresentation) {
         this.rep = syntaxRepresentation;
@@ -57,6 +64,7 @@ public class Id extends Syntax {
         return "Id";
     }
 
+    @Override
     @NotNull
     public String symbol() {
         return rep.text();

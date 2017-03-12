@@ -6,6 +6,7 @@ import aldor.lexer.AldorLexerAdapter;
 import aldor.lexer.AldorTokenTypes;
 import aldor.psi.elements.AldorElementTypeFactory;
 import aldor.psi.elements.AldorTypes;
+import aldor.psi.elements.PsiElementCreator;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.ParserDefinition;
 import com.intellij.lang.PsiParser;
@@ -15,6 +16,7 @@ import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.TokenType;
+import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
@@ -78,7 +80,13 @@ public class AldorParserDefinition implements ParserDefinition {
     @Override
     @NotNull
     public PsiElement createElement(ASTNode node) {
-        return AldorTypes.Factory.createElement(node);
+        IElementType elementType = node.getElementType();
+        if (!(elementType instanceof PsiElementCreator)) {
+            return AldorTypes.Factory.createElement(node);
+        }
+        else {
+            return ((PsiElementCreator) elementType).createElement(node);
+        }
     }
 
 }

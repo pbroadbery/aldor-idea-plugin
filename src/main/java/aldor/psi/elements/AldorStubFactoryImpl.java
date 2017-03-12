@@ -17,7 +17,7 @@ public class AldorStubFactoryImpl implements AldorStubFactory {
 
     @Override
     public int getVersion() {
-        return 5;
+        return 8;
     }
 
     @Override

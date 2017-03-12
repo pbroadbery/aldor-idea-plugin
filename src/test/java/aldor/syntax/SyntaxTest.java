@@ -145,6 +145,29 @@ public class SyntaxTest extends LightPlatformCodeInsightFixtureTestCase {
         Assert.assertEquals("(Apply + a b)", syntax.toString());
     }
 
+
+    public void testInfixedIdDecl() {
+        PsiElement psi = parseSpadText("\"+\": X");
+        Syntax syntax = parse(psi);
+        Assert.assertNotNull(syntax);
+        Assert.assertEquals("(SDecl + X)", syntax.toString());
+    }
+
+
+    public void testZeroDecl() {
+        PsiElement psi = parseText("0: X");
+        Syntax syntax = parse(psi);
+        Assert.assertNotNull(syntax);
+        Assert.assertEquals("(Decl 0 X)", syntax.toString());
+    }
+
+    public void testDecl() {
+        PsiElement psi = parseSpadText("f: (A, B) -> C");
+        Syntax syntax = parse(psi);
+        Assert.assertNotNull(syntax);
+        Assert.assertEquals("(SDecl f (Apply -> (Comma A B) C))", syntax.toString());
+    }
+
     private PsiElement parseText(CharSequence text) {
         return ParserFunctions.parseAldorText(getProject(), text);
     }

@@ -1,6 +1,7 @@
 package aldor.psi.stub.codec;
 
 import aldor.psi.AldorDeclare;
+import aldor.psi.AldorPsiUtils;
 import aldor.psi.elements.AldorDeclareElementType;
 import aldor.psi.elements.AldorStubFactory.PsiElementFactory;
 import aldor.psi.elements.PsiStubCodec;
@@ -27,27 +28,32 @@ public class AldorDeclareStubCodec implements PsiStubCodec<AldorDeclareStub, Ald
 
     @Override
     public void encode(AldorDeclareStub stub, StubOutputStream dataStream) throws IOException {
+        dataStream.writeBoolean(stub.isCategoryDeclaration());
         if (!stub.isDeclareOfId()) {
             dataStream.writeBoolean(false);
+            syntaxCodec.encode(dataStream, stub.syntax());
         } else {
             dataStream.writeBoolean(true);
             assert stub.declareIdName().isPresent();
             dataStream.writeName(stub.declareIdName().get());
-            syntaxCodec.encode(dataStream, stub.lhsSyntax());
+            syntaxCodec.encode(dataStream, stub.syntax());
         }
     }
 
     @Override
     public AldorDeclareStub decode(StubInputStream dataStream, AldorDeclareElementType eltType, StubElement<?> parentStub) throws IOException {
+        boolean isCategoryDeclaration = dataStream.readBoolean();
         boolean isDeclareOfId = dataStream.readBoolean();
+
         if (isDeclareOfId) {
             //noinspection unused
             StringRef id = dataStream.readName();
             Syntax syntax = syntaxCodec.decode(dataStream);
-            return new AldorDeclareConcreteStub(parentStub, eltType, syntax);
+            return new AldorDeclareConcreteStub(parentStub, eltType, syntax, isCategoryDeclaration);
         }
         else {
-            return new AldorDeclareConcreteStub(parentStub, eltType, null);
+            Syntax syntax = syntaxCodec.decode(dataStream);
+            return new AldorDeclareConcreteStub(parentStub, eltType, syntax, isCategoryDeclaration);
         }
     }
 
@@ -59,7 +65,10 @@ public class AldorDeclareStubCodec implements PsiStubCodec<AldorDeclareStub, Ald
     @Override
     public AldorDeclareStub createStub(StubElement<?> parentStub,
                                        AldorDeclareElementType eltType, AldorDeclare aldorDeclare) {
-        return new AldorDeclareConcreteStub(parentStub, eltType, SyntaxPsiParser.parse(aldorDeclare.getFirstChild()));
+        boolean isCategoryDeclaration = AldorPsiUtils.isCategoryDeclaration(aldorDeclare);
+        Syntax syntax = SyntaxPsiParser.parse(aldorDeclare);
+
+        return new AldorDeclareConcreteStub(parentStub, eltType, syntax, isCategoryDeclaration);
     }
 
 }
