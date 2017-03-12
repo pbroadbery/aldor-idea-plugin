@@ -31,7 +31,6 @@ import java.util.stream.Collectors;
 
 import static aldor.lexer.LexMode.Spad;
 import static aldor.parser.ParserFunctions.parseLibrary;
-import static aldor.psi.AldorPsiUtils.logPsi;
 import static aldor.test_util.TestFiles.existingFile;
 
 public class SpadParsingTest {
@@ -253,7 +252,6 @@ public class SpadParsingTest {
     @Test
     public void testAbbrevAfterIndent() {
         PsiElement psi = parseText("Foo == add\n  blah\n    blah\n)abbrev domain BBB CCC\nBBB == 2");
-        logPsi(psi);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
         Assert.assertEquals(0, errors.size());
     }
@@ -261,7 +259,6 @@ public class SpadParsingTest {
     @Test
     public void testIndentedDeclaration() {
         PsiElement psi = parseText("Foo:\n   Category == with\n    XYZ\n");
-        logPsi(psi);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
         Assert.assertEquals(0, errors.size());
     }
@@ -275,7 +272,6 @@ public class SpadParsingTest {
                 "  FreeAbelianMonoidCategory(S, NonNegativeInteger)\n" +
                 "    == InnerFreeAbelianMonoid(S, NonNegativeInteger, 1)\n";
                 PsiElement psi = parseText(text);
-        logPsi(psi);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
         Assert.assertEquals(0, errors.size());
     }
@@ -287,7 +283,6 @@ public class SpadParsingTest {
 
         File file = existingFile("/home/pab/Work/fricas/fricas/src/algebra/catdef.spad");
         PsiElement psi = parseFile(file);
-        logPsi(psi);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
         Assert.assertEquals(0, errors.size());
     }
@@ -299,7 +294,6 @@ public class SpadParsingTest {
 
         File file = existingFile("/home/pab/Work/fricas/fricas/src/algebra/cden.spad");
         PsiElement psi = parseFile(file);
-        logPsi(psi);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
         Assert.assertEquals(0, errors.size());
     }
@@ -311,7 +305,6 @@ public class SpadParsingTest {
         // Fails: Line 722      "++ to become an in order iterator" seems misplaced
         File file = existingFile("/home/pab/Work/fricas/fricas/src/algebra/aggcat.spad");
         PsiElement psi = parseFile(file);
-        logPsi(psi);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
         Assert.assertEquals(0, errors.size());
     }
@@ -322,7 +315,6 @@ public class SpadParsingTest {
 
         File file = existingFile("/home/pab/Work/fricas/fricas/src/algebra/fr.spad");
         PsiElement psi = parseFile(file);
-        logPsi(psi);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
         Assert.assertEquals(0, errors.size());
     }
@@ -333,7 +325,6 @@ public class SpadParsingTest {
 
         File file = existingFile("/home/pab/Work/fricas/fricas/src/algebra/fmod.spad");
         PsiElement psi = parseFile(file);
-        logPsi(psi);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
         Assert.assertEquals(0, errors.size());
     }
@@ -343,7 +334,6 @@ public class SpadParsingTest {
         Assert.assertNotNull(getProject());
         File file = existingFile("/home/pab/Work/fricas/fricas/src/algebra/suchthat.spad");
         PsiElement psi = parseFile(file);
-        logPsi(psi);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
         Assert.assertEquals(0, errors.size());
     }
@@ -354,7 +344,6 @@ public class SpadParsingTest {
 
         File file = existingFile("/home/pab/Work/fricas/fricas/src/algebra/numeric.spad");
         PsiElement psi = parseFile(file);
-        logPsi(psi);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
         Assert.assertEquals(0, errors.size());
     }
@@ -365,7 +354,6 @@ public class SpadParsingTest {
 
         File file = existingFile("/home/pab/Work/fricas/fricas/src/algebra/algfact.spad");
         PsiElement psi = parseFile(file);
-        logPsi(psi);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
         Assert.assertEquals(0, errors.size());
     }
@@ -377,7 +365,6 @@ public class SpadParsingTest {
 
         File file = existingFile("/home/pab/Work/fricas/fricas/src/algebra/multpoly.spad");
         PsiElement psi = parseFile(file);
-        logPsi(psi);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
         Assert.assertEquals(0, errors.size());
     }
@@ -388,7 +375,6 @@ public class SpadParsingTest {
 
         File file = existingFile("/home/pab/Work/fricas/fricas/src/algebra/radeigen.spad");
         PsiElement psi = parseFile(file);
-        logPsi(psi);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
         Assert.assertEquals(0, errors.size());
     }
@@ -400,7 +386,6 @@ public class SpadParsingTest {
 
         File file = existingFile("/home/pab/Work/fricas/fricas/src/algebra/r.spad");
         PsiElement psi = parseFile(file);
-        logPsi(psi);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
         Assert.assertEquals(0, errors.size());
     }
@@ -411,7 +396,6 @@ public class SpadParsingTest {
 
         File file = existingFile("/home/pab/Work/fricas/fricas/src/algebra/xhash.spad");
         PsiElement psi = parseFile(file);
-        logPsi(psi);
 
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
         Assert.assertEquals(0, errors.size());
@@ -423,7 +407,6 @@ public class SpadParsingTest {
 
         File file = existingFile("/home/pab/Work/fricas/fricas/src/algebra/plottool.spad");
         PsiElement psi = parseFile(file);
-        logPsi(psi);
 
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
         Assert.assertEquals(0, errors.size());
@@ -435,7 +418,6 @@ public class SpadParsingTest {
 
         File file = existingFile("/home/pab/Work/fricas/fricas/src/algebra/jet.spad");
         PsiElement psi = parseFile(file);
-        logPsi(psi);
 
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
         Assert.assertEquals(0, errors.size());
@@ -447,7 +429,6 @@ public class SpadParsingTest {
 
         File file = existingFile("/home/pab/Work/fricas/fricas/src/algebra/omcat.spad");
         PsiElement psi = parseFile(file);
-        logPsi(psi);
 
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
         Assert.assertEquals(0, errors.size());
@@ -459,7 +440,6 @@ public class SpadParsingTest {
 
         File file = existingFile("/home/pab/Work/fricas/fricas/src/algebra/free.spad");
         PsiElement psi = parseFile(file);
-        logPsi(psi);
 
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
         Assert.assertEquals(0, errors.size());
@@ -471,7 +451,6 @@ public class SpadParsingTest {
 
         File file = existingFile("/home/pab/Work/fricas/fricas/src/algebra/string.spad");
         PsiElement psi = parseFile(file);
-        logPsi(psi);
 
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
         Assert.assertEquals(0, errors.size());
@@ -484,7 +463,6 @@ public class SpadParsingTest {
 
         File file = existingFile("/home/pab/Work/fricas/fricas/src/algebra/fortran.spad");
         PsiElement psi = parseFile(file);
-        logPsi(psi);
 
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
         Assert.assertEquals(0, errors.size());

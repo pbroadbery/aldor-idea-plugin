@@ -27,7 +27,6 @@ import java.util.Map;
 import java.util.Set;
 
 import static aldor.parser.ParserFunctions.parseLibrary;
-import static aldor.psi.AldorPsiUtils.logPsi;
 import static aldor.test_util.TestFiles.existingFile;
 
 public class EnsureParsing4Test {
@@ -45,7 +44,6 @@ public class EnsureParsing4Test {
     public void testOne() {
         String text = "X: with == add";
         PsiElement psi = parseText(text);
-        logPsi(psi);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
         Assert.assertEquals(0, errors.size());
     }
@@ -145,7 +143,6 @@ public class EnsureParsing4Test {
         String text = psiFile.getText();
 
         PsiElement psi = parseText(text);
-        logPsi(psi);
         return ParserFunctions.getPsiErrorElements(psi);
     }
 

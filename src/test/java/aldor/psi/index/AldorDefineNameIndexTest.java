@@ -1,8 +1,9 @@
 package aldor.psi.index;
 
 import aldor.build.module.AldorModuleType;
+import aldor.parser.SwingThreadTestRule;
 import aldor.psi.AldorDefine;
-import aldor.test_util.JUnits;
+import aldor.test_util.LightPlatformJUnit4TestRule;
 import aldor.util.VirtualFileTests;
 import com.google.common.collect.Sets;
 import com.google.common.io.Files;
@@ -14,12 +15,16 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.stubs.StubUpdatingIndex;
 import com.intellij.testFramework.LightProjectDescriptor;
-import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
+import com.intellij.testFramework.fixtures.CodeInsightTestFixture;
 import com.intellij.util.indexing.FileBasedIndex;
 import groovy.json.internal.Charsets;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Assume;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.RuleChain;
+import org.junit.rules.TestRule;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,14 +35,19 @@ import static aldor.psi.AldorPsiUtils.logPsi;
 import static aldor.util.VirtualFileTests.createFile;
 import static com.intellij.testFramework.LightPlatformTestCase.getSourceRoot;
 
-public class AldorDefineNameIndexTest extends LightPlatformCodeInsightFixtureTestCase {
+public final class AldorDefineNameIndexTest {
+    private final CodeInsightTestFixture testFixture = LightPlatformJUnit4TestRule.createFixture(getProjectDescriptor());
 
-    static {
-        JUnits.setLogToInfo();
-    }
+    @Rule
+    public final TestRule platformTestRule =
+            RuleChain.emptyRuleChain()
+                    .around(new LightPlatformJUnit4TestRule(testFixture, ""))
+                    .around(new SwingThreadTestRule());
 
+
+    @Test
     public void testWilIndex() throws IOException {
-        Project project = getProject();
+        Project project = testFixture.getProject();
 
         VirtualFile file = createFile(getSourceRoot(), "foo.as", "a == b; c == d; e == " + System.currentTimeMillis());
 
@@ -46,8 +56,9 @@ public class AldorDefineNameIndexTest extends LightPlatformCodeInsightFixtureTes
         VirtualFileTests.deleteFile(file);
     }
 
+    @Test
     public void testDefineIndexSimpleDefs() throws IOException {
-        Project project = getProject();
+        Project project = testFixture.getProject();
         VirtualFile file = createFile(getSourceRoot(), "foo.as", "a == b; c == d; e == " + System.currentTimeMillis());
 
         FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
@@ -64,8 +75,9 @@ public class AldorDefineNameIndexTest extends LightPlatformCodeInsightFixtureTes
     }
 
 
+    @Test
     public void testDefineIndexComplexDefs() throws IOException {
-        Project project = getProject();
+        Project project = testFixture.getProject();
         VirtualFile file = createFile(getSourceRoot(), "foo.as", "Something(x: Wibble): with == stuff; aNumber == " + System.currentTimeMillis());
 
         FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
@@ -76,8 +88,9 @@ public class AldorDefineNameIndexTest extends LightPlatformCodeInsightFixtureTes
         VirtualFileTests.deleteFile(file);
     }
 
+    @Test
     public void testDefineTopLevelIndex() throws IOException {
-        Project project = getProject();
+        Project project = testFixture.getProject();
         VirtualFile file = createFile(getSourceRoot(), "foo.as", "Something(x: Wibble): with == add { foo == bar }; aNumber == " + System.currentTimeMillis());
 
         FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
@@ -89,8 +102,9 @@ public class AldorDefineNameIndexTest extends LightPlatformCodeInsightFixtureTes
     }
 
 
+    @Test
     public void testSpadDefineNameIndex() throws IOException {
-        Project project = getProject();
+        Project project = testFixture.getProject();
         VirtualFile file = createFile(getSourceRoot(), "foo.spad", "Something(x: Wibble): with == add");
         logPsi(PsiManager.getInstance(project).findFile(file));
         FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
@@ -102,10 +116,11 @@ public class AldorDefineNameIndexTest extends LightPlatformCodeInsightFixtureTes
     }
 
 
+    @Test
     public void testDefineIndexGetKey() throws IOException {
         VirtualFile file = null;
         try {
-            Project project = getProject();
+            Project project = testFixture.getProject();
 
             file = createFile(getSourceRoot(), "foo.as", "Something(x: Wibble): with == stuff; aNumber == " + System.currentTimeMillis());
             FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
@@ -113,7 +128,8 @@ public class AldorDefineNameIndexTest extends LightPlatformCodeInsightFixtureTes
             Collection<String> ll = AldorDefineNameIndex.instance.getAllKeys(project);
             Assert.assertEquals(Sets.newHashSet("Something", "aNumber"), new HashSet<>(ll));
 
-            Collection<AldorDefine> items = AldorDefineNameIndex.instance.get("Something", getProject(), GlobalSearchScope.allScope(getProject()));
+            Collection<AldorDefine> items = AldorDefineNameIndex.instance.get("Something", testFixture.getProject(),
+                    GlobalSearchScope.allScope(testFixture.getProject()));
             System.out.println("Items: " + items + " " + items.iterator().next().getText());
             Assert.assertEquals(1, items.size());
             Assert.assertTrue(items.iterator().next().getText().startsWith("Something"));
@@ -125,12 +141,13 @@ public class AldorDefineNameIndexTest extends LightPlatformCodeInsightFixtureTes
         }
     }
 
+    @Test
     public void testDefineFRA() throws IOException {
         Assume.assumeTrue(new File("/home/pab/IdeaProjects/fricas-codebase/fricas/src/algebra/algcat.spad").exists());
         String fraText = Files.toString(new File("/home/pab/IdeaProjects/fricas-codebase/fricas/src/algebra/algcat.spad"), Charsets.US_ASCII);
         VirtualFile file = null;
         try {
-            Project project = getProject();
+            Project project = testFixture.getProject();
 
             file = createFile(getSourceRoot(), "algcat.spad", fraText);
             FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
@@ -150,7 +167,6 @@ public class AldorDefineNameIndexTest extends LightPlatformCodeInsightFixtureTes
         }
     }
 
-    @Override
     protected LightProjectDescriptor getProjectDescriptor() {
         //noinspection ReturnOfInnerClass
         return new LightProjectDescriptor() {
