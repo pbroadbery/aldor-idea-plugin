@@ -61,7 +61,7 @@ public class SyntaxTest extends LightPlatformCodeInsightFixtureTestCase {
         PsiElement psi = parseText("f(x: I, y: I): X");
         Syntax syntax = parse(psi);
         Assert.assertNotNull(syntax);
-        Assert.assertEquals("(Decl (Apply f (Comma (Decl x I) (Decl y I))) X)", syntax.toString());
+        Assert.assertEquals("(Decl (Apply f (Decl x I) (Decl y I)) X)", syntax.toString());
     }
 
     public void testParseCurriedDeclare() {
@@ -106,7 +106,7 @@ public class SyntaxTest extends LightPlatformCodeInsightFixtureTestCase {
         PsiElement psi = parseText("DM(R: Join(A, E))");
         Syntax syntax = parse(psi);
         Assert.assertNotNull(syntax);
-        Assert.assertEquals("(Apply DM (Decl R (Apply Join (Comma A E))))", syntax.toString());
+        Assert.assertEquals("(Apply DM (Decl R (Apply Join A E)))", syntax.toString());
     }
 
     public void testDefaultArguments() {
@@ -128,14 +128,14 @@ public class SyntaxTest extends LightPlatformCodeInsightFixtureTestCase {
         PsiElement psi = parseText("foo(a: S, x: I == 5)");
         Syntax syntax = parse(psi);
         Assert.assertNotNull(syntax);
-        Assert.assertEquals("(Apply foo (Comma (Decl a S) (Define (Decl x I) Literal)))", syntax.toString());
+        Assert.assertEquals("(Apply foo (Decl a S) (Define (Decl x I) Literal))", syntax.toString());
     }
 
     public void testSpadDeclare() {
         PsiElement psi = parseSpadText("foo(a: S, b: T)");
         Syntax syntax = parse(psi);
         Assert.assertNotNull(syntax);
-        Assert.assertEquals("(Apply foo (Comma (SDecl a S) (SDecl b T)))", syntax.toString());
+        Assert.assertEquals("(Apply foo (SDecl a S) (SDecl b T))", syntax.toString());
     }
 
     public void testSpadExpr() {

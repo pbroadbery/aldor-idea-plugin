@@ -124,6 +124,13 @@ public final class SyntaxPsiParser {
             if (fnOrAtom.size() == 1) {
                 visitStack.peek().add(fnOrAtom.get(0));
             } else {
+                if (fnOrAtom.get(1).is(Comma.class)) {
+                    List<Syntax> args = fnOrAtom.get(1).as(Comma.class).children();
+                    Syntax op = fnOrAtom.get(0);
+                    fnOrAtom = new ArrayList<>(1+args.size());
+                    fnOrAtom.add(op);
+                    fnOrAtom.addAll(args);
+                }
                 Syntax syntax = new Apply(o, fnOrAtom);
                 visitStack.peek().add(syntax);
             }

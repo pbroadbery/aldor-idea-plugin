@@ -138,6 +138,11 @@ public final class SyntaxPrinter {
                     printWithParens(visitor, apply, argument0);
                 }
             }
+            else {
+                visitor.write("(");
+                printCommaSeq(visitor, apply, apply.arguments());
+                visitor.write(")");
+            }
         }
     }
 

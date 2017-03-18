@@ -7,10 +7,16 @@ import com.google.common.collect.Sets;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiReference;
+import com.intellij.psi.search.searches.ReferencesSearch;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.util.Query;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
+import java.util.Optional;
 import java.util.Set;
 
 public final class AldorPsiUtils {
@@ -58,7 +64,7 @@ public final class AldorPsiUtils {
 
     public static boolean isCategoryDeclaration(@SuppressWarnings("TypeMayBeWeakened") AldorDeclare aldorDeclare) {
         //noinspection ObjectEquality
-        return containingBlock(aldorDeclare) == WITH;
+        return containingBlock(aldorDeclare).type == WITH;
     }
 
     private static final Set<IElementType> withElementTypes = Sets.newHashSet(AldorTypes.WITH_PART, AldorTypes.UNARY_WITH, AldorTypes.BINARY_WITH_EXPR, AldorTypes.UNARY_WITH_EXPR);
@@ -104,14 +110,36 @@ public final class AldorPsiUtils {
         }
     }
 
-    public AldorDefine aldorDefiningForm(PsiElement element) {
+    @NotNull
+    public static Optional<AldorDefine> definingForm(PsiElement element) {
         PsiElement form = new DefiningFormVisitor().apply(element);
-        if (form instanceof AldorDefine) {
-            return (AldorDefine) form;
+        // Need to deal with macro/where here.
+        if (!(form instanceof AldorDefine)) {
+            return Optional.empty();
+        } else {
+            AldorDefine define = (AldorDefine) form;
+            if (define.definitionType().equals(AldorDefine.DefinitionType.CONSTANT)) {
+                return Optional.of(define);
+            }
+            else if (define.definitionType().equals(AldorDefine.DefinitionType.MACRO)) {
+                return definitionFromMacro(define);
+            }
+            else {
+                return Optional.empty();
+            }
         }
-        else {
-            return null;
+    }
+
+    @NotNull
+    private static Optional<AldorDefine> definitionFromMacro(AldorDefine define) {
+        AldorIdentifier id = define.defineIdentifier().get();
+        final Query<PsiReference> query = ReferencesSearch.search(id, id.getUseScope());
+        Collection<PsiReference> refs = query.findAll();
+        if (refs.size() != 1) {
+            return Optional.empty();
         }
+        PsiReference ref = refs.iterator().next();
+        return Optional.ofNullable(PsiTreeUtil.getParentOfType(ref.getElement(), AldorDefine.class));
     }
 
     private static final class DefiningFormVisitor extends ReturningAldorVisitor<PsiElement> {
@@ -143,9 +171,14 @@ public final class AldorPsiUtils {
         public void visitWhereRhs(@NotNull AldorWhereRhs o) {
             returnValue(null);
         }
+
+        @Override
+        public void visitFile(PsiFile file) {
+            returnValue(null);
+        }
     }
 
-    public static class ContainingBlockType<T> {
+    public static class ContainingBlockType<T extends PsiElement> {
         private final String name;
         private final Class<T> blockClass;
 
@@ -153,9 +186,17 @@ public final class AldorPsiUtils {
             this.name = name;
             this.blockClass = blockClass;
         }
+
+        public ContainingBlock<T> of(PsiElement element) {
+            if (!blockClass.isAssignableFrom(element.getClass())) {
+                throw new IllegalArgumentException(this.name + " " + element);
+            }
+            return new ContainingBlock<T>(this, this.blockClass.cast(element));
+        }
+
     }
 
-    private static final class ContainingBlock<T> {
+    public static final class ContainingBlock<T extends PsiElement> {
         private final ContainingBlockType<T> type;
         private final T t;
 
@@ -163,30 +204,49 @@ public final class AldorPsiUtils {
             this.type = type;
             this.t = t;
         }
+
+        public ContainingBlockType<T> type() {
+            return type;
+        }
+
+        public T element() {
+            return t;
+        }
+
+        public <X extends PsiElement> Optional<ContainingBlock<X>> castTo(ContainingBlockType<X> with) {
+            //noinspection unchecked,ObjectEquality
+            return (this.type() == with) ? Optional.of((ContainingBlock<X>) this) : Optional.empty();
+
+        }
     }
 
-    private static final ContainingBlockType<AldorLambda> LAMBDA = new ContainingBlockType<>("Lambda", AldorLambda.class);
-    private static final ContainingBlockType<AldorWith> WITH = new ContainingBlockType<>("With", AldorWith.class);
-    private static final ContainingBlockType<PsiElement> ADD = new ContainingBlockType<>("Add", PsiElement.class);
-    private static final ContainingBlockType<PsiFile> TOPLEVEL = new ContainingBlockType<>("TopLevel", PsiFile.class);
-    private static final ContainingBlockType<AldorBlock> BODY = new ContainingBlockType<>("Block", AldorBlock.class);
-    private static final ContainingBlockType<AldorBlock> WHERE = new ContainingBlockType<>("Where", AldorBlock.class);
+    public static final ContainingBlockType<AldorLambda> LAMBDA = new ContainingBlockType<>("Lambda", AldorLambda.class);
+    public static final ContainingBlockType<AldorWith> WITH = new ContainingBlockType<>("With", AldorWith.class);
+    public static final ContainingBlockType<PsiElement> ADD = new ContainingBlockType<>("Add", PsiElement.class);
+    public static final ContainingBlockType<PsiFile> TOPLEVEL = new ContainingBlockType<>("TopLevel", PsiFile.class);
+    public static final ContainingBlockType<AldorBlock> BODY = new ContainingBlockType<>("Block", AldorBlock.class);
+    public static final ContainingBlockType<AldorBlock> WHERE = new ContainingBlockType<>("Where", AldorBlock.class);
 
-    public static ContainingBlockType<?> containingBlock(PsiElement elt) {
+    public static ContainingBlock<?> containingBlock(PsiElement elt) {
         PsiElement element = elt;
         while (element != null) {
             if (element instanceof AldorLambda) {
-                return LAMBDA;
+                return LAMBDA.of(element);
             }
             if (element instanceof AldorWith) {
-                return WITH;
+                return WITH.of(element);
             }
-            if (element instanceof AldorDefine) {
-                return BODY;
+            /*
+            if (element instanceof AldorBlock) {
+                return BODY.of(element);
+            }
+            */
+            if (element instanceof PsiFile) {
+                return TOPLEVEL.of(element);
             }
             element = element.getParent();
         }
-        return TOPLEVEL;
+        throw new IllegalStateException("Missing outer block");
     }
 
 }

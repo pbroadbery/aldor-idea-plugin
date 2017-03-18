@@ -68,7 +68,7 @@ public final class AldorGotoSymbolContributorTest {
 
     @SkipCI
     @Test
-    public void testGotoSymbolDelareCategory() {
+    public void testGotoSymbolDeclareCategory() {
         Project project = testFixture.getProject();
         VirtualFile file = createFile(getSourceRoot(), "foo.as", String.format("Something: Category == with { foo: String_%s }", System.currentTimeMillis()));
 
@@ -85,7 +85,7 @@ public final class AldorGotoSymbolContributorTest {
 
     @SkipCI
     @Test
-    public void testGotoSymbolDelareDomain() {
+    public void testGotoSymbolDeclareDomain() {
         Project project = testFixture.getProject();
         VirtualFile file = createFile(getSourceRoot(), "foo.as", String.format("Something: X_%s with { foo: %% }  == add {}", System.currentTimeMillis()));
 
@@ -103,7 +103,7 @@ public final class AldorGotoSymbolContributorTest {
 
     @SkipCI
     @Test
-    public void testGotoSymbolDelareMacroDomain() {
+    public void testGotoSymbolDeclareMacroDomain() {
         Project project = testFixture.getProject();
         VirtualFile file = createFile(getSourceRoot(), "foo.as", String.format("Something: E == I where E ==> X_%s with { foo: %% } I ==> add", System.currentTimeMillis()));
 

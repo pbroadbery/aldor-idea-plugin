@@ -11,7 +11,7 @@ import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCa
 import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 
-import static aldor.psi.AldorPsiUtils.logPsi;
+import java.util.Optional;
 
 public class AldorPsiUtilsTest extends LightPlatformCodeInsightFixtureTestCase {
 
@@ -26,7 +26,6 @@ public class AldorPsiUtilsTest extends LightPlatformCodeInsightFixtureTestCase {
     public void testIsTopLevelWithWhere() throws Exception {
         String text = "Outer: B == C where { B ==> with { inner == b }}";
         PsiFile file = createLightFile(AldorFileType.INSTANCE, text);
-logPsi(file);
         AldorDefine definition = PsiTreeUtil.findChildOfType(file, AldorDefine.class);
         Assert.assertNotNull(definition);
         Assert.assertTrue(AldorPsiUtils.isTopLevel(definition.getParent()));
@@ -45,6 +44,34 @@ logPsi(file);
         Assert.assertFalse(AldorPsiUtils.isTopLevel(elt2.getParent()));
     }
 
+    public void testDefiningFormRhsCase() {
+        String text = "foo: A == with {}";
+        PsiFile file = createLightFile(AldorFileType.INSTANCE, text);
+        PsiElement withElt = file.findElementAt(text.indexOf("with"));
+        Optional<AldorDefine> defn = AldorPsiUtils.definingForm(withElt);
+        Assert.assertTrue(defn.isPresent());
+    }
+
+    public void testDefiningFormLhsCase() {
+        String text = "foo: with {} == add";
+        PsiFile file = createLightFile(AldorFileType.INSTANCE, text);
+        PsiElement withElt = file.findElementAt(text.indexOf("with"));
+        Optional<AldorDefine> defn = AldorPsiUtils.definingForm(withElt);
+        Assert.assertTrue(defn.isPresent());
+    }
+
+    public void testDefiningFormMacroCase() {
+        String text = "foo: E == I where { E ==> with; I ==> add}";
+        PsiFile file = createLightFile(AldorFileType.INSTANCE, text);
+        PsiElement withElt = file.findElementAt(text.indexOf("with"));
+        Optional<AldorDefine> defn = AldorPsiUtils.definingForm(withElt);
+        Assert.assertTrue(defn.isPresent());
+        Assert.assertEquals(0, defn.get().getTextOffset());
+
+        AldorIdentifier useOfE = PsiTreeUtil.findElementOfClassAtOffset(file, text.indexOf("E == "), AldorIdentifier.class, true);
+        useOfE.getReference().resolve();
+
+    }
 
     @Override
     protected LightProjectDescriptor getProjectDescriptor() {

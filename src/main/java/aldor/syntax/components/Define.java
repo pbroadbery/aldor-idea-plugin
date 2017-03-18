@@ -20,4 +20,8 @@ public class Define extends SyntaxNode<AldorDefine> {
     public String name() {
         return "Define";
     }
+
+    public Syntax lhs() {
+        return this.arguments.get(0);
+    }
 }

@@ -3,7 +3,7 @@ package aldor.psi.impl;
 import aldor.psi.AldorLambda;
 import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxPsiParser;
-import aldor.syntax.components.SyntaxUtils;
+import aldor.syntax.SyntaxUtils;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.Key;

@@ -4,6 +4,7 @@ import aldor.language.AldorLanguage;
 import com.intellij.extapi.psi.PsiFileBase;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.psi.FileViewProvider;
+import com.intellij.psi.stubs.StubTree;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.Icon;
@@ -31,4 +32,14 @@ public class AldorFile extends PsiFileBase {
     }
 
 
+    @NotNull
+    @Override
+    public StubTree calcStubTree() {
+        try {
+            return super.calcStubTree();
+        }
+        catch (RuntimeException e) {
+            throw new AldorPsiException("Failed to calculate stubs for " + this.getVirtualFile(), e);
+        }
+    }
 }
