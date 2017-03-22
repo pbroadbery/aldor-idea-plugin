@@ -65,13 +65,15 @@ public class AldorGitTemplateFactory extends ProjectTemplatesFactory {
                 new BuilderBasedTemplate(new AldorEmptyModuleBuilder())
         )));
         templateRegisties.add(new TemplateRegistry("Aldor", Lists.newArrayList(
-                new BuilderBasedTemplate(new AldorGitModuleBuilder("Aldor")),
+                //new BuilderBasedTemplate(new AldorGitModuleBuilder("Aldor")),
                 new BuilderBasedTemplate(new AldorSimpleModuleBuilder())
                 )));
 
+        /*
         templateRegisties.add(new TemplateRegistry("Spad", Lists.newArrayList(
                 new BuilderBasedTemplate(new AldorGitModuleBuilder("Spad"))
                 )));
+        */
     }
 
     @NotNull
