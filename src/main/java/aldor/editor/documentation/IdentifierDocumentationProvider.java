@@ -36,7 +36,7 @@ public class IdentifierDocumentationProvider extends TypedDocumentationProvider<
             if (docString == null) {
                 docString = docUtils.aldorDocStringFromIndex(element, originalElement);
             }
-            return typeText + "<code>" + docString + "</code>";
+            return typeText + (docString == null ? "" : "<code>" + docString + "</code>");
         } else {
             String docString = "File lookup failed: " + symeMaybe.failInfo();
             String indexDoc = docUtils.aldorDocStringFromIndex(element, originalElement);

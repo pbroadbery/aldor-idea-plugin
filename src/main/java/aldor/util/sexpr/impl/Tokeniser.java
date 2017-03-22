@@ -1,8 +1,8 @@
 package aldor.util.sexpr.impl;
 
 import aldor.util.CharacterSet;
+import aldor.util.ElementStream;
 import aldor.util.ReaderCharacterStream;
-import aldor.util.Stream;
 import aldor.util.sexpr.SymbolPolicy;
 import com.google.common.collect.Sets;
 import org.jetbrains.annotations.Nullable;
@@ -12,7 +12,7 @@ import java.util.Locale;
 import java.util.Set;
 
 class Tokeniser implements ITokeniser {
-    private final Stream<Character> stream;
+    private final ElementStream<Character> stream;
 
     @Nullable
     private Token token;

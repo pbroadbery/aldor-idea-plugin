@@ -1,6 +1,9 @@
 package aldor.references;
 
 import aldor.build.module.AnnotationFileManager;
+import aldor.psi.AldorDeclare;
+import aldor.psi.AldorDefine;
+import aldor.psi.AldorIdentifier;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ProjectRootManager;
@@ -9,6 +12,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
+import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -47,8 +51,26 @@ public final class FileScopeWalker {
             return null;
         }
         AnnotationFileManager fileManager = fileManagerMaybe.get();
-        return fileManager.lookupReference(element);
-    }
+        AldorIdentifier ident = fileManager.lookupReference(element);
+
+        if (ident == null) {
+            return null;
+        }
+        // It might be worth pondering using the stub tree for lookup at this point.
+        // however, it isn't worth it at the moment as the current line number based
+        // lookup for symbols means that the originating file is parsed.  There's some
+        // "gist" idea in newer intellij that might allow a storing a line number/offset map
+
+        AldorDefine outerDefine = PsiTreeUtil.getContextOfType(ident, AldorDefine.class, true);
+        AldorDeclare declare = PsiTreeUtil.getContextOfType(ident, AldorDeclare.class, true, AldorDefine.class);
+        if (outerDefine.defineIdentifier().map(id -> id == ident).orElse(false)) {
+            return outerDefine;
+        }
+        if (declare != null) {
+            return declare;
+        }
+        return ident;
+     }
 
 
 }

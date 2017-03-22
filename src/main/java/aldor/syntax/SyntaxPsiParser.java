@@ -44,6 +44,7 @@ import aldor.syntax.components.With;
 import aldor.util.sexpr.SExpression;
 import com.google.common.collect.Lists;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -70,9 +71,12 @@ public final class SyntaxPsiParser {
             elt.accept(new AldorPsiSyntaxVisitor(visitStack));
             return visitStack.getFirst().get(0);
         }
+        catch (ProcessCanceledException e) {
+            throw e;
+        }
         catch (RuntimeException e) {
-            logPsi(elt);
             LOG.error("Failed to parse " + elt.getText() + " " + elt, e);
+            logPsi(elt);
             return null;
         }
     }
@@ -216,7 +220,6 @@ public final class SyntaxPsiParser {
             List<Syntax> last = visitStack.pop();
             Syntax result;
             if (last.size() != 2) {
-                logPsi(colonExpr);
                 result = new OtherSx(SExpression.string("Odd declaration. Giving up " + last));
             }
             else {

@@ -16,6 +16,7 @@ public class SyntaxPrintTest extends LightPlatformCodeInsightFixtureTestCase {
 
     public void testApplyId() {
         Assert.assertEquals("f", parseAndPrint("f"));
+        Assert.assertEquals("f()", parseAndPrint("f()"));
         Assert.assertEquals("f x", parseAndPrint("f x"));
         Assert.assertEquals("f(x, y)", parseAndPrint("f(x, y)"));
         Assert.assertEquals("f f x", parseAndPrint("f f x"));

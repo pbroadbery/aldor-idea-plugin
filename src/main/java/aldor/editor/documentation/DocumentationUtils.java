@@ -4,9 +4,11 @@ import aldor.build.module.AldorModuleManager;
 import aldor.build.module.AnnotationFileManager;
 import aldor.psi.AldorDefine;
 import aldor.psi.AldorDocumented;
+import aldor.psi.AldorIdentifier;
 import aldor.psi.index.AldorDefineTopLevelIndex;
 import aldor.symbolfile.Syme;
 import aldor.util.AnnotatedOptional;
+import aldor.util.Streams;
 import com.google.common.base.Joiner;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
@@ -14,14 +16,18 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
+import one.util.streamex.Joining;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static aldor.util.AnnotatedOptional.missing;
+import static java.util.Optional.ofNullable;
 
 public class DocumentationUtils {
     private static final Logger LOG = Logger.getInstance(DocumentationUtils.class);
@@ -41,9 +47,16 @@ public class DocumentationUtils {
     @Nullable
     public String aldorDocStringFromContainingElement(PsiElement element) {
         AldorDocumented documented = (AldorDocumented) PsiTreeUtil.findFirstParent(element, elt -> elt instanceof AldorDocumented);
+        Optional<String> file = ofNullable(element.getContainingFile())
+                        .flatMap(psiFile -> ofNullable(psiFile.getVirtualFile()))
+                        .map(VirtualFile::getPresentableName)
+                        .map(name -> "Defined in: " + name);
 
-        return docString(documented);
+        return Stream.concat(Streams.toStream(file), Streams.toStream(docString(documented))).collect(Joining.with("<br>"));
+
     }
+
+
 
     @Nullable
     public AldorDefine findTopLevelDefine(PsiElement element) {
@@ -66,7 +79,7 @@ public class DocumentationUtils {
         if (!annotationManager.isPresent()) {
             return annotationManager.failInfo();
         }
-        PsiElement resolved = annotationManager.get().lookupReference(element);
+        AldorIdentifier resolved = annotationManager.get().lookupReference(element);
         AldorDocumented documented = (AldorDocumented) PsiTreeUtil.findFirstParent(resolved, elt -> elt instanceof AldorDocumented);
         return docString(documented);
     }

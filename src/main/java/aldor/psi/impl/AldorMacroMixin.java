@@ -2,6 +2,7 @@ package aldor.psi.impl;
 
 import aldor.psi.AldorDefine;
 import aldor.psi.AldorIdentifier;
+import aldor.psi.AldorPsiUtils;
 import aldor.psi.stub.AldorDefineStub;
 import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxPsiParser;
@@ -14,9 +15,14 @@ import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
+import com.intellij.psi.search.LocalSearchScope;
+import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.util.IncorrectOperationException;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -39,14 +45,15 @@ public class AldorMacroMixin extends StubBasedPsiElementBase<AldorDefineStub> im
     public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement place) {
         PsiElement lhs = getFirstChild();
 
-        if (!processor.execute(this, state)) {
-            return false;
-        }
-
         //noinspection ObjectEquality
         if (lastParent == lhs) {
             return true;
         }
+
+        if (!processor.execute(this, state)) {
+            return false;
+        }
+
         Optional<Syntax> syntaxMaybe = syntax();
 
         Optional<Syntax> childScope = syntaxMaybe.flatMap(SyntaxUtils::childScopeForMacroLhs);
@@ -93,4 +100,30 @@ public class AldorMacroMixin extends StubBasedPsiElementBase<AldorDefineStub> im
         return syntax;
     }
 
+    @Override
+    public String getName() {
+        return this.defineIdentifier().map(PsiElement::getText).orElse(null);
+    }
+
+    @NotNull
+    @Override
+    public SearchScope getUseScope() {
+        AldorPsiUtils.ContainingBlock<?> block = AldorPsiUtils.containingBlock(this);
+        return new LocalSearchScope(block.element());
+    }
+
+    @Nullable
+    @Override
+    public PsiElement getNameIdentifier() {
+        return this.defineIdentifier().orElse(null);
+    }
+
+    @SuppressWarnings("ThrowsRuntimeException")
+    @Override
+    public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException {
+        if (this.defineIdentifier().isPresent()) {
+            this.defineIdentifier().get().setName(name);
+        }
+        return this;
+    }
 }

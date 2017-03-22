@@ -67,10 +67,6 @@ public class AldorPsiUtilsTest extends LightPlatformCodeInsightFixtureTestCase {
         Optional<AldorDefine> defn = AldorPsiUtils.definingForm(withElt);
         Assert.assertTrue(defn.isPresent());
         Assert.assertEquals(0, defn.get().getTextOffset());
-
-        AldorIdentifier useOfE = PsiTreeUtil.findElementOfClassAtOffset(file, text.indexOf("E == "), AldorIdentifier.class, true);
-        useOfE.getReference().resolve();
-
     }
 
     @Override

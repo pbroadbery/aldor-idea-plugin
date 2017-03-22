@@ -26,7 +26,6 @@ public abstract class AldorIdentifierMixin extends ASTWrapperPsiElement implemen
         super(node);
     }
 
-
     @SuppressWarnings("ThrowsRuntimeException")
     @Override
     public PsiElement setName(@NonNls @NotNull String newName) throws IncorrectOperationException {

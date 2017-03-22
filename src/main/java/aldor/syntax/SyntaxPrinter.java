@@ -121,11 +121,11 @@ public final class SyntaxPrinter {
             visitor.write(" ");
             printWithParens(visitor, apply, rhs);
         } else {
-            Syntax argument0 = apply.arguments().get(0);
             printWithParens(visitor, apply, operator);
             if (apply.arguments().isEmpty()) {
                 visitor.write("()");
             } else if (apply.arguments().size() == 1) {
+                Syntax argument0 = apply.arguments().get(0);
                 if (argument0.is(Comma.class)) {
                     visitor.write("(");
                     argument0.accept(visitor);

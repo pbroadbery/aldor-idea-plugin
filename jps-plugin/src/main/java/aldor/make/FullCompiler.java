@@ -79,7 +79,7 @@ public class FullCompiler implements AldorFileTargetBuilder.Compiler {
             Thread.interrupted();
         } catch (ExecutionException e) {
             LOG.error("Message read threw an error: ", e);
-            context.processMessage(new CompilerMessage(ALDOR_COMPILER, BuildMessage.Kind.ERROR, "Failed to read output"));
+            context.processMessage(new CompilerMessage(ALDOR_COMPILER, BuildMessage.Kind.ERROR, "Failed to read output: " + e.getMessage() + " " + e.getCause()));
         }
         LOG.info("Build complete: " + processBuilder.command() + " @ " + processBuilder.directory());
     }

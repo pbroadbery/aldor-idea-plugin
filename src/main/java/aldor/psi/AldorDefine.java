@@ -3,11 +3,12 @@ package aldor.psi;
 import aldor.psi.stub.AldorDefineStub;
 import com.intellij.psi.NavigatablePsiElement;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiNameIdentifierOwner;
 import com.intellij.psi.StubBasedPsiElement;
 
 import java.util.Optional;
 
-public interface AldorDefine extends StubBasedPsiElement<AldorDefineStub>, NavigatablePsiElement {
+public interface AldorDefine extends StubBasedPsiElement<AldorDefineStub>, PsiNameIdentifierOwner, NavigatablePsiElement {
     Optional<AldorIdentifier> defineIdentifier();
     DefinitionType definitionType();
 

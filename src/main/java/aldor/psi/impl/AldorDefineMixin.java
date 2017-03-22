@@ -17,7 +17,10 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.util.IncorrectOperationException;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -67,14 +70,14 @@ public class AldorDefineMixin extends StubBasedPsiElementBase<AldorDefineStub> i
                                        PsiElement lastParent, @NotNull PsiElement place) {
         PsiElement lhs = getFirstChild();
 
-        if (!processor.execute(this, state)) {
-            return false;
-        }
-
         //noinspection ObjectEquality
         if (lastParent == lhs) {
             return true;
         }
+        if (!processor.execute(this, state)) {
+            return false;
+        }
+
         Optional<Syntax> syntax = syntax();
 
         if (syntax.isPresent()) {
@@ -100,4 +103,23 @@ public class AldorDefineMixin extends StubBasedPsiElementBase<AldorDefineStub> i
         return syntax;
     }
 
+    @Override
+    public String getName() {
+        return this.defineIdentifier().map(PsiElement::getText).orElse(null);
+    }
+
+    @Nullable
+    @Override
+    public PsiElement getNameIdentifier() {
+        return this.defineIdentifier().orElse(null);
+    }
+
+    @SuppressWarnings("ThrowsRuntimeException")
+    @Override
+    public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException {
+        if (this.defineIdentifier().isPresent()) {
+            this.defineIdentifier().get().setName(name);
+        }
+        return this;
+    }
 }

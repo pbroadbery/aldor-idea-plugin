@@ -157,7 +157,7 @@ public class AnnotationFileManager implements Disposable {
 
     @Nullable
     public SrcPos findSrcPosForElement(PsiElement element) {
-        LineNumberMap map = lineNumberMapForFile.get(element.getContainingFile().getVirtualFile().getPath());
+        LineNumberMap map = lineNumberMapForFile(element.getContainingFile());
         if (map == null) {
             return null;
         }
@@ -165,13 +165,19 @@ public class AnnotationFileManager implements Disposable {
     }
 
     @Nullable
-    public PsiElement findElementForSrcPos(PsiFile file, SrcPos srcPos) {
-        LineNumberMap map = lineNumberMapForFile.get(file.getVirtualFile().getPath());
+    public AldorIdentifier findElementForSrcPos(PsiFile file, SrcPos srcPos) {
+        LineNumberMap map = lineNumberMapForFile(file);
         if (map == null) {
             return null;
         }
         return map.findPsiElementForSrcPos(file, srcPos.lineNumber(), srcPos.columnNumber());
     }
+
+    private LineNumberMap lineNumberMapForFile(PsiFile file) {
+        annotationFile(file);
+        return lineNumberMapForFile.get(file.getVirtualFile().getPath());
+    }
+
 
     public Future<Void> requestRebuild(PsiFile psiFile) {
         return annotationFileBuilder.invokeAnnotationBuild(psiFile);
@@ -223,7 +229,7 @@ public class AnnotationFileManager implements Disposable {
         }
 
         @Nullable
-        public PsiElement findPsiElementForSrcPos(PsiFile file, int line, int col) {
+        public AldorIdentifier findPsiElementForSrcPos(PsiFile file, int line, int col) {
             int lineOffset = offsetForLine(line-1);
             int colOffset = lineOffset + widthCalculator.offsetForWidth(new CharSequenceSubSequence(file.getText(), lineOffset, file.getTextLength()), col);
             return PsiTreeUtil.findElementOfClassAtOffset(file, colOffset, AldorIdentifier.class, true);
@@ -231,7 +237,7 @@ public class AnnotationFileManager implements Disposable {
     }
 
     @Nullable
-    public PsiElement lookupReference(@NotNull PsiElement element) {
+    public AldorIdentifier lookupReference(@NotNull PsiElement element) {
         SrcPos srcPos = findSrcPosForElement(element);
         if (srcPos == null) {
             return null;

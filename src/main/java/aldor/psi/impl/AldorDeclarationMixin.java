@@ -11,6 +11,8 @@ import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
+
 @SuppressWarnings("AbstractClassExtendsConcreteClass")
 public abstract class AldorDeclarationMixin extends ASTWrapperPsiElement implements AldorDeclaration {
 
@@ -21,6 +23,10 @@ public abstract class AldorDeclarationMixin extends ASTWrapperPsiElement impleme
     @Override
     public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state,
                                        PsiElement lastParent, @NotNull PsiElement place) {
+        //noinspection ObjectEquality
+        if (Arrays.stream(this.getChildren()).anyMatch(x -> x == lastParent)) {
+            return true;
+        }
         if (!processor.execute(this, state)) {
             return false;
         }

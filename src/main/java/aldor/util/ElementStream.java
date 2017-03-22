@@ -1,7 +1,7 @@
 package aldor.util;
 
 @SuppressWarnings("InterfaceNamingConvention")
-public interface Stream<T> {
+public interface ElementStream<T> {
 	T peek();
 
 	void next();

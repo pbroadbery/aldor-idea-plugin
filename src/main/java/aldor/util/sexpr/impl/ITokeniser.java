@@ -1,6 +1,6 @@
 package aldor.util.sexpr.impl;
 
-import aldor.util.Stream;
+import aldor.util.ElementStream;
 
-public interface ITokeniser extends Stream<Token> {
+public interface ITokeniser extends ElementStream<Token> {
 }

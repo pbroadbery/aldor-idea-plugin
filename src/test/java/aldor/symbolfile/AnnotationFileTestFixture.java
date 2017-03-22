@@ -22,6 +22,7 @@ import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -80,12 +81,28 @@ public class AnnotationFileTestFixture {
     }
 
     public String createMakefile(String aldorLocation, Collection<String> files) {
+        return createMakefile(aldorLocation, files, Collections.emptyMap());
+    }
+
+    public String createMakefile(String aldorLocation, Collection<String> files, Map<String, List<String>> dependencies) {
         String abnRule =
                 "$(addsuffix .abn, $(ALDOR_FILES)): %.abn: %.as\n" +
                 "\techo Making $@\n"+
-                "\t$(ALDOR) -Fabn=$@ $<\n";
-        String text = "ALDOR = %s\nALDOR_FILES=%s\n%s\n";
-        return String.format(text, aldorLocation, files.stream().map(StringUtil::trimExtension).collect(Joining.with(" ")), abnRule);
+                "\t$(ALDOR) -Fabn=$@ $<\n" +
+                "$(addsuffix .ao, $(ALDOR_FILES)): %.ao: %.as\n" +
+                "\techo Making $@\n"+
+                "\t$(ALDOR) -Fao=$@ $<\n"
+        ;
+        String text = "ALDOR = %s\nALDOR_FILES=%s\n%s\n%s\n";
+        String dependencyRules = dependencies.entrySet().stream()
+                                                        .map(e -> StringUtil.trimExtension(e.getKey())
+                                                                + ".ao " + StringUtil.trimExtension(e.getKey()) + ".abn: " + e.getValue().stream()
+                                                                                        .map(StringUtil::trimExtension)
+                                                                                        .map(x -> x + ".ao").collect(Joining.with(" ")))
+                                                                 .collect(Joining.with("\n"));
+        return String.format(text, aldorLocation, files.stream().map(StringUtil::trimExtension).collect(Joining.with(" ")),
+                            dependencyRules,
+                abnRule);
     }
 
     public void runInEdtAndWait(@NotNull Runnable runnable) throws Exception {

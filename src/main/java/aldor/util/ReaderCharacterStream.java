@@ -3,7 +3,7 @@ package aldor.util;
 import java.io.IOException;
 import java.io.Reader;
 
-public class ReaderCharacterStream implements Stream<Character> {
+public class ReaderCharacterStream implements ElementStream<Character> {
 	private Exception exception = null;
 	private int c;
 	private final Reader reader;

@@ -8,14 +8,13 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiReference;
-import com.intellij.psi.search.searches.ReferencesSearch;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.Query;
+import com.intellij.refactoring.psi.SearchUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
+import java.util.Iterator;
 import java.util.Optional;
 import java.util.Set;
 
@@ -112,6 +111,17 @@ public final class AldorPsiUtils {
 
     @NotNull
     public static Optional<AldorDefine> definingForm(PsiElement element) {
+        try {
+            return definingForm1(element);
+        }
+        catch (RuntimeException ignored) {
+            LOG.error("Failed to get defining form for " + element.getText());
+            return Optional.empty();
+        }
+    }
+
+    @NotNull
+    private static Optional<AldorDefine> definingForm1(PsiElement element) {
         PsiElement form = new DefiningFormVisitor().apply(element);
         // Need to deal with macro/where here.
         if (!(form instanceof AldorDefine)) {
@@ -133,12 +143,13 @@ public final class AldorPsiUtils {
     @NotNull
     private static Optional<AldorDefine> definitionFromMacro(AldorDefine define) {
         AldorIdentifier id = define.defineIdentifier().get();
-        final Query<PsiReference> query = ReferencesSearch.search(id, id.getUseScope());
-        Collection<PsiReference> refs = query.findAll();
-        if (refs.size() != 1) {
+        Iterable<PsiReference> refs = SearchUtils.findAllReferences(define);
+        Iterator<PsiReference> iterator = refs.iterator();
+        if (!iterator.hasNext()) {
             return Optional.empty();
         }
-        PsiReference ref = refs.iterator().next();
+
+        PsiReference ref = iterator.next();
         return Optional.ofNullable(PsiTreeUtil.getParentOfType(ref.getElement(), AldorDefine.class));
     }
 
@@ -225,7 +236,7 @@ public final class AldorPsiUtils {
     public static final ContainingBlockType<PsiElement> ADD = new ContainingBlockType<>("Add", PsiElement.class);
     public static final ContainingBlockType<PsiFile> TOPLEVEL = new ContainingBlockType<>("TopLevel", PsiFile.class);
     public static final ContainingBlockType<AldorBlock> BODY = new ContainingBlockType<>("Block", AldorBlock.class);
-    public static final ContainingBlockType<AldorBlock> WHERE = new ContainingBlockType<>("Where", AldorBlock.class);
+    public static final ContainingBlockType<AldorWhereBlock> WHERE = new ContainingBlockType<>("Where", AldorWhereBlock.class);
 
     public static ContainingBlock<?> containingBlock(PsiElement elt) {
         PsiElement element = elt;
@@ -241,6 +252,9 @@ public final class AldorPsiUtils {
                 return BODY.of(element);
             }
             */
+            if (element instanceof AldorWhereBlock) {
+                return WHERE.of(element);
+            }
             if (element instanceof PsiFile) {
                 return TOPLEVEL.of(element);
             }

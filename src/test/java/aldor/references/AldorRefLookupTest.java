@@ -26,7 +26,6 @@ import static aldor.psi.AldorPsiUtils.logPsi;
 
 public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase {
 
-
     public void testReference() {
         PsiElement whole = createAldorFile("f(n: Integer): Integer == n+1");
         PsiElement theRhs = PsiTreeUtil.findChildOfType(whole, AldorE6.class);
@@ -343,7 +342,6 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
 
     private void assertReferences(String text, Map<String, String> nameRefToMap, Iterable<String> nulls, Language language) {
         PsiFile file = createFile(text, language);
-        logPsi(file);
         Map<String, PsiElement> refMap = Maps.newHashMap();
         for (Map.Entry<String, String> entry: nameRefToMap.entrySet()) {
             PsiReference ref = file.findReferenceAt(text.indexOf(entry.getKey()));
