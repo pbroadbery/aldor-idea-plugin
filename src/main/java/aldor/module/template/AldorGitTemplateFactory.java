@@ -6,11 +6,9 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
-import com.intellij.ide.util.projectWizard.ModuleBuilder;
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.roots.ModifiableRootModel;
@@ -69,11 +67,10 @@ public class AldorGitTemplateFactory extends ProjectTemplatesFactory {
                 new BuilderBasedTemplate(new AldorSimpleModuleBuilder())
                 )));
 
-        /*
+
         templateRegisties.add(new TemplateRegistry("Spad", Lists.newArrayList(
                 new BuilderBasedTemplate(new AldorGitModuleBuilder("Spad"))
                 )));
-        */
     }
 
     @NotNull
@@ -109,15 +106,11 @@ public class AldorGitTemplateFactory extends ProjectTemplatesFactory {
         return null;
     }
 
-    private abstract static class AldorModuleBuilder extends ModuleBuilder {
-        @Override
-        public void setupRootModel(ModifiableRootModel modifiableRootModel) throws ConfigurationException {
+    private abstract static class AldorTemplateModuleBuilder extends AldorModuleType.AldorModuleBuilder {
 
-        }
 
-        @Override
-        public ModuleType<ModuleBuilder> getModuleType() {
-            return AldorModuleType.instance();
+        AldorTemplateModuleBuilder(AldorModuleType type) {
+            super(type);
         }
 
         @Override
@@ -148,20 +141,18 @@ public class AldorGitTemplateFactory extends ProjectTemplatesFactory {
         }
     }
 
-    private static class AldorEmptyModuleBuilder extends AldorModuleBuilder {}
+    private static class AldorEmptyModuleBuilder extends AldorModuleType.AldorModuleBuilder {
+        AldorEmptyModuleBuilder() {
+            super(AldorModuleType.instance());
+        }
+    }
 
-    private final class AldorGitModuleBuilder extends AldorModuleBuilder {
+    private final class AldorGitModuleBuilder extends AldorModuleType.AldorModuleBuilder {
         private final String name;
 
         private AldorGitModuleBuilder(String name) {
+            super(AldorModuleType.instance());
             this.name = name;
-        }
-
-        @Override
-        public void setupRootModel(ModifiableRootModel modifiableRootModel) {
-            createContentRoot(modifiableRootModel);
-
-
         }
 
         @Override
@@ -175,8 +166,13 @@ public class AldorGitTemplateFactory extends ProjectTemplatesFactory {
         }
     }
 
-    private static class AldorSimpleModuleBuilder extends AldorModuleBuilder {
+    private static class AldorSimpleModuleBuilder extends AldorModuleType.AldorModuleBuilder {
         private static final Logger LOG = Logger.getInstance(AldorSimpleModuleBuilder.class);
+
+        protected AldorSimpleModuleBuilder() {
+            super(AldorModuleType.instance());
+        }
+
         @Override
         public String getPresentableName() {
             return "Simple Aldor module";
@@ -189,12 +185,12 @@ public class AldorGitTemplateFactory extends ProjectTemplatesFactory {
 
         @Override
         public void setupRootModel(final ModifiableRootModel modifiableRootModel) throws ConfigurationException {
+            super.setupRootModel(modifiableRootModel);
             String contentEntryPath = getContentEntryPath();
             if (StringUtil.isEmpty(contentEntryPath)) {
                 return;
             }
 
-            createContentRoot(modifiableRootModel);
             File contentRootDir = new File(contentEntryPath);
             createFileLayout(contentRootDir, modifiableRootModel);
         }

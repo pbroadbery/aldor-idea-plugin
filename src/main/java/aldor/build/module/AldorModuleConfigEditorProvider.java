@@ -2,8 +2,11 @@ package aldor.build.module;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleConfigurationEditor;
+import com.intellij.openapi.module.ModuleType;
+import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ui.configuration.BuildElementsEditor;
-import com.intellij.openapi.roots.ui.configuration.ContentEntriesEditor;
+import com.intellij.openapi.roots.ui.configuration.ClasspathEditor;
+import com.intellij.openapi.roots.ui.configuration.CommonContentEntriesEditor;
 import com.intellij.openapi.roots.ui.configuration.ModuleConfigurationEditorProviderEx;
 import com.intellij.openapi.roots.ui.configuration.ModuleConfigurationState;
 import com.intellij.openapi.roots.ui.configuration.ModuleElementsEditor;
@@ -15,21 +18,26 @@ import javax.swing.JComponent;
 /**
  * UI for editing module config.
  */
-public class AldorModuleConfigEditor implements ModuleConfigurationEditorProviderEx {
+public class AldorModuleConfigEditorProvider implements ModuleConfigurationEditorProviderEx {
     @Override
     public ModuleConfigurationEditor[] createEditors(ModuleConfigurationState state) {
-        Module module = state.getRootModel().getModule();
+        ModifiableRootModel rootModel = state.getRootModel();
+        Module rootModule = rootModel.getModule();
+        if (!(ModuleType.get(rootModule) instanceof AldorModuleType)) {
+            return ModuleConfigurationEditor.EMPTY;
+        }
+        return new ModuleConfigurationEditor[]{
+                new CommonContentEntriesEditor(rootModule.getName(), state),
+                new OutputDirectoryEditor(state),
+                new ClasspathEditor(state)
 
-        return new ModuleConfigurationEditor[]{new ContentEntriesEditor(module.getName(), state),
-                new OutputDirectoryEditor(state)
         };
     }
 
     @Override
     public boolean isCompleteEditorSet() {
-        return true;
+        return false;
     }
-
 
     public static class OutputDirectoryEditor extends ModuleElementsEditor {
         private final BuildElementsEditor outputEditor;
@@ -68,5 +76,5 @@ public class AldorModuleConfigEditor implements ModuleConfigurationEditorProvide
             super(state);
         }
     }
-
 }
+

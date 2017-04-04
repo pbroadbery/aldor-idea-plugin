@@ -1,4 +1,4 @@
-package aldor.editor;
+package aldor.editor.finder;
 
 import aldor.parser.NavigatorFactory;
 import aldor.psi.AldorDefine;
@@ -6,6 +6,8 @@ import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.search.GlobalSearchScopesCore;
+import com.intellij.psi.search.ProjectScope;
 import com.intellij.psi.stubs.StringStubIndexExtension;
 import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NotNull;
@@ -32,7 +34,12 @@ public abstract class AldorGotoDefinitionContributorBase implements ChooseByName
     @NotNull
     @Override
     public NavigationItem[] getItemsByName(String name, String pattern, Project project, boolean nonProjectItems) {
-        Collection<AldorDefine> items = index.get(name, project, GlobalSearchScope.allScope(project));
+        GlobalSearchScope scope = GlobalSearchScopesCore.projectProductionScope(project);
+        if (nonProjectItems) {
+            scope = GlobalSearchScope.union(new GlobalSearchScope[] {scope, ProjectScope.getLibrariesScope(project)});
+        }
+
+        Collection<AldorDefine> items = index.get(name, project, scope);
         List<NavigationItem> collect = items.stream()
                 .map(define -> navigationItemForIndexEntry(project, define))
                 .collect(Collectors.toList());

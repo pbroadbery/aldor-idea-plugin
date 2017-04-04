@@ -1,10 +1,10 @@
-package aldor.editor;
+package aldor.editor.finder;
 
 import aldor.psi.index.AldorDefineTopLevelIndex;
 
 public class AldorGotoClassContributor extends AldorGotoDefinitionContributorBase {
 
-    protected AldorGotoClassContributor() {
+    public AldorGotoClassContributor() {
         super(AldorDefineTopLevelIndex.instance);
     }
 }

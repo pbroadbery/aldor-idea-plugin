@@ -1,4 +1,4 @@
-package aldor.editor;
+package aldor.editor.finder;
 
 import aldor.parser.NavigatorFactory;
 import aldor.psi.SpadAbbrev;
@@ -7,6 +7,8 @@ import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.search.GlobalSearchScopesCore;
+import com.intellij.psi.search.ProjectScope;
 import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,7 +28,11 @@ public class SpadAbbrevGotoClassContributor implements ChooseByNameContributor {
     @NotNull
     @Override
     public NavigationItem[] getItemsByName(String name, String pattern, Project project, boolean nonProjectItems) {
-        Collection<SpadAbbrev> items = AbbrevAbbrevIndex.instance.get(name, project, GlobalSearchScope.allScope(project));
+        GlobalSearchScope scope = GlobalSearchScopesCore.projectProductionScope(project);
+        if (nonProjectItems) {
+            scope = GlobalSearchScope.union(new GlobalSearchScope[] {scope, ProjectScope.getLibrariesScope(project)});
+        }
+        Collection<SpadAbbrev> items = AbbrevAbbrevIndex.instance.get(name, project, scope);
         List<NavigationItem> collect = items.stream()
                 .filter(abbrev -> !abbrev.abbrevInfo().isError())
                 .map(abbrev -> NavigatorFactory.get(project).getNavigationItem(abbrev))

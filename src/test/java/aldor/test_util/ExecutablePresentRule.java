@@ -1,12 +1,13 @@
 package aldor.test_util;
 
-import com.google.common.collect.Lists;
 import org.junit.Assume;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,10 +19,14 @@ import java.util.Optional;
  * Explicit places beat PATH lookup.
  */
 public class ExecutablePresentRule implements TestRule {
-    static final List<String> places = Lists.newArrayList("/home/pab/IdeaProjects/aldor-codebase/opt/bin");
     private final String executableName;
+    private final List<String> places;
 
     public ExecutablePresentRule(String name) {
+        this(Collections.emptyList(), name);
+    }
+    public ExecutablePresentRule(List<String> places, String name) {
+        this.places = new ArrayList<>(places);
         this.executableName = name;
     }
 
@@ -70,6 +75,14 @@ public class ExecutablePresentRule implements TestRule {
         return Optional.empty();
     }
 
+    public String prefix() {
+        File file = executable();
+        if ("bin".equals(file.getParentFile().getName())) {
+            return file.getParentFile().getParentFile().getPath();
+        }
+        throw new RuntimeException("No prefix for executable");
+    }
+
     @SuppressWarnings("serial")
     public static final class MissingExecutableException extends RuntimeException {
         MissingExecutableException(String msg) {
@@ -79,7 +92,13 @@ public class ExecutablePresentRule implements TestRule {
 
     public static class Aldor extends ExecutablePresentRule {
         public Aldor() {
-            super("aldor");
+            super(Collections.singletonList("/home/pab/IdeaProjects/aldor-codebase/opt/bin"), "aldor");
+        }
+    }
+
+    public static class Fricas extends ExecutablePresentRule {
+        public Fricas() {
+            super(Collections.singletonList("/home/pab/Work/fricas/opt/bin"), "fricas");
         }
     }
 

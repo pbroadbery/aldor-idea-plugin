@@ -1,5 +1,6 @@
 package aldor.util;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -82,9 +83,41 @@ public final class AnnotatedOptional<T, X> {
         throw errorSupplier.apply(failInfo());
     }
 
+    public T orElse(Function<X, T> valueSupplier) {
+        if (isPresent()) {
+            return get();
+        }
+        //noinspection ProhibitedExceptionThrown
+        return valueSupplier.apply(this.failInfo);
+    }
+
     @Override
     public String toString() {
         return "{" + (this.value == null ? "FAIL: " + failInfo : "OK: " + value) + "}";
     }
 
+    @Override
+    public int hashCode() {
+        return this.map(Object::hashCode).orElse(Object::hashCode);
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof AnnotatedOptional)) {
+            return false;
+        }
+        //noinspection unchecked
+        AnnotatedOptional<T, X> otherOptional = (AnnotatedOptional<T, X>) other;
+        if (isPresent() && otherOptional.isPresent()) {
+            return Objects.equals(this.get(), otherOptional.get());
+        }
+        if (!isPresent() && !otherOptional.isPresent()) {
+            return Objects.equals(this.failInfo(), otherOptional.failInfo());
+        }
+        return false;
+    }
+
+    public T orElseConstant(T c) {
+        return isPresent() ? get() : c;
+    }
 }

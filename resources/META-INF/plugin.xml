@@ -34,7 +34,7 @@
 
         <moduleType id="ALDOR-MODULE" classpathProvider="false"
                     implementationClass="aldor.build.module.AldorModuleType"/>
-        <moduleConfigurationEditorProvider implementation="aldor.build.module.AldorModuleConfigEditor"/>
+        <moduleConfigurationEditorProvider implementation="aldor.build.module.AldorModuleConfigEditorProvider"/>
 
         <lang.syntaxHighlighterFactory language="Aldor" implementationClass="aldor.editor.AldorSyntaxHighlighterFactory"/>
         <lang.braceMatcher language="Aldor" implementationClass="aldor.editor.AldorBracketMatcher"/>
@@ -51,26 +51,30 @@
 
         <!-- Not useful: <externalAnnotator language="Aldor" implementationClass="aldor.editor.TypeAndRefAnnotator"/> -->
 
-        <gotoClassContributor implementation="aldor.editor.AldorGotoClassContributor"/>
-        <gotoSymbolContributor implementation="aldor.editor.AldorGotoSymbolContributor"/>
-        <gotoSymbolContributor implementation="aldor.editor.AldorGotoWithDeclarationContributor"/>
+        <gotoClassContributor implementation="aldor.editor.finder.AldorGotoClassContributor"/>
+        <gotoSymbolContributor implementation="aldor.editor.finder.AldorGotoSymbolContributor"/>
+        <gotoSymbolContributor implementation="aldor.editor.finder.AldorGotoWithDeclarationContributor"/>
         <stubElementTypeHolder class="aldor.psi.elements.AldorTypes"/>
         <stubIndex implementation="aldor.psi.index.AldorDefineNameIndex"/>
         <stubIndex implementation="aldor.psi.index.AldorDefineTopLevelIndex"/>
         <stubIndex implementation="aldor.psi.index.AldorDeclareTopIndex"/>
-
+        <moduleRendererFactory implementation="aldor.editor.finder.OptionRendererFactory"/>
         <!-- Aldor extras -->
         <lang.refactoringSupport language="Aldor" implementationClass="aldor.references.AldorRefactoringSupportProvider"/>
         <documentationProvider implementation="aldor.editor.documentation.AldorDocumentationProvider"/>
         <fileTypeFactory implementation="aldor.file.AldorFileTypeFactory"/>
         <lang.parserDefinition language="Aldor" implementationClass="aldor.parser.AldorParserDefinition"/>
 
+        <library.type implementation="aldor.library.AldorLibraryType"/>
+        <sdkType implementation="aldor.sdk.AldorSdkType"/>
+        <sdkType implementation="aldor.sdk.FricasSdkType"/>
+
         <!-- Spad extras -->
         <fileTypeFactory implementation="aldor.file.SpadFileTypeFactory"/>
         <lang.parserDefinition language="Spad" implementationClass="aldor.parser.SpadParserDefinition"/>
         <stubIndex implementation="aldor.psi.index.AbbrevNameIndex"/>
         <stubIndex implementation="aldor.psi.index.AbbrevAbbrevIndex"/>
-        <gotoClassContributor implementation="aldor.editor.SpadAbbrevGotoClassContributor"/>
+        <gotoClassContributor implementation="aldor.editor.finder.SpadAbbrevGotoClassContributor"/>
 
         <!-- Test language -->
         <fileTypeFactory implementation="aldor.expression.ExpressionFileTypeFactory"/>

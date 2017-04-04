@@ -1,4 +1,4 @@
-package aldor.editor;
+package aldor.editor.finder;
 
 import aldor.build.module.AldorModuleType;
 import aldor.parser.SwingThreadTestRule;

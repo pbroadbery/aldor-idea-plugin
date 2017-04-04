@@ -1,10 +1,10 @@
-package aldor.editor;
+package aldor.editor.finder;
 
 import aldor.psi.index.AldorDefineNameIndex;
 
 public class AldorGotoSymbolContributor extends AldorGotoDefinitionContributorBase {
 
-    protected AldorGotoSymbolContributor() {
+    public AldorGotoSymbolContributor() {
         super(AldorDefineNameIndex.instance);
     }
 }
