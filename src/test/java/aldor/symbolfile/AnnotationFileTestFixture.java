@@ -105,7 +105,7 @@ public class AnnotationFileTestFixture {
                 abnRule);
     }
 
-    public void runInEdtAndWait(@NotNull Runnable runnable) throws Exception {
+    public void runInEdtAndWait(@NotNull Runnable runnable) {
         EdtTestUtilKt.runInEdtAndWait(() -> {
             runnable.run();
             //noinspection ReturnOfNull

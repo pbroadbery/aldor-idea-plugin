@@ -32,6 +32,7 @@ import java.util.function.Predicate;
 
 import static org.junit.Assert.assertNotNull;
 
+@SuppressWarnings("ClassWithTooManyDependents")
 public final class ParserFunctions {
     public static final int NOT_INTERACTIVE_MILLIS = 1000;
     private static final Logger LOG = Logger.getInstance(ParserFunctions.class);

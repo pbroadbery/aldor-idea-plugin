@@ -18,6 +18,7 @@ class DefineDocumentationProvider extends TypedDocumentationProvider<AldorDefine
 
         Optional<String> externalLink = (o.getContainingFile().getLanguage().equals(SpadLanguage.INSTANCE)) ? makeExternalLink(o) : Optional.empty();
 
+        //noinspection StringConcatenationMissingWhitespace
         return externalLink.map(x -> x + "<hr/>\n").orElse("") + docUtils.aldorDocStringFromContainingElement(o);
     }
 

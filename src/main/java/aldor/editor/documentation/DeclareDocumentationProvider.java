@@ -21,10 +21,10 @@ class DeclareDocumentationProvider extends TypedDocumentationProvider<AldorDecla
     @Override
     public String generateDoc(AldorDeclare o, PsiElement originalElement) {
         String type1 = declareTypeText(o);
-        String exportType = declareExporterType(o).map(e -> "<br/><b>Exporter:</b>" + e).orElse("");
+        String exportType = declareExporterType(o).map(e -> "<b>Exporter:</b>" + e).orElse("");
         String header = "<b>Type:</b> " + type1;
         String docco = docUtils.aldorDocStringFromContainingElement(o);
-        return header + exportType + "<hr/>" + docco;
+        return header + "<br/>" + exportType + "<hr/>" + docco;
     }
 
     private String declareTypeText(AldorDeclare o) {
@@ -40,7 +40,7 @@ class DeclareDocumentationProvider extends TypedDocumentationProvider<AldorDecla
         return type;
     }
 
-    private Optional<String> declareExporterType(AldorDeclare o) {
+    private Optional<String> declareExporterType(@SuppressWarnings("TypeMayBeWeakened") AldorDeclare o) {
         AldorPsiUtils.ContainingBlock<?> block = AldorPsiUtils.containingBlock(o);
         Optional<AldorDefine> definingForm = block.castTo(WITH)
                 .map(AldorPsiUtils.ContainingBlock::element)

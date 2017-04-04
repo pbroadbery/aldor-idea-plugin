@@ -37,6 +37,7 @@ public class AldorDefineMixin extends StubBasedPsiElementBase<AldorDefineStub> i
         super(stub, type);
     }
 
+    @NotNull
     @Override
     public Optional<AldorIdentifier> defineIdentifier() {
         return defineId().map(Id::aldorIdentifier);
@@ -47,6 +48,7 @@ public class AldorDefineMixin extends StubBasedPsiElementBase<AldorDefineStub> i
         return DefinitionType.CONSTANT;
     }
 
+    @NotNull
     private Optional<Id> defineId() {
         Optional<Syntax> syntaxMaybe = syntax();
         if (!syntaxMaybe.isPresent()) {

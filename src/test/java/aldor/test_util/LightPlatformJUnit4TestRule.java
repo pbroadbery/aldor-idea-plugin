@@ -15,6 +15,7 @@ import org.junit.runners.model.Statement;
 
 import java.io.File;
 
+@SuppressWarnings("ClassWithTooManyDependents")
 public class LightPlatformJUnit4TestRule implements TestRule {
     private final String basePath;
     private CodeInsightTestFixture myFixture = null;

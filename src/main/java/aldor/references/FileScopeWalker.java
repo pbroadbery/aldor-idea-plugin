@@ -17,6 +17,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
+import static java.util.Optional.ofNullable;
+
 public final class FileScopeWalker {
     private static final Logger LOG = Logger.getInstance(FileScopeWalker.class);
 
@@ -43,9 +45,9 @@ public final class FileScopeWalker {
     @Nullable
     public static PsiElement lookupBySymbolFile(PsiElement element) {
         ProjectRootManager rootManager = ProjectRootManager.getInstance(element.getProject());
-        Optional<PsiFile> fileMaybe = Optional.ofNullable(element.getContainingFile());
-        Optional<VirtualFile> vfMaybe = fileMaybe.flatMap(psiFile -> Optional.ofNullable(psiFile.getVirtualFile()));
-        Optional<Module> moduleMaybe = vfMaybe.flatMap(vf -> Optional.ofNullable(rootManager.getFileIndex().getModuleForFile(vf)));
+        Optional<PsiFile> fileMaybe = ofNullable(element.getContainingFile());
+        Optional<VirtualFile> vfMaybe = fileMaybe.flatMap(psiFile -> ofNullable(psiFile.getVirtualFile()));
+        Optional<Module> moduleMaybe = vfMaybe.flatMap(vf -> ofNullable(rootManager.getFileIndex().getModuleForFile(vf)));
         Optional<AnnotationFileManager> fileManagerMaybe = moduleMaybe.flatMap(AnnotationFileManager::getAnnotationFileManager);
         if (!fileManagerMaybe.isPresent()) {
             return null;
@@ -61,10 +63,11 @@ public final class FileScopeWalker {
         // lookup for symbols means that the originating file is parsed.  There's some
         // "gist" idea in newer intellij that might allow a storing a line number/offset map
 
-        AldorDefine outerDefine = PsiTreeUtil.getContextOfType(ident, AldorDefine.class, true);
+        Optional<AldorDefine> outerDefineMaybe = ofNullable(PsiTreeUtil.getContextOfType(ident, AldorDefine.class, true));
         AldorDeclare declare = PsiTreeUtil.getContextOfType(ident, AldorDeclare.class, true, AldorDefine.class);
-        if (outerDefine.defineIdentifier().map(id -> id == ident).orElse(false)) {
-            return outerDefine;
+        //noinspection ObjectEquality
+        if (outerDefineMaybe.flatMap(AldorDefine::defineIdentifier).map(id -> id == ident).orElse(false)) {
+            return outerDefineMaybe.get();
         }
         if (declare != null) {
             return declare;

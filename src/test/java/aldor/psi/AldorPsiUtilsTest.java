@@ -66,6 +66,7 @@ public class AldorPsiUtilsTest extends LightPlatformCodeInsightFixtureTestCase {
         PsiElement withElt = file.findElementAt(text.indexOf("with"));
         Optional<AldorDefine> defn = AldorPsiUtils.definingForm(withElt);
         Assert.assertTrue(defn.isPresent());
+        //noinspection OptionalGetWithoutIsPresent
         Assert.assertEquals(0, defn.get().getTextOffset());
     }
 

@@ -2,11 +2,11 @@ package aldor.editor;
 
 import aldor.psi.AldorDeclare;
 import aldor.psi.stub.AldorDeclareStub;
+import aldor.syntax.DeclareFunctions;
 import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxPrinter;
 import aldor.syntax.SyntaxPsiParser;
 import aldor.syntax.components.AbstractId;
-import aldor.syntax.components.analysis.DeclareFunctions;
 import aldor.ui.AldorIcons;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeNode;

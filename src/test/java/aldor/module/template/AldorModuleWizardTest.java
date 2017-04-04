@@ -3,6 +3,7 @@ package aldor.module.template;
 import com.intellij.testFramework.PlatformTestCase;
 import org.junit.Ignore;
 
+@SuppressWarnings("JUnitTestCaseWithNoTests")
 @Ignore("Need to revisit & turn into junit4")
 public class AldorModuleWizardTest extends PlatformTestCase {
 

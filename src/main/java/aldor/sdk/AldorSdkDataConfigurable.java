@@ -9,6 +9,7 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 public class AldorSdkDataConfigurable implements AdditionalDataConfigurable {
+    @SuppressWarnings("FieldHasSetterButNoGetter")
     private Sdk sdk = null;
 
     @Override

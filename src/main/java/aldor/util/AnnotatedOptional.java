@@ -87,7 +87,6 @@ public final class AnnotatedOptional<T, X> {
         if (isPresent()) {
             return get();
         }
-        //noinspection ProhibitedExceptionThrown
         return valueSupplier.apply(this.failInfo);
     }
 

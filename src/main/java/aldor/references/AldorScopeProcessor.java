@@ -35,7 +35,7 @@ public class AldorScopeProcessor implements PsiScopeProcessor {
         return new ScopeVisitor(state).apply(element);
     }
 
-    class ScopeVisitor extends ReturningAldorVisitor<Boolean> {
+    private class ScopeVisitor extends ReturningAldorVisitor<Boolean> {
         private final ResolveState state;
 
         ScopeVisitor(ResolveState state) {
@@ -88,7 +88,7 @@ public class AldorScopeProcessor implements PsiScopeProcessor {
         return true;
     }
 
-    private boolean executeIdentifier(AldorIdentifier id, ResolveState state) {
+    private boolean executeIdentifier(PsiElement id, ResolveState state) {
         if (this.name.equals(id.getText())) {
             // FIXME: returning the id is probably incorrect
             // - The outer define or declare is more suitable.  Unfortunately it might not exist..

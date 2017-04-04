@@ -19,7 +19,7 @@ public class SkipOnCIBuildRule implements TestRule {
         if (!Objects.equals(System.getProperty("aldor.build.skip_ci"), "true")) {
             return statement;
         } else {
-            //noinspection InnerClassTooDeeplyNested,ReturnOfInnerClass
+            //noinspection ReturnOfInnerClass
             return new Statement() {
                 @Override
                 public void evaluate() throws Throwable {

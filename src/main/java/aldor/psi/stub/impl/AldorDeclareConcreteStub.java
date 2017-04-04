@@ -1,15 +1,17 @@
 package aldor.psi.stub.impl;
 
 import aldor.psi.AldorDeclare;
+import aldor.psi.AldorPsiUtils;
 import aldor.psi.stub.AldorDeclareStub;
+import aldor.syntax.DeclareFunctions;
 import aldor.syntax.Syntax;
 import aldor.syntax.components.AbstractId;
 import aldor.syntax.components.DeclareNode;
-import aldor.syntax.components.analysis.DeclareFunctions;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubBase;
 import com.intellij.psi.stubs.StubElement;
 
+import java.util.Objects;
 import java.util.Optional;
 
 public class AldorDeclareConcreteStub extends StubBase<AldorDeclare> implements AldorDeclareStub {
@@ -17,10 +19,10 @@ public class AldorDeclareConcreteStub extends StubBase<AldorDeclare> implements 
     private final boolean isCategoryDeclaration;
 
     public AldorDeclareConcreteStub(StubElement<?> parent, IStubElementType<AldorDeclareStub, AldorDeclare> elementType,
-                                    Syntax syntax, @SuppressWarnings("MethodParameterNamingConvention") boolean isCategoryDeclaration) {
+                                    Syntax syntax, AldorPsiUtils.IContainingBlockType blockType) {
         super(parent, elementType);
         this.syntax = syntax;
-        this.isCategoryDeclaration = isCategoryDeclaration;
+        this.isCategoryDeclaration = Objects.equals(blockType, AldorPsiUtils.WITH);
     }
 
     public Optional<AbstractId> declareId() {

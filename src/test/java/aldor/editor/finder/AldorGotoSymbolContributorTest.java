@@ -25,8 +25,6 @@ import org.junit.Test;
 import org.junit.rules.RuleChain;
 import org.junit.rules.TestRule;
 
-import java.io.IOException;
-
 import static aldor.psi.AldorPsiUtils.logPsi;
 import static aldor.util.VirtualFileTests.createFile;
 import static com.intellij.testFramework.LightPlatformTestCase.getSourceRoot;
@@ -46,7 +44,7 @@ public final class AldorGotoSymbolContributorTest {
     public final TestRule rule = new SkipOnCIBuildRule();
 
     @Test
-    public void testGotoSymbol() throws IOException {
+    public void testGotoSymbol() {
         Project project = testFixture.getProject();
         VirtualFile file = createFile(getSourceRoot(), "foo.as", "Something: with == add { aNumber == " + System.currentTimeMillis() + "}");
 

@@ -140,9 +140,13 @@ public final class AldorPsiUtils {
         }
     }
 
+    /**
+     * Handle the 'X: E == I where E ==> ...' idiom
+     * @param define A macro definition (E ==> ..)
+     * @return the definition where the value of the macro is used (X: E == I).
+     */
     @NotNull
-    private static Optional<AldorDefine> definitionFromMacro(AldorDefine define) {
-        AldorIdentifier id = define.defineIdentifier().get();
+    private static Optional<AldorDefine> definitionFromMacro(@SuppressWarnings("TypeMayBeWeakened") AldorDefine define) {
         Iterable<PsiReference> refs = SearchUtils.findAllReferences(define);
         Iterator<PsiReference> iterator = refs.iterator();
         if (!iterator.hasNext()) {
@@ -189,7 +193,11 @@ public final class AldorPsiUtils {
         }
     }
 
-    public static class ContainingBlockType<T extends PsiElement> {
+    public interface IContainingBlockType {
+        String name();
+    }
+
+    public static class ContainingBlockType<T extends PsiElement> implements IContainingBlockType {
         private final String name;
         private final Class<T> blockClass;
 
@@ -198,13 +206,14 @@ public final class AldorPsiUtils {
             this.blockClass = blockClass;
         }
 
-        public ContainingBlock<T> of(PsiElement element) {
-            if (!blockClass.isAssignableFrom(element.getClass())) {
-                throw new IllegalArgumentException(this.name + " " + element);
-            }
-            return new ContainingBlock<T>(this, this.blockClass.cast(element));
+        @Override
+        public String name() {
+            return name;
         }
 
+        public Class<T> blockClass() {
+            return blockClass;
+        }
     }
 
     public static final class ContainingBlock<T extends PsiElement> {
@@ -230,6 +239,12 @@ public final class AldorPsiUtils {
 
         }
     }
+    public static <T extends PsiElement> ContainingBlock<T> block(ContainingBlockType<T> blockType, PsiElement element) {
+        if (!blockType.blockClass().isAssignableFrom(element.getClass())) {
+            throw new IllegalArgumentException(blockType.name() + " " + element);
+        }
+        return new ContainingBlock<T>(blockType, blockType.blockClass().cast(element));
+    }
 
     public static final ContainingBlockType<AldorLambda> LAMBDA = new ContainingBlockType<>("Lambda", AldorLambda.class);
     public static final ContainingBlockType<AldorWith> WITH = new ContainingBlockType<>("With", AldorWith.class);
@@ -241,11 +256,12 @@ public final class AldorPsiUtils {
     public static ContainingBlock<?> containingBlock(PsiElement elt) {
         PsiElement element = elt;
         while (element != null) {
+            //noinspection ChainOfInstanceofChecks
             if (element instanceof AldorLambda) {
-                return LAMBDA.of(element);
+                return block(LAMBDA, element);
             }
             if (element instanceof AldorWith) {
-                return WITH.of(element);
+                return block(WITH, element);
             }
             /*
             if (element instanceof AldorBlock) {
@@ -253,10 +269,10 @@ public final class AldorPsiUtils {
             }
             */
             if (element instanceof AldorWhereBlock) {
-                return WHERE.of(element);
+                return block(WHERE, element);
             }
             if (element instanceof PsiFile) {
-                return TOPLEVEL.of(element);
+                return block(TOPLEVEL, element);
             }
             element = element.getParent();
         }

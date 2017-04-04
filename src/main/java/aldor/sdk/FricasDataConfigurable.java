@@ -9,6 +9,7 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 public class FricasDataConfigurable implements AdditionalDataConfigurable {
+    @SuppressWarnings("FieldHasSetterButNoGetter")
     @Nullable
     private Sdk sdk = null;
 

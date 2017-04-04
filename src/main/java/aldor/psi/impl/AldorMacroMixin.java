@@ -62,6 +62,7 @@ public class AldorMacroMixin extends StubBasedPsiElementBase<AldorDefineStub> im
         return ret.orElse(true);
     }
 
+    @NotNull
     @Override
     public Optional<AldorIdentifier> defineIdentifier() {
         return defineId().map(Id::aldorIdentifier);

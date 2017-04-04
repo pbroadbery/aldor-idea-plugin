@@ -18,6 +18,8 @@ import com.intellij.util.io.StringRef;
 
 import java.io.IOException;
 
+import static aldor.psi.AldorPsiUtils.containingBlock;
+
 public class AldorDeclareStubCodec implements PsiStubCodec<AldorDeclareStub, AldorDeclare, AldorDeclareElementType> {
     private static final StubCodec<Syntax> syntaxCodec = new SyntaxCodec();
     private final PsiElementFactory<AldorDeclareStub, AldorDeclare> psiElementFactory;
@@ -46,14 +48,13 @@ public class AldorDeclareStubCodec implements PsiStubCodec<AldorDeclareStub, Ald
         boolean isDeclareOfId = dataStream.readBoolean();
 
         if (isDeclareOfId) {
-            //noinspection unused
             StringRef id = dataStream.readName();
             Syntax syntax = syntaxCodec.decode(dataStream);
-            return new AldorDeclareConcreteStub(parentStub, eltType, syntax, isCategoryDeclaration);
+            return new AldorDeclareConcreteStub(parentStub, eltType, syntax, isCategoryDeclaration ? AldorPsiUtils.WITH : AldorPsiUtils.BODY);
         }
         else {
             Syntax syntax = syntaxCodec.decode(dataStream);
-            return new AldorDeclareConcreteStub(parentStub, eltType, syntax, isCategoryDeclaration);
+            return new AldorDeclareConcreteStub(parentStub, eltType, syntax, isCategoryDeclaration? AldorPsiUtils.WITH : AldorPsiUtils.BODY);
         }
     }
 
@@ -65,10 +66,9 @@ public class AldorDeclareStubCodec implements PsiStubCodec<AldorDeclareStub, Ald
     @Override
     public AldorDeclareStub createStub(StubElement<?> parentStub,
                                        AldorDeclareElementType eltType, AldorDeclare aldorDeclare) {
-        boolean isCategoryDeclaration = AldorPsiUtils.isCategoryDeclaration(aldorDeclare);
         Syntax syntax = SyntaxPsiParser.parse(aldorDeclare);
 
-        return new AldorDeclareConcreteStub(parentStub, eltType, syntax, isCategoryDeclaration);
+        return new AldorDeclareConcreteStub(parentStub, eltType, syntax, containingBlock(aldorDeclare).type());
     }
 
 }

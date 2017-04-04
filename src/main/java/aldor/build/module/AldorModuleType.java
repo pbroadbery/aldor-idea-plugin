@@ -4,14 +4,11 @@ import aldor.sdk.AldorSdkType;
 import aldor.sdk.FricasSdkType;
 import aldor.ui.AldorIcons;
 import com.intellij.ide.util.projectWizard.ModuleBuilder;
-import com.intellij.ide.util.projectWizard.ModuleWizardStep;
-import com.intellij.ide.util.projectWizard.SettingsStep;
 import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.projectRoots.SdkTypeId;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.Icon;
 
@@ -90,11 +87,6 @@ public class AldorModuleType extends ModuleType<AldorModuleType.AldorModuleBuild
             return type;
         }
 
-        @Nullable
-        @Override
-        public ModuleWizardStep modifySettingsStep(@NotNull SettingsStep settingsStep) {
-            return super.modifySettingsStep(settingsStep);
-        }
 
         @Override
         public boolean isSuitableSdkType(SdkTypeId sdkType) {

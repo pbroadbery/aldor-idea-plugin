@@ -1,6 +1,5 @@
-package aldor.syntax.components.analysis;
+package aldor.syntax;
 
-import aldor.syntax.Syntax;
 import aldor.syntax.components.AbstractId;
 import aldor.syntax.components.Apply;
 

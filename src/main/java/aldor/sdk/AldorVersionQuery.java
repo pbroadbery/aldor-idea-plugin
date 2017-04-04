@@ -82,7 +82,7 @@ public class AldorVersionQuery {
         ProcessBuilder builder = new ProcessBuilder(command);
         builder.redirectOutput(ProcessBuilder.Redirect.PIPE);
 
-        Process process = null;
+        Process process;
         try {
             process = builder.start();
             process.getOutputStream().close();

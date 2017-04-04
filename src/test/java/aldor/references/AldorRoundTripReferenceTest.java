@@ -41,6 +41,8 @@ public class AldorRoundTripReferenceTest {
                     .around(aldorExecutableRule)
                     .around(new LightPlatformJUnit4TestRule(codeTestFixture, ""))
                     .around(annotationTestFixture.rule(codeTestFixture::getProject));
+
+    @SuppressWarnings("ConstantConditions")
     @Test
     public void testResolution() throws ExecutionException, InterruptedException {
         String makefileText = annotationTestFixture.createMakefile(aldorExecutableRule.executable().getAbsolutePath(),

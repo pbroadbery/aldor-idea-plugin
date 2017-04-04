@@ -46,7 +46,7 @@ public final class AldorDefineNameIndexTest {
 
 
     @Test
-    public void testWilIndex() throws IOException {
+    public void testWilIndex() {
         Project project = testFixture.getProject();
 
         VirtualFile file = createFile(getSourceRoot(), "foo.as", "a == b; c == d; e == " + System.currentTimeMillis());
@@ -57,7 +57,7 @@ public final class AldorDefineNameIndexTest {
     }
 
     @Test
-    public void testDefineIndexSimpleDefs() throws IOException {
+    public void testDefineIndexSimpleDefs() {
         Project project = testFixture.getProject();
         VirtualFile file = createFile(getSourceRoot(), "foo.as", "a == b; c == d; e == " + System.currentTimeMillis());
 
@@ -76,7 +76,7 @@ public final class AldorDefineNameIndexTest {
 
 
     @Test
-    public void testDefineIndexComplexDefs() throws IOException {
+    public void testDefineIndexComplexDefs() {
         Project project = testFixture.getProject();
         VirtualFile file = createFile(getSourceRoot(), "foo.as", "Something(x: Wibble): with == stuff; aNumber == " + System.currentTimeMillis());
 
@@ -89,7 +89,7 @@ public final class AldorDefineNameIndexTest {
     }
 
     @Test
-    public void testDefineTopLevelIndex() throws IOException {
+    public void testDefineTopLevelIndex() {
         Project project = testFixture.getProject();
         VirtualFile file = createFile(getSourceRoot(), "foo.as", "Something(x: Wibble): with == add { foo == bar }; aNumber == " + System.currentTimeMillis());
 
@@ -103,7 +103,7 @@ public final class AldorDefineNameIndexTest {
 
 
     @Test
-    public void testSpadDefineNameIndex() throws IOException {
+    public void testSpadDefineNameIndex() {
         Project project = testFixture.getProject();
         VirtualFile file = createFile(getSourceRoot(), "foo.spad", "Something(x: Wibble): with == add");
         logPsi(PsiManager.getInstance(project).findFile(file));
@@ -117,7 +117,7 @@ public final class AldorDefineNameIndexTest {
 
 
     @Test
-    public void testDefineIndexGetKey() throws IOException {
+    public void testDefineIndexGetKey() {
         VirtualFile file = null;
         try {
             Project project = testFixture.getProject();

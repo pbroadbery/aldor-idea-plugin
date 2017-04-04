@@ -20,7 +20,7 @@ public class AldorGotoWithDeclarationContributor implements ChooseByNameContribu
 
     @NotNull
     @Override
-    public String[] getNames(Project project, boolean includeNonProjectItems) {
+    public String[] getNames(Project project, boolean nonProjectItems) {
         Collection<String> keys = index.getAllKeys(project);
         return keys.toArray(ArrayUtil.EMPTY_STRING_ARRAY);
 
@@ -28,7 +28,7 @@ public class AldorGotoWithDeclarationContributor implements ChooseByNameContribu
 
     @NotNull
     @Override
-    public NavigationItem[] getItemsByName(String name, String pattern, Project project, boolean includeNonProjectItems) {
+    public NavigationItem[] getItemsByName(String name, String pattern, Project project, boolean nonProjectItems) {
         Collection<AldorDeclare> items = index.get(name, project, GlobalSearchScope.allScope(project));
         List<NavigationItem> collect = items.stream()
                 .map(declare -> navigationItemForIndexEntry(project, declare))

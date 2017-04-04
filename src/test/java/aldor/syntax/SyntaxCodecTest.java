@@ -55,15 +55,15 @@ public class SyntaxCodecTest {
     }
 
 
-    private Syntax encodeDecode(ByteArrayOutputStream byteArrayOutputStream, Syntax syntax) throws IOException {
+    private Syntax encodeDecode(ByteArrayOutputStream baos, Syntax syntax) throws IOException {
         System.out.println("Syntax is: " + syntax);
         StubCodec<Syntax> codec = new SyntaxCodec();
         AbstractStringEnumerator stringEnumerator = new SimpleStringEnumerator();
-        StubOutputStream stubOutputStream = new StubOutputStream(byteArrayOutputStream, stringEnumerator);
+        StubOutputStream stubOutputStream = new StubOutputStream(baos, stringEnumerator);
         codec.encode(stubOutputStream, syntax);
         stubOutputStream.close();
 
-        byte[] bytes = byteArrayOutputStream.toByteArray();
+        byte[] bytes = baos.toByteArray();
         Syntax inSyntax;
         try (InputStream inStream = new ByteArrayInputStream(bytes)) {
             inSyntax = codec.decode(new StubInputStream(inStream, stringEnumerator)) ;

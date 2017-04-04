@@ -129,7 +129,11 @@ public class SyntaxCodec implements StubCodec<Syntax> {
                 return Id.createMissingId(null, name);
             }
             else {
-                String tokenTypeName = stream.readName().getString();
+                StringRef tokenTypeRef = stream.readName();
+                if (tokenTypeRef == null) {
+                    throw new IOException("Unknown name in file");
+                }
+                String tokenTypeName = tokenTypeRef.getString();
 
                 AldorTokenType tokenType = (AldorTokenType) AldorTokenTypes.createTokenType(tokenTypeName);
                 return Id.createMissingId(tokenType, name);
