@@ -5,11 +5,7 @@ import aldor.psi.AldorDeclare;
 import aldor.psi.AldorDefine;
 import aldor.psi.AldorIdentifier;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -44,15 +40,8 @@ public final class FileScopeWalker {
 
     @Nullable
     public static PsiElement lookupBySymbolFile(PsiElement element) {
-        ProjectRootManager rootManager = ProjectRootManager.getInstance(element.getProject());
-        Optional<PsiFile> fileMaybe = ofNullable(element.getContainingFile());
-        Optional<VirtualFile> vfMaybe = fileMaybe.flatMap(psiFile -> ofNullable(psiFile.getVirtualFile()));
-        Optional<Module> moduleMaybe = vfMaybe.flatMap(vf -> ofNullable(rootManager.getFileIndex().getModuleForFile(vf)));
-        Optional<AnnotationFileManager> fileManagerMaybe = moduleMaybe.flatMap(AnnotationFileManager::getAnnotationFileManager);
-        if (!fileManagerMaybe.isPresent()) {
-            return null;
-        }
-        AnnotationFileManager fileManager = fileManagerMaybe.get();
+        AnnotationFileManager fileManager = AnnotationFileManager.getAnnotationFileManager(element.getProject());
+
         AldorIdentifier ident = fileManager.lookupReference(element);
 
         if (ident == null) {

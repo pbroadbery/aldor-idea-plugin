@@ -20,7 +20,7 @@ public class MissingAnnotationFile implements AnnotationFile {
 
     @Override
     public String sourceFile() {
-        return file.getPath();
+        return (file == null) ? null : file.getPath();
     }
 
     @Override

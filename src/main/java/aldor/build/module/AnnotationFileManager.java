@@ -14,10 +14,7 @@ import aldor.util.sexpr.impl.SExpressionReadException;
 import com.google.common.collect.Maps;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
@@ -39,8 +36,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.NavigableMap;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.Future;
@@ -58,40 +53,27 @@ public class AnnotationFileManager implements Disposable {
     private final Map<String, LineNumberMap> lineNumberMapForFile;
     private final AnnotationFileBuilder annotationFileBuilder;
     private final IndentWidthCalculator widthCalculator;
-    private final Module module;
+    private final Project project;
 
-    public AnnotationFileManager(Module module) {
+    public AnnotationFileManager(Project project) {
         dirtyFiles = new HashSet<>();
         updatingFiles = new HashSet<>();
         annotationFileForFile = Maps.newHashMap();
         lineNumberMapForFile = Maps.newHashMap();
         annotationFileBuilder = new AnnotationFileBuilder.AnnotationFileBuilderImpl();
         widthCalculator = new IndentWidthCalculator();
-        this.module = module;
+        this.project = project;
     }
 
     @NotNull
-    public static Optional<AnnotationFileManager> getAnnotationFileManager(Project project, @NotNull VirtualFile virtualFile) {
-        Optional<Module> aModule = Optional.ofNullable(ProjectRootManager.getInstance(project).getFileIndex().getModuleForFile(virtualFile));
-        return aModule.flatMap(AnnotationFileManager::getAnnotationFileManager);
-    }
-
-    @NotNull
-    public static Optional<AnnotationFileManager> getAnnotationFileManager(@NotNull Module module) {
-        ModuleType<?> type = ModuleType.get(module);
-        if (!Objects.equals(type, AldorModuleType.instance())) {
-            return Optional.empty();
+    public static AnnotationFileManager getAnnotationFileManager(Project project) {
+        AnnotationFileManager mgr = project.getUserData(MGR_KEY);
+        if (mgr == null) {
+            mgr = new AnnotationFileManager(project);
+            project.putUserData(MGR_KEY, mgr);
+            Disposer.register(project, mgr);
         }
-        AnnotationFileManager annotationManager = module.getUserData(MGR_KEY);
-        if (annotationManager == null) {
-            annotationManager = new AnnotationFileManager(module);
-            AnnotationFileManager finalAnnotationManager = annotationManager;
-            Disposer.register(module, annotationManager);
-            module.putUserData(MGR_KEY, annotationManager);
-            annotationManager = finalAnnotationManager;
-        }
-
-        return Optional.of(annotationManager);
+        return mgr;
     }
 
     @Override
@@ -102,6 +84,9 @@ public class AnnotationFileManager implements Disposable {
     @NotNull
     public AnnotationFile annotationFile(@NotNull PsiFile psiFile) {
         VirtualFile virtualFile = psiFile.getVirtualFile();
+        if (virtualFile == null) {
+            return new MissingAnnotationFile(null, "no file");
+        }
         if (!annotationFileForFile.containsKey(virtualFile.getPath())) {
             annotationFileForFile.put(virtualFile.getPath(), annotatedFile(psiFile));
             LineNumberMap map = new LineNumberMap(psiFile);
@@ -122,7 +107,7 @@ public class AnnotationFileManager implements Disposable {
         VirtualFileSystem vfs = virtualFile.getFileSystem();
 
         AldorModuleManager moduleManager = AldorModuleManager.getInstance(psiFile.getProject());
-        String buildFilePath = moduleManager.annotationFileForSourceFile(virtualFile);
+        String buildFilePath = moduleManager.annotationFileForSourceFile(psiFile);
         if (buildFilePath == null) {
             return new MissingAnnotationFile(virtualFile, "No content directory");
         }
@@ -174,6 +159,9 @@ public class AnnotationFileManager implements Disposable {
     }
 
     private LineNumberMap lineNumberMapForFile(PsiFile file) {
+        if (file.getVirtualFile() == null) {
+            return null;
+        }
         annotationFile(file);
         return lineNumberMapForFile.get(file.getVirtualFile().getPath());
     }
@@ -250,7 +238,7 @@ public class AnnotationFileManager implements Disposable {
         }
 
         if (syme.srcpos() != null) {
-            PsiFile theFile = psiFileForFileName(module, syme.srcpos().fileName() + ".as");
+            PsiFile theFile = psiFileForFileName(element.getContainingFile(), syme.srcpos().fileName() + ".as");
             return (theFile == null) ? null : findElementForSrcPos(theFile, syme.srcpos());
         }
 
@@ -258,7 +246,7 @@ public class AnnotationFileManager implements Disposable {
         if (refSourceFile == null) {
             return null;
         }
-        PsiFile refFile = psiFileForFileName(module, refSourceFile);
+        PsiFile refFile = psiFileForFileName(element.getContainingFile(), refSourceFile);
         if (refFile == null) {
             return null;
         }
@@ -299,8 +287,8 @@ public class AnnotationFileManager implements Disposable {
     }
 
     @Nullable
-    private static PsiFile psiFileForFileName(Module module, String sourceFile) {
-        PsiFile[] refFiles = FilenameIndex.getFilesByName(module.getProject(), sourceFile, module.getModuleContentScope());
+    private PsiFile psiFileForFileName(PsiElement referer, String sourceFile) {
+        PsiFile[] refFiles = FilenameIndex.getFilesByName(project, sourceFile, referer.getResolveScope());
         @Nullable PsiFile refFile;
         if (refFiles.length > 1) {
             LOG.info("Multiple files called " + sourceFile);

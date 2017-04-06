@@ -92,5 +92,6 @@ public class AldorModuleTest extends UsefulTestCase {
         protected ModuleFixture instantiateFixture() {
             return new ModuleFixtureImpl(this);
         }
+
     }
 }

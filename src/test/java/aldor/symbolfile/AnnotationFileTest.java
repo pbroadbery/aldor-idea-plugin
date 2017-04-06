@@ -19,11 +19,8 @@ import org.junit.Test;
 import org.junit.rules.RuleChain;
 import org.junit.rules.TestRule;
 
-import java.util.Optional;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 public class AnnotationFileTest {
 
@@ -55,9 +52,7 @@ public class AnnotationFileTest {
         annotationTestFixture.compileFile(sourceFile);
 
         annotationTestFixture.runInEdtAndWait(() -> {
-            Optional<AnnotationFileManager> fileManagerMaybe = AnnotationFileManager.getAnnotationFileManager(insightTestFixture.getProject(), sourceFile);
-            assertTrue(fileManagerMaybe.isPresent());
-            AnnotationFileManager fileManager = fileManagerMaybe.get();
+            AnnotationFileManager fileManager = AnnotationFileManager.getAnnotationFileManager(insightTestFixture.getProject());
 
             PsiFile file = insightTestFixture.getPsiManager().findFile(sourceFile);
             assertNotNull(file);

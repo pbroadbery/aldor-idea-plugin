@@ -21,7 +21,6 @@ import org.junit.Rule;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class AnnotationRoundTripTest extends LightPlatformCodeInsightFixtureTestCase {
@@ -52,16 +51,15 @@ public class AnnotationRoundTripTest extends LightPlatformCodeInsightFixtureTest
 
        annotationTextFixture.runInEdtAndWait(() -> {
             PsiFile psiFile = PsiManager.getInstance(project).findFile(sourceFile);
-            Optional<AnnotationFileManager> annotationManager = AnnotationFileManager.getAnnotationFileManager(myModule);
-            Assert.assertTrue(annotationManager.isPresent());
+            AnnotationFileManager annotationManager = AnnotationFileManager.getAnnotationFileManager(project);
             Assert.assertNotNull(psiFile);
-            AnnotationFile annotationFile = annotationManager.get().annotationFile(psiFile);
+            AnnotationFile annotationFile = annotationManager.annotationFile(psiFile);
             Assert.assertNull(annotationFile.errorMessage());
             Collection<AldorIdentifier> elts = PsiTreeUtil.findChildrenOfType(psiFile, AldorIdentifier.class);
             List<AldorIdentifier> nInstances = elts.stream().filter(id -> "n".equals(id.getText())).collect(Collectors.toList());
             Assert.assertFalse(nInstances.isEmpty());
             Assert.assertTrue(nInstances.stream()
-                                        .map(annotationManager.get()::findSrcPosForElement)
+                                        .map(annotationManager::findSrcPosForElement)
                                         .map(annotationFile::lookupSyme)
                     .allMatch(syme -> {
                                     if (syme == null) {

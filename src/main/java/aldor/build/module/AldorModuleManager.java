@@ -9,6 +9,7 @@ import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiFileSystemItem;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -17,8 +18,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static aldor.util.AnnotatedOptional.missing;
 
 public final class AldorModuleManager {
     private static final Key<AldorModuleManager> key = new Key<>(AldorModuleManager.class.getName());
@@ -64,13 +63,8 @@ public final class AldorModuleManager {
 
     @NotNull
     public AnnotatedOptional<AnnotationFileManager, String> annotationFileManagerForFile(@NotNull VirtualFile virtualFile) {
-        Optional<Module> moduleMaybe = aldorModuleForFile(virtualFile);
-        if (!moduleMaybe.isPresent()) {
-            return missing("No module for file " + virtualFile.getName());
-        }
-        Module module = moduleMaybe.get();
-        Optional<AnnotationFileManager> qq = AnnotationFileManager.getAnnotationFileManager(module);
-        return AnnotatedOptional.fromOptional(qq, () -> "missing module");
+        AnnotationFileManager qq = AnnotationFileManager.getAnnotationFileManager(project);
+        return AnnotatedOptional.of(qq);
     }
 
 
@@ -88,19 +82,16 @@ public final class AldorModuleManager {
         }
     }
 
-
-    public String buildPathForFile(VirtualFile virtualFile) {
-        Optional<Module> maybeModule = aldorModuleForFile(virtualFile);
-        if (!maybeModule.isPresent()) {
-            return null;
-        }
-
+    @NotNull
+    public String buildPathForFile(@NotNull VirtualFile virtualFile) {
         VirtualFile root = ProjectRootManager.getInstance(project).getFileIndex().getContentRootForFile(virtualFile);
-
+        if (root == null) {
+            throw new IllegalArgumentException("file not part of project: "+ virtualFile);
+        }
         return buildPathFromRoot(root, virtualFile.getParent());
     }
 
-    private String buildPathFromRoot(VirtualFile root, VirtualFile virtualFile) {
+    private String buildPathFromRoot(@NotNull VirtualFile root, @NotNull VirtualFile virtualFile) {
         if (virtualFile.equals(root)) {
             return root.getPath();
         }
@@ -112,8 +103,11 @@ public final class AldorModuleManager {
         }
     }
 
+    public String annotationFileForSourceFile(PsiFileSystemItem file) {
+        return buildPathForFile(file.getVirtualFile()) + "/" + StringUtil.trimExtension(file.getName()) + ".abn";
+    }
+
     public String annotationFileForSourceFile(VirtualFile file) {
         return buildPathForFile(file) + "/" + StringUtil.trimExtension(file.getName()) + ".abn";
     }
-
 }
