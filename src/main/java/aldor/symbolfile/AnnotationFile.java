@@ -7,6 +7,7 @@ public interface AnnotationFile {
     @Nullable
     Syme symeForNameAndCode(String name, int typeCode);
 
+    @Nullable
     String sourceFile();
 
     @Nullable

@@ -12,6 +12,7 @@ import com.intellij.psi.stubs.StubElement;
 
 public interface AldorStubFactory {
 
+    @SuppressWarnings("SameReturnValue")
     int getVersion();
 
     PsiStubCodec<AldorDefineStub, AldorDefine, AldorDefineElementType> defineCodec(PsiElementFactory<AldorDefineStub, AldorDefine> psiElementFactory);

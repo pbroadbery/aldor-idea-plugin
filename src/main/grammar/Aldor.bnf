@@ -722,6 +722,7 @@ SpadTopLevelExpression ::= SpadAbbrevCmd* PreDocument Expression //{pin=PreDocum
 SpadDocument ::= TK_PostDoc*
 SpadAbbrevCmd ::= TK_SysCmdAbbrev
 
+
 //private TopLevel_Recover ::= !(TK_PreDoc)
 
 SpadInfixed ::= Block | Expr
@@ -766,10 +767,10 @@ Colon_194_Expr ::= KW_Colon Expr
 //private PrimaryGroup ::= PrimaryExpr
 PrimaryExpr ::= Application
 
-UnaryWithExpr ::= KW_With (Expr PostDocument)?
-BinaryWithExpr ::= Expr KW_With (Expr PostDocument)?
-UnaryAddExpr ::= KW_Add Expr?
-BinaryAddExpr ::= Expr KW_Add Expr?
+UnaryWithExpr ::= KW_With DeclMolecule
+BinaryWithExpr ::= Expr KW_With DeclMolecule
+UnaryAddExpr ::= KW_Add DeclMolecule
+BinaryAddExpr ::= Expr KW_Add DeclMolecule
 
 SharpExpr ::= KW_Sharp Qual Expr
 QuoteExpr ::= KW_Quote QuotedSym

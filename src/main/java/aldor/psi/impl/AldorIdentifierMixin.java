@@ -1,9 +1,11 @@
 package aldor.psi.impl;
 
+import aldor.language.SpadLanguage;
 import aldor.lexer.AldorTokenTypes;
 import aldor.psi.AldorElementFactory;
 import aldor.psi.AldorIdentifier;
 import aldor.references.AldorNameReference;
+import aldor.references.SpadNameReference;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.diagnostic.Logger;
@@ -55,7 +57,7 @@ public abstract class AldorIdentifierMixin extends ASTWrapperPsiElement implemen
     public PsiReference[] getReferences() {
         final PsiReference[] fromProviders = ReferenceProvidersRegistry.getReferencesFromProviders(this);
 
-        PsiReference ref = new AldorNameReference(this);
+        PsiReference ref = (getContainingFile().getLanguage() == SpadLanguage.INSTANCE) ? new SpadNameReference(this) : new AldorNameReference(this);
         return ArrayUtil.prepend(ref, fromProviders);
     }
 

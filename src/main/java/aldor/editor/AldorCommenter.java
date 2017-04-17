@@ -5,7 +5,9 @@ import org.jetbrains.annotations.Nullable;
 
 
 /*
- * Stuff about Aldor comments.. Basically, just --
+ * Stuff about Aldor comments.. Basically, just "--"
+ * nb: eventually should be CodeDocumentationAwareCommenterEx
+ * but there's a way to go yet.
  */
 public class AldorCommenter implements Commenter {
 

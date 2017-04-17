@@ -11,6 +11,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFileSystemItem;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -82,11 +83,11 @@ public final class AldorModuleManager {
         }
     }
 
-    @NotNull
+    @Nullable
     public String buildPathForFile(@NotNull VirtualFile virtualFile) {
         VirtualFile root = ProjectRootManager.getInstance(project).getFileIndex().getContentRootForFile(virtualFile);
         if (root == null) {
-            throw new IllegalArgumentException("file not part of project: "+ virtualFile);
+            return virtualFile.getPath();
         }
         return buildPathFromRoot(root, virtualFile.getParent());
     }

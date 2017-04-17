@@ -33,6 +33,7 @@ public class AldorLibraryProperties extends LibraryProperties<AldorLibraryProper
     }
 
     public static final class AldorLibraryDescriptor {
+        @Nullable
         private final String sourceDirectory;
 
         public AldorLibraryDescriptor() {

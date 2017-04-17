@@ -18,6 +18,7 @@ public class MissingAnnotationFile implements AnnotationFile {
         return null;
     }
 
+    @Nullable
     @Override
     public String sourceFile() {
         return (file == null) ? null : file.getPath();

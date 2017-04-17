@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 
 import static aldor.lexer.LexMode.Spad;
 import static aldor.parser.ParserFunctions.parseLibrary;
+import static aldor.psi.AldorPsiUtils.logPsi;
 import static aldor.test_util.TestFiles.existingFile;
 
 public class SpadParsingTest {
@@ -275,6 +276,27 @@ public class SpadParsingTest {
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
         Assert.assertEquals(0, errors.size());
     }
+    /*
+    F: E == I where
+    E ==> with
+        x: String
+    I ==> add
+
+     */
+    @Test
+    public void testMacroWhere() {
+        String text =
+                "F: E == I where\n" +
+                "    E ==> with\n" +
+                "        x: String\n" +
+                "    I ==> add\n" +
+                "        x: String == 1\n";
+        PsiElement psi = parseText(text);
+        logPsi(psi);
+        final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
+        Assert.assertEquals(0, errors.size());
+    }
+
 
 
     @Test

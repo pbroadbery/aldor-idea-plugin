@@ -53,9 +53,11 @@ public final class FileScopeWalker {
         // "gist" idea in newer intellij that might allow a storing a line number/offset map
 
         Optional<AldorDefine> outerDefineMaybe = ofNullable(PsiTreeUtil.getContextOfType(ident, AldorDefine.class, true));
+        //noinspection unchecked
         AldorDeclare declare = PsiTreeUtil.getContextOfType(ident, AldorDeclare.class, true, AldorDefine.class);
         //noinspection ObjectEquality
         if (outerDefineMaybe.flatMap(AldorDefine::defineIdentifier).map(id -> id == ident).orElse(false)) {
+            assert outerDefineMaybe.isPresent();
             return outerDefineMaybe.get();
         }
         if (declare != null) {

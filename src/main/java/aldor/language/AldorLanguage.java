@@ -13,4 +13,8 @@ public final class AldorLanguage extends Language {
         super("Aldor", "text/aldor");
     }
 
+    @Override
+    public boolean isCaseSensitive() {
+        return true;
+    }
 }

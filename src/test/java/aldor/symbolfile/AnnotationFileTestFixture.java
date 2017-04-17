@@ -43,6 +43,7 @@ public class AnnotationFileTestFixture {
     }
 
     public TestRule rule(Supplier<Project> projectSupplier) {
+        //noinspection ReturnOfInnerClass
         return new Rule(projectSupplier);
     }
 
