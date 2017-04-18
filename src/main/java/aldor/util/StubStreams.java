@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
+@SuppressWarnings("unused")
 public final class StubStreams {
 
     private static final StubCodec<String> STRING_CODEC = new StringCodec();

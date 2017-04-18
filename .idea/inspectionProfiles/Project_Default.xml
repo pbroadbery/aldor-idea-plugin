@@ -560,7 +560,7 @@
       <option name="limit" value="3" />
     </inspection_tool>
     <inspection_tool class="PackageWithTooManyClasses" enabled="true" level="WARNING" enabled_by_default="true">
-      <option name="limit" value="10" />
+      <option name="limit" value="15" />
     </inspection_tool>
     <inspection_tool class="ParameterNamingConvention" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="m_regex" value="[a-z][A-Za-z\d]*" />

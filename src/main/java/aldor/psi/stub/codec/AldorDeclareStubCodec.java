@@ -48,6 +48,7 @@ public class AldorDeclareStubCodec implements PsiStubCodec<AldorDeclareStub, Ald
         boolean isDeclareOfId = dataStream.readBoolean();
 
         if (isDeclareOfId) {
+            //noinspection unused
             StringRef id = dataStream.readName();
             Syntax syntax = syntaxCodec.decode(dataStream);
             return new AldorDeclareConcreteStub(parentStub, eltType, syntax, isCategoryDeclaration ? AldorPsiUtils.WITH : AldorPsiUtils.BODY);

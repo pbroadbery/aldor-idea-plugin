@@ -63,7 +63,7 @@ public final class AldorPsiUtils {
 
     public static boolean isCategoryDeclaration(@SuppressWarnings("TypeMayBeWeakened") AldorDeclare aldorDeclare) {
         //noinspection ObjectEquality
-        return containingBlock(aldorDeclare).type == WITH;
+        return containingBlock(aldorDeclare).type() == WITH;
     }
 
     private static final Set<IElementType> withElementTypes = Sets.newHashSet(AldorTypes.WITH_PART, AldorTypes.UNARY_WITH, AldorTypes.BINARY_WITH_EXPR, AldorTypes.UNARY_WITH_EXPR);

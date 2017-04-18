@@ -52,8 +52,6 @@ public abstract class SyntaxVisitor<T> {
         return visitAnyId(id);
     }
 
-
-
     public T visitOther(Other other) {
         return visitSyntax(other);
     }

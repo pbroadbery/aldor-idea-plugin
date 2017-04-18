@@ -14,9 +14,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 
+@SuppressWarnings("AbstractClassExtendsConcreteClass")
 public abstract class AldorWhereRhsMixin extends ASTWrapperPsiElement implements AldorWhereRhs {
 
-    public AldorWhereRhsMixin(@NotNull ASTNode node) {
+    protected AldorWhereRhsMixin(@NotNull ASTNode node) {
         super(node);
     }
 

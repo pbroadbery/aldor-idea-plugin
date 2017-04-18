@@ -15,15 +15,15 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("AbstractClassExtendsConcreteClass")
 public abstract class AldorWhereMixin extends StubBasedPsiElementBase<EmptyStub<AldorWhereBlock>> implements AldorWhereBlock {
 
-    public AldorWhereMixin(@NotNull EmptyStub<AldorWhereBlock> stub, @NotNull IStubElementType<EmptyStub<AldorWhereBlock>, AldorWhereBlock> nodeType) {
+    protected AldorWhereMixin(@NotNull EmptyStub<AldorWhereBlock> stub, @NotNull IStubElementType<EmptyStub<AldorWhereBlock>, AldorWhereBlock> nodeType) {
         super(stub, nodeType);
     }
 
-    public AldorWhereMixin(@NotNull ASTNode node) {
+    protected AldorWhereMixin(@NotNull ASTNode node) {
         super(node);
     }
 
-    public AldorWhereMixin(EmptyStub<AldorWhereBlock> stub, IElementType nodeType, ASTNode node) {
+    protected AldorWhereMixin(EmptyStub<AldorWhereBlock> stub, IElementType nodeType, ASTNode node) {
         super(stub, nodeType, node);
     }
 
