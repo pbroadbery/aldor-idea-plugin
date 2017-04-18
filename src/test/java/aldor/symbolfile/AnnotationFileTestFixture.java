@@ -115,7 +115,7 @@ public class AnnotationFileTestFixture {
     private class Rule implements TestRule {
         private final Supplier<Project> projectSupplier;
 
-        public Rule(Supplier<Project> projectSupplier) {
+        Rule(Supplier<Project> projectSupplier) {
             this.projectSupplier = projectSupplier;
         }
 

@@ -132,7 +132,7 @@ public class AldorSdkType extends SdkType {
     private static final List<String> LIBS = Arrays.asList("aldor", "algebra");
 
     private List<VirtualFile> findSources(File aldorHome) {
-        Optional<VirtualFile> vf = Optional.ofNullable(LocalFileSystem.getInstance().findFileByIoFile(aldorHome));
+        Optional<VirtualFile> vf = ofNullable(LocalFileSystem.getInstance().findFileByIoFile(aldorHome));
         vf = vf.flatMap(f -> ofNullable(f.findChild("share")));
         vf = vf.flatMap(f -> ofNullable(f.findChild("aldor")));
         vf = vf.flatMap(f -> ofNullable(f.findChild("lib")));
