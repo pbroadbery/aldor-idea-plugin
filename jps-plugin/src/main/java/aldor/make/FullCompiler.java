@@ -104,7 +104,7 @@ public class FullCompiler implements AldorFileTargetBuilder.Compiler {
             String line;
             while ((line = lineReader.readLine()) != null) {
                 errorParser.newMessage(line);
-                context.processMessage(new CompilerMessage(ALDOR_COMPILER, BuildMessage.Kind.INFO, line));
+                //context.processMessage(new CompilerMessage(ALDOR_COMPILER, BuildMessage.Kind.INFO, line));
                 LOG.info("Info from compiler: " + line);
             }
         } catch (IOException e) {

@@ -128,10 +128,10 @@ public final class AldorPsiUtils {
             return Optional.empty();
         } else {
             AldorDefine define = (AldorDefine) form;
-            if (define.definitionType().equals(AldorDefine.DefinitionType.CONSTANT)) {
+            if (define.definitionType() == AldorDefine.DefinitionType.CONSTANT) {
                 return Optional.of(define);
             }
-            else if (define.definitionType().equals(AldorDefine.DefinitionType.MACRO)) {
+            else if (define.definitionType() == AldorDefine.DefinitionType.MACRO) {
                 return definitionFromMacro(define);
             }
             else {
@@ -243,7 +243,7 @@ public final class AldorPsiUtils {
         if (!blockType.blockClass().isAssignableFrom(element.getClass())) {
             throw new IllegalArgumentException(blockType.name() + " " + element);
         }
-        return new ContainingBlock<T>(blockType, blockType.blockClass().cast(element));
+        return new ContainingBlock<>(blockType, blockType.blockClass().cast(element));
     }
 
     public static final ContainingBlockType<AldorLambda> LAMBDA = new ContainingBlockType<>("Lambda", AldorLambda.class);

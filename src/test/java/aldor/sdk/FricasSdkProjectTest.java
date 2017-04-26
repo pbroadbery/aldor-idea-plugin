@@ -109,7 +109,7 @@ public class FricasSdkProjectTest {
         }
 
         Sdk createSDK() {
-            FricasSdkType sdkType = new FricasSdkType();
+            FricasInstalledSdkType sdkType = new FricasInstalledSdkType();
             Sdk theSdk = new ProjectJdkImpl("Fricas Test SDK", sdkType);
 
             SdkModificator mod = theSdk.getSdkModificator();

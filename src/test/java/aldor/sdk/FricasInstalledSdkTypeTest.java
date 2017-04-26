@@ -18,7 +18,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class FricasSdkTypeTest {
+public class FricasInstalledSdkTypeTest {
     private final CodeInsightTestFixture codeTestFixture = LightPlatformJUnit4TestRule.createFixture(null);
     private final ExecutablePresentRule fricasExecutableRule = new ExecutablePresentRule.Fricas();
 
@@ -30,20 +30,20 @@ public class FricasSdkTypeTest {
 
     @Test
     public void testFricasSdk() {
-        SdkType sdk = new FricasSdkType();
+        SdkType sdk = new FricasInstalledSdkType();
         assertTrue(sdk.isValidSdkHome(fricasExecutableRule.prefix()));
     }
 
     @Test
     public void testVersionString() {
-        SdkType sdk = new FricasSdkType();
+        SdkType sdk = new FricasInstalledSdkType();
         assertNotNull(sdk.getVersionString(fricasExecutableRule.prefix()));
     }
 
 
     @Test
     public void testSetupPaths() {
-        FricasSdkType sdkType = new FricasSdkType();
+        FricasInstalledSdkType sdkType = new FricasInstalledSdkType();
         Sdk sdk = new ProjectJdkImpl("Fricas Test SDK", sdkType);
 
         SdkModificator mod = sdk.getSdkModificator();

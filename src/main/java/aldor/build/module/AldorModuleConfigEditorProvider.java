@@ -12,6 +12,7 @@ import com.intellij.openapi.roots.ui.configuration.ModuleConfigurationState;
 import com.intellij.openapi.roots.ui.configuration.ModuleElementsEditor;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.jps.model.java.JavaSourceRootType;
 
 import javax.swing.JComponent;
 
@@ -27,7 +28,7 @@ public class AldorModuleConfigEditorProvider implements ModuleConfigurationEdito
             return ModuleConfigurationEditor.EMPTY;
         }
         return new ModuleConfigurationEditor[]{
-                new CommonContentEntriesEditor(rootModule.getName(), state),
+                new CommonContentEntriesEditor(rootModule.getName(), state, JavaSourceRootType.SOURCE),
                 new OutputDirectoryEditor(state),
                 new ClasspathEditor(state)
         };

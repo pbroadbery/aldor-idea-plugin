@@ -17,7 +17,6 @@ import com.intellij.testFramework.fixtures.impl.TempDirTestFixtureImpl;
 import org.junit.Assert;
 
 import java.io.IOException;
-import java.util.Optional;
 
 public class AldorModuleTest extends UsefulTestCase {
 
@@ -60,10 +59,6 @@ public class AldorModuleTest extends UsefulTestCase {
         VirtualFile foo_as = createFile("root/aldor/src/foo.as", "");
         createFile("root/build", "");
 
-        Optional<Module> someModule = manager.aldorModuleForFile(foo_as);
-        Assert.assertTrue(someModule.isPresent());
-        //noinspection OptionalGetWithoutIsPresent
-        Assert.assertSame(module, someModule.get());
 
         VirtualFile root = ProjectRootManager.getInstance(project).getFileIndex().getContentRootForFile(foo_as);
         Assert.assertNotNull(root);

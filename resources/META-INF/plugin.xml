@@ -66,8 +66,8 @@
         <lang.parserDefinition language="Aldor" implementationClass="aldor.parser.AldorParserDefinition"/>
 
         <library.type implementation="aldor.library.AldorLibraryType"/>
-        <sdkType implementation="aldor.sdk.AldorSdkType"/>
-        <sdkType implementation="aldor.sdk.FricasSdkType"/>
+        <sdkType implementation="aldor.sdk.AldorInstalledSdkType"/>
+        <sdkType implementation="aldor.sdk.AldorLocalSdkType"/>
 
         <!-- Spad extras -->
         <fileTypeFactory implementation="aldor.file.SpadFileTypeFactory"/>
@@ -75,6 +75,7 @@
         <stubIndex implementation="aldor.psi.index.AbbrevNameIndex"/>
         <stubIndex implementation="aldor.psi.index.AbbrevAbbrevIndex"/>
         <gotoClassContributor implementation="aldor.editor.finder.SpadAbbrevGotoClassContributor"/>
+        <sdkType implementation="aldor.sdk.FricasInstalledSdkType"/>
 
         <!-- Test language -->
         <fileTypeFactory implementation="aldor.expression.ExpressionFileTypeFactory"/>

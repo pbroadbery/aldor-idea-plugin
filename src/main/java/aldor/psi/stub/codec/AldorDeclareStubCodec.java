@@ -14,7 +14,6 @@ import aldor.util.StubCodec;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
-import com.intellij.util.io.StringRef;
 
 import java.io.IOException;
 
@@ -49,7 +48,7 @@ public class AldorDeclareStubCodec implements PsiStubCodec<AldorDeclareStub, Ald
 
         if (isDeclareOfId) {
             //noinspection unused
-            StringRef id = dataStream.readName();
+            dataStream.readName(); // id (not used)
             Syntax syntax = syntaxCodec.decode(dataStream);
             return new AldorDeclareConcreteStub(parentStub, eltType, syntax, isCategoryDeclaration ? AldorPsiUtils.WITH : AldorPsiUtils.BODY);
         }

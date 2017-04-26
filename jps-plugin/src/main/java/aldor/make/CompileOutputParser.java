@@ -1,6 +1,6 @@
 package aldor.make;
 
-import one.util.streamex.Joining;
+import aldor.util.Joiners;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.jps.incremental.messages.BuildMessage;
@@ -142,9 +142,9 @@ public class CompileOutputParser {
         Matcher matcher = locatorLine.matcher(lines.get(0));
         if (!matcher.matches()) {
             return new CompilerMessage(compilerName, BuildMessage.Kind.ERROR, "ERR: " +
-                    truncate(MAX_ERROR_MESSAGE_LINES, lines));
+                    Joiners.truncate(MAX_ERROR_MESSAGE_LINES, lines));
         }
-        String body = truncate(MAX_ERROR_MESSAGE_LINES, lines.subList(1, lines.size()));
+        String body = Joiners.truncate(MAX_ERROR_MESSAGE_LINES, lines.subList(1, lines.size()));
         String lineNumberText = matcher.group(locatorLine_grp_1_line);
         String columnNumberText = matcher.group(locatorLine_grp_2_column);
         //String messageNumberText = matcher.group(locatorLine_grp_3_errNo);
@@ -166,15 +166,6 @@ public class CompileOutputParser {
 
         }
     }
-
-    private String truncate(int maxLines, List<String> lines) {
-        String text = lines.subList(0, Math.min(maxLines, lines.size())).stream().collect(Joining.with("\n"));
-        if (lines.size() > maxLines) {
-            text = text + "\n...";
-        }
-        return text;
-    }
-
     public interface Listener {
         void messageReceived(CompilerMessage message);
     }

@@ -49,7 +49,7 @@ public class AldorDeclareIndexTopLevelTest {
 
         Collection<String> ll = AldorDeclareTopIndex.instance.getAllKeys(project);
 
-        Optional<String> xName = ll.stream().filter(s -> "x".equals(s)).findFirst();
+        Optional<String> xName = ll.stream().filter("x"::equals).findFirst();
         assertTrue(xName.isPresent());
 
         Collection<AldorDeclare> decl = AldorDeclareTopIndex.instance.get("x", project, GlobalSearchScope.fileScope(project, file));

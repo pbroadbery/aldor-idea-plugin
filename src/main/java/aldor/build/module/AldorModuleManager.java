@@ -16,7 +16,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -52,13 +51,6 @@ public final class AldorModuleManager {
         modules = modules.filter(module -> ModuleType.get(module).equals(AldorModuleType.instance()));
 
         return modules.collect(Collectors.toList());
-    }
-
-    @NotNull
-    public Optional<Module> aldorModuleForFile(@NotNull VirtualFile file) {
-        Module module = ProjectRootManager.getInstance(project).getFileIndex().getModuleForFile(file);
-
-        return Optional.ofNullable(module).filter(mod -> ModuleType.is(mod, AldorModuleType.instance()));
     }
 
 

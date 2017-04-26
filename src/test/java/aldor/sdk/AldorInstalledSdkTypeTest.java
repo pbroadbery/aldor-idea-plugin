@@ -18,7 +18,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class AldorSdkTypeTest {
+public class AldorInstalledSdkTypeTest {
 
     private final CodeInsightTestFixture codeTestFixture = LightPlatformJUnit4TestRule.createFixture(null);
     private final ExecutablePresentRule aldorExecutableRule = new ExecutablePresentRule.Aldor();
@@ -31,26 +31,26 @@ public class AldorSdkTypeTest {
 
     @Test
     public void testAldorSdk() {
-        SdkType sdk = new AldorSdkType();
+        SdkType sdk = new AldorInstalledSdkType();
         assertTrue(sdk.isValidSdkHome(aldorExecutableRule.prefix()));
     }
 
     @Test
     public void testVersionString() {
-        SdkType sdk = new AldorSdkType();
+        SdkType sdk = new AldorInstalledSdkType();
         assertNotNull(sdk.getVersionString(aldorExecutableRule.prefix()));
     }
 
     @Test
     public void testSuggestSdkName() {
-        SdkType sdk = new AldorSdkType();
+        SdkType sdk = new AldorInstalledSdkType();
         assertNotNull(sdk.getVersionString(aldorExecutableRule.prefix()));
     }
 
 
     @Test
     public void testSetupPaths() {
-        AldorSdkType sdkType = new AldorSdkType();
+        AldorInstalledSdkType sdkType = new AldorInstalledSdkType();
         Sdk sdk = new ProjectJdkImpl("Fricas Test SDK", sdkType);
 
         SdkModificator mod = sdk.getSdkModificator();
