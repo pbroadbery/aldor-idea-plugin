@@ -72,7 +72,7 @@ public class AldorRoundTripDocumentationTest {
             System.out.println("Text is: " + text);
             text = Htmls.removeTags(text);
             System.out.println("Expurgated Text is: " + text);
-            assertTrue(text.contains("exporter: Dom AldorInteger"));
+            assertTrue(text.contains("exporter:  Dom AldorInteger"));
             assertFalse(text.contains("null"));
         });
     }

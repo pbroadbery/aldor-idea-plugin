@@ -29,8 +29,8 @@ public class IdentifierDocumentationProvider extends TypedDocumentationProvider<
             Syntax exporter = syme.exporter();
             Syntax type = syme.type();
 
-            String typeText = "<p><b>exporter:</b> " + printer.toString(exporter)
-                    + "</b></p>" + "\n<p><b>type:</b> " + printer.toString(type) + "</p>";
+            String typeText = "<p><b>exporter: </b> " + printer.toString(exporter)
+                    + "</b></p>" + "\n<p><b>type: </b> " + printer.toString(type) + "</p>";
 
             String docString = docUtils.aldorDocString(syme, element, originalElement);
             if (docString == null) {

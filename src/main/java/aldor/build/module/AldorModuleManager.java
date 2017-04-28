@@ -19,6 +19,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.util.Optional.ofNullable;
+
 public final class AldorModuleManager {
     private static final Key<AldorModuleManager> key = new Key<>(AldorModuleManager.class.getName());
     private final Project project;
@@ -76,10 +78,15 @@ public final class AldorModuleManager {
     }
 
     @Nullable
+    public String annotationFilePathForFile(@NotNull VirtualFile virtualFile) {
+        return ofNullable(buildPathForFile(virtualFile)).map(p -> p+"/"+virtualFile.getName()).orElse(null);
+    }
+
+    @Nullable
     public String buildPathForFile(@NotNull VirtualFile virtualFile) {
         VirtualFile root = ProjectRootManager.getInstance(project).getFileIndex().getContentRootForFile(virtualFile);
         if (root == null) {
-            return virtualFile.getPath();
+            return virtualFile.getParent().getPath();
         }
         return buildPathFromRoot(root, virtualFile.getParent());
     }
@@ -96,11 +103,15 @@ public final class AldorModuleManager {
         }
     }
 
+    @Nullable
     public String annotationFileForSourceFile(PsiFileSystemItem file) {
-        return buildPathForFile(file.getVirtualFile()) + "/" + StringUtil.trimExtension(file.getName()) + ".abn";
+        if (file.getVirtualFile() == null) {
+            return null;
+        }
+        return annotationFileForSourceFile(file.getVirtualFile());
     }
 
-    public String annotationFileForSourceFile(VirtualFile file) {
+    public String annotationFileForSourceFile(@NotNull VirtualFile file) {
         return buildPathForFile(file) + "/" + StringUtil.trimExtension(file.getName()) + ".abn";
     }
 }

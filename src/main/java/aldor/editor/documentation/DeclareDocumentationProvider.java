@@ -4,10 +4,12 @@ import aldor.psi.AldorDeclare;
 import aldor.psi.AldorDefine;
 import aldor.psi.AldorPsiUtils;
 import aldor.psi.stub.AldorDeclareStub;
+import aldor.symbolfile.Syme;
 import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxPrinter;
 import aldor.syntax.SyntaxPsiParser;
 import aldor.syntax.SyntaxUtils;
+import aldor.util.AnnotatedOptional;
 import com.intellij.psi.PsiElement;
 
 import java.util.Optional;
@@ -21,10 +23,15 @@ class DeclareDocumentationProvider extends TypedDocumentationProvider<AldorDecla
     @Override
     public String generateDoc(AldorDeclare o, PsiElement originalElement) {
         String type1 = declareTypeText(o);
-        String exportType = declareExporterType(o).map(e -> "<b>Exporter:</b>" + e).orElse("");
+        AnnotatedOptional<Syntax, String> syme = AnnotatedOptional.ofNullable(originalElement, () -> (String) null)
+                                                                .flatMap(docUtils::symeForElement)
+                                                                .map(Syme::type);
+        String exportType = declareExporterType(o).map(e -> "<b>Exporter:</b> " + e).orElse("");
+
         String header = "<b>Type:</b> " + type1;
+        String importType = "<br/>" + syme.map(s -> "<b>Imported Type:</b> " + SyntaxPrinter.instance().toString(s)).orElse(msg -> "");
         String docco = docUtils.aldorDocStringFromContainingElement(o);
-        return header + "<br/>" + exportType + "<hr/>" + docco;
+        return header + "<br/>" + exportType + importType + "<hr/>" + docco;
     }
 
     private String declareTypeText(AldorDeclare o) {

@@ -35,7 +35,7 @@ public class AnnotationFileBuilderImpl implements AnnotationFileBuilder {
                             LOG.info("Message: " + message);
                         }
                         AnnotationFileManager annotationManager = AnnotationFileManager.getAnnotationFileManager(project);
-                        annotationManager.invalidate(file);
+                        annotationManager.invalidate(psiFile);
                         compileContext.getMessages(CompilerMessageCategory.ERROR);
                         completion.set(null);
                     }

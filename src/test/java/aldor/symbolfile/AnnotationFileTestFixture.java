@@ -77,6 +77,7 @@ public class AnnotationFileTestFixture {
         });
 
         result.get(0).get();
+        file.getFileSystem().refresh(false);
     }
 
     public String createMakefile(String aldorLocation, Collection<String> files) {

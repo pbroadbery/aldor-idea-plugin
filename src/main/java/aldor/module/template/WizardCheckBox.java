@@ -9,6 +9,7 @@ public class WizardCheckBox extends WizardInputField<JCheckBox> {
     private final String label;
     private final JCheckBox checkbox;
 
+    @SuppressWarnings("BooleanParameter")
     public WizardCheckBox(String id, String label, boolean defaultValue) {
         super(id, Boolean.toString(defaultValue));
         this.label = label;

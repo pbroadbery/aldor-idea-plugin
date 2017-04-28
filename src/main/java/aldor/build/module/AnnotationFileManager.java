@@ -12,17 +12,23 @@ import aldor.util.sexpr.SymbolPolicy;
 import aldor.util.sexpr.impl.SExpressionReadException;
 import com.google.common.collect.Maps;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.VirtualFileSystem;
+import com.intellij.openapi.vfs.newvfs.BulkFileListener;
+import com.intellij.openapi.vfs.newvfs.events.VFileContentChangeEvent;
+import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.psi.search.FilenameIndex;
+import com.intellij.util.messages.MessageBusConnection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,6 +37,7 @@ import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
@@ -47,6 +54,8 @@ public class AnnotationFileManager implements Disposable {
     private final Map<String, LineNumberMap> lineNumberMapForFile;
     private final AnnotationFileBuilder annotationFileBuilder;
     private final Project project;
+    @Nullable
+    private MessageBusConnection myBusConnection = null;
 
     public AnnotationFileManager(Project project) {
         dirtyFiles = new HashSet<>();
@@ -55,6 +64,24 @@ public class AnnotationFileManager implements Disposable {
         lineNumberMapForFile = Maps.newHashMap();
         annotationFileBuilder = new AnnotationFileBuilderImpl();
         this.project = project;
+        setupFileWatcher();
+    }
+
+    void setupFileWatcher() {
+        myBusConnection = ApplicationManager.getApplication().getMessageBus().connect();
+        myBusConnection.subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener.Adapter() {
+            @Override
+            public void after(@NotNull final List<? extends VFileEvent> events) {
+                for (VFileEvent event : events) {
+                    if ((event instanceof VFileContentChangeEvent) && (event.getFile() != null)) {
+                        if (event.getFile().getName().endsWith(".abn")) {
+                            invalidate(event.getFile());
+                        }
+                    }
+                }
+            }
+
+        });
     }
 
     @NotNull
@@ -71,29 +98,47 @@ public class AnnotationFileManager implements Disposable {
     @Override
     public void dispose() {
         LOG.info("Disposing of annotation file manager");
+        if (myBusConnection != null) {
+            myBusConnection.dispose();
+        }
+        myBusConnection = null;
     }
 
     @NotNull
     public AnnotationFile annotationFile(@NotNull PsiFile psiFile) {
         VirtualFile virtualFile = psiFile.getVirtualFile();
+        AldorModuleManager moduleManager = AldorModuleManager.getInstance(psiFile.getProject());
+        String buildFilePath = moduleManager.annotationFileForSourceFile(psiFile);
+
         if (virtualFile == null) {
             return new MissingAnnotationFile(null, "no file");
         }
-        if (!annotationFileForFile.containsKey(virtualFile.getPath())) {
-            annotationFileForFile.put(virtualFile.getPath(), annotatedFile(psiFile));
+        if (!annotationFileForFile.containsKey(buildFilePath)) {
+            LOG.info("loading annotated file: " + virtualFile);
+
+            AnnotationFile annotationFile = annotatedFile(psiFile);
+            annotationFileForFile.put(buildFilePath, annotationFile);
             LineNumberMap map = new LineNumberMap(psiFile);
-            this.lineNumberMapForFile.put(virtualFile.getPath(), map);
+            this.lineNumberMapForFile.put(buildFilePath, map);
 
         }
-        return annotationFileForFile.get(virtualFile.getPath());
+        return annotationFileForFile.get(buildFilePath);
     }
 
     // ToDo: There's probably a fair amount of missing thread-safety here.
+    public void invalidate(PsiFile psiFile) {
+        LOG.info("Invalidating " + psiFile);
+        AldorModuleManager moduleManager = AldorModuleManager.getInstance(psiFile.getProject());
+        String buildFilePath = moduleManager.annotationFileForSourceFile(psiFile);
+        annotationFileForFile.remove(buildFilePath);
+    }
+
     public void invalidate(VirtualFile file) {
+        assert file.getName().endsWith(".abn");
         annotationFileForFile.remove(file.getPath());
     }
 
-    @NotNull
+        @NotNull
     private AnnotationFile annotatedFile(PsiFileSystemItem psiFile) {
         VirtualFile virtualFile = psiFile.getVirtualFile();
         VirtualFileSystem vfs = virtualFile.getFileSystem();
@@ -105,9 +150,10 @@ public class AnnotationFileManager implements Disposable {
         }
         else {
             VirtualFile buildFile = vfs.findFileByPath(buildFilePath);
-            if (buildFile == null) {
-                buildFile = vfs.refreshAndFindFileByPath(buildFilePath);
-            }
+            /* Could call
+             *    buildFile = vfs.refreshAndFindFileByPath(buildFilePath);
+             * here, but might deadlock from a non EDT thread, so bottle it.
+             */
 
             if (buildFile == null) {
                 return new MissingAnnotationFile(virtualFile, "Missing .abn file: "+ buildFilePath);
@@ -143,6 +189,8 @@ public class AnnotationFileManager implements Disposable {
 
     @Nullable
     public AldorIdentifier findElementForSrcPos(PsiFile file, SrcPos srcPos) {
+        AldorModuleManager moduleManager = AldorModuleManager.getInstance(file.getProject());
+        String buildFilePath = moduleManager.annotationFileForSourceFile(file);
         LineNumberMap map = lineNumberMapForFile(file);
         if (map == null) {
             return null;
@@ -151,11 +199,13 @@ public class AnnotationFileManager implements Disposable {
     }
 
     private LineNumberMap lineNumberMapForFile(PsiFile file) {
+        AldorModuleManager moduleManager = AldorModuleManager.getInstance(file.getProject());
+        String buildFilePath = moduleManager.annotationFileForSourceFile(file);
         if (file.getVirtualFile() == null) {
             return null;
         }
         annotationFile(file);
-        return lineNumberMapForFile.get(file.getVirtualFile().getPath());
+        return lineNumberMapForFile.get(buildFilePath);
     }
 
 
@@ -168,7 +218,7 @@ public class AnnotationFileManager implements Disposable {
 
         AnnotatedOptional<SrcPos, String> srcPosMaybe = AnnotatedOptional.ofNullable(findSrcPosForElement(element), () -> "No source found");
 
-        return srcPosMaybe.flatMap(srcPos -> AnnotatedOptional.ofNullable(annotationFile.lookupSyme(srcPos), () -> "Failed to find symbol"));
+        return srcPosMaybe.flatMap(srcPos -> AnnotatedOptional.ofNullable(annotationFile.lookupSyme(srcPos), () -> "Failed to find symbol " + srcPosMaybe));
     }
 
     @Nullable

@@ -77,8 +77,8 @@ public class AldorDocumentationProviderTest extends LightPlatformCodeInsightFixt
             String docs = docForElement(PsiTreeUtil.findElementOfClassAtOffset(psiFile, program.indexOf("foo();"), AldorIdentifier.class, true));
             LOG.info("Docs are: " + docs);
             Assert.assertNotNull(docs);
-            Assert.assertTrue("Doc is " + docs, docs.contains("<p><b>exporter:</b> Dom</b></p>"));
-            Assert.assertTrue("Doc is " + docs, docs.contains("<p><b>type:</b> () -> Dom</p>"));
+            Assert.assertTrue("Doc is " + docs, docs.contains("<p><b>exporter: </b> Dom</b></p>"));
+            Assert.assertTrue("Doc is " + docs, docs.contains("<p><b>type: </b> () -> Dom</p>"));
         });
     }
 
@@ -93,13 +93,13 @@ public class AldorDocumentationProviderTest extends LightPlatformCodeInsightFixt
         annotationTextFixture.createFile("Makefile", "foo.abn: foo.as\n\t" + aldorExecutableRule.executable() + " -Fabn=foo.abn foo.as");
 
         annotationTextFixture.compileFile(sourceFile);
-
+Thread.sleep(10000);
         annotationTextFixture.runInEdtAndWait(() -> {
             PsiFile psiFile = ofNullable(PsiManager.getInstance(getProject()).findFile(sourceFile)).orElseThrow(() -> new AssertionFailedError("Missing file!"));
             String docs = docForElement(PsiTreeUtil.findElementOfClassAtOffset(psiFile, program.indexOf("abs;"), AldorIdentifier.class, true));
             LOG.info("Docs are: " + docs);
             Assert.assertNotNull(docs);
-            Assert.assertTrue("Doc is " + docs, docs.contains("<b>type:</b> AldorInteger -> AldorInteger</p>"));
+            Assert.assertTrue("Doc is " + docs, docs.contains("<b>type: </b> AldorInteger -> AldorInteger</p>"));
         });
     }
 
