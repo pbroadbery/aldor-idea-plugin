@@ -282,7 +282,16 @@ public class AldorGitTemplateFactory extends ProjectTemplatesFactory {
             Map<String, String> map = Maps.newHashMap();
             map.put("PROJECT", model.getProject().getName());
             map.put("MODULE", model.getModule().getName());
+            map.put("ALDOR_SDK", (model.getSdk() == null) ? "\"SDK path goes here\"" : model.getSdk().getHomePath());
+            map.put("INITIAL_ALDOR_FILES", "example");
             saveFile(file, "Makefile.none", map);
+
+            file = getOrCreateExternalProjectConfigFile(contentRootDir.getPath(), "example.as");
+            if (file == null) {
+                return;
+            }
+            saveFile(file, "example.as", map);
+
         }
 
         @Nullable

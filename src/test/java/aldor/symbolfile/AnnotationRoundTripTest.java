@@ -61,10 +61,11 @@ public class AnnotationRoundTripTest extends LightPlatformCodeInsightFixtureTest
             Assert.assertTrue(nInstances.stream()
                                         .map(annotationManager::findSrcPosForElement)
                                         .map(annotationFile::lookupSyme)
-                    .allMatch(syme -> {
-                                    if (syme == null) {
+                    .allMatch(symes -> {
+                                    if (symes.isEmpty()) {
                                         return false;
                                     }
+                                    Syme syme = symes.stream().filter(s -> "n".equals(s.name())).findFirst().orElse(null);
                                     String pretty = SyntaxPrinter.instance().toString(syme.type());
                                     return "AldorInteger".equals(pretty);
                     }));

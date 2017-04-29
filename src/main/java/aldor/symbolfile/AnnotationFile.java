@@ -1,6 +1,9 @@
 package aldor.symbolfile;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Collection;
 
 public interface AnnotationFile {
 
@@ -13,6 +16,6 @@ public interface AnnotationFile {
     @Nullable
     String errorMessage();
 
-    @Nullable
-    Syme lookupSyme(SrcPos srcPos);
+    @NotNull
+    Collection<Syme> lookupSyme(SrcPos srcPos);
 }

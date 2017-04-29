@@ -49,8 +49,6 @@
         <langCodeStyleSettingsProvider implementation="aldor.formatting.AldorLanguageCodeStyleSettingsProvider"/>
         <codeStyleSettingsProvider implementation="aldor.formatting.AldorCodeStyleSettingsProvider"/>
 
-        <!-- Not useful: <externalAnnotator language="Aldor" implementationClass="aldor.editor.TypeAndRefAnnotator"/> -->
-
         <gotoClassContributor implementation="aldor.editor.finder.AldorGotoClassContributor"/>
         <gotoSymbolContributor implementation="aldor.editor.finder.AldorGotoSymbolContributor"/>
         <gotoSymbolContributor implementation="aldor.editor.finder.AldorGotoWithDeclarationContributor"/>

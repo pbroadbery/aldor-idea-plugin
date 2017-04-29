@@ -36,9 +36,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.Future;
 
@@ -218,7 +220,11 @@ public class AnnotationFileManager implements Disposable {
 
         AnnotatedOptional<SrcPos, String> srcPosMaybe = AnnotatedOptional.ofNullable(findSrcPosForElement(element), () -> "No source found");
 
-        return srcPosMaybe.flatMap(srcPos -> AnnotatedOptional.ofNullable(annotationFile.lookupSyme(srcPos), () -> "Failed to find symbol " + srcPosMaybe));
+        return srcPosMaybe.flatMap(srcPos -> {
+            Optional<Syme> symeMaybe = annotationFile.lookupSyme(srcPos).stream().filter(s -> s.name().equals(element.getText())).findFirst();
+
+            return AnnotatedOptional.fromOptional(symeMaybe, () -> "Failed to find symbol " + element.getText() + " at " + srcPos);
+        });
     }
 
     @Nullable
@@ -228,7 +234,7 @@ public class AnnotationFileManager implements Disposable {
             return null;
         }
         AnnotationFile annotationFile = annotationFile(element.getContainingFile());
-        Syme syme = annotationFile.lookupSyme(srcPos);
+        Syme syme = lookupAndSelectSyme(element, srcPos, annotationFile);
         if (syme == null) {
             LOG.info("No Symbol found at " + srcPos);
             return null;
@@ -259,6 +265,11 @@ public class AnnotationFileManager implements Disposable {
         }
         LOG.info("Found reference to " + element.getText() + " at " + refSyme.srcpos());
         return findElementForSrcPos(refFile, refSyme.srcpos());
+    }
+
+    private Syme lookupAndSelectSyme(@NotNull PsiElement element, SrcPos srcPos, AnnotationFile annotationFile) {
+        Collection<Syme> symes = annotationFile.lookupSyme(srcPos);
+        return symes.stream().filter(s -> s.name().equals(element.getText())).findFirst().orElse(null);
     }
 
     @Nullable

@@ -2,16 +2,18 @@ package aldor.symbolfile;
 
 import aldor.util.sexpr.SExpression;
 import aldor.util.sexpr.SxType;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.NavigableMap;
-import java.util.TreeMap;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -19,12 +21,12 @@ import java.util.stream.Collectors;
  */
 public class PopulatedAnnotationFile implements AnnotationFile {
     private final String fileName;
-    private final NavigableMap<SrcPos, SExpression> sxForSrcPos;
+    private final Multimap<SrcPos, SExpression> sxForSrcPos;
     @NotNull
     private final Lookup lookup;
 
     public PopulatedAnnotationFile(String fileName, SExpression sx) {
-        this.sxForSrcPos = new TreeMap<>();
+        this.sxForSrcPos = HashMultimap.create(10, 1);
         this.fileName = fileName;
         parseForIds(sxForSrcPos, sx.car());
         this.lookup = new Lookup(sx.asList().get(1), sx.asList().get(2));
@@ -92,7 +94,7 @@ public class PopulatedAnnotationFile implements AnnotationFile {
         }
     }
 
-    void parseForIds(Map<SrcPos, SExpression> map, SExpression sx) {
+    void parseForIds(Multimap<SrcPos, SExpression> map, SExpression sx) {
         for (SExpression child: sx.asList()) {
             if (child.isOfType(SxType.Cons) && child.car().equals(SymbolFileSymbols.Id)) {
                 SExpression sxPos = child.cdr().asAssociationList().get(SymbolFileSymbols.SrcPos);
@@ -112,10 +114,6 @@ public class PopulatedAnnotationFile implements AnnotationFile {
         return new SrcPos(pos.nth(0).string(), pos.nth(1).integer(), pos.nth(2).integer());
     }
 
-    public Iterable<Map.Entry<SrcPos, SExpression>> entries() {
-        return sxForSrcPos.entrySet();
-    }
-
     @Override
     public String sourceFile() {
         return fileName;
@@ -128,21 +126,15 @@ public class PopulatedAnnotationFile implements AnnotationFile {
     }
 
     @Override
-    @Nullable
-    public Syme lookupSyme(@NotNull SrcPos srcPos) {
-        SExpression sx = sxForSrcPos.get(srcPos);
-        if (sx == null) {
-            return null;
-        }
+    public Collection<Syme> lookupSyme(@NotNull SrcPos srcPos) {
+        Collection<SExpression> sExpressions = sxForSrcPos.get(srcPos);
 
-        SExpression indexRef = sx.cdr().asAssociationList().get(SymbolFileSymbols.Syme);
-        if (indexRef == null) {
-            return null;
-        }
-        SExpression index = indexRef.cdr();
-        if (!index.isOfType(SxType.Integer)) {
-            return null;
-        }
-        return lookup.syme(index.integer());
+        return sExpressions.stream()
+                .map(sx -> sx.cdr().asAssociationList().get(SymbolFileSymbols.Syme))
+                .filter(Objects::nonNull)
+                .map(SExpression::cdr)
+                .filter(x -> x.isOfType(SxType.Integer))
+                .map(n -> lookup.syme(n.integer()))
+                .collect(Collectors.toList());
     }
 }

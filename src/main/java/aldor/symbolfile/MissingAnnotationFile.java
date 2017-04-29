@@ -3,6 +3,9 @@ package aldor.symbolfile;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
+import java.util.Collections;
+
 public class MissingAnnotationFile implements AnnotationFile {
     private final VirtualFile file;
     private final String errorMessage;
@@ -29,9 +32,8 @@ public class MissingAnnotationFile implements AnnotationFile {
         return errorMessage;
     }
 
-    @Nullable
     @Override
-    public Syme lookupSyme(SrcPos srcPos) {
-        return null;
+    public Collection<Syme> lookupSyme(SrcPos srcPos) {
+        return Collections.emptyList();
     }
 }

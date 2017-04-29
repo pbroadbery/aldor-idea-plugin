@@ -7,9 +7,10 @@
 #
 # Feel free to edit/replace this file - it's just here to get you started.
 
-ALDOR = aldor
+ALDOR_SDK = ${ALDOR_SDK}
+ALDOR = $(ALDOR_SDK)/bin/aldor
 
-ALDOR_FILES = {INITIAL_ALDOR_FILE}
+ALDOR_FILES = ${INITIAL_ALDOR_FILES}
 
 $(addsuffix .ao, $(ALDOR_FILES)): %.ao: %.as
 	@$(ALDOR) -Fao=$@ $<
@@ -20,3 +21,9 @@ $(addsuffix .abn, $(ALDOR_FILES)): %.abn: %.as
 
 .PHONY: $(addsuffix .run, $(ALDOR_FILES))
 $(addsuffix .run, $(ALDOR_FILES)): %.run: %.as
+
+# Used to extract file information
+idea:
+    echo run: $(addsuffix .run, $(ALDOR_FILES))
+    echo files: $(addsuffix .as, $(ALDOR_FILES))
+
