@@ -111,39 +111,6 @@ public class AldorGitTemplateFactory extends ProjectTemplatesFactory {
         return null;
     }
 
-    private abstract static class AldorTemplateModuleBuilder extends AldorModuleType.AldorModuleBuilder {
-        AldorTemplateModuleBuilder(AldorModuleType type) {
-            super(type);
-        }
-
-        @Override
-        public String getPresentableName() {
-            return "Empty Aldor/Spad module";
-        }
-
-        @Override
-        public String getDescription() {
-            return "Empty Aldor/Spad module - do as you will..";
-        }
-
-
-        protected void createContentRoot(ModifiableRootModel modifiableRootModel) {
-            String contentEntryPath = getContentEntryPath();
-            if (StringUtil.isEmpty(contentEntryPath)) {
-                return;
-            }
-            File contentRootDir = new File(contentEntryPath);
-            FileUtilRt.createDirectory(contentRootDir);
-            LocalFileSystem fileSystem = LocalFileSystem.getInstance();
-            VirtualFile modelContentRootDir = fileSystem.refreshAndFindFileByIoFile(contentRootDir);
-            if (modelContentRootDir == null) {
-                return;
-            }
-
-            modifiableRootModel.addContentEntry(modelContentRootDir);
-        }
-    }
-
     private static class AldorEmptyModuleBuilder extends AldorModuleType.AldorModuleBuilder {
         AldorEmptyModuleBuilder() {
             super(AldorModuleType.instance());
@@ -272,6 +239,16 @@ public class AldorGitTemplateFactory extends ProjectTemplatesFactory {
 
             File contentRootDir = new File(contentEntryPath);
             createFileLayout(contentRootDir, modifiableRootModel);
+
+            ContentEntry entry = modifiableRootModel.getContentEntries()[0];
+            if (entry.getFile() != null) {
+                VirtualFile file = entry.getFile().findFileByRelativePath(contentRootDir.getAbsolutePath());
+
+                if (file != null) {
+                    entry.addSourceFolder(file, false);
+                }
+            }
+
         }
 
         private void createFileLayout(File contentRootDir, ModifiableRootModel model) throws ConfigurationException {

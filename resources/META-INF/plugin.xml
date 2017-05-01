@@ -74,6 +74,7 @@
         <stubIndex implementation="aldor.psi.index.AbbrevAbbrevIndex"/>
         <gotoClassContributor implementation="aldor.editor.finder.SpadAbbrevGotoClassContributor"/>
         <sdkType implementation="aldor.sdk.FricasInstalledSdkType"/>
+        <sdkType implementation="aldor.sdk.FricasLocalSdkType"/>
 
         <!-- Test language -->
         <fileTypeFactory implementation="aldor.expression.ExpressionFileTypeFactory"/>

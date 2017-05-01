@@ -115,4 +115,15 @@ public class FricasInstalledSdkType extends SdkType implements FricasSdkType {
         VirtualFile root = LocalFileSystem.getInstance().findFileByPath(algebraPath.getAbsolutePath());
         return Collections.singletonList(root);
     }
+
+    @Nullable
+    @Override
+    public String fricasPath(Sdk sdk) {
+        return sdk.getHomePath() + "/bin/fricas";
+    }
+
+    @Override
+    public boolean isLocalInstall() {
+        return false;
+    }
 }
