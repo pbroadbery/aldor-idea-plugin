@@ -1,16 +1,12 @@
 package aldor.sdk;
 
-import aldor.build.module.AldorModuleType;
 import aldor.parser.SwingThreadTestRule;
 import aldor.psi.AldorDefine;
 import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.LightPlatformJUnit4TestRule;
 import com.intellij.codeInsight.documentation.DocumentationManager;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkModificator;
-import com.intellij.openapi.projectRoots.impl.ProjectJdkImpl;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
@@ -20,7 +16,6 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.CodeInsightTestFixture;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.Assert;
 import org.junit.Rule;
@@ -36,8 +31,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class FricasSdkProjectTest {
-    private final CodeInsightTestFixture codeTestFixture = LightPlatformJUnit4TestRule.createFixture(getProjectDescriptor());
     private final ExecutablePresentRule fricasExecutableRule = new ExecutablePresentRule.Fricas();
+    private final CodeInsightTestFixture codeTestFixture = LightPlatformJUnit4TestRule.createFixture(getProjectDescriptor(fricasExecutableRule));
 
     @Rule
     public final TestRule platformTestRule =
@@ -82,42 +77,9 @@ public class FricasSdkProjectTest {
         return DocumentationManager.getProviderFromElement(id).generateDoc(id, id);
     }
 
-
-
-
-    private LightProjectDescriptor getProjectDescriptor() {
-        return new FricasSdkLightProjectDescriptor();
+    private static LightProjectDescriptor getProjectDescriptor(ExecutablePresentRule fricasExecutableRule) {
+        return SdkProjectDescriptors.fricasSdkProjectDescriptor(fricasExecutableRule.prefix());
 
     }
 
-    private class FricasSdkLightProjectDescriptor extends LightProjectDescriptor {
-        private Sdk sdk = null;
-
-        @Override
-        @NotNull
-        public ModuleType<?> getModuleType() {
-            return AldorModuleType.instance();
-        }
-
-        @Nullable
-        @Override
-        public Sdk getSdk() {
-            if (sdk == null) {
-                sdk = createSDK();
-            }
-            return sdk;
-        }
-
-        Sdk createSDK() {
-            FricasInstalledSdkType sdkType = new FricasInstalledSdkType();
-            Sdk theSdk = new ProjectJdkImpl("Fricas Test SDK", sdkType);
-
-            SdkModificator mod = theSdk.getSdkModificator();
-            mod.setHomePath(fricasExecutableRule.prefix());
-            mod.commitChanges();
-            sdkType.setupSdkPaths(theSdk);
-            return theSdk;
-        }
-
-    }
 }

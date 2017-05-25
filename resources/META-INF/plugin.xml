@@ -67,6 +67,10 @@
         <sdkType implementation="aldor.sdk.AldorInstalledSdkType"/>
         <sdkType implementation="aldor.sdk.AldorLocalSdkType"/>
 
+        <lang.findUsagesProvider language="Aldor" implementationClass="aldor.editor.AldorFindUsagesProvider"/>
+        <usageTypeProvider implementation="aldor.editor.AldorUsageTypeProvider"/>
+        <!--<elementDescriptionProvider implementation="aldor.editor.AldorElementDescriptionProvider"/> -->
+
         <!-- Spad extras -->
         <fileTypeFactory implementation="aldor.file.SpadFileTypeFactory"/>
         <lang.parserDefinition language="Spad" implementationClass="aldor.parser.SpadParserDefinition"/>
@@ -103,4 +107,10 @@
             <implementation-class>aldor.build.module.AldorApplicationComponent</implementation-class>
         </component>
     </application-components>
+
+    <!-- Features not implemented:
+       ElementSignatureProvider: Used to load/save usage&fold state (in case of off-line updates to a file)
+
+     -->
+
 </idea-plugin>
