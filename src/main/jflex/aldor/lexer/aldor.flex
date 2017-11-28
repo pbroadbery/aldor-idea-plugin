@@ -153,7 +153,7 @@ SPAD_SYSCMD_ABBREV=\)abbrev[^\r\n]*
 "rem" { yybegin(NORMAL); return AldorTokenTypes.KW_Rem; }
 "repeat" { yybegin(NORMAL); return AldorTokenTypes.KW_Repeat; }
 "return" { yybegin(NORMAL); return AldorTokenTypes.KW_Return; }
-//"rule" { yybegin(NORMAL); return AldorTokenTypes.KW_Rule; }
+"rule" { yybegin(NORMAL); return aldorModeKeyword(AldorTokenTypes.KW_Rule); }
 "select" { yybegin(NORMAL); return aldorModeKeyword(AldorTokenTypes.KW_Select); }
 "then" { yybegin(NORMAL); return AldorTokenTypes.KW_Then; }
 "throw" { yybegin(NORMAL); return AldorTokenTypes.KW_Throw; }

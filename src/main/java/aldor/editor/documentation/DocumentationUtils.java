@@ -53,10 +53,7 @@ public class DocumentationUtils {
                         .map(name -> "Defined in: " + name);
 
         return Stream.concat(Streams.toStream(file), Streams.toStream(docString(documented))).collect(Joining.with("<br>"));
-
     }
-
-
 
     @Nullable
     public AldorDefine findTopLevelDefine(PsiElement element) {
@@ -92,7 +89,7 @@ public class DocumentationUtils {
         return Joiner.on("<br/>\n").join(documented.documentationNodes().stream().map((psiElement) -> NewLine.matcher(psiElement.getText()).replaceAll(Matcher.quoteReplacement("<br/>\n"))).collect(Collectors.toList()));
     }
 
-    AnnotatedOptional<Syme, String> symeForElement(PsiElement element) {
+    public AnnotatedOptional<Syme, String> symeForElement(PsiElement element) {
         VirtualFile virtualFile = element.getContainingFile().getVirtualFile();
         Project project = element.getProject();
         if (virtualFile == null) {
@@ -102,7 +99,5 @@ public class DocumentationUtils {
         AnnotatedOptional<AnnotationFileManager, String> annotationManager = moduleManager.annotationFileManagerForFile(virtualFile);
 
         return annotationManager.flatMap(am -> am.symeForElement(element));
-
     }
-
 }

@@ -14,6 +14,7 @@ public class AldorFileTypeFactory extends FileTypeFactory {
     @Override
     public void createFileTypes(@NotNull FileTypeConsumer fileTypeConsumer) {
         fileTypeConsumer.consume(AldorFileType.INSTANCE);
+        fileTypeConsumer.consume(SpadFileType.INSTANCE);
 
         fileTypeConsumer.consume(new AldorMiscFileType("ALDOROBJ", "Aldor Object", "ao"));
         fileTypeConsumer.consume(new AldorMiscFileType("ALDORFOAM", "Aldor Intermediate", "fm"));
@@ -68,7 +69,7 @@ public class AldorFileTypeFactory extends FileTypeFactory {
 
         @Override
         public boolean isReadOnly() {
-            return false;
+            return true;
         }
 
         @Nullable

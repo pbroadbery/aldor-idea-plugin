@@ -14,4 +14,5 @@ public final class AldorIcons {
 
     public static final Icon DECLARE_ICON = IconUtil.addText(IconUtil.getAddLinkIcon(), ":");
 
+    public static final Icon MACRO = IconUtil.addText(IDENTIFIER, "M");
 }

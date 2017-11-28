@@ -3,7 +3,6 @@ package aldor.build.module;
 import aldor.lexer.IndentWidthCalculator;
 import aldor.psi.AldorIdentifier;
 import aldor.symbolfile.SrcPos;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -14,6 +13,8 @@ import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
+
+import static aldor.builder.files.AldorFileBuildTarget.trimExtension;
 
 class LineNumberMap {
     private final NavigableMap<Integer, Integer> lineNumberForOffset;
@@ -51,7 +52,7 @@ class LineNumberMap {
         int textOffset = element.getTextOffset();
         Integer lineOffset = lineNumberForOffset.headMap(textOffset, true).lastKey();
         int column = widthCalculator.width(element.getContainingFile().getText().subSequence(lineOffset, textOffset));
-        return new SrcPos(StringUtil.trimExtension(element.getContainingFile().getName()), 1 + lineNumberForOffset.get(lineOffset), 1 + column);
+        return new SrcPos(trimExtension(element.getContainingFile().getName()), 1 + lineNumberForOffset.get(lineOffset), 1 + column);
     }
 
     @Nullable

@@ -18,5 +18,9 @@ public interface AldorDefine extends StubBasedPsiElement<AldorDefineStub>, PsiNa
         return getFirstChild();
     }
 
+    default PsiElement rhs() {
+        return getLastChild();
+    }
+
     enum DefinitionType { CONSTANT, MACRO }
 }

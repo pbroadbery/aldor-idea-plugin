@@ -46,11 +46,6 @@ public class AldorModuleType extends ModuleType<AldorModuleType.AldorModuleBuild
     }
 
     @Override
-    public Icon getBigIcon() {
-        return AldorIcons.MODULE;
-    }
-
-    @Override
     public Icon getNodeIcon(@Deprecated boolean isOpened) {
         return AldorIcons.MODULE;
     }

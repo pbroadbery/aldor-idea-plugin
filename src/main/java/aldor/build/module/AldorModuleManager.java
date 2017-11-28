@@ -7,7 +7,6 @@ import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFileSystemItem;
 import org.jetbrains.annotations.NotNull;
@@ -19,6 +18,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static aldor.builder.files.AldorFileBuildTarget.trimExtension;
 import static java.util.Optional.ofNullable;
 
 public final class AldorModuleManager {
@@ -86,7 +86,7 @@ public final class AldorModuleManager {
     public String buildPathForFile(@NotNull VirtualFile virtualFile) {
         VirtualFile root = ProjectRootManager.getInstance(project).getFileIndex().getContentRootForFile(virtualFile);
         if (root == null) {
-            return virtualFile.getParent().getPath();
+            return (virtualFile.getParent() == null) ? null : virtualFile.getParent().getPath();
         }
         return buildPathFromRoot(root, virtualFile.getParent());
     }
@@ -112,6 +112,6 @@ public final class AldorModuleManager {
     }
 
     public String annotationFileForSourceFile(@NotNull VirtualFile file) {
-        return buildPathForFile(file) + "/" + StringUtil.trimExtension(file.getName()) + ".abn";
+        return buildPathForFile(file) + "/" + trimExtension(file.getName()) + ".abn";
     }
 }

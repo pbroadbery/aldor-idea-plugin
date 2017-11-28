@@ -17,7 +17,6 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.VirtualFileSystem;
@@ -43,6 +42,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.Future;
+
+import static aldor.builder.files.AldorFileBuildTarget.trimExtension;
 
 public class AnnotationFileManager implements Disposable {
     private static final Logger LOG = Logger.getInstance(AnnotationFileManager.class);
@@ -71,7 +72,7 @@ public class AnnotationFileManager implements Disposable {
 
     void setupFileWatcher() {
         myBusConnection = ApplicationManager.getApplication().getMessageBus().connect();
-        myBusConnection.subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener.Adapter() {
+        myBusConnection.subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener() {
             @Override
             public void after(@NotNull final List<? extends VFileEvent> events) {
                 for (VFileEvent event : events) {
@@ -291,7 +292,7 @@ public class AnnotationFileManager implements Disposable {
         if (refName == null) {
             return null;
         }
-        return StringUtil.trimExtension(refName) + ".as";
+        return trimExtension(refName) + ".as";
     }
 
     @Nullable

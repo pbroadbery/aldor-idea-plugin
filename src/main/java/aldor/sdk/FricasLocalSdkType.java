@@ -71,7 +71,7 @@ public class FricasLocalSdkType extends SdkType implements FricasSdkType {
     }
 
     @Override
-    public void showCustomCreateUI(@NotNull SdkModel sdkModel, @NotNull JComponent parentComponent, @NotNull Consumer<Sdk> sdkCreatedCallback) {
+    public void showCustomCreateUI(@NotNull SdkModel sdkModel, @NotNull JComponent parentComponent, Sdk parentSdk, @NotNull Consumer<Sdk> sdkCreatedCallback) {
         ProjectJdkImpl sdk = new ProjectJdkImpl("Local Fricas Build", this);
         sdk.setVersionString("git repository");
         sdkCreatedCallback.consume(sdk);

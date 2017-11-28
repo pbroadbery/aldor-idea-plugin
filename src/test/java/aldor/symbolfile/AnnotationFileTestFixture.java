@@ -95,12 +95,12 @@ public class AnnotationFileTestFixture {
         ;
         String text = "ALDOR = %s\nALDOR_FILES=%s\n%s\n%s\n";
         String dependencyRules = dependencies.entrySet().stream()
-                                                        .map(e -> StringUtil.trimExtension(e.getKey())
-                                                                + ".ao " + StringUtil.trimExtension(e.getKey()) + ".abn: " + e.getValue().stream()
-                                                                                        .map(StringUtil::trimExtension)
+                                                        .map(e -> StringUtil.trimExtensions(e.getKey())
+                                                                + ".ao " + StringUtil.trimExtensions(e.getKey()) + ".abn: " + e.getValue().stream()
+                                                                                        .map(StringUtil::trimExtensions)
                                                                                         .map(x -> x + ".ao").collect(Joining.with(" ")))
                                                                  .collect(Joining.with("\n"));
-        return String.format(text, aldorLocation, files.stream().map(StringUtil::trimExtension).collect(Joining.with(" ")),
+        return String.format(text, aldorLocation, files.stream().map(StringUtil::trimExtensions).collect(Joining.with(" ")),
                             dependencyRules,
                 abnRule);
     }

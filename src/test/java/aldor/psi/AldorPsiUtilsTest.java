@@ -70,6 +70,35 @@ public class AldorPsiUtilsTest extends LightPlatformCodeInsightFixtureTestCase {
         Assert.assertEquals(0, defn.get().getTextOffset());
     }
 
+    public void testDefinitionClass() {
+        String text = "foo: Category == with {}";
+        PsiFile file = createLightFile(AldorFileType.INSTANCE, text);
+        AldorDefine define = PsiTreeUtil.findChildOfType(file, AldorDefine.class);
+        assertEquals(AldorPsiUtils.DefinitionClass.CATEGORY, AldorPsiUtils.definitionClassForDefine(define));
+    }
+
+    public void testDefinitionClass1() {
+        String text = "foo: with == add";
+        PsiFile file = createLightFile(AldorFileType.INSTANCE, text);
+        AldorDefine define = PsiTreeUtil.findChildOfType(file, AldorDefine.class);
+        assertEquals(AldorPsiUtils.DefinitionClass.DOMAIN, AldorPsiUtils.definitionClassForDefine(define));
+    }
+
+    public void testDefinitionClass2() {
+        String text = "foo: AA == add";
+        PsiFile file = createLightFile(AldorFileType.INSTANCE, text);
+        AldorDefine define = PsiTreeUtil.findChildOfType(file, AldorDefine.class);
+        assertEquals(AldorPsiUtils.DefinitionClass.DOMAIN, AldorPsiUtils.definitionClassForDefine(define));
+    }
+
+    public void testDefinitionClass3() {
+        String text = "foo: AA == bbb";
+        PsiFile file = createLightFile(AldorFileType.INSTANCE, text);
+        AldorDefine define = PsiTreeUtil.findChildOfType(file, AldorDefine.class);
+        assertEquals(AldorPsiUtils.DefinitionClass.VALUE, AldorPsiUtils.definitionClassForDefine(define));
+    }
+
+
     @Override
     protected LightProjectDescriptor getProjectDescriptor() {
         //noinspection ReturnOfInnerClass

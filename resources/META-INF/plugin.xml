@@ -69,6 +69,8 @@
 
         <lang.findUsagesProvider language="Aldor" implementationClass="aldor.editor.AldorFindUsagesProvider"/>
         <usageTypeProvider implementation="aldor.editor.AldorUsageTypeProvider"/>
+        <breadcrumbsInfoProvider implementation="aldor.editor.AldorBreadcrumbsProvider"/>
+        <lang.psiStructureViewFactory language="Aldor" implementationClass="aldor.structure.AldorPsiStructureViewFactory"/>
         <!--<elementDescriptionProvider implementation="aldor.editor.AldorElementDescriptionProvider"/> -->
 
         <!-- Spad extras -->

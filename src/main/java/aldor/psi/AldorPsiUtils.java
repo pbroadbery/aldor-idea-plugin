@@ -8,7 +8,6 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiReference;
-import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.refactoring.psi.SearchUtils;
@@ -67,9 +66,14 @@ public final class AldorPsiUtils {
     }
 
     private static final Set<IElementType> withElementTypes = Sets.newHashSet(AldorTypes.WITH_PART, AldorTypes.UNARY_WITH, AldorTypes.BINARY_WITH_EXPR, AldorTypes.UNARY_WITH_EXPR);
+    private static final Set<IElementType> addElementTypes = Sets.newHashSet(AldorTypes.ADD_PART, AldorTypes.UNARY_ADD, AldorTypes.BINARY_ADD_EXPR, AldorTypes.UNARY_ADD_EXPR);
 
-    private static boolean isWithElementType(IStubElementType<?, ?> stubType) {
+    private static boolean isWithElementType(IElementType stubType) {
         return withElementTypes.contains(stubType);
+    }
+
+    private static boolean isAddElementType(IElementType stubType) {
+        return addElementTypes.contains(stubType);
     }
 
     private static final class TopLevelVisitor extends AldorVisitor {
@@ -279,4 +283,55 @@ public final class AldorPsiUtils {
         throw new IllegalStateException("Missing outer block");
     }
 
+    public enum DefinitionClass {
+        CATEGORY, DOMAIN, VALUE
+    }
+
+    public static DefinitionClass definitionClassForDefine(AldorDefine define) {
+        if (isCategoryDefinition(define)) {
+            return DefinitionClass.CATEGORY;
+        }
+        if (isDomainByLhs(define)) {
+            return DefinitionClass.DOMAIN;
+        }
+        if (isDomainByRhs(define)) {
+            return DefinitionClass.DOMAIN;
+        }
+        return DefinitionClass.VALUE;
+    }
+
+    static boolean isCategoryDefinition(AldorDefine define) {
+        // foo: Category == ...
+        AldorDeclare decl = PsiTreeUtil.findChildOfType(define.lhs(), AldorDeclare.class);
+        if (decl == null) {
+            return false;
+        }
+        AldorIdentifier ident = PsiTreeUtil.findChildOfType(decl.rhs(), AldorIdentifier.class);
+        if (ident != null) {
+            if ("Category".equals(ident.getText())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    static boolean isDomainByLhs(AldorDefine define) {
+        AldorDeclare decl = PsiTreeUtil.findChildOfType(define.lhs(), AldorDeclare.class);
+        if (decl == null) {
+            return false;
+        }
+        if (PsiTreeUtil.findChildOfType(decl.rhs(), AldorWith.class) != null) {
+            return true;
+        }
+        return false;
+    }
+
+    static boolean isDomainByRhs(AldorDefine define) {
+        // foo: ... == add
+        PsiElement rhs = define.rhs();
+        if (PsiTreeUtil.findChildOfAnyType(define.rhs(), AldorUnaryAdd.class, AldorUnaryAddExpr.class, AldorAddPart.class, AldorBinaryAddExpr.class) != null) {
+            return true;
+        }
+        return false;
+    }
 }
