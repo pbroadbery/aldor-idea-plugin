@@ -3,6 +3,7 @@ package aldor.parser;
 import aldor.psi.elements.AldorTypes;
 import aldor.test_util.LightPlatformJUnit4TestRule;
 import aldor.test_util.SkipOnCIBuildRule;
+import aldor.test_util.Timer;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -25,7 +26,7 @@ import static aldor.test_util.TestFiles.existingFile;
 import static com.intellij.testFramework.LightPlatformTestCase.getProject;
 
 public class ParseBenchTest {
-
+    public static final int ITERATIONS = 5000;
     private final CodeInsightTestFixture testFixture = LightPlatformJUnit4TestRule.createFixture(null);
     @Rule
     public final TestRule rule = new SkipOnCIBuildRule();
@@ -37,16 +38,20 @@ public class ParseBenchTest {
                     .around(new SwingThreadTestRule());
 
     @Test
-    public void testParseLang() {
+    public void testParseFF2GE() throws Exception {
         Assert.assertNotNull(getProject());
 
         Project project = getProject();
-
-        for (int i=0; i<300; i++) {
-            File file = existingFile("/home/pab/Work/aldorgit/aldor/aldor/lib/algebra/src/mat/gauss/sit_ff2ge.as");
-            final List<PsiErrorElement> errors = parseFile(project, file);
-            Assert.assertEquals(0, errors.size());
+        Timer timer = new Timer("Parser");
+        try (Timer.TimerRun run = timer.run()) {
+            for (int i = 0; i< ITERATIONS; i++) {
+                File file = existingFile("/home/pab/Work/aldorgit/aldor/aldor/lib/algebra/src/mat/gauss/sit_ff2ge.as");
+                final List<PsiErrorElement> errors = parseFile(project, file);
+                Assert.assertEquals(0, errors.size());
+            }
         }
+        System.out.println(String.format("Number of iterations: %s - Total time: %s - Per Iteration: %s", ITERATIONS, timer.duration(), ((double) timer.duration())/ITERATIONS));
+
     }
 
     @NotNull
