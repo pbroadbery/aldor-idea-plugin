@@ -6,6 +6,7 @@ import aldor.psi.AldorDeclare;
 import aldor.psi.elements.AldorTypes;
 import aldor.symbolfile.AnnotationFileTestFixture;
 import aldor.test_util.LightPlatformJUnit4TestRule;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -35,7 +36,7 @@ public class DeclareDocumentationProviderTest {
     public void testDomainExport() {
         String text = "++ This is documentation\nFoo: with { x: String } == add";
 
-        VirtualFile file = annotationTestFixture.createFile("foo.spad", text);
+        VirtualFile file = annotationTestFixture.createFile(getProject(), "foo.spad", text);
         PsiFile psi = PsiManager.getInstance(testFixture.getProject()).findFile(file);
         DeclareDocumentationProvider docCreator = new DeclareDocumentationProvider();
         assert psi != null;
@@ -51,7 +52,7 @@ public class DeclareDocumentationProviderTest {
     public void testCategoryExport() {
         String text = "++ This is documentation\nFoo: Category == Join(X,Y) with { x: String }";
 
-        VirtualFile file = annotationTestFixture.createFile("foo.spad", text);
+        VirtualFile file = annotationTestFixture.createFile(getProject(), "foo.spad", text);
         PsiFile psi = PsiManager.getInstance(testFixture.getProject()).findFile(file);
         DeclareDocumentationProvider docCreator = new DeclareDocumentationProvider();
         assert psi != null;
@@ -66,6 +67,10 @@ public class DeclareDocumentationProviderTest {
 
     private PsiElement parseSpadText(CharSequence text) {
         return ParserFunctions.parseSpadText(testFixture.getProject(), text, AldorTypes.TOP_LEVEL);
+    }
+
+    private Project getProject() {
+        return testFixture.getProject();
     }
 
 }

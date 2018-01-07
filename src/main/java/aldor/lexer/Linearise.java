@@ -38,6 +38,7 @@ import static aldor.lexer.AldorTokenTypes.KW_Try;
 import static aldor.lexer.AldorTokenTypes.KW_Where;
 import static aldor.lexer.AldorTokenTypes.KW_With;
 import static aldor.lexer.AldorTokenTypes.TK_PostDoc;
+import static aldor.lexer.AldorTokenTypes.TK_PreDoc;
 import static aldor.lexer.AldorTokenTypes.TK_SysCmd;
 import static aldor.lexer.AldorTokenTypes.TK_SysCmdAbbrev;
 import static aldor.lexer.AldorTokenTypes.WHITE_SPACE;
@@ -503,6 +504,10 @@ public class Linearise {
                 else if (!line.isPreDocument() && line.isPostDoc()) {
                     lastLine.join(line);
                 }
+                else if (line.isPreDocument()) {
+                    joinedLines.add(line);
+                    lastLine = line;
+                }
                 else if (!line.isPreDocument() && line.isBlank()) {
                     lastLine.joinWhitespaceTokens(line);
                 } else {
@@ -733,6 +738,9 @@ public class Linearise {
             }
             else if ((allTokens.size() == 1) && Objects.equals(tokens.get(0), TK_PostDoc)) {
                 this.isPostDocument = true;
+            }
+            else if ((allTokens.size() == 1) && Objects.equals(tokens.get(0), TK_PreDoc)) {
+                this.isPreDocument = true;
             }
 
         }

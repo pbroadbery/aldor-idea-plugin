@@ -4,6 +4,7 @@ import aldor.parser.SwingThreadTestRule;
 import aldor.psi.AldorDefine;
 import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.LightPlatformJUnit4TestRule;
+import aldor.test_util.SdkProjectDescriptors;
 import com.intellij.codeInsight.documentation.DocumentationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;

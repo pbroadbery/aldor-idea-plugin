@@ -35,7 +35,7 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
 
     @Override
     protected LightProjectDescriptor getProjectDescriptor() {
-        return new AldorProjectDescriptor();
+        return LightProjectDescriptor.EMPTY_PROJECT_DESCRIPTOR;
     }
 
     public void testParseCatDefinition() {
@@ -302,10 +302,6 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
 
         PsiElement psi = parseText(text);
         return ParserFunctions.getPsiErrorElements(psi);
-    }
-
-    public static class AldorProjectDescriptor extends LightProjectDescriptor {
-
     }
 
 

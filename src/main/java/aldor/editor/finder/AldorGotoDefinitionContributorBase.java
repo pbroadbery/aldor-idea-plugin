@@ -26,14 +26,16 @@ public abstract class AldorGotoDefinitionContributorBase implements ChooseByName
 
     @NotNull
     @Override
-    public String[] getNames(Project project, boolean nonProjectItems) {
+    public String[] getNames(Project project,
+                             @SuppressWarnings("NegativelyNamedBooleanVariable") boolean nonProjectItems) {
         Collection<String> keys = index.getAllKeys(project);
         return keys.toArray(ArrayUtil.EMPTY_STRING_ARRAY);
     }
 
     @NotNull
     @Override
-    public NavigationItem[] getItemsByName(String name, String pattern, Project project, boolean nonProjectItems) {
+    public NavigationItem[] getItemsByName(String name, String pattern, Project project,
+                                           @SuppressWarnings("NegativelyNamedBooleanVariable") boolean nonProjectItems) {
         GlobalSearchScope scope = GlobalSearchScopesCore.projectProductionScope(project);
         if (nonProjectItems) {
             scope = GlobalSearchScope.union(new GlobalSearchScope[] {scope, ProjectScope.getLibrariesScope(project)});

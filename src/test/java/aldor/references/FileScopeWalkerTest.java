@@ -1,18 +1,15 @@
 package aldor.references;
 
-import aldor.build.module.AldorModuleType;
 import aldor.psi.AldorId;
 import aldor.util.VirtualFileTests;
 import aldor.util.sexpr.SExpression;
 import aldor.util.sexpr.SymbolPolicy;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Ignore;
 
@@ -28,6 +25,7 @@ import static aldor.symbolfile.AnnotationFileTests.type;
 import static aldor.symbolfile.AnnotationFileTests.typeCode;
 import static aldor.symbolfile.SymbolFileSymbols.Exporter;
 import static aldor.symbolfile.SymbolFileSymbols.Id;
+import static aldor.test_util.LightProjectDescriptors.ALDOR_MODULE_DESCRIPTOR;
 import static aldor.util.VirtualFileTests.createChildDirectory;
 import static aldor.util.VirtualFileTests.createFile;
 import static aldor.util.sexpr.SExpressions.list;
@@ -166,15 +164,6 @@ public class FileScopeWalkerTest extends LightPlatformCodeInsightFixtureTestCase
 
     @Override
     protected LightProjectDescriptor getProjectDescriptor() {
-        //noinspection ReturnOfInnerClass
-        return new LightProjectDescriptor() {
-
-            @Override
-            @NotNull
-            public ModuleType<?> getModuleType() {
-                return AldorModuleType.instance();
-            }
-
-        };
+        return ALDOR_MODULE_DESCRIPTOR;
     }
 }

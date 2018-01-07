@@ -3,6 +3,7 @@ package aldor.symbolfile;
 import aldor.build.module.AnnotationFileManager;
 import aldor.psi.AldorIdentifier;
 import aldor.syntax.SyntaxPrinter;
+import aldor.test_util.AldorRoundTripProjectDescriptor;
 import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.JUnits;
 import aldor.test_util.LightPlatformJUnit4TestRule;
@@ -40,16 +41,14 @@ public class AnnotationFileTest {
                     .around(new LightPlatformJUnit4TestRule(insightTestFixture, ""));
     @Test
     public void testLocalReferences() throws Exception {
-        annotationTestFixture.project(insightTestFixture.getProject());
-
         String program = "#include \"aldor\"\n"
                 + "#include \"aldor\"\n" +
                 "Dom: with { foo: () -> % } == add { foo(): % == never }\n" +
                 "f(): Dom == foo();\n";
-        VirtualFile sourceFile = annotationTestFixture.createFile("foo.as", program);
-        annotationTestFixture.createFile("Makefile", "foo.abn: foo.as\n\t" + aldorExecutableRule.executable() + " -Fabn=foo.abn foo.as");
+        VirtualFile sourceFile = annotationTestFixture.createFile(insightTestFixture.getProject(), "foo.as", program);
+        annotationTestFixture.createFile(insightTestFixture.getProject(), "Makefile", "foo.abn: foo.as\n\t" + aldorExecutableRule.executable() + " -Fabn=foo.abn foo.as");
 
-        annotationTestFixture.compileFile(sourceFile);
+        annotationTestFixture.compileFile(sourceFile, insightTestFixture.getProject());
 
         annotationTestFixture.runInEdtAndWait(() -> {
             AnnotationFileManager fileManager = AnnotationFileManager.getAnnotationFileManager(insightTestFixture.getProject());

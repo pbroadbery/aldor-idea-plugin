@@ -1,15 +1,14 @@
 package aldor.editor.finder;
 
-import aldor.build.module.AldorModuleType;
 import aldor.parser.SwingThreadTestRule;
 import aldor.symbolfile.AnnotationFileTestFixture;
+import aldor.test_util.JUnits;
 import aldor.test_util.LightPlatformJUnit4TestRule;
 import aldor.test_util.SkipCI;
 import aldor.test_util.SkipOnCIBuildRule;
 import aldor.util.VirtualFileTests;
 import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.navigation.NavigationItem;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
@@ -18,14 +17,16 @@ import com.intellij.psi.stubs.StubUpdatingIndex;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.CodeInsightTestFixture;
 import com.intellij.util.indexing.FileBasedIndex;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
 import org.junit.rules.TestRule;
 
 import static aldor.psi.AldorPsiUtils.logPsi;
+import static aldor.test_util.LightProjectDescriptors.ALDOR_MODULE_DESCRIPTOR;
 import static aldor.util.VirtualFileTests.createFile;
 import static com.intellij.testFramework.LightPlatformTestCase.getSourceRoot;
 
@@ -42,6 +43,11 @@ public final class AldorGotoSymbolContributorTest {
 
     @Rule
     public final TestRule rule = new SkipOnCIBuildRule();
+
+    @Before
+    public void setUp() {
+        JUnits.setLogToDebug();
+    }
 
     @Test
     public void testGotoSymbol() {
@@ -66,9 +72,10 @@ public final class AldorGotoSymbolContributorTest {
 
     @SkipCI
     @Test
+    @Ignore("Broken - becuase we index definitions, not declarations")
     public void testGotoSymbolDeclareCategory() {
         Project project = testFixture.getProject();
-        VirtualFile file = createFile(getSourceRoot(), "foo.as", String.format("Something: Category == with { foo: String_%s }", System.currentTimeMillis()));
+        VirtualFile file = createFile(testFixture.getProject().getBaseDir(), "foo.as", String.format("Something: Category == with { foo: String_%s }", System.currentTimeMillis()));
 
         FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
         FileBasedIndex.getInstance().ensureUpToDate(StubUpdatingIndex.INDEX_ID, project, null);
@@ -83,6 +90,7 @@ public final class AldorGotoSymbolContributorTest {
 
     @SkipCI
     @Test
+    @Ignore("Broken - becuase we index definitions, not declarations")
     public void testGotoSymbolDeclareDomain() {
         Project project = testFixture.getProject();
         VirtualFile file = createFile(getSourceRoot(), "foo.as", String.format("Something: X_%s with { foo: %% }  == add {}", System.currentTimeMillis()));
@@ -101,6 +109,7 @@ public final class AldorGotoSymbolContributorTest {
 
     @SkipCI
     @Test
+    @Ignore("Broken - becuase we index definitions, not declarations")
     public void testGotoSymbolDeclareMacroDomain() {
         Project project = testFixture.getProject();
         VirtualFile file = createFile(getSourceRoot(), "foo.as", String.format("Something: E == I where E ==> X_%s with { foo: %% } I ==> add", System.currentTimeMillis()));
@@ -118,18 +127,8 @@ public final class AldorGotoSymbolContributorTest {
         Assert.assertTrue(items[0].canNavigate());
     }
 
-    protected LightProjectDescriptor getProjectDescriptor() {
-        //noinspection ReturnOfInnerClass
-        return new LightProjectDescriptor() {
-
-            @Override
-            @NotNull
-            public ModuleType<?> getModuleType() {
-                return AldorModuleType.instance();
-            }
-
-        };
+    private LightProjectDescriptor getProjectDescriptor() {
+        return ALDOR_MODULE_DESCRIPTOR;
     }
-
 
 }

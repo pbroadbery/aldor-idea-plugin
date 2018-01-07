@@ -17,7 +17,7 @@ public final class VirtualFileTests {
 
     public static VirtualFile getProjectRoot(Project project) {
         AldorModuleManager mgr = AldorModuleManager.getInstance(project);
-        List<VirtualFile> roots = mgr.aldorModules().stream()
+        List<VirtualFile> roots = mgr.aldorModules(project).stream()
                 .flatMap(mod -> Arrays.stream(ModuleRootManager.getInstance(mod).getContentRoots()))
                 .collect(Collectors.toList());
 

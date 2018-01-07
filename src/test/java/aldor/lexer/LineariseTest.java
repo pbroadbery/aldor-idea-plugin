@@ -5,6 +5,8 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+
 
 public class LineariseTest {
 /*
@@ -47,7 +49,7 @@ public class LineariseTest {
         AldorLexerAdapter lla = AldorLexerAdapter.createAndStart("#pile\nrepeat\n Statement1\n\n Statement2\n");
         Linearise lineariser = new Linearise();
         List<Linearise.PiledSection> pp = lineariser.scanForPiledSections(lla);
-        Assert.assertEquals(1, pp.size());
+        assertEquals(1, pp.size());
         Linearise.PiledSection section = pp.get(0);
         System.out.println("Blocks: " + section.blockMarkers());
     }
@@ -86,4 +88,19 @@ public class LineariseTest {
         Assert.assertTrue(pp.isEmpty());
     }
 
+    @Test
+    public void testPreDoc() {
+        AldorLexerAdapter lla = AldorLexerAdapter.createAndStart("#pile\n" +
+                "#pile\n" +
+                "FileNameCategory : Category == with\n" +
+                "        coerce : String -> %\n" +
+                "            ++ coerce(s) converts a string to a file name\n" +
+                "\n" +
+                "+++   This domain provides an interface to names in the file system.\n" +
+                "+++\n" +
+                "FileName : FileNameCategory == add\n");
+        Linearise lineariser = new Linearise();
+        List<Linearise.PiledSection> pp = lineariser.scanForPiledSections(lla);
+        assertEquals(4, pp.get(0).lines().size());
+    }
 }

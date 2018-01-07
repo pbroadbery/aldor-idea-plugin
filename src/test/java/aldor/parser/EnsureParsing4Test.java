@@ -157,6 +157,10 @@ public class EnsureParsing4Test {
         for (Map.Entry<ParserFunctions.FailReason, File> ent: badFiles.entries()) {
             System.out.println("Failed: " + ent.getKey() + " --> " + ent.getValue());
         }
+
+        for (Map.Entry<ParserFunctions.FailReason, File> ent: badFiles.entries()) {
+            System.out.println("Failed: " + ent.getKey() + " --> " + ent.getValue() + "\n" + ent.getKey().details());
+        }
         Assert.assertTrue(badFiles.isEmpty());
     }
 
@@ -167,11 +171,14 @@ public class EnsureParsing4Test {
 
         File base = existingFile("/home/pab/Work/aldorgit/aldor/aldor/lib/algebra/src");
         Set<String> blackList = Sets.newHashSet("tst_dup.as", "tst_fold.as",
-                "sit_upolc0.as", "sit_upolc.as");
+                "sit_upolc0.as", "sit_upolc.as","sit_upfactp.as", "pol.as", "tst_sfloat.as");
         Multimap<ParserFunctions.FailReason, File> badFiles = parseLibrary(getProject(), base, null, blackList);
 
         for (Map.Entry<ParserFunctions.FailReason, File> ent: badFiles.entries()) {
             System.out.println("Failed: " + ent.getKey() + " --> " + ent.getValue());
+        }
+        for (Map.Entry<ParserFunctions.FailReason, File> ent: badFiles.entries()) {
+            System.out.println("Failed: " + ent.getKey() + " --> " + ent.getValue() + "\n" + ent.getKey().details());
         }
         Assert.assertTrue(badFiles.isEmpty());
     }

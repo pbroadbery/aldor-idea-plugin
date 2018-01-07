@@ -1,4 +1,4 @@
-package aldor.symbolfile;
+package aldor.test_util;
 
 import aldor.build.module.AldorModuleType;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
@@ -14,7 +14,10 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.LightProjectDescriptor;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
+
 public class AldorRoundTripProjectDescriptor extends LightProjectDescriptor {
+
     @Override
     public void setUpProject(@NotNull Project project, @NotNull SetupHandler handler) throws Exception {
         super.setUpProject(project, handler);
@@ -28,6 +31,7 @@ public class AldorRoundTripProjectDescriptor extends LightProjectDescriptor {
         CompilerModuleExtension compilerModuleExtension = model.getModuleExtension(CompilerModuleExtension.class);
         compilerModuleExtension.setCompilerOutputPath("file:///tmp/test_output");
         compilerModuleExtension.inheritCompilerOutputPath(false);
+        System.out.println("Configure " + module);
     }
 
     // Not needed, except that the compile driver insists on it.
@@ -44,6 +48,20 @@ public class AldorRoundTripProjectDescriptor extends LightProjectDescriptor {
 
     @Override
     protected VirtualFile createSourceRoot(@NotNull Module module, String srcPath) {
-        return module.getProject().getBaseDir();
+        try {
+            VirtualFile root = module.getProject().getBaseDir().getFileSystem().findFileByPath("/tmp");
+            assert root != null;
+            String moduleName = module.getProject().getName() + "_" + module.getName();
+            VirtualFile srcRoot = root.findChild(moduleName);
+            if (srcRoot == null) {
+                    return root.createChildDirectory(null, moduleName);
+            }
+            else {
+                srcRoot.refresh(false, false);
+                return srcRoot;
+            }
+        }catch (IOException e) {
+            throw new RuntimeException("No way", e);
+        }
     }
 }

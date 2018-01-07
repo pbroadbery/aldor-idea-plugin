@@ -1,6 +1,5 @@
 package aldor.syntax;
 
-import aldor.parser.EnsureParsingTest;
 import aldor.parser.ParserFunctions;
 import com.intellij.psi.PsiElement;
 import com.intellij.testFramework.LightProjectDescriptor;
@@ -47,7 +46,7 @@ public class SyntaxPrintTest extends LightPlatformCodeInsightFixtureTestCase {
 
     @Override
     protected LightProjectDescriptor getProjectDescriptor() {
-        return new EnsureParsingTest.AldorProjectDescriptor();
+        return LightProjectDescriptor.EMPTY_PROJECT_DESCRIPTOR;
     }
 
 

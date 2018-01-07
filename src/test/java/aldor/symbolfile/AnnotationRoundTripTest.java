@@ -3,6 +3,7 @@ package aldor.symbolfile;
 import aldor.build.module.AnnotationFileManager;
 import aldor.psi.AldorIdentifier;
 import aldor.syntax.SyntaxPrinter;
+import aldor.test_util.AldorRoundTripProjectDescriptor;
 import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.JUnits;
 import com.intellij.codeInsight.documentation.DocumentationManager;
@@ -41,13 +42,12 @@ public class AnnotationRoundTripTest extends LightPlatformCodeInsightFixtureTest
     }
 
     public void testFullRoundTrip() throws Exception {
-        annotationTextFixture.project(getProject());
         Project project = getProject();
 
-        annotationTextFixture.createFile("Makefile", "foo.abn: foo.as\n\t" + aldorExecutableRule.executable() + " -Fabn=foo.abn foo.as");
-        VirtualFile sourceFile = annotationTextFixture.createFile("foo.as", "#include \"aldor\"\nfoo(n: Integer): Integer == n+" + System.currentTimeMillis());
+        annotationTextFixture.createFile(getProject(), "Makefile", "foo.abn: foo.as\n\t" + aldorExecutableRule.executable() + " -Fabn=foo.abn foo.as");
+        VirtualFile sourceFile = annotationTextFixture.createFile(getProject(), "foo.as", "#include \"aldor\"\nfoo(n: Integer): Integer == n+" + System.currentTimeMillis());
 
-        annotationTextFixture.compileFile(sourceFile);
+        annotationTextFixture.compileFile(sourceFile, getProject());
 
        annotationTextFixture.runInEdtAndWait(() -> {
             PsiFile psiFile = PsiManager.getInstance(project).findFile(sourceFile);

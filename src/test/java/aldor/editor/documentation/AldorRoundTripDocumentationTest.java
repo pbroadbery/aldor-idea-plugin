@@ -1,13 +1,14 @@
 package aldor.editor.documentation;
 
 import aldor.psi.AldorIdentifier;
-import aldor.symbolfile.AldorRoundTripProjectDescriptor;
 import aldor.symbolfile.AnnotationFileTestFixture;
+import aldor.test_util.AldorRoundTripProjectDescriptor;
 import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.Htmls;
 import aldor.test_util.LightPlatformJUnit4TestRule;
 import com.google.common.collect.ImmutableMap;
 import com.intellij.codeInsight.documentation.DocumentationManager;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
@@ -45,7 +46,7 @@ public class AldorRoundTripDocumentationTest {
         String makefileText = annotationTestFixture.createMakefile(aldorExecutableRule.executable().getAbsolutePath(),
                                                                     Arrays.asList("define.as", "use.as"),
                 ImmutableMap.<String, List<String>>builder().put("use", Collections.singletonList("define")).build());
-        VirtualFile makefileFile = annotationTestFixture.createFile("Makefile", makefileText);
+        VirtualFile makefileFile = annotationTestFixture.createFile(getProject(), "Makefile", makefileText);
         String definitions = "#include \"aldor\"\n" +
                 "+++ This is a domain\n" +
                 "define Dom(R: PrimitiveType): with { f: R -> Boolean;\n" +
@@ -57,10 +58,10 @@ public class AldorRoundTripDocumentationTest {
                 "import from DEF;\n" +
                 "import from Dom Integer, Integer;\n" +
                 "f(12)\n";
-        VirtualFile defFile = annotationTestFixture.createFile("define.as", definitions);
-        VirtualFile useFile = annotationTestFixture.createFile("use.as", uses);
+        VirtualFile defFile = annotationTestFixture.createFile(codeTestFixture.getProject(), "define.as", definitions);
+        VirtualFile useFile = annotationTestFixture.createFile(codeTestFixture.getProject(), "use.as", uses);
 
-        annotationTestFixture.compileFile(useFile);
+        annotationTestFixture.compileFile(useFile, codeTestFixture.getProject());
 
         EdtTestUtil.runInEdtAndWait(() -> {
             PsiFile usePsiFile = PsiManager.getInstance(codeTestFixture.getProject()).findFile(useFile);
@@ -77,5 +78,8 @@ public class AldorRoundTripDocumentationTest {
         });
     }
 
+    private Project getProject() {
+        return codeTestFixture.getProject();
+    }
 
 }

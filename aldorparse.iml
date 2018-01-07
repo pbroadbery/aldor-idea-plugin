@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="PLUGIN_MODULE" version="4">
   <component name="DevKit.ModuleBuildProperties" url="file://$MODULE_DIR$/resources/META-INF/plugin.xml" />
-  <component name="NewModuleRootManager" inherit-compiler-output="true">
+  <component name="NewModuleRootManager">
+    <output url="file://$MODULE_DIR$/out/production/aldorparse" />
+    <output-test url="file://$MODULE_DIR$/out/test/aldorparse" />
     <exclude-output />
     <annotation-paths>
       <root url="file://$MODULE_DIR$/src/annotations" />

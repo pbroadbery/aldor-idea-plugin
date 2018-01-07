@@ -93,7 +93,6 @@ public class PileModeParsingTest extends LightPlatformCodeInsightTestCase {
         Assert.assertEquals(0, errors.size());
     }
 
-    ///@Ignore("Still broken - ignoring (might work in spad..)")
     public void ignoredTestPiledDeclaration() {
         // Currently broken, needs fixing
         PsiElement psi = parseText("" +
@@ -102,6 +101,22 @@ public class PileModeParsingTest extends LightPlatformCodeInsightTestCase {
         logPsi(psi);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
         Assert.assertEquals(0, errors.size());
+    }
+
+
+    public void testDocumentation() {
+        PsiElement psi = parseText("" +
+                "#pile\n" +
+                "FileNameCategory : Category == with\n" +
+                "        coerce : String -> %\n" +
+                "            ++ coerce(s) converts a string to a file name\n\n" +
+                "+++   This domain provides an interface to names in the file system.\n" +
+                "+++\n" +
+                "FileName : FileNameCategory == add\n");
+        logPsi(psi);
+        final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
+        Assert.assertEquals(0, errors.size());
+
     }
 
     private PsiElement parseText(CharSequence text) {

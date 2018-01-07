@@ -1,7 +1,6 @@
 package aldor.editor;
 
 import aldor.language.AldorLanguage;
-import aldor.parser.EnsureParsingTest;
 import aldor.psi.AldorDefine;
 import com.intellij.lang.Language;
 import com.intellij.psi.PsiElement;
@@ -35,7 +34,7 @@ public class AldorBreadcrumbsProviderTest extends LightPlatformCodeInsightFixtur
 
     @Override
     protected LightProjectDescriptor getProjectDescriptor() {
-        return new EnsureParsingTest.AldorProjectDescriptor();
+        return LightProjectDescriptor.EMPTY_PROJECT_DESCRIPTOR;
     }
 }
 

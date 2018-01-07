@@ -1,7 +1,6 @@
 package aldor.references;
 
 import aldor.language.SpadLanguage;
-import aldor.parser.EnsureParsingTest;
 import aldor.psi.AldorIdentifier;
 import aldor.psi.SpadBinaryOp;
 import com.intellij.psi.PsiElement;
@@ -41,7 +40,7 @@ public class SpadRefLookupTest extends LightPlatformCodeInsightFixtureTestCase {
 
     @Override
     protected LightProjectDescriptor getProjectDescriptor() {
-        return new EnsureParsingTest.AldorProjectDescriptor();
+        return LightProjectDescriptor.EMPTY_PROJECT_DESCRIPTOR;
     }
 
 }

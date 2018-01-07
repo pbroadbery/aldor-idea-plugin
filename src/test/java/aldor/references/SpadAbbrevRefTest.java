@@ -1,6 +1,5 @@
 package aldor.references;
 
-import aldor.parser.EnsureParsingTest;
 import aldor.psi.SpadAbbrev;
 import aldor.util.VirtualFileTests;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -45,7 +44,7 @@ public class SpadAbbrevRefTest extends LightPlatformCodeInsightFixtureTestCase {
 
     @Override
     protected LightProjectDescriptor getProjectDescriptor() {
-        return new EnsureParsingTest.AldorProjectDescriptor();
+        return LightProjectDescriptor.EMPTY_PROJECT_DESCRIPTOR;
     }
 
 

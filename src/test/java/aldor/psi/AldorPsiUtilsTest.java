@@ -1,17 +1,16 @@
 package aldor.psi;
 
-import aldor.build.module.AldorModuleType;
 import aldor.file.AldorFileType;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 
 import java.util.Optional;
+
+import static aldor.test_util.LightProjectDescriptors.ALDOR_MODULE_DESCRIPTOR;
 
 public class AldorPsiUtilsTest extends LightPlatformCodeInsightFixtureTestCase {
 
@@ -98,19 +97,8 @@ public class AldorPsiUtilsTest extends LightPlatformCodeInsightFixtureTestCase {
         assertEquals(AldorPsiUtils.DefinitionClass.VALUE, AldorPsiUtils.definitionClassForDefine(define));
     }
 
-
     @Override
     protected LightProjectDescriptor getProjectDescriptor() {
-        //noinspection ReturnOfInnerClass
-        return new LightProjectDescriptor() {
-
-            @Override
-            @NotNull
-            public ModuleType<?> getModuleType() {
-                return AldorModuleType.instance();
-            }
-
-
-        };
+        return ALDOR_MODULE_DESCRIPTOR;
     }
 }

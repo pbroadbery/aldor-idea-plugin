@@ -1,11 +1,12 @@
 package aldor.editor.documentation;
 
 import aldor.psi.AldorIdentifier;
-import aldor.symbolfile.AldorRoundTripProjectDescriptor;
 import aldor.symbolfile.AnnotationFileTestFixture;
+import aldor.test_util.AldorRoundTripProjectDescriptor;
 import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.Htmls;
 import aldor.test_util.LightPlatformJUnit4TestRule;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
@@ -40,13 +41,13 @@ public class IdentifierDocumentProviderTest {
     @Test
     public void testExporterIdentifierDocumentation() throws ExecutionException, InterruptedException {
         String makefileText = annotationTestFixture.createMakefile(aldorExecutableRule.executable().getAbsolutePath(), Collections.singleton("foo.as"));
-        VirtualFile makefileFile = annotationTestFixture.createFile("Makefile", makefileText);
+        VirtualFile makefileFile = annotationTestFixture.createFile(getProject(), "Makefile", makefileText);
         String program = "#include \"aldor\"\n" +
                 "Foo(X: with): with { id: % -> %} == add { id(x: %): % == x }\n" +
                 "fn(x: Foo String): Foo String == id x\n";
-        VirtualFile testFile = annotationTestFixture.createFile("foo.as", program);
+        VirtualFile testFile = annotationTestFixture.createFile(getProject(), "foo.as", program);
 
-        annotationTestFixture.compileFile(testFile);
+        annotationTestFixture.compileFile(testFile, getProject());
 
         EdtTestUtil.runInEdtAndWait(() -> {
             IdentifierDocumentationProvider docProvider = new IdentifierDocumentationProvider();
@@ -62,12 +63,12 @@ public class IdentifierDocumentProviderTest {
     @Test
     public void testIdentifierDocumentation() throws ExecutionException, InterruptedException {
         String makefileText = annotationTestFixture.createMakefile(aldorExecutableRule.executable().getAbsolutePath(), Collections.singleton("foo.as"));
-        VirtualFile makefileFile = annotationTestFixture.createFile("Makefile", makefileText);
+        VirtualFile makefileFile = annotationTestFixture.createFile(getProject(), "Makefile", makefileText);
         String program = "#include \"aldor\"\n" +
                 "Foo(X: with): with { id: % -> %} == add { id(x: %): % == id x }\n";
-        VirtualFile testFile = annotationTestFixture.createFile("foo.as", program);
+        VirtualFile testFile = annotationTestFixture.createFile(getProject(), "foo.as", program);
 
-        annotationTestFixture.compileFile(testFile);
+        annotationTestFixture.compileFile(testFile, getProject());
 
         EdtTestUtil.runInEdtAndWait(() -> {
             IdentifierDocumentationProvider docProvider = new IdentifierDocumentationProvider();
@@ -82,5 +83,9 @@ public class IdentifierDocumentProviderTest {
         });
     }
 
+
+    private Project getProject() {
+        return codeTestFixture.getProject();
+    }
 
 }

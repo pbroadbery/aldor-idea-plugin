@@ -27,6 +27,7 @@ import aldor.psi.AldorWith;
 import aldor.psi.JxrightElement;
 import aldor.psi.NegationElement;
 import aldor.psi.SpadBinaryOp;
+import aldor.psi.impl.ReturningAldorVisitor;
 import aldor.syntax.components.Add;
 import aldor.syntax.components.AldorDeclare;
 import aldor.syntax.components.Apply;
@@ -46,6 +47,7 @@ import com.google.common.collect.Lists;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -69,7 +71,7 @@ public final class SyntaxPsiParser {
             final Deque<List<Syntax>> visitStack = new ArrayDeque<>();
             visitStack.add(Lists.newArrayList());
             elt.accept(new AldorPsiSyntaxVisitor(visitStack));
-            return visitStack.getFirst().get(0);
+            return visitStack.stream().findFirst().flatMap(x -> x.stream().findFirst()).orElse(null);
         }
         catch (ProcessCanceledException e) {
             throw e;
@@ -78,6 +80,94 @@ public final class SyntaxPsiParser {
             LOG.error("Failed to parse " + elt.getText() + " " + elt, e);
             logPsi(elt);
             return null;
+        }
+    }
+
+    public enum SurroundType { Any, Leading }
+
+    @Nullable
+    public static Syntax surroundingApplication(PsiElement element, SurroundType type) {
+        SurroundingApplicationVisitor visitor = new SurroundingApplicationVisitor(type);
+        return visitor.apply(element);
+    }
+
+    private static final class SurroundingApplicationVisitor extends ReturningAldorVisitor<Syntax> {
+        private final SurroundType type;
+
+        private SurroundingApplicationVisitor(SurroundType leadingArgument) {
+            this.type = leadingArgument;
+        }
+
+        @Override
+        public void visitElement(PsiElement element) {
+            super.visitElement(element);
+            if (element.getParent() == null) {
+                returnValue(null);
+            }
+            else if ((this.type == SurroundType.Leading) && (element.getStartOffsetInParent() != 0)) {
+                returnValue(null);
+            }
+            else {
+                element.getParent().accept(this);
+            }
+        }
+
+        @Override
+        public void visitFile(PsiFile file) {
+            returnValue(null);
+        }
+
+        @Override
+        public void visitJxrightElement(@NotNull JxrightElement o) {
+            visitApplyBuilder(o);
+        }
+
+        @Override
+        public void visitJxleftAtom(@NotNull AldorJxleftAtom o) {
+            visitApplyBuilder(o);
+        }
+
+        @Override
+        public void visitInfixedExpression(@NotNull AldorInfixedExpression expr) {
+            visitApplyBuilder(expr);
+        }
+
+        @Override
+        public void visitBracketed(@NotNull AldorBracketed brackets) {
+            visitApplyBuilder(brackets);
+        }
+
+        @Override
+        public void visitRightArrow1002Expr(@NotNull AldorRightArrow1002Expr rightArrow1002Expr) {
+            visitApplyBuilder(rightArrow1002Expr);
+        }
+
+        @Override
+        public void visitRelExpr(@NotNull AldorRelExpr addPrecedenceExpr) {
+            visitBinaryOp(addPrecedenceExpr);
+        }
+
+        public void visitBinaryOp(PsiElement expr) {
+            visitApplyBuilder(expr);
+        }
+
+        private void visitApplyBuilder(@NotNull PsiElement o) {
+            Syntax syntax = parse(o);
+            if (syntax == null) {
+                returnValue(null);
+            } else if (syntax.is(Apply.class)) {
+                returnValue(syntax);
+            } else {
+                visitElement(o);
+            }
+        }
+
+        @Override
+        public void visitId(AldorId id) {
+            visitElement(id);
+            if (returnValue() == null) {
+                returnValue(parse(id));
+            }
         }
     }
 

@@ -1,7 +1,6 @@
 package aldor.build.module;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -20,8 +19,8 @@ import java.io.IOException;
 
 public class AldorModuleTest extends UsefulTestCase {
 
-    private Project project;
     private final TempDirTestFixture tempDirTestFixture = new TempDirTestFixtureImpl();
+    private IdeaProjectTestFixture fixture;
 
     @SuppressWarnings("ProhibitedExceptionDeclared")
     @Override
@@ -33,10 +32,19 @@ public class AldorModuleTest extends UsefulTestCase {
 
         moduleFixtureBuilder.addContentRoot(tempDirTestFixture.getTempDirPath());
 
-        IdeaProjectTestFixture fixture = projectBuilder.getFixture();
+        fixture = projectBuilder.getFixture();
         moduleFixtureBuilder.instantiateFixture();
         fixture.setUp();
-        project = fixture.getProject();
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        try {
+            fixture.tearDown();
+        }
+        finally {
+            super.tearDown();
+        }
     }
 
     public void testModule2() throws IOException {
@@ -44,12 +52,12 @@ public class AldorModuleTest extends UsefulTestCase {
     }
     public void testModule() throws IOException {
 
-        AldorModuleManager manager = AldorModuleManager.getInstance(project);
+        AldorModuleManager manager = AldorModuleManager.getInstance(fixture.getProject());
         Assert.assertNotNull(manager);
 
-        Assert.assertEquals(1, manager.aldorModules().size());
+        Assert.assertEquals(1, manager.aldorModules(fixture.getProject()).size());
 
-        Module module = manager.aldorModules().iterator().next();
+        Module module = manager.aldorModules(fixture.getProject()).iterator().next();
 
         VirtualFile[] roots = ModuleRootManager.getInstance(module).getContentRoots();
 
@@ -60,12 +68,12 @@ public class AldorModuleTest extends UsefulTestCase {
         createFile("root/build", "");
 
 
-        VirtualFile root = ProjectRootManager.getInstance(project).getFileIndex().getContentRootForFile(foo_as);
+        VirtualFile root = ProjectRootManager.getInstance(fixture.getProject()).getFileIndex().getContentRootForFile(foo_as);
         Assert.assertNotNull(root);
-        String path = manager.buildPathForFile(foo_as);
+        String path = manager.buildPathForFile(fixture.getProject(), foo_as);
         Assert.assertEquals(root.getPath() + "/build/src", path);
 
-        String annotationFile = manager.annotationFileForSourceFile(foo_as);
+        String annotationFile = manager.annotationFileForSourceFile(fixture.getProject(), foo_as);
         Assert.assertEquals(root.getPath() + "/build/src/foo.abn", annotationFile);
     }
 

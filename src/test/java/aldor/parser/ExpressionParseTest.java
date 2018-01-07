@@ -30,7 +30,7 @@ public class ExpressionParseTest extends LightPlatformCodeInsightFixtureTestCase
 
     @Override
     protected LightProjectDescriptor getProjectDescriptor() {
-        return new EnsureParsingTest.AldorProjectDescriptor();
+        return LightProjectDescriptor.EMPTY_PROJECT_DESCRIPTOR;
     }
 
 

@@ -1,18 +1,19 @@
 package aldor.symbolfile;
 
-import aldor.build.module.AldorModuleManager;
 import aldor.build.module.AnnotationFileManager;
 import aldor.util.VirtualFileTests;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.module.Module;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.testFramework.EdtTestUtilKt;
+import com.intellij.testFramework.fixtures.impl.BaseFixture;
 import one.util.streamex.Joining;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -29,17 +30,21 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.function.Supplier;
 
-public class AnnotationFileTestFixture {
+/**
+ * Track annotation files.
+ *
+ * Note that for JUnit3 you will need to ensure the .iws and .iml files are kept when UsefulTestCase
+ * comes to delete things
+ */
+public class AnnotationFileTestFixture extends BaseFixture {
+    private static final Logger LOG = Logger.getInstance(AnnotationFileTestFixture.class);
+
     private final Map<String, VirtualFile> fileForName = Maps.newHashMap();
-    @Nullable
-    private Project project;
 
     AnnotationFileTestFixture(@Nullable Project project) {
-        this.project = project;
     }
 
     public AnnotationFileTestFixture() {
-        project = null;
     }
 
     public TestRule rule(Supplier<Project> projectSupplier) {
@@ -47,28 +52,29 @@ public class AnnotationFileTestFixture {
         return new Rule(projectSupplier);
     }
 
-    public VirtualFile createFile(String name, String text) {
+    public VirtualFile createFile(Project project, String name, String text) {
         Assert.assertNotNull(project);
         ApplicationManager.getApplication().invokeAndWait(() -> {
-            VirtualFile file = VirtualFileTests.createFile(project.getBaseDir(), name, text);
+            VirtualFile file = VirtualFileTests.createFile(sourceDirectory(project), name, text);
             fileForName.put(name, file);
         });
         return fileForName.get(name);
     }
 
-    public void project(Project project) {
-        this.project = project;
+    public VirtualFile sourceDirectory(Project project) {
+        return ProjectRootManager.getInstance(project).getContentSourceRoots()[0];
     }
 
     public VirtualFile fileForName(String name) {
         return fileForName.get(name);
     }
 
-    public void compileFile(VirtualFile file) throws ExecutionException, InterruptedException {
+    public void compileFile(VirtualFile file, Project project) throws ExecutionException, InterruptedException {
+        file.getFileSystem().refresh(false);
+
         Assert.assertNotNull(project);
         List<Future<Void>> result = Lists.newArrayList();
         ApplicationManager.getApplication().invokeAndWait(() -> {
-            Module module = AldorModuleManager.getInstance(project).aldorModules().stream().findFirst().orElseThrow(()->new RuntimeException("no module for " + file));
             PsiFile psiFile = PsiManager.getInstance(project).findFile(file);
             AnnotationFileManager manager = AnnotationFileManager.getAnnotationFileManager(project);
 
@@ -76,8 +82,11 @@ public class AnnotationFileTestFixture {
             result.add(fut);
         });
 
+       // file.getFileSystem().refresh(false);
         result.get(0).get();
+        LOG.info("START REFRESH");
         file.getFileSystem().refresh(false);
+        LOG.info("END REFRESH");
     }
 
     public String createMakefile(String aldorLocation, Collection<String> files) {
@@ -127,11 +136,14 @@ public class AnnotationFileTestFixture {
 
                 @Override
                 public void evaluate() throws Throwable {
-                    AnnotationFileTestFixture.this.project(projectSupplier.get());
-                    statement.evaluate();
+                    try {
+                        statement.evaluate();
+                    } finally {
+                        System.out.println("Done...");
+                    }
                 }
             };
         }
-    }
 
+    }
 }

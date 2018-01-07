@@ -1,6 +1,5 @@
 package aldor.language;
 
-import aldor.parser.EnsureParsingTest;
 import aldor.parser.ParserFunctions;
 import com.intellij.psi.PsiFile;
 import com.intellij.testFramework.LightProjectDescriptor;
@@ -25,7 +24,7 @@ public class SpadLanguageTest extends LightPlatformCodeInsightFixtureTestCase {
 
     @Override
     protected LightProjectDescriptor getProjectDescriptor() {
-        return new EnsureParsingTest.AldorProjectDescriptor();
+        return LightProjectDescriptor.EMPTY_PROJECT_DESCRIPTOR;
     }
 
 }

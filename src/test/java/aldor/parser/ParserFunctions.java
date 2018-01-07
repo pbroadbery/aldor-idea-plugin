@@ -38,7 +38,7 @@ public final class ParserFunctions {
     private static final Logger LOG = Logger.getInstance(ParserFunctions.class);
 
     public static PsiElement parseAldorText(Project project, CharSequence text) {
-        return parseAldorText(project, text, AldorTypes.CURLY_CONTENTS_LABELLED);
+        return parseAldorText(project, text, AldorTypes.TOP_LEVEL);
     }
 
     public static PsiElement parseAldorText(Project project, CharSequence text, IElementType elementType) {
@@ -129,10 +129,10 @@ public final class ParserFunctions {
             //noinspection StringConcatenationMissingWhitespace
             LOG.info("... File " + file + " took " + duration + "ms");
             if (!errors.isEmpty()) {
-                badFiles.put(FailReason.NoCompile, file);
+                badFiles.put(FailReason.noCompile(errors.toString()), file);
             }
             if (duration > NOT_INTERACTIVE_MILLIS) {
-                badFiles.put(FailReason.Slow, file);
+                badFiles.put(FailReason.slow(duration + " ms"), file);
             }
         }
         LOG.info("Compiled: " + files.size() + " " + badFiles.size() + " failed");
@@ -157,8 +157,31 @@ public final class ParserFunctions {
     }
 
 
-    public enum FailReason {
-        Slow, NoCompile
+    public static class FailReason {
+        private final String summary;
+        private final String details;
+
+        public FailReason(String summary, String details) {
+            this.summary = summary;
+            this.details = details;
+        }
+
+        @Override
+        public String toString() {
+            return summary;
+        }
+
+        public String details() {
+            return details;
+        }
+
+        public static FailReason slow(String details) {
+            return new FailReason("Slow", details);
+        }
+
+        public static FailReason noCompile(String details) {
+            return new FailReason("NoCompile", details);
+        }
     }
 
 

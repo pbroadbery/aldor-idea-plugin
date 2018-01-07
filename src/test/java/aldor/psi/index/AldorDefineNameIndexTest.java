@@ -1,13 +1,12 @@
 package aldor.psi.index;
 
-import aldor.build.module.AldorModuleType;
 import aldor.parser.SwingThreadTestRule;
 import aldor.psi.AldorDefine;
 import aldor.test_util.LightPlatformJUnit4TestRule;
+import aldor.test_util.LightProjectDescriptors;
 import aldor.util.VirtualFileTests;
 import com.google.common.collect.Sets;
 import com.google.common.io.Files;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.FileIndexFacade;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -18,7 +17,6 @@ import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.CodeInsightTestFixture;
 import com.intellij.util.indexing.FileBasedIndex;
 import groovy.json.internal.Charsets;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Rule;
@@ -168,16 +166,6 @@ public final class AldorDefineNameIndexTest {
     }
 
     protected LightProjectDescriptor getProjectDescriptor() {
-        //noinspection ReturnOfInnerClass
-        return new LightProjectDescriptor() {
-
-            @Override
-            @NotNull
-            public ModuleType<?> getModuleType() {
-                return AldorModuleType.instance();
-            }
-
-
-        };
+        return LightProjectDescriptors.ALDOR_MODULE_DESCRIPTOR;
     }
 }

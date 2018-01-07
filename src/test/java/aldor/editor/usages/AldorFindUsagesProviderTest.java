@@ -1,8 +1,8 @@
 package aldor.editor.usages;
 
 import aldor.psi.AldorDefine;
-import aldor.symbolfile.AldorRoundTripProjectDescriptor;
 import aldor.symbolfile.AnnotationFileTestFixture;
+import aldor.test_util.AldorRoundTripProjectDescriptor;
 import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.LightPlatformJUnit4TestRule;
 import com.intellij.find.findUsages.DefaultFindUsagesHandlerFactory;
@@ -45,13 +45,13 @@ public class AldorFindUsagesProviderTest {
     @Test
     public void testUsage() throws ExecutionException, InterruptedException {
         String makefileText = annotationTestFixture.createMakefile(aldorExecutableRule.executable().getAbsolutePath(), Collections.singleton("foo.as"));
-        VirtualFile makefileFile = annotationTestFixture.createFile("Makefile", makefileText);
+        VirtualFile makefileFile = annotationTestFixture.createFile(codeTestFixture.getProject(), "Makefile", makefileText);
         String program = "#include \"aldor\"\n" +
                 "Foo(X: with): with { id: % -> %} == add { id(x: %): % == x }\n" +
                 "fn(x: Foo String): Foo String == id x\n";
-        VirtualFile testFile = annotationTestFixture.createFile("foo.as", program);
+        VirtualFile testFile = annotationTestFixture.createFile(codeTestFixture.getProject(), "foo.as", program);
 
-        annotationTestFixture.compileFile(testFile);
+        annotationTestFixture.compileFile(testFile, codeTestFixture.getProject());
 
         EdtTestUtil.runInEdtAndWait(() -> {
             PsiFile psiFile = PsiManager.getInstance(codeTestFixture.getProject()).findFile(testFile);

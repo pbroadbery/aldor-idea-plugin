@@ -82,6 +82,7 @@
         <sdkType implementation="aldor.sdk.FricasInstalledSdkType"/>
         <sdkType implementation="aldor.sdk.FricasLocalSdkType"/>
 
+        <typeHierarchyProvider implementationClass="aldor.hierarchy.AldorTypeHierarchyProvider" language="Spad"/>
         <!-- Test language -->
         <fileTypeFactory implementation="aldor.expression.ExpressionFileTypeFactory"/>
         <lang.parserDefinition language="Expression" implementationClass="aldor.expression.ExpressionParserDefinition"/>

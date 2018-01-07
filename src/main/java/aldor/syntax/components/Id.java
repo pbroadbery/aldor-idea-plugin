@@ -6,11 +6,13 @@ import aldor.psi.AldorIdentifier;
 import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxVisitor;
 import com.intellij.psi.PsiElement;
+import com.intellij.util.Producer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Optional;
 
 import static aldor.lexer.AldorTokenTypes.TK_Id;
 
@@ -54,6 +56,28 @@ public class Id extends AbstractId {
         return createMissingId((AldorTokenType) elt.getNode().getElementType(), s);
     }
 
+    public static Id withFactory(Producer<AldorIdentifier> elt) {
+        return new Id(new SyntaxRepresentation<AldorIdentifier>() {
+
+            @Nullable
+            @Override
+            public AldorIdentifier element() {
+                return elt.produce();
+            }
+
+            @Nullable
+            @Override
+            public AldorTokenType tokenType() {
+                return TK_Id;
+            }
+
+            @NotNull
+            @Override
+            public String text() {
+                return Optional.ofNullable(element()).map(PsiElement::getText).orElse("<missing>");
+            }
+        });
+    }
 
     public Id(SyntaxRepresentation<AldorIdentifier> syntaxRepresentation) {
         this.rep = syntaxRepresentation;
@@ -100,4 +124,5 @@ public class Id extends AbstractId {
     public String toString() {
         return symbol();
     }
+
 }

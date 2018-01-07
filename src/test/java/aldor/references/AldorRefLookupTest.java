@@ -2,7 +2,6 @@ package aldor.references;
 
 import aldor.language.AldorLanguage;
 import aldor.language.SpadLanguage;
-import aldor.parser.EnsureParsingTest;
 import aldor.psi.AldorE6;
 import aldor.psi.AldorIdentifier;
 import com.google.common.collect.ImmutableMap;
@@ -375,7 +374,7 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
 
     @Override
     protected LightProjectDescriptor getProjectDescriptor() {
-        return new EnsureParsingTest.AldorProjectDescriptor();
+        return LightProjectDescriptor.EMPTY_PROJECT_DESCRIPTOR;
     }
 
 }

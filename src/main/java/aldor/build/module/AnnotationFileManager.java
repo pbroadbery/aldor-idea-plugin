@@ -56,7 +56,7 @@ public class AnnotationFileManager implements Disposable {
     private final Map<String, AnnotationFile> annotationFileForFile;
     private final Map<String, LineNumberMap> lineNumberMapForFile;
     private final AnnotationFileBuilder annotationFileBuilder;
-    private final Project project;
+
     @Nullable
     private MessageBusConnection myBusConnection = null;
 
@@ -66,7 +66,7 @@ public class AnnotationFileManager implements Disposable {
         annotationFileForFile = Maps.newHashMap();
         lineNumberMapForFile = Maps.newHashMap();
         annotationFileBuilder = new AnnotationFileBuilderImpl();
-        this.project = project;
+        project.putUserData(MGR_KEY, this);
         setupFileWatcher();
     }
 
@@ -158,6 +158,7 @@ public class AnnotationFileManager implements Disposable {
              * here, but might deadlock from a non EDT thread, so bottle it.
              */
 
+            LOG.info("Looking for build file: " + buildFilePath);
             if (buildFile == null) {
                 return new MissingAnnotationFile(virtualFile, "Missing .abn file: "+ buildFilePath);
             }
@@ -242,7 +243,7 @@ public class AnnotationFileManager implements Disposable {
         }
 
         if (syme.srcpos() != null) {
-            PsiFile theFile = psiFileForFileName(element.getContainingFile(), syme.srcpos().fileName() + ".as");
+            PsiFile theFile = psiFileForFileName(element.getProject(), element.getContainingFile(), syme.srcpos().fileName() + ".as");
             return (theFile == null) ? null : findElementForSrcPos(theFile, syme.srcpos());
         }
 
@@ -250,7 +251,7 @@ public class AnnotationFileManager implements Disposable {
         if (refSourceFile == null) {
             return null;
         }
-        PsiFile refFile = psiFileForFileName(element.getContainingFile(), refSourceFile);
+        PsiFile refFile = psiFileForFileName(element.getProject(), element.getContainingFile(), refSourceFile);
         if (refFile == null) {
             return null;
         }
@@ -296,7 +297,7 @@ public class AnnotationFileManager implements Disposable {
     }
 
     @Nullable
-    private PsiFile psiFileForFileName(PsiElement referer, String sourceFile) {
+    private PsiFile psiFileForFileName(Project project, PsiElement referer, String sourceFile) {
         PsiFile[] refFiles = FilenameIndex.getFilesByName(project, sourceFile, referer.getResolveScope());
         @Nullable PsiFile refFile;
         if (refFiles.length > 1) {

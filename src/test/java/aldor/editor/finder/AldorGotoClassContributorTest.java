@@ -1,21 +1,19 @@
 package aldor.editor.finder;
 
-import aldor.build.module.AldorModuleType;
 import aldor.util.VirtualFileTests;
 import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.navigation.NavigationItem;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.stubs.StubUpdatingIndex;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import com.intellij.util.indexing.FileBasedIndex;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 
 import java.io.IOException;
 
+import static aldor.test_util.LightProjectDescriptors.ALDOR_MODULE_DESCRIPTOR;
 import static aldor.util.VirtualFileTests.createFile;
 import static com.intellij.testFramework.LightPlatformTestCase.getSourceRoot;
 
@@ -66,20 +64,8 @@ public class AldorGotoClassContributorTest extends LightPlatformCodeInsightFixtu
         VirtualFileTests.deleteFile(file);
     }
 
-
     @Override
     protected LightProjectDescriptor getProjectDescriptor() {
-        //noinspection ReturnOfInnerClass
-        return new LightProjectDescriptor() {
-
-            @Override
-            @NotNull
-            public ModuleType<?> getModuleType() {
-                return AldorModuleType.instance();
-            }
-
-        };
+        return ALDOR_MODULE_DESCRIPTOR;
     }
-
-
 }
