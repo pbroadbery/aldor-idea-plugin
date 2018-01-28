@@ -19,16 +19,6 @@ public class SpadDeclare extends DeclareNode<AldorColonExpr> {
     }
 
     @Override
-    public Syntax lhs() {
-        return child(0);
-    }
-
-    @Override
-    public Syntax rhs() {
-        return child(1);
-    }
-
-    @Override
     public String name() {
         return "SDecl";
     }

@@ -82,6 +82,7 @@
         <sdkType implementation="aldor.sdk.FricasInstalledSdkType"/>
         <sdkType implementation="aldor.sdk.FricasLocalSdkType"/>
 
+        <lang.psiStructureViewFactory language="Spad" implementationClass="aldor.structure.AldorPsiStructureViewFactory"/>
         <typeHierarchyProvider implementationClass="aldor.hierarchy.AldorTypeHierarchyProvider" language="Spad"/>
         <!-- Test language -->
         <fileTypeFactory implementation="aldor.expression.ExpressionFileTypeFactory"/>

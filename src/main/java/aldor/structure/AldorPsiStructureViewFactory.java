@@ -1,6 +1,6 @@
 package aldor.structure;
 
-import aldor.file.AldorFile;
+import aldor.file.AxiomFile;
 import com.intellij.ide.structureView.StructureViewBuilder;
 import com.intellij.ide.structureView.StructureViewModel;
 import com.intellij.ide.structureView.TreeBasedStructureViewBuilder;
@@ -14,13 +14,13 @@ public class AldorPsiStructureViewFactory implements PsiStructureViewFactory {
     @Nullable
     @Override
     public StructureViewBuilder getStructureViewBuilder(PsiFile psiFile) {
-        if (!(psiFile instanceof AldorFile))
+        if (!(psiFile instanceof AxiomFile))
             return null;
         return new TreeBasedStructureViewBuilder() {
             @NotNull
             @Override
             public StructureViewModel createStructureViewModel(@Nullable Editor editor) {
-                return new AldorStructureViewModel(editor, (AldorFile) psiFile);
+                return new AldorStructureViewModel(editor, psiFile);
             }
         };
     }

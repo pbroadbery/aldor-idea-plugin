@@ -34,6 +34,13 @@ allprojects {
     }
 }
 
+dependencies {
+    classpath files("/home/pab/IdeaProjects/aldor-modules/types/index/jars/aldor.jar")
+    classpath files("/home/pab/IdeaProjects/aldor-modules/types/index/jars/algebra.jar")
+    classpath files("/home/pab/IdeaProjects/aldor-modules/types/index/jars/foam.jar")
+    classpath files("/home/pab/IdeaProjects/aldor-modules/types/index/jars/foamj.jar")
+}
+
 
 apply plugin: 'org.jetbrains.intellij'
 apply plugin: 'idea'

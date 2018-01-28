@@ -16,9 +16,13 @@ public abstract class DeclareNode<T extends PsiElement> extends SyntaxNode<T> {
         super(representation, arguments);
     }
 
-    public abstract Syntax lhs();
+    public Syntax lhs() {
+        return child(0);
+    }
 
-    public abstract Syntax rhs();
+    public Syntax rhs() {
+        return child(1);
+    }
 
     @Override
     public <R> R accept(SyntaxVisitor<R> syntaxVisitor) {

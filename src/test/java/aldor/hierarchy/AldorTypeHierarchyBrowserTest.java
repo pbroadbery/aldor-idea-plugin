@@ -84,6 +84,39 @@ public class AldorTypeHierarchyBrowserTest {
         ((Disposable) ProgressManager.getInstance()).dispose();
     }
 
+    @Test
+    public void testRing() {
+        String text = "Ring";
+        PsiFile whole = codeTestFixture.addFileToProject("test.spad", text);
+
+        HierarchyProvider provider = new AldorTypeHierarchyProvider();
+        PsiElement elt = whole.findElementAt(text.indexOf("Ring"));
+
+        DataContext context = SimpleDataContext.getSimpleContext(CommonDataKeys.PSI_ELEMENT.getName(), elt,
+                SimpleDataContext.getProjectContext(codeTestFixture.getProject()));
+
+        PsiElement target = provider.getTarget(context);
+        AldorTypeHierarchyBrowser browser = (AldorTypeHierarchyBrowser) provider.createHierarchyBrowser(target);
+
+        Assert.assertNotNull(target);
+
+        provider.browserActivated(browser);
+
+        System.out.println("Browser: " + browser);
+        HierarchyTreeStructure hierarchy = browser.createHierarchyTreeStructure(SUPERTYPES_HIERARCHY_TYPE, target);
+        Assert.assertNotNull(hierarchy);
+
+        AldorHierarchyNodeDescriptor rootDescriptor = (AldorHierarchyNodeDescriptor) hierarchy.getRootElement();
+        rootDescriptor.update();
+
+        System.out.println("Root: " + rootDescriptor);
+
+        System.out.println("Children: " + Arrays.stream(hierarchy.getChildElements(hierarchy.getRootElement())).peek(child -> ((NodeDescriptor<?>) child).update()).collect(Collectors.toList()));
+
+        browser.dispose();
+        ((Disposable) ProgressManager.getInstance()).dispose();
+    }
+
     private static LightProjectDescriptor getProjectDescriptor(ExecutablePresentRule fricasExecutableRule) {
         return SdkProjectDescriptors.fricasSdkProjectDescriptor(fricasExecutableRule.prefix());
 

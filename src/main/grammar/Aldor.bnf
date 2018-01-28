@@ -598,10 +598,12 @@ BlockEnclosure ::= Enclosure | Block
 DeclBlock ::= Curly_Labelled | DeclPiled_Expression
 Block ::= Curly_Labelled | Piled_Expression
 
+RecoverableExpression ::= Expression { recoverWhile=ExpressionRecover}
+private ExpressionRecover ::= !(KW_CParen| KW_CBrack | <<blockEnd>> | SpadAbbrevCmd)
 
-Parened ::= KW_OParen (KW_CParen | Expression KW_CParen) { pin="KW_OParen"}
+Parened ::= KW_OParen (KW_CParen | RecoverableExpression KW_CParen) { pin="KW_OParen"}
 
-Bracketed ::= KW_OBrack (KW_CBrack | Expression KW_CBrack) { pin="KW_OBrack"}
+Bracketed ::= KW_OBrack (KW_CBrack | RecoverableExpression KW_CBrack) { pin="KW_OBrack"}
 
 QuotedIds ::= KW_Quote (KW_Quote | Names KW_Quote) { pin=1}
 

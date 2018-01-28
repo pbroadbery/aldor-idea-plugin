@@ -2,13 +2,11 @@ package aldor.syntax;
 
 import aldor.parser.ParserFunctions;
 import aldor.parser.SwingThreadTestRule;
-import aldor.psi.elements.AldorTypes;
 import aldor.syntax.components.Other;
 import aldor.test_util.LightPlatformJUnit4TestRule;
 import aldor.util.StubCodec;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
 import com.intellij.testFramework.fixtures.CodeInsightTestFixture;
@@ -97,14 +95,8 @@ public class SyntaxCodecTest {
         assertTrue(inSyntax.toString().contains("RandomSubclass"));
     }
 
-
     private Syntax parseToSyntax(CharSequence text) {
-        PsiElement element = parseText(text);
-        return SyntaxPsiParser.parse(element);
-    }
-
-    private PsiElement parseText(CharSequence text) {
-        return ParserFunctions.parseAldorText(testFixture.getProject(), text, AldorTypes.TOP_LEVEL);
+        return ParserFunctions.parseToSyntax(this.testFixture.getProject(), text);
     }
 
 

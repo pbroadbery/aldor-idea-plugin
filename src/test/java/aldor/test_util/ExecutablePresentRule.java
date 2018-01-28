@@ -98,7 +98,7 @@ public class ExecutablePresentRule implements TestRule {
 
     public static class Fricas extends ExecutablePresentRule {
         public Fricas() {
-            super(Collections.singletonList("/home/pab/IdeaProjects/fricas-codebase/opt/bin"), "fricas");
+            super(Collections.singletonList("/home/pab/IdeaProjects/fricas-codebase/opt/lib/fricas/target/x86_64-unknown-linux/bin/"), "fricas");
         }
     }
 

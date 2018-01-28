@@ -1,6 +1,7 @@
 package aldor.structure;
 
 import aldor.file.AldorFile;
+import aldor.file.AxiomFile;
 import aldor.psi.AldorDefine;
 import aldor.psi.impl.CollectingAldorVisitor;
 import com.intellij.ide.structureView.StructureViewModel;
@@ -52,7 +53,7 @@ public class AldorStructureViewModel extends TextEditorBasedStructureViewModel i
     @NotNull
     @Override
     public StructureViewTreeElement getRoot() {
-        return new AldorFileTreeElement((AldorFile) getPsiFile());
+        return new AldorFileTreeElement((AxiomFile) getPsiFile());
     }
 
     @Override
@@ -65,9 +66,9 @@ public class AldorStructureViewModel extends TextEditorBasedStructureViewModel i
         return false;
     }
 
-    private static class AldorFileTreeElement extends PsiTreeElementBase<AldorFile> {
+    private static class AldorFileTreeElement extends PsiTreeElementBase<AxiomFile> {
 
-        protected AldorFileTreeElement(AldorFile psiElement) {
+        protected AldorFileTreeElement(AxiomFile psiElement) {
             super(psiElement);
         }
 

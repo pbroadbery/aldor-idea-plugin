@@ -46,7 +46,7 @@ public class FricasInstalledSdkType extends SdkType implements FricasSdkType {
     @Nullable
     @Override
     public String suggestHomePath() {
-        return "/home/pab/Work/fricas/opt";
+        return "/home/pab/Work/fricas/opt/lib/fricas/target/x86_64-unknown-linux";
     }
 
     @Override
@@ -111,7 +111,7 @@ public class FricasInstalledSdkType extends SdkType implements FricasSdkType {
     @NotNull
     private List<VirtualFile> findSources(File fricasHome) {
         // FIXME: Can do better than this
-        File algebraPath = new File(fricasHome.getAbsolutePath() + "/lib/fricas/target/x86_64-unknown-linux/src/algebra");
+        File algebraPath = new File(fricasHome.getAbsolutePath() + "/src");
         VirtualFile root = LocalFileSystem.getInstance().findFileByPath(algebraPath.getAbsolutePath());
         return Collections.singletonList(root);
     }

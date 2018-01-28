@@ -25,6 +25,19 @@ public interface SpadLibrary {
             this.condition = condition;
             this.exporter = exporter;
         }
+
+        @Override
+        public String toString() {
+            return "{Op: " + name + " " + type + "}";
+        }
+
+        public String name() {
+            return name;
+        }
+
+        public Syntax type() {
+            return type;
+        }
     }
 
 

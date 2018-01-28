@@ -1,6 +1,8 @@
 package aldor.parser;
 
 import aldor.psi.elements.AldorTypes;
+import aldor.syntax.Syntax;
+import aldor.syntax.SyntaxPsiParser;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
@@ -39,6 +41,12 @@ public final class ParserFunctions {
 
     public static PsiElement parseAldorText(Project project, CharSequence text) {
         return parseAldorText(project, text, AldorTypes.TOP_LEVEL);
+    }
+
+
+    public static Syntax parseToSyntax(Project project, CharSequence text) {
+        PsiElement element = parseAldorText(project, text, AldorTypes.TOP_LEVEL);
+        return SyntaxPsiParser.parse(element);
     }
 
     public static PsiElement parseAldorText(Project project, CharSequence text, IElementType elementType) {

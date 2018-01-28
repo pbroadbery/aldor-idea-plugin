@@ -26,7 +26,7 @@ import static aldor.test_util.TestFiles.existingFile;
 import static com.intellij.testFramework.LightPlatformTestCase.getProject;
 
 public class ParseBenchTest {
-    public static final int ITERATIONS = 5000;
+    public static final int ITERATIONS = 500;
     private final CodeInsightTestFixture testFixture = LightPlatformJUnit4TestRule.createFixture(null);
     @Rule
     public final TestRule rule = new SkipOnCIBuildRule();

@@ -19,17 +19,7 @@ public class AldorDeclare extends DeclareNode<AldorDeclPart> {
     public AldorDeclare(List<Syntax> l) {
         super(createMissing(), l);
     }
-
-    @Override
-    public Syntax lhs() {
-        return child(0);
-    }
-
-    @Override
-    public Syntax rhs() {
-        return child(1);
-    }
-
+    
     @Override
     public String name() {
         return "Decl";

@@ -17,6 +17,7 @@ public class AldorBracketMatcher implements PairedBraceMatcher {
             new BracePair(AldorTokenTypes.KW_OBBrack, AldorTokenTypes.KW_CBBrack, true),
             new BracePair(AldorTokenTypes.KW_OCurly, AldorTokenTypes.KW_CCurly, false),
     };
+    @NotNull
     @SuppressWarnings("ReturnOfCollectionOrArrayField")
     @Override
     public BracePair[] getPairs() {
