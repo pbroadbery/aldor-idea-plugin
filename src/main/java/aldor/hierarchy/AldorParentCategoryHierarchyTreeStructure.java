@@ -7,6 +7,7 @@ import aldor.syntax.SyntaxPrinter;
 import aldor.syntax.SyntaxPsiParser;
 import aldor.syntax.SyntaxUtils;
 import aldor.syntax.components.Apply;
+import com.google.common.collect.Sets;
 import com.intellij.ide.hierarchy.HierarchyNodeDescriptor;
 import com.intellij.ide.hierarchy.HierarchyTreeStructure;
 import com.intellij.ide.util.treeView.NodeDescriptor;
@@ -18,6 +19,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Stream;
 
 import static aldor.syntax.SyntaxPsiParser.SurroundType.Leading;
 
@@ -59,6 +62,17 @@ public final class AldorParentCategoryHierarchyTreeStructure extends HierarchyTr
         }
     }
 
+    private Object createOperationNodeDescriptorMaybe(@NotNull AldorHierarchyNodeDescriptor parent, SpadLibrary.Operation operation) {
+        return new AldorHierarchyOperationDescriptor(this.myProject, parent, operation);
+    }
+
+    private Set<Class<?>> leafElements = Sets.newHashSet(AldorHierarchyOperationDescriptor.class, ErrorNodeDescriptor.class);
+
+    @Override
+    public boolean isAlwaysLeaf(Object element) {
+        return leafElements.contains(element.getClass());
+    }
+
     @NotNull
     @Override
     protected Object[] buildChildren(@NotNull HierarchyNodeDescriptor descriptor) {
@@ -76,7 +90,10 @@ public final class AldorParentCategoryHierarchyTreeStructure extends HierarchyTr
         Syntax syntax = aldorDescriptor.syntax();
         List<Syntax> parents = library.parentCategories(syntax);
 
-        return parents.stream().map(psyntax -> createNodeDescriptorMaybe(aldorDescriptor, psyntax)).toArray();
+        Stream<Object> parentNodes = parents.stream().map(psyntax -> createNodeDescriptorMaybe(aldorDescriptor, psyntax));
+        Stream<Object> operationNodes = library.operations(syntax).stream().map(op -> createOperationNodeDescriptorMaybe(aldorDescriptor, op));
+
+        return Stream.concat(parentNodes, operationNodes).toArray();
     }
 
     @Nullable

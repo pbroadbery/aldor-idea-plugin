@@ -17,12 +17,14 @@ import java.util.Optional;
 public class AldorDeclareConcreteStub extends StubBase<AldorDeclare> implements AldorDeclareStub {
     private final Syntax syntax;
     private final boolean isCategoryDeclaration;
+    private final Syntax exporter;
 
-    public AldorDeclareConcreteStub(StubElement<?> parent, IStubElementType<AldorDeclareStub, AldorDeclare> elementType,
-                                    Syntax syntax, AldorPsiUtils.IContainingBlockType blockType) {
+    private AldorDeclareConcreteStub(StubElement<?> parent, IStubElementType<AldorDeclareStub, AldorDeclare> elementType,
+                                    Syntax syntax, AldorPsiUtils.IContainingBlockType blockType, Syntax exporter) {
         super(parent, elementType);
         this.syntax = syntax;
         this.isCategoryDeclaration = Objects.equals(blockType, AldorPsiUtils.WITH);
+        this.exporter = exporter;
     }
 
     public Optional<AbstractId> declareId() {
@@ -66,4 +68,50 @@ public class AldorDeclareConcreteStub extends StubBase<AldorDeclare> implements 
         return syntax;
     }
 
+    @Override
+    public Syntax exporter() {
+        return exporter;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    @SuppressWarnings("FieldHasSetterButNoGetter")
+    public static class Builder {
+        private StubElement<?> parent = null;
+        private IStubElementType<AldorDeclareStub, AldorDeclare> elementType = null;
+        private Syntax syntax = null;
+        private AldorPsiUtils.IContainingBlockType blockType = null;
+        private Syntax exporter = null;
+
+        public Builder setParent(StubElement<?> parent) {
+            this.parent = parent;
+            return this;
+        }
+
+        public Builder setElementType(IStubElementType<AldorDeclareStub, AldorDeclare> elementType) {
+            this.elementType = elementType;
+            return this;
+        }
+
+        public Builder setSyntax(Syntax syntax) {
+            this.syntax = syntax;
+            return this;
+        }
+
+        public Builder setBlockType(AldorPsiUtils.IContainingBlockType blockType) {
+            this.blockType = blockType;
+            return this;
+        }
+
+        public Builder setExporter(Syntax exporter) {
+            this.exporter = exporter;
+            return this;
+        }
+
+        public AldorDeclareConcreteStub build() {
+            return new AldorDeclareConcreteStub(parent, elementType, syntax, blockType, exporter);
+        }
+    }
 }

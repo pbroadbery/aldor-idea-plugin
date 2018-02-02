@@ -1,6 +1,7 @@
 package aldor.psi;
 
 import aldor.file.AldorFileType;
+import aldor.file.SpadFileType;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -65,9 +66,18 @@ public class AldorPsiUtilsTest extends LightPlatformCodeInsightFixtureTestCase {
         PsiElement withElt = file.findElementAt(text.indexOf("with"));
         Optional<AldorDefine> defn = AldorPsiUtils.definingForm(withElt);
         Assert.assertTrue(defn.isPresent());
-        //noinspection OptionalGetWithoutIsPresent
         Assert.assertEquals(0, defn.get().getTextOffset());
     }
+
+    public void testDefiningFormMacroSpadCase() {
+        String text = "foo: E == I where { E ==> with; I ==> add}";
+        PsiFile file = createLightFile(SpadFileType.INSTANCE, text);
+        PsiElement withElt = file.findElementAt(text.indexOf("with"));
+        Optional<AldorDefine> defn = AldorPsiUtils.definingForm(withElt);
+        Assert.assertTrue(defn.isPresent());
+        Assert.assertEquals(0, defn.get().getTextOffset());
+    }
+
 
     public void testDefinitionClass() {
         String text = "foo: Category == with {}";

@@ -15,9 +15,10 @@ import aldor.psi.stub.codec.SpadAbbrevStubCodec;
  */
 public class AldorStubFactoryImpl implements AldorStubFactory {
 
+    // Add one if any stub format is changed
     @Override
     public int getVersion() {
-        return 8;
+        return 9;
     }
 
     @Override

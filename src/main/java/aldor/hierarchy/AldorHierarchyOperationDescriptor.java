@@ -1,42 +1,38 @@
 package aldor.hierarchy;
 
-import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxPrinter;
 import aldor.ui.AldorIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.hierarchy.HierarchyNodeDescriptor;
-import com.intellij.ide.util.treeView.NodeDescriptor;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ui.util.CompositeAppearance;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Iconable;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.Icon;
 import java.awt.Font;
 
-public class AldorHierarchyNodeDescriptor extends HierarchyNodeDescriptor {
-    private static final Logger LOG = Logger.getInstance(AldorHierarchyNodeDescriptor.class);
-    private final Syntax syntax;
+import static aldor.spad.SpadLibrary.Operation;
 
-    protected AldorHierarchyNodeDescriptor(@NotNull Project project, NodeDescriptor<PsiElement> parentDescriptor, @NotNull PsiElement element, Syntax syntax, boolean isBase) {
-        super(project, parentDescriptor, element, isBase);
-        this.syntax = syntax;
+public class AldorHierarchyOperationDescriptor  extends HierarchyNodeDescriptor {
+    private final Operation operation;
+
+    protected AldorHierarchyOperationDescriptor(@NotNull Project project, HierarchyNodeDescriptor parentDescriptor, Operation operation) {
+        //noinspection ConstantConditions
+        super(project, parentDescriptor, (operation.declaration() == null) ? parentDescriptor.getPsiElement() : operation.declaration(), false);
+        this.operation = operation;
     }
 
-    public Syntax syntax() {
-        return syntax;
+    public Operation operation() {
+        return operation;
     }
 
     @Override
     public final boolean update() {
         final CompositeAppearance oldText = myHighlightedText;
         final Icon oldIcon = getIcon();
-
-        int flags = Iconable.ICON_FLAG_VISIBILITY | (isMarkReadOnly() ? Iconable.ICON_FLAG_READ_STATUS: 0);
 
         final PsiElement enclosingElement = getPsiElement();
         if (enclosingElement == null) {
@@ -46,25 +42,23 @@ public class AldorHierarchyNodeDescriptor extends HierarchyNodeDescriptor {
             }
             return true;
         }
+
         boolean changes = super.update();
-        Icon newIcon = AldorIcons.IDENTIFIER;
+        Icon newIcon = AldorIcons.OPERATION;
         setIcon(newIcon);
 
         myHighlightedText = new CompositeAppearance();
-        TextAttributes mainTextAttributes = null;
-        if (myColor != null) {
-            mainTextAttributes = new TextAttributes(myColor, null, null, null, Font.PLAIN);
-        }
+        int fontStyle = (this.operation.declaration() == null) ? Font.ITALIC : Font.PLAIN;
+        TextAttributes mainTextAttributes = new TextAttributes(myColor, null, null, null, fontStyle);
 
-        myHighlightedText.getBeginning().addText(SyntaxPrinter.instance().toString(syntax), mainTextAttributes);
+        myHighlightedText.getBeginning().addText(operation.name() + ": " + SyntaxPrinter.instance().toString(operation.type()), mainTextAttributes);
         myName = myHighlightedText.getText();
 
+        assert getIcon().equals(newIcon);
         if (!Comparing.equal(myHighlightedText, oldText) || !Comparing.equal(getIcon(), oldIcon)) {
             changes = true;
         }
-        LOG.info("changes: " + changes);
 
         return changes;
     }
-
 }

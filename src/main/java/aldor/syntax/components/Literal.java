@@ -15,9 +15,11 @@ import java.util.Collections;
  */
 public class Literal extends Syntax {
     private final AldorLiteral literal;
+    private final String text;
 
     public Literal(String text, AldorLiteral literal) {
         this.literal = literal;
+        this.text = text;
     }
 
     @Override
@@ -37,7 +39,7 @@ public class Literal extends Syntax {
 
     @Override
     public String toString() {
-        return name();
+        return text();
     }
 
     @Nullable
@@ -53,5 +55,9 @@ public class Literal extends Syntax {
             return AldorTokenTypes.TK_String;
         }
         return null;
+    }
+
+    public String text() {
+        return text;
     }
 }

@@ -1,13 +1,18 @@
 package aldor.hierarchy;
 
+import aldor.psi.AldorIdentifier;
 import com.intellij.ide.hierarchy.HierarchyBrowser;
 import com.intellij.ide.hierarchy.HierarchyBrowserBaseEx;
 import com.intellij.ide.hierarchy.HierarchyProvider;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,6 +27,16 @@ public class AldorTypeHierarchyProvider implements HierarchyProvider {
         final Project project = CommonDataKeys.PROJECT.getData(dataContext);
         if (project == null) {
             return null;
+        }
+
+        final Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
+
+        if (editor != null) {
+            final PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+            if (file == null) return null;
+
+            AldorIdentifier element = PsiTreeUtil.findElementOfClassAtOffset(file, editor.getCaretModel().getOffset(), AldorIdentifier.class, false);
+            return element;
         }
 
         PsiElement element = CommonDataKeys.PSI_ELEMENT.getData(dataContext);

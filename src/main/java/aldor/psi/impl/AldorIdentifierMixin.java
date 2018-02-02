@@ -49,7 +49,7 @@ public abstract class AldorIdentifierMixin extends ASTWrapperPsiElement implemen
     @Override
     public PsiReference getReference() {
         PsiReference[] arr = getReferences();
-        return (arr.length == 1) ? arr[0] : null;
+        return (arr.length == 0) ? null : arr[0];
     }
 
     @NotNull

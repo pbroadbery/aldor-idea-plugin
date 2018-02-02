@@ -6,7 +6,9 @@ import aldor.syntax.components.Comma;
 import aldor.syntax.components.DeclareNode;
 import aldor.syntax.components.Define;
 import aldor.syntax.components.Id;
+import aldor.syntax.components.Literal;
 import aldor.syntax.components.Other;
+import com.google.common.collect.Streams;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -33,9 +35,7 @@ public final class SyntaxUtils {
             List<Syntax> ll = apply.arguments();
             for (Syntax child : ll) {
                 if (child.is(Comma.class)) {
-                    for (Syntax commaElt : child.children()) {
-                        scopes.add(commaElt);
-                    }
+                    scopes.addAll(child.children());
                 }
                 else if (child.is(DeclareNode.class)) {
                     scopes.add(child);
@@ -71,6 +71,11 @@ public final class SyntaxUtils {
         return Optional.empty();
     }
 
+    /**
+     * Foo(X: A) -> Foo(X)
+     * @param syntax a type form
+     * @return the name of the type
+     */
     public static Syntax typeName(Syntax syntax) {
         Syntax syntax1 = syntax;
         if (syntax1.is(DeclareNode.class)) {
@@ -87,6 +92,12 @@ public final class SyntaxUtils {
         return new Other(syntax1.psiElement());
     }
 
+    /**
+     * Foo(A: X, B: Y) --> Foo, foo: X == bar --> foo
+     * Note that if the end item is not an id, "Other(?)" is returned
+     * @param item a declaration or definition
+     * @return the id being defined.
+     */
     private static Syntax definingId(Syntax item) {
         Syntax definingId = item;
         if (definingId.is(Define.class)) {
@@ -101,4 +112,42 @@ public final class SyntaxUtils {
         return new Other(definingId.psiElement());
     }
 
+    public static Syntax leadingId(Syntax syntax) {
+        Syntax leadingPart = syntax;
+        while (leadingPart.is(Apply.class)) {
+            leadingPart = leadingPart.as(Apply.class).operator();
+        }
+        return leadingPart;
+    }
+
+    public static boolean match(Syntax sourceSyntax, Syntax librarySyntax) {
+        boolean ret = match1(sourceSyntax, librarySyntax);
+        System.out.println("Match: " + sourceSyntax + " " + librarySyntax + " = "  + ret);
+        return ret;
+    }
+
+    private static boolean match1(Syntax sourceSyntax, Syntax librarySyntax) {
+        if (sourceSyntax.is(Id.class) && librarySyntax.is(Id.class)) {
+            return sourceSyntax.as(Id.class).symbol().equals(librarySyntax.as(Id.class).symbol());
+        }
+        if (sourceSyntax.is(Apply.class) && librarySyntax.is(Apply.class)) {
+            Apply sourceApply = sourceSyntax.as(Apply.class);
+            Apply libraryApply = librarySyntax.as(Apply.class);
+            return match(sourceApply.operator(), libraryApply.operator())
+                    && (sourceApply.arguments().size() == libraryApply.arguments().size())
+                    && Streams.zip(sourceApply.arguments().stream(), libraryApply.arguments().stream(), SyntaxUtils::match).allMatch(m -> m);
+        }
+        if (sourceSyntax.is(Comma.class) && librarySyntax.is(Comma.class)) {
+            Comma sourceComma = sourceSyntax.as(Comma.class);
+            Comma libraryComma = librarySyntax.as(Comma.class);
+            if (sourceComma.children().size() != libraryComma.children().size()) {
+                return false;
+            }
+            return  Streams.zip(sourceComma.children().stream(), libraryComma.children().stream(), SyntaxUtils::match).allMatch(m -> m);
+        }
+        if (sourceSyntax.is(Literal.class) && librarySyntax.is(Literal.class)) {
+            return sourceSyntax.as(Literal.class).text().equals(librarySyntax.as(Literal.class).text());
+        }
+        return false;
+    }
 }

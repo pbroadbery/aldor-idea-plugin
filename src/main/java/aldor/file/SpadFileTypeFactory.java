@@ -8,5 +8,6 @@ public class SpadFileTypeFactory extends FileTypeFactory {
     @Override
     public void createFileTypes(@NotNull FileTypeConsumer fileTypeConsumer) {
         fileTypeConsumer.consume(SpadFileType.INSTANCE, "spad");
+        fileTypeConsumer.consume(SpadInputFileType.INSTANCE, "input");
     }
 }

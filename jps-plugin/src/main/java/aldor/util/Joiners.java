@@ -16,7 +16,7 @@ public final class Joiners {
     }
 
     @NotNull
-    @SuppressWarnings({"AccessingNonPublicFieldOfAnotherObject", "NullableProblems"})
+    @SuppressWarnings({"AccessingNonPublicFieldOfAnotherObject"})
     private static <T> Collector<String, ?, String> elidingCollector(int maxEntries, @NotNull Collector<String, T, String> collector) {
         Supplier<Accumulator<T>> supplier = () -> new Accumulator<>(collector.supplier().get());
         BiConsumer<Accumulator<T>, String> accumulator = (acc, s) -> {

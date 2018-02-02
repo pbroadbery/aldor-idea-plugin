@@ -1,6 +1,9 @@
 package aldor.hierarchy;
 
 import aldor.parser.SwingThreadTestRule;
+import aldor.psi.AldorDefine;
+import aldor.psi.AldorIdentifier;
+import aldor.psi.index.AldorDefineTopLevelIndex;
 import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.JUnits;
 import aldor.test_util.LightPlatformJUnit4TestRule;
@@ -15,6 +18,7 @@ import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.CodeInsightTestFixture;
 import org.junit.Assert;
@@ -26,6 +30,7 @@ import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.stream.Collectors;
 
 import static com.intellij.ide.hierarchy.TypeHierarchyBrowserBase.SUPERTYPES_HIERARCHY_TYPE;
@@ -40,7 +45,7 @@ public class AldorTypeHierarchyBrowserTest {
                     .around(new TestRule() {
                         @Override
                         public Statement apply(Statement statement, Description description) {
-                            return JUnits.prePostStatement(() -> {JUnits.setLogToInfo();}, () -> checkUIState(), statement);
+                            return JUnits.prePostStatement(JUnits::setLogToInfo, () -> checkUIState(), statement);
                         }
                     })
                     .around(fricasExecutableRule)
@@ -116,6 +121,41 @@ public class AldorTypeHierarchyBrowserTest {
         browser.dispose();
         ((Disposable) ProgressManager.getInstance()).dispose();
     }
+
+    @Test
+    public void testEltAgg() {
+        String text = "Ring";
+
+        HierarchyProvider provider = new AldorTypeHierarchyProvider();
+        Collection<AldorDefine> items = AldorDefineTopLevelIndex.instance.get("EltableAggregate", codeTestFixture.getProject(), GlobalSearchScope.allScope(codeTestFixture.getProject()));
+
+        AldorIdentifier theId = items.stream().findFirst().flatMap(AldorDefine::defineIdentifier).orElse(null);
+
+        DataContext context = SimpleDataContext.getSimpleContext(CommonDataKeys.PSI_ELEMENT.getName(), theId,
+                SimpleDataContext.getProjectContext(codeTestFixture.getProject()));
+
+        PsiElement target = provider.getTarget(context);
+        AldorTypeHierarchyBrowser browser = (AldorTypeHierarchyBrowser) provider.createHierarchyBrowser(target);
+
+        Assert.assertNotNull(target);
+
+        provider.browserActivated(browser);
+
+        System.out.println("Browser: " + browser);
+        HierarchyTreeStructure hierarchy = browser.createHierarchyTreeStructure(SUPERTYPES_HIERARCHY_TYPE, target);
+        Assert.assertNotNull(hierarchy);
+
+        AldorHierarchyNodeDescriptor rootDescriptor = (AldorHierarchyNodeDescriptor) hierarchy.getRootElement();
+        rootDescriptor.update();
+
+        System.out.println("Root: " + rootDescriptor);
+
+        System.out.println("Children: " + Arrays.stream(hierarchy.getChildElements(hierarchy.getRootElement())).peek(child -> ((NodeDescriptor<?>) child).update()).collect(Collectors.toList()));
+
+        browser.dispose();
+        ((Disposable) ProgressManager.getInstance()).dispose();
+    }
+
 
     private static LightProjectDescriptor getProjectDescriptor(ExecutablePresentRule fricasExecutableRule) {
         return SdkProjectDescriptors.fricasSdkProjectDescriptor(fricasExecutableRule.prefix());

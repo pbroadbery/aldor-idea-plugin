@@ -4,16 +4,14 @@ import aldor.psi.elements.AldorTypes;
 import aldor.psi.impl.ReturningAldorVisitor;
 import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
+import com.google.common.collect.Streams;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiReference;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.refactoring.psi.SearchUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Iterator;
 import java.util.Optional;
 import java.util.Set;
 
@@ -113,6 +111,11 @@ public final class AldorPsiUtils {
         }
     }
 
+    /** Find the Define element that contains this element.
+     * Note that in the case of the "A: E == I where ..." idiom we should return "A: E == I" for any element in E or I.
+     * @param element a starting point
+     * @return the definition containing element
+     */
     @NotNull
     public static Optional<AldorDefine> definingForm(PsiElement element) {
         try {
@@ -151,14 +154,47 @@ public final class AldorPsiUtils {
      */
     @NotNull
     private static Optional<AldorDefine> definitionFromMacro(@SuppressWarnings("TypeMayBeWeakened") AldorDefine define) {
-        Iterable<PsiReference> refs = SearchUtils.findAllReferences(define);
-        Iterator<PsiReference> iterator = refs.iterator();
-        if (!iterator.hasNext()) {
+        Optional<AldorWhereBlock> whereBlock = Optional.ofNullable(new WhereClauseVisitor().apply(define.getParent()));
+
+        if (!whereBlock.isPresent()) {
             return Optional.empty();
         }
+        if (!define.defineIdentifier().isPresent()) {
+            return Optional.empty();
+        }
+        AldorIdentifier id = define.defineIdentifier().get();
+        Optional<PsiElement> lhsMaybe = whereBlock.map(PsiElement::getFirstChild);
 
-        PsiReference ref = iterator.next();
-        return Optional.ofNullable(PsiTreeUtil.getParentOfType(ref.getElement(), AldorDefine.class));
+        Optional<AldorId> usages = Streams.stream(lhsMaybe)
+                .flatMap(lhsElt -> PsiTreeUtil.findChildrenOfType(lhsElt, AldorId.class).stream())
+                .filter(someId -> id.getText().equals(someId.getText()))
+                .findFirst();
+        return usages.flatMap(AldorPsiUtils::definingForm);
+    }
+
+    private static final class WhereClauseVisitor extends ReturningAldorVisitor<AldorWhereBlock> {
+        private WhereClauseVisitor() {
+        }
+
+        @Override
+        public void visitElement(PsiElement element) {
+            element.getParent().accept(this);
+        }
+
+        @Override
+        public void visitWhereBlock(@NotNull AldorWhereBlock o) {
+            returnValue(o);
+        }
+
+        @Override
+        public void visitFile(PsiFile file) {
+            returnValue(null);
+        }
+
+        @Override
+        public void visitDefine(@NotNull AldorDefine ignored) {
+            returnValue(null);
+        }
     }
 
     private static final class DefiningFormVisitor extends ReturningAldorVisitor<PsiElement> {

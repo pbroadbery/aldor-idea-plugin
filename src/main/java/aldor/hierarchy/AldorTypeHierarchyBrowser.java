@@ -4,11 +4,15 @@ import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxPsiParser;
 import aldor.syntax.components.Apply;
 import aldor.syntax.components.Id;
+import aldor.ui.AldorIcons;
 import com.intellij.ide.hierarchy.HierarchyNodeDescriptor;
 import com.intellij.ide.hierarchy.HierarchyTreeStructure;
 import com.intellij.ide.hierarchy.TypeHierarchyBrowserBase;
 import com.intellij.ide.util.treeView.NodeDescriptor;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.actionSystem.IdeActions;
+import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
@@ -61,6 +65,13 @@ public class AldorTypeHierarchyBrowser extends TypeHierarchyBrowserBase {
         return null;
     }
 
+
+    @Override
+    protected void prependActions(@NotNull DefaultActionGroup actionGroup) {
+        actionGroup.add(new AldorTypeHierarchyBrowser.ShowOperationsAction());
+    }
+
+
     @Override
     protected boolean isApplicableElement(@NotNull PsiElement element) {
         Syntax syntax = SyntaxPsiParser.parse(element);
@@ -87,4 +98,27 @@ public class AldorTypeHierarchyBrowser extends TypeHierarchyBrowserBase {
     protected Comparator<NodeDescriptor> getComparator() {
         return Comparator.comparing(NodeDescriptor::toString);
     }
+
+    @SuppressWarnings("InnerClassMayBeStatic") // Should have some per-instance state, eventually
+    protected class ShowOperationsAction extends ToggleAction {
+        public ShowOperationsAction() {
+            super("Show operations", "Show operations", AldorIcons.OPERATION);
+        }
+
+        @Override
+        public final boolean isSelected(final AnActionEvent event) {
+            return true;
+        }
+
+        @Override
+        public final void setSelected(final AnActionEvent event, final boolean flag) {
+        }
+
+        @Override
+        public final void update(@NotNull final AnActionEvent event) {
+            super.update(event);
+        }
+    }
+
+
 }

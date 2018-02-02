@@ -1,13 +1,23 @@
 package aldor.references;
 
+import aldor.psi.AldorDefine;
 import aldor.psi.AldorIdentifier;
+import aldor.psi.index.AldorDefineTopLevelIndex;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReferenceBase;
+import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Collection;
+import java.util.Optional;
 
 import static aldor.references.FileScopeWalker.resolveAndWalk;
 
@@ -25,7 +35,27 @@ public class SpadNameReference extends PsiReferenceBase<AldorIdentifier> {
         AldorScopeProcessor scopeProcessor = new AldorScopeProcessor(getElement().getText());
         resolveAndWalk(scopeProcessor, getElement());
 
-        return scopeProcessor.getResult();
+        PsiElement result = scopeProcessor.getResult();
+        if (result == null) {
+            result = resolveByTopLevelName();
+        }
+
+        return result;
+    }
+
+    private PsiElement resolveByTopLevelName() {
+        Project project = getElement().getProject();
+        ProjectRootManager rootManager = ProjectRootManager.getInstance(project);
+        Optional<VirtualFile> fileMaybe = Optional.ofNullable(getElement().getContainingFile().getVirtualFile());
+        Optional<Module> module = fileMaybe.flatMap(file -> Optional.ofNullable(rootManager.getFileIndex().getModuleForFile(file, false)));
+        Optional<GlobalSearchScope> scopeMaybe = module.map(GlobalSearchScope::moduleWithLibrariesScope);
+
+        GlobalSearchScope scope = scopeMaybe.orElse(GlobalSearchScope.allScope(project));
+        Collection<AldorDefine> topLevelDefines = AldorDefineTopLevelIndex.instance.get(getElement().getText(), project, scope);
+        if (topLevelDefines.size() == 1) {
+            return topLevelDefines.iterator().next();
+        }
+        return null;
     }
 
 

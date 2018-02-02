@@ -7,6 +7,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
+import com.intellij.ui.breadcrumbs.BreadcrumbsProvider;
 import org.junit.Assert;
 
 public class AldorBreadcrumbsProviderTest extends LightPlatformCodeInsightFixtureTestCase {
@@ -15,7 +16,7 @@ public class AldorBreadcrumbsProviderTest extends LightPlatformCodeInsightFixtur
         PsiElement whole = createAldorFile("Foo: with == add { a == 1 }");
         PsiElement def = PsiTreeUtil.findChildOfType(whole, AldorDefine.class);
 
-        AldorBreadcrumbsProvider provider = new AldorBreadcrumbsProvider();
+        BreadcrumbsProvider provider = new AldorBreadcrumbsProvider();
 
         assert def != null;
         Assert.assertTrue(provider.acceptElement(def));

@@ -11,6 +11,7 @@ import aldor.syntax.components.Apply;
 import aldor.syntax.components.Comma;
 import aldor.syntax.components.DeclareNode;
 import aldor.syntax.components.Id;
+import aldor.syntax.components.Literal;
 import aldor.syntax.components.SyntaxRepresentation;
 import aldor.typelib.AnnotatedAbSyn;
 import aldor.typelib.AnnotatedId;
@@ -37,11 +38,21 @@ public final class AnnotatedSyntax {
     private static final Logger LOG = Logger.getInstance(AnnotatedSyntax.class);
 
     public static Syntax toSyntax(GlobalSearchScope scope, AnnotatedAbSyn ab) {
-        return ReadAction.compute(() -> doToSyntax(scope, ab));
+        try {
+            return ReadAction.compute(() -> doToSyntax(scope, ab));
+        }
+        catch (RuntimeException e) {
+            throw new SyntaxConversionException("Failed to convert " + ab, e);
+        }
     }
 
     public static AnnotatedAbSyn fromSyntax(Env env, @NotNull Syntax syntax) {
-        return ReadAction.compute(() -> syntax.accept(new AnnotatedAbSynSyntaxVisitor(env)));
+        try {
+            return ReadAction.compute(() -> syntax.accept(new AnnotatedAbSynSyntaxVisitor(env)));
+        }
+        catch (RuntimeException e) {
+            throw new SyntaxConversionException("Failed to convert " + syntax, e);
+        }
     }
 
     private static Syntax doToSyntax(GlobalSearchScope scope, AnnotatedAbSyn abIn) {
@@ -52,11 +63,14 @@ public final class AnnotatedSyntax {
                 all.add(doToSyntax(scope, ab.applyOperator()));
                 all.addAll(abApplyArgs(scope, ab));
                 return new Apply(all);
-            } else if (ab.isId()) {
+            }
+            else if (ab.isId()) {
                 return toSyntax(scope, ab.idSymbol());
-            } else if (ab.isDeclare()) {
+            }
+            else if (ab.isDeclare()) {
                 return new AnnotatedAbSynDeclareNode(scope, ab);
-            } else if (ab.isComma()) {
+            }
+            else if (ab.isComma()) {
                 if (ab.commaArgCount() == 0) {
                     return new Comma(Collections.emptyList());
                 } else if (ab.commaArgCount() == 1) {
@@ -64,7 +78,11 @@ public final class AnnotatedSyntax {
                 } else {
                     return new Comma(abCommaArgs(scope, ab));
                 }
-            } else {
+            }
+            else if (ab.isLiteral()) {
+                return new Literal(ab.literal(), null);
+            }
+            else {
                 throw new RuntimeException("Unknown syntax type: " + ab);
             }
         }
@@ -219,6 +237,11 @@ public final class AnnotatedSyntax {
                     (apply.arguments().stream()
                             .map(x -> x.accept(this))
                             .collect(Collectors.toList())));
+        }
+
+        @Override
+        public AnnotatedAbSyn visitComma(Comma comma) {
+            throw new RuntimeException("oops - comma");
         }
 
         @Override

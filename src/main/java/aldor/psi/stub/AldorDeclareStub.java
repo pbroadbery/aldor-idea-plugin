@@ -20,5 +20,7 @@ public interface AldorDeclareStub extends StubElement<AldorDeclare> {
 
     Syntax syntax();
 
+    Syntax exporter();
+
     //AldorDefineInfo defineInfo();
 }
