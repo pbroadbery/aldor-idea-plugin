@@ -84,6 +84,10 @@
 
         <lang.psiStructureViewFactory language="Spad" implementationClass="aldor.structure.AldorPsiStructureViewFactory"/>
         <typeHierarchyProvider implementationClass="aldor.hierarchy.AldorTypeHierarchyProvider" language="Spad"/>
+
+        <configurationType implementation="aldor.spad.runconfiguration.SpadInputRunConfigurationType" />
+        <runConfigurationProducer implementation = "aldor.spad.runconfiguration.SpadInputRunConfigurationProducer"/>
+
         <!-- Test language -->
         <fileTypeFactory implementation="aldor.expression.ExpressionFileTypeFactory"/>
         <lang.parserDefinition language="Expression" implementationClass="aldor.expression.ExpressionParserDefinition"/>

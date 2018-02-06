@@ -21,6 +21,7 @@ import aldorlib.sexpr.Symbol;
 import com.google.common.collect.Lists;
 import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import org.jetbrains.annotations.Contract;
@@ -41,6 +42,9 @@ public final class AnnotatedSyntax {
         try {
             return ReadAction.compute(() -> doToSyntax(scope, ab));
         }
+        catch (ProcessCanceledException e) {
+            throw e;
+        }
         catch (RuntimeException e) {
             throw new SyntaxConversionException("Failed to convert " + ab, e);
         }
@@ -49,6 +53,9 @@ public final class AnnotatedSyntax {
     public static AnnotatedAbSyn fromSyntax(Env env, @NotNull Syntax syntax) {
         try {
             return ReadAction.compute(() -> syntax.accept(new AnnotatedAbSynSyntaxVisitor(env)));
+        }
+        catch (ProcessCanceledException e) {
+            throw e;
         }
         catch (RuntimeException e) {
             throw new SyntaxConversionException("Failed to convert " + syntax, e);

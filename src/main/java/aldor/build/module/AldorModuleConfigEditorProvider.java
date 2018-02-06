@@ -15,6 +15,9 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.jps.model.java.JavaSourceRootType;
 
 import javax.swing.JComponent;
+import javax.swing.JPanel;
+import java.awt.BorderLayout;
+import java.awt.Component;
 
 /**
  * UI for editing module config.
@@ -30,7 +33,7 @@ public class AldorModuleConfigEditorProvider implements ModuleConfigurationEdito
         return new ModuleConfigurationEditor[]{
                 new CommonContentEntriesEditor(rootModule.getName(), state, JavaSourceRootType.SOURCE),
                 new OutputDirectoryEditor(state),
-                new ClasspathEditor(state)
+                new ModuleJdkEditor(state)
         };
     }
 
@@ -76,5 +79,35 @@ public class AldorModuleConfigEditorProvider implements ModuleConfigurationEdito
             super(state);
         }
     }
+
+    /**
+     * Classpath editor tweaked to hide class path boxes (keeps the module setting)
+     */
+    private static class ModuleJdkEditor extends ClasspathEditor {
+
+        ModuleJdkEditor(ModuleConfigurationState state) {
+            super(state);
+        }
+
+        @Override
+        public JComponent createComponentImpl() {
+            JComponent component = super.createComponentImpl();
+            if (component instanceof JPanel) {
+                JPanel panel = (JPanel) component;
+                Component childComponent = ((BorderLayout) panel.getLayout()).getLayoutComponent(BorderLayout.CENTER);
+                if (childComponent != null) {
+                    childComponent.setVisible(false);
+                }
+                //noinspection AbsoluteAlignmentInUserInterface
+                childComponent = ((BorderLayout) panel.getLayout()).getLayoutComponent(BorderLayout.SOUTH);
+                if (childComponent != null) {
+                    childComponent.setVisible(false);
+                }
+
+            }
+            return component;
+        }
+    }
+
 }
 

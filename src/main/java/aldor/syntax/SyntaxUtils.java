@@ -121,9 +121,7 @@ public final class SyntaxUtils {
     }
 
     public static boolean match(Syntax sourceSyntax, Syntax librarySyntax) {
-        boolean ret = match1(sourceSyntax, librarySyntax);
-        System.out.println("Match: " + sourceSyntax + " " + librarySyntax + " = "  + ret);
-        return ret;
+        return match1(sourceSyntax, librarySyntax);
     }
 
     private static boolean match1(Syntax sourceSyntax, Syntax librarySyntax) {

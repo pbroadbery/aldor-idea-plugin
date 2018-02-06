@@ -17,7 +17,7 @@ allprojects {
         test.resources.srcDir 'test/src/resources'
     }
     intellij {
-        version 'IC-2016.3.4' //IntelliJ IDEA 2016.3 dependency; for releases: https://www.jetbrains.com/intellij-repository/releases
+        version 'IC-2017.2.6' //IntelliJ IDEA 2016.3 dependency; for releases: https://www.jetbrains.com/intellij-repository/releases
         pluginName 'Aldor Plugin'
 
         plugins = []
@@ -34,14 +34,6 @@ allprojects {
     }
 }
 
-dependencies {
-    classpath files("/home/pab/IdeaProjects/aldor-modules/types/index/jars/aldor.jar")
-    classpath files("/home/pab/IdeaProjects/aldor-modules/types/index/jars/algebra.jar")
-    classpath files("/home/pab/IdeaProjects/aldor-modules/types/index/jars/foam.jar")
-    classpath files("/home/pab/IdeaProjects/aldor-modules/types/index/jars/foamj.jar")
-}
-
-
 apply plugin: 'org.jetbrains.intellij'
 apply plugin: 'idea'
 apply plugin: 'de.undercouch.download'
@@ -51,13 +43,36 @@ import de.undercouch.gradle.tasks.download.Download
 tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
 tasks.withType(Test) { systemProperties['aldor.build.skip_ci'] = System.getProperty('aldor.build.skip_ci') }
 
+
+def libFiles = ["aldor", "algebra", "foam", "foamj", "SpadType"]
 dependencies {
     compile project('jps-plugin')
+    compile files(
+            libFiles.collect({"lib/${it}.jar"}))
 }
 
+task copyLibraryFiles(type: Copy) {
+    from libFiles.collect({"/home/pab/IdeaProjects/aldor-modules/types/index/jars/${it}.jar"})
+    into 'lib'
+    eachFile {
+        println "" + it.relativePath.getFile(destinationDir) + " " + it.relativePath.getFile(destinationDir).exists()
+        if (it.relativePath.getFile(destinationDir).exists()) {
+            it.exclude()
+        }
+    }
+    doFirst {
+        println "BEFORE " + file("lib").list()
+    }
+}
+
+task list(dependsOn: configurations.compile) {
+    doLast {
+        println "classpath = ${configurations.compile.collect { File file -> file.toString()}}"
+    }
+}
 
 task downloadGrammarKit(type: Download) {
-    src 'https://github.com/JetBrains/Grammar-Kit/releases/download/1.5.1/GrammarKit.zip'
+    src 'https://github.com/JetBrains/Grammar-Kit/files/1459993/GrammarKit-2017.1.1.zip'
     dest 'download/GrammarKit.zip'
     overwrite false
     outputs.file file(dest)
@@ -82,7 +97,15 @@ task cleanLexer {
     }
 }
 
+task cleanLibs {
+    doLast {
+        print libFiles
+        for (f in libFiles) { delete "lib/${f}.jar"}
+    }
+}
+
 tasks.clean.dependsOn tasks.cleanLexer
+tasks.clean.dependsOn tasks.cleanLibs
 
 task unzipGrammar(type: Copy) {
     def zipFile = file('download/GrammarKit.zip')
@@ -96,10 +119,10 @@ task unzipGrammar(type: Copy) {
 }
 
 task generateLexer (type: JavaExec) {
-        def dstRoot = "$project.projectDir/src/gen/jflex"
-	def pkg = 'aldor/lexer'
-        def src = "$project.projectDir/src/main/jflex/${pkg}/aldor.flex"
-        def dst = "src/gen/jflex/" + pkg
+    def dstRoot = "$project.projectDir/src/gen/jflex"
+    def pkg = 'aldor/lexer'
+    def src = "$project.projectDir/src/main/jflex/${pkg}/aldor.flex"
+    def dst = "src/gen/jflex/" + pkg
 
 	doFirst {
             delete file(dst)
@@ -123,13 +146,14 @@ parserTask(project, "Expression", "aldor/expression")
 tasks.compileJava.dependsOn tasks.generateAldorParser
 tasks.compileJava.dependsOn tasks.generateExpressionParser
 tasks.compileJava.dependsOn tasks.generateLexer
+tasks.compileJava.dependsOn tasks.copyLibraryFiles
 
 def parserTask(project, parserName, pkg) {
     def tt = tasks.create("generate${parserName}Parser", JavaExec) {
         def dstRoot = "$project.projectDir/src/gen/grammar"
         def src = "$project.projectDir/src/main/grammar/${parserName}.bnf"
-	def dst = "$dstRoot/$pkg"
-        classpath(configurations.compile + files('lib/GrammarKit/lib/grammar-kit.jar'))
+	    def dst = "$dstRoot/$pkg"
+        classpath(configurations.compile + files('lib/GrammarKit/lib/grammar-kit-2017.1.1.jar'))
 
         args = [dstRoot, file(src)]
         main = 'org.intellij.grammar.Main'
