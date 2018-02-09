@@ -1,13 +1,13 @@
-package aldor.editor;
+package aldor.editor.navigation;
 
-import aldor.psi.AldorIdentifier;
-import aldor.ui.AldorIcons;
+import aldor.psi.SpadAbbrev;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.navigation.PsiElementNavigationItem;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.psi.PsiElement;
+import com.intellij.util.IconUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -15,12 +15,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 
-public class AldorIdentifierNavigationItem extends AbstractTreeNode<AldorIdentifier>
-        implements PsiElementNavigationItem, DataProvider {
+public class SpadAbbrevNavigationItem extends AbstractTreeNode<SpadAbbrev> implements PsiElementNavigationItem, DataProvider {
+
     @SuppressWarnings("AssignmentToSuperclassField")
-    public AldorIdentifierNavigationItem(AldorIdentifier ident) {
-        super(ident.getProject(), ident);
-        myName = ident.getName();
+    public SpadAbbrevNavigationItem(SpadAbbrev abbrev) {
+        super(abbrev.getProject(), abbrev);
+        myName = abbrev.abbrevInfo().name();
     }
 
     @NotNull
@@ -44,21 +44,11 @@ public class AldorIdentifierNavigationItem extends AbstractTreeNode<AldorIdentif
         getValue().navigate(requestFocus);
     }
 
-    @Override
-    public boolean canNavigate() {
-        return true;
-    }
-
-    @Override
-    public boolean canNavigateToSource() {
-        return true;
-    }
-
     @NotNull
     @Override
     protected PresentationData createPresentation() {
         return new PresentationData(this.getValue().getText(),
-                getValue().getContainingFile().getName(), AldorIcons.IDENTIFIER, null);
+                getValue().getContainingFile().getName(), IconUtil.getMoveUpIcon(), null);
     }
 
     @Nullable
@@ -75,6 +65,4 @@ public class AldorIdentifierNavigationItem extends AbstractTreeNode<AldorIdentif
         }
         return null;
     }
-
-
 }

@@ -1,12 +1,6 @@
-package aldor.editor;
+package aldor.editor.navigation;
 
-import aldor.psi.AldorDeclare;
-import aldor.psi.stub.AldorDeclareStub;
-import aldor.syntax.DeclareFunctions;
-import aldor.syntax.Syntax;
-import aldor.syntax.SyntaxPrinter;
-import aldor.syntax.SyntaxPsiParser;
-import aldor.syntax.components.AbstractId;
+import aldor.psi.AldorIdentifier;
 import aldor.ui.AldorIcons;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
@@ -21,18 +15,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 
-public class AldorDeclareNavigationItem extends AbstractTreeNode<AldorDeclare> implements PsiElementNavigationItem, DataProvider {
-    private static final SyntaxPrinter printer = SyntaxPrinter.instance();
-
+public class AldorIdentifierNavigationItem extends AbstractTreeNode<AldorIdentifier>
+        implements PsiElementNavigationItem, DataProvider {
     @SuppressWarnings("AssignmentToSuperclassField")
-    public AldorDeclareNavigationItem(AldorDeclare declare) {
-        super(declare.getProject(), declare);
-        AldorDeclareStub stub = declare.getGreenStub();
-        if (stub == null) {
-            this.myName = DeclareFunctions.declareId(SyntaxPsiParser.parse(declare.getFirstChild())).map(AbstractId::symbol).orElse("(unknown)");
-        } else {
-            this.myName = stub.declareIdName().orElse("(unknown)");
-        }
+    public AldorIdentifierNavigationItem(AldorIdentifier ident) {
+        super(ident.getProject(), ident);
+        myName = ident.getName();
     }
 
     @NotNull
@@ -56,14 +44,21 @@ public class AldorDeclareNavigationItem extends AbstractTreeNode<AldorDeclare> i
         getValue().navigate(requestFocus);
     }
 
+    @Override
+    public boolean canNavigate() {
+        return true;
+    }
+
+    @Override
+    public boolean canNavigateToSource() {
+        return true;
+    }
+
     @NotNull
     @Override
     protected PresentationData createPresentation() {
-        AldorDeclare declare = this.getValue();
-        AldorDeclareStub stub = declare.getGreenStub();
-        Syntax declareType = (stub != null) ? stub.declareType() : SyntaxPsiParser.parse(declare.rhs());
-        return new PresentationData(this.myName + ": " + printer.toString(declareType),
-                getValue().getContainingFile().getName(), AldorIcons.DECLARE_ICON, null);
+        return new PresentationData(this.getValue().getText(),
+                getValue().getContainingFile().getName(), AldorIcons.IDENTIFIER, null);
     }
 
     @Nullable
@@ -80,5 +75,6 @@ public class AldorDeclareNavigationItem extends AbstractTreeNode<AldorDeclare> i
         }
         return null;
     }
+
 
 }

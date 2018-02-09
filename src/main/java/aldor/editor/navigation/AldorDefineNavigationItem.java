@@ -1,4 +1,4 @@
-package aldor.editor;
+package aldor.editor.navigation;
 
 import aldor.psi.AldorDefine;
 import aldor.psi.AldorIdentifier;

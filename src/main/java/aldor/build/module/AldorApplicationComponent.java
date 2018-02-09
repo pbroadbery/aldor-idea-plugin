@@ -1,6 +1,6 @@
 package aldor.build.module;
 
-import aldor.editor.DefaultNavigator;
+import aldor.editor.navigation.DefaultNavigator;
 import aldor.parser.NavigatorFactory;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
