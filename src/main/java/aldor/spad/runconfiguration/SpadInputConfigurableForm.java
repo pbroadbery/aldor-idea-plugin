@@ -37,12 +37,12 @@ public class SpadInputConfigurableForm extends JComponent {
     public void resetEditor(SpadInputConfigurationBean bean) {
         myInputFile.setText(bean.inputFile);
         loadSpad.setSelected(bean.loadSpad);
-        keepProcess.setSelected(bean.keep);
+        keepProcess.setSelected(bean.keepRunning);
     }
 
     public void updateConfiguration(SpadInputConfigurationBean bean) {
         bean.inputFile = myInputFile.getText();
         bean.loadSpad = loadSpad.isSelected();
-        bean.keep = keepProcess.isSelected();
+        bean.keepRunning = keepProcess.isSelected();
     }
 }

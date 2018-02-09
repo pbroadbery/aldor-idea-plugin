@@ -55,13 +55,9 @@ task copyLibraryFiles(type: Copy) {
     from libFiles.collect({"/home/pab/IdeaProjects/aldor-modules/types/index/jars/${it}.jar"})
     into 'lib'
     eachFile {
-        println "" + it.relativePath.getFile(destinationDir) + " " + it.relativePath.getFile(destinationDir).exists()
         if (it.relativePath.getFile(destinationDir).exists()) {
             it.exclude()
         }
-    }
-    doFirst {
-        println "BEFORE " + file("lib").list()
     }
 }
 
@@ -99,7 +95,6 @@ task cleanLexer {
 
 task cleanLibs {
     doLast {
-        print libFiles
         for (f in libFiles) { delete "lib/${f}.jar"}
     }
 }
