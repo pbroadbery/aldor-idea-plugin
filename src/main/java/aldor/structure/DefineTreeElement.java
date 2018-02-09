@@ -71,10 +71,9 @@ final class DefineTreeElement extends PsiTreeElementBase<AldorDefine> {
         public TextAttributesKey getTextAttributesKey() {
             AldorPsiUtils.DefinitionClass defClass = AldorPsiUtils.definitionClassForDefine(element);
 
-            return AldorTextAttributes.textAttributesForDefinitionClass(defClass);
+            return textAttributesForDefinitionClass(defClass);
         }
 
-        @Nullable
         @Override
         public String getPresentableText() {
             return ((presentation == null) ? DefineTreeElement.this.getPresentableText() : presentation.getPresentableText()) + "-"+AldorPsiUtils.definitionClassForDefine(element);
@@ -92,4 +91,17 @@ final class DefineTreeElement extends PsiTreeElementBase<AldorDefine> {
             return DefineTreeElement.this.getIcon(false);
         }
     }
+
+    public static TextAttributesKey textAttributesForDefinitionClass(AldorPsiUtils.DefinitionClass defClass) {
+        switch (defClass) {
+            case CATEGORY:
+                return AldorTextAttributes.ALDOR_CATEGORY_ATTRIBUTES;
+            case DOMAIN:
+                return AldorTextAttributes.ALDOR_DOMAIN_ATTRIBUTES;
+            case VALUE:
+                return AldorTextAttributes.ALDOR_VALUE_ATTRIBUTES;
+        }
+        throw new RuntimeException("Missing");
+    }
+
 }
