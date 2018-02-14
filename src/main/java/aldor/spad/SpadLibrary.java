@@ -1,6 +1,7 @@
 package aldor.spad;
 
 import aldor.syntax.Syntax;
+import aldor.syntax.components.Id;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,6 +15,10 @@ public interface SpadLibrary {
 
     @NotNull
     Syntax normalise(@NotNull Syntax syntax);
+
+    List<Syntax> allTypes();
+
+    String definingFile(Id id);
 
     class Operation {
         private final String name;

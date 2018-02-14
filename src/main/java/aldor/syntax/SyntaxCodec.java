@@ -74,6 +74,7 @@ public class SyntaxCodec implements StubCodec<Syntax> {
             stream.writeName(codec.clzz().getSimpleName());
             codec.encode(stream, syntax);
         }
+
     }
 
     @Override

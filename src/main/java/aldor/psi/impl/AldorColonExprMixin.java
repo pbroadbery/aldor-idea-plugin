@@ -5,12 +5,15 @@ import aldor.psi.AldorDeclare;
 import aldor.psi.stub.AldorDeclareStub;
 import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxPsiParser;
+import aldor.syntax.SyntaxUtils;
+import aldor.syntax.components.Id;
 import com.intellij.extapi.psi.StubBasedPsiElementBase;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class AldorColonExprMixin extends StubBasedPsiElementBase<AldorDeclareStub> implements AldorColonExpr, AldorDeclare {
@@ -46,6 +49,12 @@ public abstract class AldorColonExprMixin extends StubBasedPsiElementBase<AldorD
     }
 
     @Override
+    public String getName() {
+        return SyntaxUtils.leadingId(SyntaxPsiParser.parse(lhs())).maybeAs(Id.class).map(Id::symbol).orElse(null);
+
+    }
+
+    @Override
     public PsiElement lhs() {
         return this.getExprList().get(0);
     }
@@ -53,5 +62,11 @@ public abstract class AldorColonExprMixin extends StubBasedPsiElementBase<AldorD
     @Override
     public PsiElement rhs() {
         return this.getExprList().get(1);
+    }
+
+    @SuppressWarnings("ThrowsRuntimeException")
+    @Override
+    public PsiElement setName(@NotNull String name) throws IncorrectOperationException {
+        throw new IncorrectOperationException("no rename for definitions (yet)");
     }
 }

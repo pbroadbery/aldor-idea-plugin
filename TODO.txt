@@ -1,26 +1,25 @@
 
-Lexer:
-Floating Point
+Input file runner - use module to get SDK
 
-Extensions:
-"Goto definition"
+Code Completion:
+- Types in Type and "with" context
+- Types where suitable as arguments to a fn
+- names:
+    from lambdas
+    from commas (dependent types)
 
-Definition Trees & structure
+Improve structure view - should be prettier
+
+Lexer: Floating Point
 
 References:
 - Use PsiPolyVariantReference for declaration/implementation stuff	
-
-Module building:
--- Idea here is that "initially", we'll support one type of module,
-   the checked out git repository.
 
 Grammar:
 Error recovery
 
 PileMode
    -- continuation lines
-
-Use intellij log faciities
 
 tests for rename: CodeInsightTestUtil.doInlineRename(new VariableInplaceRenameHandler(), newName, getEditor(), element);
 
@@ -31,17 +30,23 @@ Lexer:
 DONE Comments
 DONE Pre/Post Doc
 DONE Bracket matching
+DONE Definition Trees & structure
 
+DONE Extensions:  "Goto definition"
+
+Module building:
+-- Idea here is that "initially", we'll support one type of module,
+   the checked out git repository.
+
+Use intellij log faciities
 
 --------------------
 SPAD differences:
 
-++ instead of +++ (which will be annoying...)
-')' system commands
-
-select: Not a keyword(!)
-
-Quotes have lispish semantics/tokeniser rules
+OK: ++ instead of +++ (which will be annoying...)
+OK: ')' system commands
+OK: select: Not a keyword(!)
+OK: Quotes have lispish semantics/tokeniser rules
 
 -----
 

@@ -68,6 +68,16 @@ public class TestSpadLibrary implements SpadLibrary {
         return syntax;
     }
 
+    @Override
+    public List<Syntax> allTypes() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public String definingFile(Id id) {
+        return "list.spad (probably)";
+    }
+
     private ParentInfo parentInfo(Syntax syntax) {
         Syntax discriminator = syntax;
         if (syntax.is(Apply.class)) {

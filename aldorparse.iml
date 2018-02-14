@@ -25,7 +25,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="TEST" name="org.mockito:mockito-all:1.10.19" level="project" />
-    <orderEntry type="library" name="lib" level="project" />
     <orderEntry type="library" name="com.google.guava:guava:19.0" level="project" />
     <orderEntry type="module-library">
       <library>
@@ -69,6 +68,15 @@
       <library>
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../aldor-modules/types/index/jars/algebra.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/aldor-jps-plugin.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

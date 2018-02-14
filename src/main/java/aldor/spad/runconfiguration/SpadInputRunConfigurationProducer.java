@@ -48,7 +48,9 @@ public class SpadInputRunConfigurationProducer extends RunConfigurationProducer<
             return false;
         }
         PsiFile file = location.getContainingFile();
-
+        if ((file == null) || (file.getVirtualFile() == null)) {
+            return false;
+        }
         return FileUtil.pathsEqual(file.getVirtualFile().getPath(), configuration.inputFile());
     }
 }

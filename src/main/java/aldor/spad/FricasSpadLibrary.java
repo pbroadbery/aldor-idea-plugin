@@ -14,6 +14,7 @@ import aldor.typelib.AxiomInterface;
 import aldor.typelib.Env;
 import aldor.typelib.NamedExport;
 import aldor.typelib.SymbolDatabase;
+import aldor.typelib.SymbolMeaning;
 import aldor.typelib.TForm;
 import aldor.typelib.TypePackage;
 import com.intellij.openapi.Disposable;
@@ -21,7 +22,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.GlobalSearchScopesCore;
 import foamj.Clos;
@@ -31,14 +32,17 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static aldor.syntax.AnnotatedSyntax.fromSyntax;
+import static aldor.syntax.AnnotatedSyntax.toSyntax;
 
 public class FricasSpadLibrary implements SpadLibrary, Disposable {
     private static final Logger LOG = Logger.getInstance(FricasSpadLibrary.class);
@@ -113,7 +117,7 @@ public class FricasSpadLibrary implements SpadLibrary, Disposable {
     }
 
     /** This is, well, guesswork. If we had the declaration line number it would be easier. */
-    private PsiElement declarationFor(Syntax exporter, NamedExport namedExport) {
+    private PsiNamedElement declarationFor(Syntax exporter, NamedExport namedExport) {
         Syntax leadingExporter = SyntaxUtils.leadingId(exporter);
         // Find all definitions of "namedExport" in the file containing the exporter
         Collection<AldorDefine> exportingDefinitionCandidates = AldorDefineTopLevelIndex.instance.get(leadingExporter.as(Id.class).symbol(), project, scope);
@@ -168,6 +172,32 @@ public class FricasSpadLibrary implements SpadLibrary, Disposable {
     @Override
     public Syntax normalise(@NotNull Syntax syntax) {
         return syntax;
+    }
+
+    @Override
+    public List<Syntax> allTypes() {
+        try {
+            return this.aldorExecutor.compute(() -> this.iface.allTypes().stream().map(absyn -> toSyntax(scope, absyn)).collect(Collectors.toList()));
+        } catch (InterruptedException e) {
+            LOG.error("failed to read types", e);
+            return Collections.emptyList();
+        }
+    }
+
+    @Override
+    public String definingFile(Id id) {
+        Collection<AldorDefine> defineCollection = AldorDefineTopLevelIndex.instance.get(id.symbol(), project, scope);
+        if (defineCollection.isEmpty()) {
+            LOG.warn("No file for: " + id);
+            return "";
+        }
+        AldorDefine define = defineCollection.iterator().next();
+        return define.getContainingFile().getVirtualFile().getPresentableName();
+    }
+
+    private Stream<AldorDefine> topLevelDefinition(SymbolMeaning symbolMeaning) {
+        Collection<AldorDefine> definitions = AldorDefineTopLevelIndex.instance.get(symbolMeaning.name().name(), project, scope);
+        return definitions.stream().limit(1);
     }
 
     @Override

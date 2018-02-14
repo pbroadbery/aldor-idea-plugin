@@ -301,7 +301,6 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
         assertReferences(text, nameRefToMap, nulls);
     }
 
-
     public void testWhere2() {
         String text = "foo: bar where { foo == 2; bar == 3}";
 
@@ -333,7 +332,6 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
         Collection<String> nulls = Arrays.asList("E ==>", "I ==>");
         assertReferences(text, nameRefToMap, nulls);
     }
-
 
     private void assertReferences(String text, Map<String, String> nameRefToMap, Iterable<String> nulls) {
         assertReferences(text, nameRefToMap, nulls, AldorLanguage.INSTANCE);

@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
+import java.util.Optional;
 
 /**
  * Core representation of Syntax.. We don't use PSI as it's probably too heavyweight,
@@ -25,6 +26,10 @@ public abstract class Syntax {
             return clzz.cast(this);
         }
         throw new IllegalArgumentException("Expected a " + clzz.getName() + " got " + this.getClass() + " " + this);
+    }
+
+    public <T extends Syntax> Optional<T> maybeAs(Class<T> clzz) {
+        return is(clzz) ? Optional.of(this.as(clzz)) : Optional.empty();
     }
 
     public <T extends Syntax> boolean is(@NotNull Class<T> clzz) {

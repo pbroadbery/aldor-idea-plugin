@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import static aldor.references.FileScopeWalker.resolveAndWalk;
@@ -82,6 +83,13 @@ public class SpadNameReference extends PsiReferenceBase<AldorIdentifier> {
     @NotNull
     @Override
     public Object[] getVariants() {
-        return NO_VARIANTS;
+        VariantScopeProcessor scopeProcessor = new VariantScopeProcessor();
+        resolveAndWalk(scopeProcessor, getElement());
+
+        List<Object> result = scopeProcessor.references();
+        //result.addAll(topLevelReferences());
+
+        return result.toArray();
     }
+
 }

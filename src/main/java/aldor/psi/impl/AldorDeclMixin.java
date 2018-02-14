@@ -5,11 +5,14 @@ import aldor.psi.AldorDeclare;
 import aldor.psi.stub.AldorDeclareStub;
 import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxPsiParser;
+import aldor.syntax.SyntaxUtils;
+import aldor.syntax.components.Id;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings({"AbstractClassWithOnlyOneDirectInheritor"})
@@ -44,6 +47,11 @@ public abstract class AldorDeclMixin extends AldorDeclareImpl implements AldorDe
     }
 
     @Override
+    public String getName() {
+        return SyntaxUtils.leadingId(SyntaxPsiParser.parse(lhs())).maybeAs(Id.class).map(Id::symbol).orElse(null);
+    }
+
+    @Override
     public PsiElement lhs() {
         return this.getFirstChild();
     }
@@ -51,5 +59,11 @@ public abstract class AldorDeclMixin extends AldorDeclareImpl implements AldorDe
     @Override
     public PsiElement rhs() {
         return this.getType();
+    }
+
+    @SuppressWarnings("ThrowsRuntimeException")
+    @Override
+    public PsiElement setName(@NotNull String name) throws IncorrectOperationException {
+        throw new IncorrectOperationException("No rename on declarations");
     }
 }

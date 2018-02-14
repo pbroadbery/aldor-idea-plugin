@@ -9,7 +9,9 @@ import aldor.syntax.components.Id;
 import aldor.syntax.components.Literal;
 import aldor.syntax.components.Other;
 import com.google.common.collect.Streams;
+import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -69,6 +71,27 @@ public final class SyntaxUtils {
             return Optional.of(leftmost);
         }
         return Optional.empty();
+    }
+
+    /**
+     * Find element on given syntactic form
+     * @param syntax Some syntax - generally a constructor form
+     * @return psi representing the definition of this element
+     */
+    @Nullable
+    public static PsiElement psiElementFromSyntax(Syntax syntax) {
+        Syntax syntax1 = syntax;
+        while (true) {
+            if (syntax1.psiElement() != null) {
+                return syntax1.psiElement();
+            }
+            if (syntax1.is(Apply.class)) {
+                syntax1 = syntax1.as(Apply.class).operator();
+            }
+            else {
+                return null;
+            }
+        }
     }
 
     /**

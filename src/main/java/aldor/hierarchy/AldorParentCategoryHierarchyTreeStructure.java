@@ -6,7 +6,6 @@ import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxPrinter;
 import aldor.syntax.SyntaxPsiParser;
 import aldor.syntax.SyntaxUtils;
-import aldor.syntax.components.Apply;
 import com.google.common.collect.Sets;
 import com.intellij.ide.hierarchy.HierarchyNodeDescriptor;
 import com.intellij.ide.hierarchy.HierarchyTreeStructure;
@@ -16,20 +15,20 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiElementPointer;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
 import static aldor.syntax.SyntaxPsiParser.SurroundType.Leading;
+import static aldor.syntax.SyntaxUtils.psiElementFromSyntax;
 
 public final class AldorParentCategoryHierarchyTreeStructure extends HierarchyTreeStructure {
     private static final Object[] EMPTY_ARRAY = new Object[0];
     private final SmartPsiElementPointer<PsiElement> smartPointer;
 
     private AldorParentCategoryHierarchyTreeStructure(Project project, @NotNull Syntax syntax) {
-        super(project, createBaseNodeDescriptor(project, null, syntax));
+        super(project, createBaseNodeDescriptor(project, syntax));
         this.smartPointer = SmartPointerManager.getInstance(project).createSmartPsiElementPointer(psiElementFromSyntax(syntax));
     }
 
@@ -45,8 +44,8 @@ public final class AldorParentCategoryHierarchyTreeStructure extends HierarchyTr
         return new AldorParentCategoryHierarchyTreeStructure(project, syntax);
     }
 
-    private static HierarchyNodeDescriptor createBaseNodeDescriptor(Project project, NodeDescriptor<PsiElement> parentDescriptor, Syntax syntax) {
-        return new AldorHierarchyNodeDescriptor(project,  parentDescriptor, psiElementFromSyntax(syntax), syntax, true);
+    private static HierarchyNodeDescriptor createBaseNodeDescriptor(Project project, @NotNull Syntax syntax) {
+        return new AldorHierarchyNodeDescriptor(project,  null, psiElementFromSyntax(syntax), syntax, true);
     }
 
     private static HierarchyNodeDescriptor createNodeDescriptor(Project project, NodeDescriptor<PsiElement> parentDescriptor, Syntax syntax) {
@@ -94,21 +93,5 @@ public final class AldorParentCategoryHierarchyTreeStructure extends HierarchyTr
         Stream<Object> operationNodes = library.operations(syntax).stream().map(op -> createOperationNodeDescriptorMaybe(aldorDescriptor, op));
 
         return Stream.concat(parentNodes, operationNodes).toArray();
-    }
-
-    @Nullable
-    private static PsiElement psiElementFromSyntax(Syntax syntax) {
-        Syntax syntax1 = syntax;
-        while (true) {
-            if (syntax1.psiElement() != null) {
-                return syntax1.psiElement();
-            }
-            if (syntax1.is(Apply.class)) {
-                syntax1 = syntax1.as(Apply.class).operator();
-            }
-            else {
-                return null;
-            }
-        }
     }
 }

@@ -7,6 +7,7 @@ import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.ProjectJdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.roots.impl.DirectoryIndex;
@@ -27,7 +28,7 @@ public class SpadLibraryManager {
 
     @Nullable
     public SpadLibrary forModule(Module module) {
-        return forProject(module.getProject());
+        return forSdk(module.getProject(), ModuleRootManager.getInstance(module).getSdk());
     }
 
     public static SpadLibraryManager instance() {

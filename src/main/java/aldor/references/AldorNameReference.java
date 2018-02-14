@@ -9,6 +9,8 @@ import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
 import static aldor.references.FileScopeWalker.resolveAndWalk;
 
 public class AldorNameReference extends PsiReferenceBase<AldorIdentifier> {
@@ -56,7 +58,12 @@ public class AldorNameReference extends PsiReferenceBase<AldorIdentifier> {
     @NotNull
     @Override
     public Object[] getVariants() {
-        return NO_VARIANTS;
-    }
+        VariantScopeProcessor scopeProcessor = new VariantScopeProcessor();
+        resolveAndWalk(scopeProcessor, getElement());
 
+        List<Object> result = scopeProcessor.references();
+        //result.addAll(topLevelReferences());
+
+        return result.toArray();
+    }
 }

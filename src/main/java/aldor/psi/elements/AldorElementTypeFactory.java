@@ -83,14 +83,12 @@ public class AldorElementTypeFactory {
         private FileStubElementType(Language language, int stubVersion) {
             super("aldorFile", language);
             this.stubVersion = stubVersion;
-
         }
 
         @Override
         public int getStubVersion() {
             return stubVersion;
         }
-
     }
 
 }

@@ -105,6 +105,15 @@ public class AldorTypeHierarchyBrowserMissingLibTest {
         public Syntax normalise(@NotNull Syntax syntax) {
             return syntax;
         }
-    }
 
+        @Override
+        public List<Syntax> allTypes() {
+            return Collections.emptyList();
+        }
+
+        @Override
+        public String definingFile(Id id) {
+            return "nope";
+        }
+    }
 }
