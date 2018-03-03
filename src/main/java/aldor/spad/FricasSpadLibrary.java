@@ -2,10 +2,13 @@ package aldor.spad;
 
 import aldor.psi.AldorDeclare;
 import aldor.psi.AldorDefine;
+import aldor.psi.AldorPsiUtils;
 import aldor.psi.index.AldorDeclareTopIndex;
 import aldor.psi.index.AldorDefineTopLevelIndex;
+import aldor.psi.stub.AldorDeclareStub;
 import aldor.syntax.AnnotatedSyntax;
 import aldor.syntax.Syntax;
+import aldor.syntax.SyntaxPsiParser;
 import aldor.syntax.SyntaxUtils;
 import aldor.syntax.components.DeclareNode;
 import aldor.syntax.components.Id;
@@ -14,6 +17,7 @@ import aldor.typelib.AxiomInterface;
 import aldor.typelib.Env;
 import aldor.typelib.NamedExport;
 import aldor.typelib.SymbolDatabase;
+import aldor.typelib.SymbolDatabaseHelper;
 import aldor.typelib.SymbolMeaning;
 import aldor.typelib.TForm;
 import aldor.typelib.TypePackage;
@@ -21,7 +25,11 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ThrowableComputable;
+import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileContentsChangedAdapter;
+import com.intellij.openapi.vfs.VirtualFileListener;
+import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.GlobalSearchScopesCore;
@@ -30,10 +38,12 @@ import foamj.FoamContext;
 import foamj.FoamHelper;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -46,29 +56,82 @@ import static aldor.syntax.AnnotatedSyntax.toSyntax;
 
 public class FricasSpadLibrary implements SpadLibrary, Disposable {
     private static final Logger LOG = Logger.getInstance(FricasSpadLibrary.class);
+    public static final GlobalSearchScope[] EMPTY_SCOPE_ARRAY = new GlobalSearchScope[0];
 
-    private final String directory;
-    private final AxiomInterface iface;
+    private final String name;
     private final GlobalSearchScope scope;
     private final AldorExecutor aldorExecutor;
     private final Project project;
+    private final FricasSpadLibrary.AxiomInterfaceContainer axiomInterfaceContainer;
+    private final FricasEnvironment environment;
 
-    public FricasSpadLibrary(Project project, VirtualFile directory) {
-        this.directory = directory.getCanonicalPath() + "/algebra";
-        this.scope = GlobalSearchScopesCore.directoriesScope(project, true, directory);
+    public FricasSpadLibrary(Project project, FricasEnvironment fricasEnvironment) {
+        //this.directory = daaseDirectory.getCanonicalPath() + "/algebra";
+        //this.scope = GlobalSearchScopesCore.directoriesScope(project, true, daaseDirectory);
+        this.name = fricasEnvironment.name();
+        this.scope = fricasEnvironment.scope(project);
+        this.environment = fricasEnvironment;
         this.project = project;
-        aldorExecutor = new AldorExecutor();
-        try {
-            iface = aldorExecutor.compute(this::initExecutor);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        this.aldorExecutor = new AldorExecutor();
+        this.axiomInterfaceContainer = new AxiomInterfaceContainer(fricasEnvironment);
     }
 
-    private AxiomInterface initExecutor() {
-        Clos fn = aldorExecutor.createLoadFn("axiomshell");
-        fn.call();
-        return AxiomInterface.create(SymbolDatabase.daases(directory));
+
+    void initialiseFileListener() {
+        VirtualFileListener listener = createListener();
+        VirtualFileManager.getInstance().addVirtualFileListener(listener, this);
+    }
+
+    private VirtualFileListener createListener() {
+        return new VirtualFileContentsChangedAdapter() {
+            @Override
+            protected void onFileChange(@NotNull VirtualFile file) {
+                if (environment.containsFile(file)) {
+                    axiomInterfaceContainer.needsReload();
+                }
+            }
+
+            @Override
+            protected void onBeforeFileChange(@NotNull VirtualFile file) {
+
+            }
+        };
+    }
+
+    private class AxiomInterfaceContainer {
+        private final FricasEnvironment environment;
+        private AxiomInterface iface = null;
+        private boolean needsReload = true;
+
+        AxiomInterfaceContainer(FricasEnvironment fricasEnvironment) {
+            this.environment = fricasEnvironment;
+        }
+
+        AxiomInterface value() {
+            if (needsReload) {
+                iface = load();
+                needsReload = false;
+            }
+            return iface;
+        }
+
+        AxiomInterface load() {
+            try {
+                Clos fn = aldorExecutor.createLoadFn("axiomshell");
+                fn.call();
+                return aldorExecutor.compute(environment::create);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+        }
+
+        public void needsReload() {
+            needsReload = true;
+        }
+
+        public void dispose() {
+        }
     }
 
     @Override
@@ -76,11 +139,12 @@ public class FricasSpadLibrary implements SpadLibrary, Disposable {
         try {
             return aldorExecutor.compute(() -> doParentCategories(syntax));
         } catch (InterruptedException e) {
-            throw new RuntimeException("failed to create library: " + directory, e);
+            throw new RuntimeException("failed to create parents: " + name + " " + syntax, e);
         }
     }
 
     private List<Syntax> doParentCategories(@NotNull Syntax syntax) {
+        AxiomInterface iface = axiomInterfaceContainer.value();
         Env env = iface.env();
         AnnotatedAbSyn absyn = fromSyntax(env, syntax);
         TForm tf = iface.asTForm(absyn);
@@ -96,11 +160,12 @@ public class FricasSpadLibrary implements SpadLibrary, Disposable {
         try {
             return aldorExecutor.compute(() -> doOperations(syntax));
         } catch (InterruptedException e) {
-            throw new RuntimeException("failed to create library: " + directory, e);
+            throw new RuntimeException("failed find operations: " + name + " " + syntax, e);
         }
     }
 
     private List<Operation> doOperations(Syntax syntax) {
+        AxiomInterface iface = axiomInterfaceContainer.value();
         Env env = iface.env();
         AnnotatedAbSyn absyn = fromSyntax(env, syntax);
         Collection<NamedExport> operations = iface.directOperations(absyn);
@@ -151,8 +216,9 @@ public class FricasSpadLibrary implements SpadLibrary, Disposable {
 
     @NotNull
     private Predicate<AldorDeclare> filterBySignature(NamedExport namedExport) {
+        AxiomInterface iface = axiomInterfaceContainer.value();
         return decl -> {
-            Syntax librarySyntax = AnnotatedSyntax.toSyntax(scope, TypePackage.asAbSyn(iface.env(), namedExport.original()));
+            Syntax librarySyntax = toSyntax(scope, TypePackage.asAbSyn(iface.env(), namedExport.original()));
             Syntax sourceSyntax = decl.getGreenStub().syntax().as(DeclareNode.class).rhs();
 
             LOG.info("Lib syntax: " + librarySyntax + " Source: " + sourceSyntax);
@@ -163,8 +229,16 @@ public class FricasSpadLibrary implements SpadLibrary, Disposable {
     @NotNull
     private Predicate<AldorDeclare> filterByExporter(Syntax leadingExporter) {
         return decl -> {
-            Syntax sourceExporter = decl.getGreenStub().exporter();
-            return SyntaxUtils.match(SyntaxUtils.leadingId(sourceExporter), leadingExporter);
+            AldorDeclareStub stub = Optional.ofNullable(decl.getGreenStub()).orElse(decl.getStub());
+            if (stub == null) {
+                Optional<AldorDefine> definingForm = AldorPsiUtils.definingForm(decl);
+                Optional<Syntax> exporter = definingForm.map(form -> SyntaxUtils.typeName(SyntaxPsiParser.parse(form.lhs())));
+                return exporter.map(e -> SyntaxUtils.match(SyntaxUtils.leadingId(e), leadingExporter)).orElse(false);
+            }
+            else {
+                Syntax sourceExporter = stub.exporter();
+                return SyntaxUtils.match(SyntaxUtils.leadingId(sourceExporter), leadingExporter);
+            }
         };
     }
 
@@ -177,7 +251,8 @@ public class FricasSpadLibrary implements SpadLibrary, Disposable {
     @Override
     public List<Syntax> allTypes() {
         try {
-            return this.aldorExecutor.compute(() -> this.iface.allTypes().stream().map(absyn -> toSyntax(scope, absyn)).collect(Collectors.toList()));
+            AxiomInterface iface = axiomInterfaceContainer.value();
+            return this.aldorExecutor.compute(() -> iface.allTypes().stream().map(absyn -> toSyntax(scope, absyn)).collect(Collectors.toList()));
         } catch (InterruptedException e) {
             LOG.error("failed to read types", e);
             return Collections.emptyList();
@@ -202,11 +277,12 @@ public class FricasSpadLibrary implements SpadLibrary, Disposable {
 
     @Override
     public void dispose() {
+        axiomInterfaceContainer.dispose();
     }
 
     public static class AldorExecutor {
         private final FoamContext context;
-        private Lock lock = new ReentrantLock();
+        private final Lock lock = new ReentrantLock();
 
         public AldorExecutor() {
             this.context = new FoamContext();
@@ -244,4 +320,59 @@ public class FricasSpadLibrary implements SpadLibrary, Disposable {
             return context.createLoadFn(className);
         }
     }
+
+    public static class FricasEnvironment {
+        private final VirtualFile daaseDirectory;
+        private final List<VirtualFile> nrLibs;
+        private final VirtualFile daaseSourceDirectory;
+        private final List<VirtualFile> nrlibSourceDirectories;
+
+        FricasEnvironment(VirtualFile daaseDirectory, VirtualFile daaseSourceDirectory, List<VirtualFile> nrLibs, List<VirtualFile> nrlibSourceDirectories) {
+            this.daaseDirectory = daaseDirectory;
+            this.nrLibs = new ArrayList<>(nrLibs);
+            this.daaseSourceDirectory = daaseSourceDirectory;
+            this.nrlibSourceDirectories = new ArrayList<>(nrlibSourceDirectories);
+        }
+
+        AxiomInterface create() {
+            List<SymbolDatabase> databases = new ArrayList<>();
+            if (daaseDirectory != null) {
+                databases.add(SymbolDatabase.daases(daaseDirectory.getPath()));
+            }
+            databases.addAll(nrLibs.stream().map(dir -> SymbolDatabaseHelper.nrlib(dir.getPath())).collect(Collectors.toList()));
+            if (databases.size() != 1) {
+                throw new RuntimeException("Invalid fricas library state - can only support one lib at the moment");
+            }
+            return AxiomInterface.create(databases.get(0));
+        }
+
+        public String name() {
+            return "FricasEnv: " + daaseDirectory + " " + nrLibs;
+        }
+
+        public GlobalSearchScope scope(Project project) {
+            List<GlobalSearchScope> lst = new ArrayList<>();
+            if (daaseSourceDirectory != null) {
+                lst.add(GlobalSearchScopesCore.directoriesScope(project, true, daaseSourceDirectory));
+            }
+            for (VirtualFile nrlibDir: nrlibSourceDirectories) {
+                lst.add(GlobalSearchScopesCore.directoriesScope(project, true, nrlibDir));
+            }
+            if (lst.isEmpty()) {
+                return GlobalSearchScope.EMPTY_SCOPE;
+            }
+            return GlobalSearchScope.union(lst.toArray(new GlobalSearchScope[lst.size()]));
+        }
+
+        public boolean containsFile(VirtualFile file) {
+            if (VfsUtilCore.isAncestor(daaseDirectory, file, true)) {
+                return true;
+            }
+            if (nrLibs.stream().anyMatch(lib -> VfsUtilCore.isAncestor(lib, file, true))) {
+                return true;
+            }
+            return false;
+        }
+    }
+
 }

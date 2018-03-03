@@ -2,11 +2,13 @@ package aldor.spad;
 
 import aldor.language.SpadLanguage;
 import aldor.sdk.FricasSdkType;
+import aldor.sdk.SdkTypes;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.ProjectJdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.roots.CompilerModuleExtension;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.ProjectRootManager;
@@ -28,7 +30,32 @@ public class SpadLibraryManager {
 
     @Nullable
     public SpadLibrary forModule(Module module) {
-        return forSdk(module.getProject(), ModuleRootManager.getInstance(module).getSdk());
+        if (module.getUserData(key) != null) {
+            return module.getUserData(key);
+        }
+
+        SpadLibrary lib = forModule0(module);
+        module.putUserData(key, lib);
+        return lib;
+    }
+
+    private SpadLibrary forModule0(Module module) {
+        ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
+        Sdk moduleSdk = rootManager.getSdk();
+        if (moduleSdk == null) {
+            return forProject(module.getProject());
+        }
+        if (SdkTypes.isLocalSdk(moduleSdk)) {
+            VirtualFile path = rootManager.getModuleExtension(CompilerModuleExtension.class).getCompilerOutputPath();
+            VirtualFile likelySourceDirectory = Optional.ofNullable((rootManager.getSourceRoots().length < 1) ? null : rootManager)
+                    .map(mgr -> mgr.getSourceRoots()[0])
+                    .flatMap(root -> Optional.ofNullable(root.findFileByRelativePath("algebra")))
+                    .orElse(null);
+            return forNRLibDirectory(module.getProject(), path.findFileByRelativePath("src/algebra"), likelySourceDirectory);
+        }
+        else {
+            return forSdk(module.getProject(), moduleSdk);
+        }
     }
 
     public static SpadLibraryManager instance() {
@@ -51,13 +78,18 @@ public class SpadLibraryManager {
     }
 
     @Nullable
-    public SpadLibrary forSdk(Project project, Sdk sdk) {
+    public SpadLibrary forSdk(Project project, @NotNull Sdk sdk) {
         if (sdk.getUserData(key) != null) {
             return sdk.getUserData(key);
         }
-        FricasSpadLibrary lib = new FricasSpadLibrary(project, sdk.getHomeDirectory());
+        SpadLibrary lib = new FricasSpadLibraryBuilder().project(project).daaseDirectory(sdk.getHomeDirectory().findFileByRelativePath("algebra")).createFricasSpadLibrary();
         sdk.putUserData(key, lib);
         return lib;
+    }
+
+    @Nullable
+    public SpadLibrary forNRLibDirectory(@NotNull Project project, @NotNull VirtualFile directory, @Nullable VirtualFile sourceDirectory) {
+        return new FricasSpadLibraryBuilder().project(project).nrlibDirectory(directory, sourceDirectory).createFricasSpadLibrary();
     }
 
 
@@ -68,7 +100,10 @@ public class SpadLibraryManager {
             return null;
         }
         if (module != null) {
-            return forModule(module);
+            SpadLibrary library = forModule(module);
+            if (library != null) {
+                return library;
+            }
         }
 
         DirectoryInfo info = DirectoryIndex.getInstance(psiElement.getProject()).getInfoForFile(psiElement.getContainingFile().getVirtualFile());

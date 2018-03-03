@@ -4,8 +4,6 @@ import aldor.spad.SpadLibrary;
 import aldor.spad.SpadLibraryManager;
 import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxPrinter;
-import aldor.syntax.SyntaxPsiParser;
-import aldor.syntax.SyntaxUtils;
 import com.google.common.collect.Sets;
 import com.intellij.ide.hierarchy.HierarchyNodeDescriptor;
 import com.intellij.ide.hierarchy.HierarchyTreeStructure;
@@ -20,29 +18,18 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static aldor.syntax.SyntaxPsiParser.SurroundType.Leading;
 import static aldor.syntax.SyntaxUtils.psiElementFromSyntax;
 
 public final class AldorParentCategoryHierarchyTreeStructure extends HierarchyTreeStructure {
+    private static final Set<Class<?>> leafElements = Sets.newHashSet(AldorHierarchyOperationDescriptor.class, ErrorNodeDescriptor.class);
     private static final Object[] EMPTY_ARRAY = new Object[0];
     private final SmartPsiElementPointer<PsiElement> smartPointer;
 
-    private AldorParentCategoryHierarchyTreeStructure(Project project, @NotNull Syntax syntax) {
+    public AldorParentCategoryHierarchyTreeStructure(Project project, @NotNull Syntax syntax) {
         super(project, createBaseNodeDescriptor(project, syntax));
         this.smartPointer = SmartPointerManager.getInstance(project).createSmartPsiElementPointer(psiElementFromSyntax(syntax));
     }
 
-    public static HierarchyTreeStructure createRootTreeStructure(Project project, @NotNull PsiElement element) {
-        Syntax syntax = SyntaxPsiParser.surroundingApplication(element, Leading);
-        if (syntax == null) {
-            return new NullHierarchyTreeStructure(element, "Invalid element - " + element);
-        }
-        syntax = SyntaxUtils.typeName(syntax);
-        if (psiElementFromSyntax(syntax) == null) {
-            return new NullHierarchyTreeStructure(element, "Failed to find syntax form for " + element.getText());
-        }
-        return new AldorParentCategoryHierarchyTreeStructure(project, syntax);
-    }
 
     private static HierarchyNodeDescriptor createBaseNodeDescriptor(Project project, @NotNull Syntax syntax) {
         return new AldorHierarchyNodeDescriptor(project,  null, psiElementFromSyntax(syntax), syntax, true);
@@ -64,8 +51,6 @@ public final class AldorParentCategoryHierarchyTreeStructure extends HierarchyTr
     private Object createOperationNodeDescriptorMaybe(@NotNull AldorHierarchyNodeDescriptor parent, SpadLibrary.Operation operation) {
         return new AldorHierarchyOperationDescriptor(this.myProject, parent, operation);
     }
-
-    private Set<Class<?>> leafElements = Sets.newHashSet(AldorHierarchyOperationDescriptor.class, ErrorNodeDescriptor.class);
 
     @Override
     public boolean isAlwaysLeaf(Object element) {

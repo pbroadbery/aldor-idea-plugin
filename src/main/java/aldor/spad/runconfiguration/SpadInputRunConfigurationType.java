@@ -1,7 +1,7 @@
 package aldor.spad.runconfiguration;
 
 import aldor.sdk.FricasSdkType;
-import aldor.sdk.FricasSdkTypes;
+import aldor.sdk.SdkTypes;
 import aldor.ui.AldorIcons;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
@@ -205,7 +205,7 @@ public class SpadInputRunConfigurationType extends ConfigurationTypeBase {
             if (sdk.getHomePath() == null) {
                 return new GeneralCommandLine().withExePath("missing-sdk-home-path");
             }
-            String execPath = FricasSdkTypes.axiomSysPath(configuration.effectiveSdk());
+            String execPath = SdkTypes.axiomSysPath(configuration.effectiveSdk());
             if (execPath == null) {
                 return new GeneralCommandLine().withExePath("error");
             }
@@ -223,7 +223,7 @@ public class SpadInputRunConfigurationType extends ConfigurationTypeBase {
 
         @Nullable
         private String findExecutablePath() {
-            return FricasSdkTypes.axiomSysPath(configuration.effectiveSdk());
+            return SdkTypes.axiomSysPath(configuration.effectiveSdk());
         }
     }
 

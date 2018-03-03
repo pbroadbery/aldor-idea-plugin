@@ -1,5 +1,5 @@
 plugins {
-    id 'org.jetbrains.intellij' version "0.2.5"
+    id 'org.jetbrains.intellij' version "0.2.7"
     id "de.undercouch.download" version "3.2.0"
 }
 
@@ -7,7 +7,7 @@ plugins {
 allprojects {
     apply plugin: 'java'
     group = 'org.aldor.idea'
-    version = '1.0'
+    version = '1.1'
 
     sourceSets {
         main.java.srcDirs = ['src/main/java', 'src/gen/jflex', 'src/gen/grammar']
@@ -22,7 +22,7 @@ allprojects {
 
         plugins = []
 
-        //updateSinceUntilBuild = false// Was in haskell, but..
+        updateSinceUntilBuild = false// Was in haskell, but..
 
         sandboxDirectory = project.rootDir.canonicalPath + "/.sandbox"
     }

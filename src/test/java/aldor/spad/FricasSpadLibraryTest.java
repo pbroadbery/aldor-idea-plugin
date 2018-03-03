@@ -13,6 +13,7 @@ import aldor.test_util.DirectoryPresentRule;
 import aldor.test_util.JUnits;
 import aldor.test_util.LightPlatformJUnit4TestRule;
 import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.testFramework.fixtures.CodeInsightTestFixture;
@@ -45,8 +46,10 @@ public class FricasSpadLibraryTest {
 
     @Test
     public void testParents0() {
-        FricasSpadLibrary lib = new FricasSpadLibrary(testFixture.getProject(),
-                                                        ProjectRootManager.getInstance(testFixture.getProject()).getProjectSdk().getHomeDirectory());
+        VirtualFile homeDirectory = ProjectRootManager.getInstance(testFixture.getProject()).getProjectSdk().getHomeDirectory();
+        FricasSpadLibrary lib = new FricasSpadLibraryBuilder().project(testFixture.getProject())
+                .daaseDirectory(homeDirectory.findFileByRelativePath("algebra"))
+                .createFricasSpadLibrary();
         Syntax syntax = Id.createMissingId(AldorTokenTypes.TK_Id, "Integer");
 
         List<Syntax> pp = lib.parentCategories(syntax);
@@ -60,8 +63,10 @@ public class FricasSpadLibraryTest {
     @Test
     public void testOperations() {
         JUnits.setLogToInfo();
-        FricasSpadLibrary lib = new FricasSpadLibrary(testFixture.getProject(),
-                ProjectRootManager.getInstance(testFixture.getProject()).getProjectSdk().getHomeDirectory());
+        VirtualFile homeDirectory = ProjectRootManager.getInstance(testFixture.getProject()).getProjectSdk().getHomeDirectory();
+        FricasSpadLibrary lib = new FricasSpadLibraryBuilder().project(testFixture.getProject())
+                .daaseDirectory(homeDirectory.findFileByRelativePath("algebra"))
+                .createFricasSpadLibrary();
 
         Collection<AldorDefine> ll = AldorDefineTopLevelIndex.instance.get("Group", getProject(), GlobalSearchScope.allScope(getProject()));
 
@@ -87,8 +92,11 @@ public class FricasSpadLibraryTest {
     @Test
     public void testCoercibleToOperations() {
         JUnits.setLogToInfo();
-        FricasSpadLibrary lib = new FricasSpadLibrary(testFixture.getProject(),
-                ProjectRootManager.getInstance(testFixture.getProject()).getProjectSdk().getHomeDirectory());
+        VirtualFile homeDirectory = ProjectRootManager.getInstance(testFixture.getProject()).getProjectSdk().getHomeDirectory();
+        FricasSpadLibrary lib = new FricasSpadLibraryBuilder()
+                .project(testFixture.getProject())
+                .daaseDirectory(homeDirectory.findFileByRelativePath("algebra"))
+                .createFricasSpadLibrary();
 
         Syntax syntax = ParserFunctions.parseToSyntax(testFixture.getProject(), "CoercibleTo OutputForm");
 
@@ -106,8 +114,11 @@ public class FricasSpadLibraryTest {
     @Test
     public void testListAggregrateRec() {
         JUnits.setLogToInfo();
-        FricasSpadLibrary lib = new FricasSpadLibrary(testFixture.getProject(),
-                ProjectRootManager.getInstance(testFixture.getProject()).getProjectSdk().getHomeDirectory());
+        VirtualFile homeDirectory = ProjectRootManager.getInstance(testFixture.getProject()).getProjectSdk().getHomeDirectory();
+        FricasSpadLibrary lib = new FricasSpadLibraryBuilder()
+                .project(testFixture.getProject())
+                .daaseDirectory(homeDirectory.findFileByRelativePath("algebra"))
+                .createFricasSpadLibrary();
 
         Syntax syntax = ParserFunctions.parseToSyntax(testFixture.getProject(), "ListAggregate X");
 

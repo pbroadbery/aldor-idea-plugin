@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.Icon;
 import java.awt.Font;
 
-public class AldorHierarchyNodeDescriptor extends HierarchyNodeDescriptor {
+public class AldorHierarchyNodeDescriptor extends HierarchyNodeDescriptor implements ComparatorPriority {
     private static final Logger LOG = Logger.getInstance(AldorHierarchyNodeDescriptor.class);
     private final Syntax syntax;
 
@@ -67,4 +67,8 @@ public class AldorHierarchyNodeDescriptor extends HierarchyNodeDescriptor {
         return changes;
     }
 
+    @Override
+    public int priority() {
+        return 10;
+    }
 }

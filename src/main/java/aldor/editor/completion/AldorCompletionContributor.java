@@ -28,6 +28,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -64,7 +65,7 @@ public class AldorCompletionContributor extends CompletionContributor {
     public List<LookupElement> allTypes(CompletionParameters parameters) {
         PsiElement elt = parameters.getPosition();
         SpadLibrary spadLibrary = SpadLibraryManager.instance().spadLibraryForElement(elt);
-        return allTypes(spadLibrary);
+        return (spadLibrary == null) ? Collections.emptyList() : allTypes(spadLibrary);
     }
 
     @VisibleForTesting

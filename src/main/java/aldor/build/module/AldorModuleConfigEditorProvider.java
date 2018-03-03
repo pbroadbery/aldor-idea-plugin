@@ -47,7 +47,7 @@ public class AldorModuleConfigEditorProvider implements ModuleConfigurationEdito
 
         public OutputDirectoryEditor(ModuleConfigurationState state) {
             super(state);
-            outputEditor = new AldorBuildElementsEditor(state);
+            outputEditor = new AldorBuildPathEditor(state);
         }
 
         @Override
@@ -73,13 +73,35 @@ public class AldorModuleConfigEditorProvider implements ModuleConfigurationEdito
         }
     }
 
-    private static class AldorBuildElementsEditor extends BuildElementsEditor {
+    private static class AldorBuildPathEditor extends BuildElementsEditor {
 
-        protected AldorBuildElementsEditor(ModuleConfigurationState state) {
+        protected AldorBuildPathEditor(ModuleConfigurationState state) {
             super(state);
         }
     }
 
+    /* Giving up and using the output editor instead.
+     * Would be nice to have a custom editor
+
+    private static class LocalBuildElementsEditor extends ModuleElementsEditor {
+ AldorBuildLocationForm locationForm = new AldorBuildLocationForm();
+        protected LocalBuildElementsEditor(@NotNull ModuleConfigurationState state) {
+            super(state);
+        }
+
+        @Override
+        protected JComponent createComponentImpl() {
+            return locationForm;
+        }
+
+        @Nls
+        @Override
+        public String getDisplayName() {
+            return "Local Build Location";
+        }
+
+    }
+    */
     /**
      * Classpath editor tweaked to hide class path boxes (keeps the module setting)
      */

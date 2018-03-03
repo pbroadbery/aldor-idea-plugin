@@ -16,7 +16,7 @@ import java.awt.Font;
 
 import static aldor.spad.SpadLibrary.Operation;
 
-public class AldorHierarchyOperationDescriptor  extends HierarchyNodeDescriptor {
+public class AldorHierarchyOperationDescriptor  extends HierarchyNodeDescriptor implements ComparatorPriority {
     private final Operation operation;
 
     protected AldorHierarchyOperationDescriptor(@NotNull Project project, HierarchyNodeDescriptor parentDescriptor, Operation operation) {
@@ -60,5 +60,10 @@ public class AldorHierarchyOperationDescriptor  extends HierarchyNodeDescriptor 
         }
 
         return changes;
+    }
+
+    @Override
+    public int priority() {
+        return 1;
     }
 }

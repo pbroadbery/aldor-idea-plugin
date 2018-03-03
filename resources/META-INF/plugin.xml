@@ -1,21 +1,21 @@
 <!--suppress XmlHighlighting -->
-<idea-plugin version="2">
+<idea-plugin>
     <id>pab.aldor</id>
     <name>Aldor Plugin</name>
-    <version>1.0</version>
-    <vendor email="nobody@example.com" url="http://www.notreally.org">Peter Broadbery</vendor>
+    <version>1.1</version>
+    <vendor email="p.broadbery@gmail.com" url="http://www.notreally.org">Peter Broadbery</vendor>
 
     <description><![CDATA[
       Aldor/Spad plugin.
     ]]></description>
 
     <change-notes><![CDATA[
-      Version the first
+      Version the second
     ]]>
     </change-notes>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-    <idea-version since-build="141.0"/>
+    <idea-version since-build="173"/>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
@@ -84,6 +84,7 @@
 
         <lang.psiStructureViewFactory language="Spad" implementationClass="aldor.structure.AldorPsiStructureViewFactory"/>
         <typeHierarchyProvider implementationClass="aldor.hierarchy.AldorTypeHierarchyProvider" language="Spad"/>
+        <methodHierarchyProvider implementationClass="aldor.hierarchy.AldorMissingHierarchyProvider" language="Spad"/>
 
         <configurationType implementation="aldor.spad.runconfiguration.SpadInputRunConfigurationType" />
         <runConfigurationProducer implementation = "aldor.spad.runconfiguration.SpadInputRunConfigurationProducer"/>
@@ -108,6 +109,27 @@
                 text="Create New SPAD File" description="Creates a new SPAD file">
             <add-to-group group-id="NewGroup" anchor="after" relative-to-action="NewFile"/>
         </action>
+
+        <action id="AldorTypeHierarchy.BaseOnThisType" text="Base on this Type"
+                class="aldor.hierarchy.AldorTypeHierarchyBrowser$AldorBaseOnThisTypeAction"
+                use-shortcut-of="TypeHierarchy"/>
+        <group id="AldorTypeHierarchyPopupMenu">
+            <reference ref="AldorTypeHierarchy.BaseOnThisType"/>
+            <reference ref="TypeHierarchy.Class"/>
+            <reference ref="TypeHierarchy.Subtypes"/>
+            <reference ref="TypeHierarchy.Supertypes"/>
+            <separator/>
+            <reference ref="EditSource"/>
+            <separator/>
+            <reference ref="FindUsages"/>
+            <reference ref="RefactoringMenu"/>
+            <separator/>
+            <reference ref="AddToFavorites"/>
+            <separator/>
+            <reference ref="VersionControlsGroup"/>
+            <separator/>
+        </group>
+
     </actions>
 
     <application-components>

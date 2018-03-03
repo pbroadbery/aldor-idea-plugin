@@ -157,6 +157,44 @@ public class AldorTypeHierarchyBrowserTest {
     }
 
 
+
+    @Test
+    public void testFlatEltAgg() {
+
+        HierarchyProvider provider = new AldorTypeHierarchyProvider();
+        Collection<AldorDefine> items = AldorDefineTopLevelIndex.instance.get("EltableAggregate", codeTestFixture.getProject(), GlobalSearchScope.allScope(codeTestFixture.getProject()));
+
+        AldorIdentifier theId = items.stream().findFirst().flatMap(AldorDefine::defineIdentifier).orElse(null);
+
+        DataContext context = SimpleDataContext.getSimpleContext(CommonDataKeys.PSI_ELEMENT.getName(), theId,
+                SimpleDataContext.getProjectContext(codeTestFixture.getProject()));
+
+        PsiElement target = provider.getTarget(context);
+        AldorTypeHierarchyBrowser browser = (AldorTypeHierarchyBrowser) provider.createHierarchyBrowser(target);
+
+        Assert.assertNotNull(target);
+
+        provider.browserActivated(browser);
+
+        System.out.println("Browser: " + browser);
+        HierarchyTreeStructure hierarchy = browser.createHierarchyTreeStructure(AldorTypeHierarchyBrowser.FLAT_HIERARCHY_TYPE, target);
+        Assert.assertNotNull(hierarchy);
+
+        AldorHierarchyNodeDescriptor rootDescriptor = (AldorHierarchyNodeDescriptor) hierarchy.getRootElement();
+        rootDescriptor.update();
+
+        System.out.println("Root: " + rootDescriptor);
+
+        Object[] childElements = hierarchy.getChildElements(hierarchy.getRootElement());
+        System.out.println("Children: " + Arrays.stream(childElements).peek(child -> ((NodeDescriptor<?>) child).update()).collect(Collectors.toList()));
+
+        Assert.assertEquals(5, childElements.length);
+
+        browser.dispose();
+        ((Disposable) ProgressManager.getInstance()).dispose();
+    }
+
+
     private static LightProjectDescriptor getProjectDescriptor(ExecutablePresentRule fricasExecutableRule) {
         return SdkProjectDescriptors.fricasSdkProjectDescriptor(fricasExecutableRule.prefix());
 

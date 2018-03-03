@@ -33,10 +33,11 @@ public class AldorTypeHierarchyProvider implements HierarchyProvider {
 
         if (editor != null) {
             final PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
-            if (file == null) return null;
+            if (file == null) {
+                return null;
+            }
 
-            AldorIdentifier element = PsiTreeUtil.findElementOfClassAtOffset(file, editor.getCaretModel().getOffset(), AldorIdentifier.class, false);
-            return element;
+            return PsiTreeUtil.findElementOfClassAtOffset(file, editor.getCaretModel().getOffset(), AldorIdentifier.class, false);
         }
 
         PsiElement element = CommonDataKeys.PSI_ELEMENT.getData(dataContext);

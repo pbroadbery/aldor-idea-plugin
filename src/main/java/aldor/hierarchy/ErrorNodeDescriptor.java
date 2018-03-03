@@ -4,11 +4,13 @@ import com.intellij.ide.hierarchy.HierarchyNodeDescriptor;
 import com.intellij.openapi.roots.ui.util.CompositeAppearance;
 import org.jetbrains.annotations.NotNull;
 
-public class ErrorNodeDescriptor extends HierarchyNodeDescriptor {
+import static aldor.util.Assertions.isNotNull;
+
+public class ErrorNodeDescriptor extends HierarchyNodeDescriptor implements ComparatorPriority {
     private final String text;
 
     public ErrorNodeDescriptor(@NotNull AldorHierarchyNodeDescriptor parent, String s) {
-        super(parent.getProject(), parent, parent.getPsiElement(), false);
+        super(isNotNull(parent.getProject()), parent, isNotNull(parent.getPsiElement()), false);
         this.text = s;
     }
 
@@ -23,5 +25,10 @@ public class ErrorNodeDescriptor extends HierarchyNodeDescriptor {
             changes = true;
         }
         return changes;
+    }
+
+    @Override
+    public int priority() {
+        return 1;
     }
 }

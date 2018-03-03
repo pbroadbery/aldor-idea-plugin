@@ -1,54 +1,39 @@
 package aldor.spad;
 
 import aldor.parser.ParserFunctions;
-import aldor.parser.SwingThreadTestRule;
 import aldor.psi.AldorDefine;
 import aldor.psi.index.AldorDefineTopLevelIndex;
 import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxPrinter;
 import aldor.syntax.components.Apply;
-import aldor.test_util.DirectoryPresentRule;
-import aldor.test_util.LightPlatformJUnit4TestRule;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.testFramework.fixtures.CodeInsightTestFixture;
 import org.junit.Assert;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.RuleChain;
-import org.junit.rules.TestRule;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-import static aldor.test_util.LightPlatformJUnit4TestRule.createFixture;
-import static aldor.test_util.SdkProjectDescriptors.fricasSdkProjectDescriptor;
 import static com.intellij.testFramework.LightPlatformTestCase.getProject;
 import static org.junit.Assert.assertNotNull;
 
-public class SpadLibraryManagerTest {
-    @Rule
-    public final DirectoryPresentRule directory = new DirectoryPresentRule("/home/pab/Work/fricas/opt/lib/fricas/target/x86_64-unknown-linux");
+public abstract class SpadLibraryManagerTest {
 
-    private final CodeInsightTestFixture testFixture = createFixture(fricasSdkProjectDescriptor(directory.path()));
+    public abstract String basePath();
+    public abstract CodeInsightTestFixture testFixture();
 
-    @Rule
-    public final TestRule platformTestRule =
-            RuleChain.emptyRuleChain()
-                    .around(directory)
-                    .around(new LightPlatformJUnit4TestRule(testFixture, ""))
-                    .around(new SwingThreadTestRule());
 
     @Test
-    public void test() {
+    public void xtestListInteger() {
         Collection<AldorDefine> ll = AldorDefineTopLevelIndex.instance.get("List", getProject(), GlobalSearchScope.allScope(getProject()));
 
         PsiFile file = ll.iterator().next().getContainingFile();
 
         SpadLibrary lib = SpadLibraryManager.instance().spadLibraryForElement(file);
         assertNotNull(lib);
-        Syntax syntax = ParserFunctions.parseToSyntax(testFixture.getProject(), "List Integer");
+        Syntax syntax = ParserFunctions.parseToSyntax(testFixture().getProject(), "List Integer");
         assertNotNull(syntax);
         List<Syntax> pp = lib.parentCategories(syntax);
         for (Syntax parentSyntax: pp) {
@@ -72,15 +57,16 @@ public class SpadLibraryManagerTest {
 
 
     }
+
     @Test
-    public void testRing() {
+    public void xtestRing() {
         Collection<AldorDefine> ll = AldorDefineTopLevelIndex.instance.get("Ring", getProject(), GlobalSearchScope.allScope(getProject()));
 
         PsiFile file = ll.iterator().next().getContainingFile();
 
         SpadLibrary lib = SpadLibraryManager.instance().spadLibraryForElement(file);
         assertNotNull(lib);
-        Syntax syntax = ParserFunctions.parseToSyntax(testFixture.getProject(), "Ring");
+        Syntax syntax = ParserFunctions.parseToSyntax(testFixture().getProject(), "Ring");
         assertNotNull(syntax);
         List<Syntax> pp = lib.parentCategories(syntax);
         for (Syntax parentSyntax: pp) {

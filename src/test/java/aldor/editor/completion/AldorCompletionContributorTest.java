@@ -1,6 +1,6 @@
 package aldor.editor.completion;
 
-import aldor.spad.FricasSpadLibrary;
+import aldor.spad.FricasSpadLibraryBuilder;
 import aldor.spad.SpadLibrary;
 import aldor.test_util.DirectoryPresentRule;
 import aldor.test_util.SdkProjectDescriptors;
@@ -25,13 +25,15 @@ public class AldorCompletionContributorTest extends LightPlatformCodeInsightFixt
     }
 
     public void testLoadAllBenchmark() {
-        SpadLibrary lib = new FricasSpadLibrary(getProject(),
-                ProjectRootManager.getInstance(getProject()).getProjectSdk().getHomeDirectory());
+        SpadLibrary lib = new FricasSpadLibraryBuilder()
+                .project(getProject())
+                .daaseDirectory(ProjectRootManager.getInstance(getProject()).getProjectSdk().getHomeDirectory().findFileByRelativePath("algebra"))
+                .createFricasSpadLibrary();
         for (int i=0; i<1; i++) {
             Timer timer = new Timer("loadAllTypes-" + i);
             try (Timer.TimerRun run = timer.run()) {
                 AldorCompletionContributor.allTypes(lib);
-            } catch (Exception e) {
+            } catch (Exception ignore) {
                 Assert.fail();
             }
             System.out.println("Read files: "+ timer);
@@ -39,8 +41,9 @@ public class AldorCompletionContributorTest extends LightPlatformCodeInsightFixt
     }
 
     public void testLoadAll() {
-        SpadLibrary lib = new FricasSpadLibrary(getProject(),
-                ProjectRootManager.getInstance(getProject()).getProjectSdk().getHomeDirectory());
+        SpadLibrary lib = new FricasSpadLibraryBuilder().project(getProject())
+                .daaseDirectory(ProjectRootManager.getInstance(getProject()).getProjectSdk().getHomeDirectory().findFileByRelativePath("algebra"))
+                .createFricasSpadLibrary();
         List<LookupElement> allTypes = AldorCompletionContributor.allTypes(lib);
         System.out.println("All types: " + allTypes.size());
         Assert.assertFalse(allTypes.isEmpty());

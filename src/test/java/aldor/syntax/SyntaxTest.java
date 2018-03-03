@@ -132,7 +132,7 @@ public class SyntaxTest extends LightPlatformCodeInsightFixtureTestCase {
             PsiElement psi = parseText("foo(x: I == 1)");
             Syntax syntax = parse(psi);
             Assert.assertNotNull(syntax);
-            Assert.assertEquals("(Apply foo (Define (Decl x I) Literal))", syntax.toString());
+            Assert.assertEquals("(Apply foo (Define (Decl x I) 1))", syntax.toString());
         }
 
     /* testDefaultArguments2() */
@@ -152,7 +152,7 @@ public class SyntaxTest extends LightPlatformCodeInsightFixtureTestCase {
             PsiElement psi = parseText("foo(a: S, x: I == 5)");
             Syntax syntax = parse(psi);
             Assert.assertNotNull(syntax);
-            Assert.assertEquals("(Apply foo (Decl a S) (Define (Decl x I) Literal))", syntax.toString());
+            Assert.assertEquals("(Apply foo (Decl a S) (Define (Decl x I) 5))", syntax.toString());
         }
 
     /* testSpadDeclare() */

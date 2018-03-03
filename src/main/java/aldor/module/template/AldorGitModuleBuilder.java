@@ -3,6 +3,7 @@ package aldor.module.template;
 import aldor.build.module.AldorModuleBuilder;
 import aldor.build.module.AldorModuleType;
 import aldor.sdk.AldorLocalSdkType;
+import aldor.sdk.FricasLocalSdkType;
 import com.intellij.ide.util.projectWizard.WizardInputField;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.projectRoots.SdkTypeId;
@@ -16,19 +17,20 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 final class AldorGitModuleBuilder extends AldorModuleBuilder {
     private static final String FLD_SOURCEDIR = "aldor";
     private static final String FLD_USEEXISTING = "useExisting";
     private static final String FLD_BUILDDIR = "build";
-    private final String name;
     private final Map<String, WizardInputField<?>> additionalFieldsByName;
     private final List<WizardInputField<?>> additionalFields;
+    private final GitModuleDetail detail;
 
-    AldorGitModuleBuilder(String name) {
+    AldorGitModuleBuilder(GitModuleType type) {
         super(AldorModuleType.instance());
-        this.name = name;
+        this.detail = type.fn.apply(this);
         additionalFields = createAdditionalFields();
         this.additionalFieldsByName = additionalFields.stream().collect(Collectors.toMap(WizardInputField::getId, f -> f));
     }
@@ -68,47 +70,124 @@ final class AldorGitModuleBuilder extends AldorModuleBuilder {
 
     @Override
     public String getPresentableName() {
-        return name + " Git Module";
+        return detail.name() + " Git Module";
     }
 
     @Override
     public String getDescription() {
-        return name + " Module cloned from git repository";
+        return detail.name() + " Module cloned from git repository";
     }
 
-    @Override
-    public boolean isSuitableSdkType(SdkTypeId sdkType) {
-        return (sdkType instanceof AldorLocalSdkType);
-    }
 
     @Override
     public void setupRootModel(final ModifiableRootModel modifiableRootModel) throws ConfigurationException {
         super.setupRootModel(modifiableRootModel);
-        String contentEntryPath = getContentEntryPath();
-        String sourceDirectory = additionalFieldsByName.get(FLD_SOURCEDIR).getValue();
+        detail.setupRootModel(modifiableRootModel);
+    }
 
-        if (StringUtil.isEmpty(contentEntryPath)) {
-            return;
+    private interface GitModuleDetail {
+        boolean isSuitableSdkType(SdkTypeId sdkType);
+
+        String name();
+        void setupRootModel(ModifiableRootModel model) throws ConfigurationException;
+    }
+
+    enum GitModuleType {
+        Aldor((b -> b.new AldorGitModuleDetail())),
+        Fricas(b-> b.new FricasGitModuleDetail());
+
+        Function<AldorGitModuleBuilder, GitModuleDetail> fn;
+
+        GitModuleType(Function<AldorGitModuleBuilder, GitModuleDetail> fn) {
+            this.fn = fn;
+        }
+    }
+
+
+    private class AldorGitModuleDetail implements GitModuleDetail {
+
+        @Override
+        public boolean isSuitableSdkType(SdkTypeId sdkType) {
+            return (sdkType instanceof AldorLocalSdkType);
         }
 
-        ContentEntry entry = modifiableRootModel.getContentEntries()[0];
-        if (entry.getFile() == null) {
-            return;
+        @Override
+        public String name() {
+            return "Aldor";
         }
 
-        VirtualFile gitDirectory = entry.getFile().findFileByRelativePath(sourceDirectory + "/.git");
-        if (gitDirectory == null) {
-            File file = new File(entry.getFile().getPath() + "/" + sourceDirectory);
-            throw new ConfigurationException("Missing git repository - expecting repository in " + file);
-        }
+        @Override
+        public void setupRootModel(final ModifiableRootModel modifiableRootModel) throws ConfigurationException {
+            String contentEntryPath = getContentEntryPath();
+            String sourceDirectory = additionalFieldsByName.get(FLD_SOURCEDIR).getValue();
 
-        String[] paths = { "aldor/lib/aldor", "aldor/lib/algebra" };
-        for (String path: paths) {
-            VirtualFile file = entry.getFile().findFileByRelativePath(sourceDirectory + "/" + path);
-            if (file != null) {
-                entry.addSourceFolder(file, false);
+            if (StringUtil.isEmpty(contentEntryPath)) {
+                return;
+            }
+
+            ContentEntry entry = modifiableRootModel.getContentEntries()[0];
+            if (entry.getFile() == null) {
+                return;
+            }
+
+            VirtualFile gitDirectory = entry.getFile().findFileByRelativePath(sourceDirectory + "/.git");
+            if (gitDirectory == null) {
+                File file = new File(entry.getFile().getPath() + "/" + sourceDirectory);
+                throw new ConfigurationException("Missing git repository - expecting repository in " + file);
+            }
+
+            String[] paths = { "aldor/lib/aldor", "aldor/lib/algebra" };
+            for (String path: paths) {
+                VirtualFile file = entry.getFile().findFileByRelativePath(sourceDirectory + "/" + path);
+                if (file != null) {
+                    entry.addSourceFolder(file, false);
+                }
             }
         }
+
+    }
+
+    private class FricasGitModuleDetail implements GitModuleDetail {
+
+        @Override
+        public boolean isSuitableSdkType(SdkTypeId sdkType) {
+            return (sdkType instanceof FricasLocalSdkType);
+        }
+
+        @Override
+        public String name() {
+            return "Fricas";
+        }
+
+        @Override
+        public void setupRootModel(final ModifiableRootModel modifiableRootModel) throws ConfigurationException {
+            String contentEntryPath = getContentEntryPath();
+            String sourceDirectory = additionalFieldsByName.get(FLD_SOURCEDIR).getValue();
+
+            if (StringUtil.isEmpty(contentEntryPath)) {
+                return;
+            }
+
+            ContentEntry entry = modifiableRootModel.getContentEntries()[0];
+            if (entry.getFile() == null) {
+                return;
+            }
+
+            VirtualFile gitDirectory = entry.getFile().findFileByRelativePath(sourceDirectory + "/.git");
+            if (gitDirectory == null) {
+                File file = new File(entry.getFile().getPath() + "/" + sourceDirectory);
+                throw new ConfigurationException("Missing git repository - expecting repository in " + file);
+            }
+
+            String[] paths = { "fricas/src/algebra" };
+            for (String path: paths) {
+                VirtualFile file = entry.getFile().findFileByRelativePath(sourceDirectory + "/" + path);
+                if (file != null) {
+                    entry.addSourceFolder(file, false);
+                }
+            }
+        }
+
     }
 
 }
