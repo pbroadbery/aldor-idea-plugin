@@ -217,9 +217,15 @@ public class FricasSpadLibrary implements SpadLibrary, Disposable {
     @NotNull
     private Predicate<AldorDeclare> filterBySignature(NamedExport namedExport) {
         AxiomInterface iface = axiomInterfaceContainer.value();
+        Syntax librarySyntax = toSyntax(scope, TypePackage.asAbSyn(iface.env(), namedExport.original()));
         return decl -> {
-            Syntax librarySyntax = toSyntax(scope, TypePackage.asAbSyn(iface.env(), namedExport.original()));
-            Syntax sourceSyntax = decl.getGreenStub().syntax().as(DeclareNode.class).rhs();
+            Optional<AldorDeclareStub> stub = Optional.ofNullable(decl.getGreenStub());
+            if (!stub.isPresent()) {
+                stub = Optional.ofNullable(decl.getStub());
+            }
+            Syntax sourceSyntax = stub
+                    .map(s -> s.syntax().as(DeclareNode.class).rhs())
+                    .orElse(SyntaxPsiParser.parse(decl.rhs()));
 
             LOG.info("Lib syntax: " + librarySyntax + " Source: " + sourceSyntax);
             return SyntaxUtils.match(sourceSyntax, librarySyntax);

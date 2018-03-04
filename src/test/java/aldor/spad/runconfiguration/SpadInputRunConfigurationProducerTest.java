@@ -44,7 +44,7 @@ public class SpadInputRunConfigurationProducerTest extends LightPlatformCodeInsi
         VirtualFile file = createFile(getSourceRoot(), "foo.input", "23\n)quit\n");
 
         PsiFile whole = PsiManager.getInstance(getProject()).findFile(file);
-
+        Assert.assertNotNull(whole);
         MyMapDataContext dataContext = new MyMapDataContext();
         dataContext.put("module", super.myModule);
         dataContext.put("Location", new PsiLocation<>(whole));
@@ -63,7 +63,7 @@ public class SpadInputRunConfigurationProducerTest extends LightPlatformCodeInsi
 
         Executor executor = DefaultRunExecutor.getRunExecutorInstance();
         ProgramRunner<?> runner = RunnerRegistry.getInstance().getRunner(DefaultRunExecutor.EXECUTOR_ID, runConfiguration);
-
+        Assert.assertNotNull(runner);
         ExecutionEnvironment executionEnvironment = new ExecutionEnvironment(executor, runner, runnerAndConfigurationSettings, getProject());
 
         RunContentDescriptor[] descriptorBox = new RunContentDescriptor[1];

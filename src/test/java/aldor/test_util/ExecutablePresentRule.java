@@ -41,7 +41,6 @@ public class ExecutablePresentRule implements TestRule {
     public File executable() {
         Optional<File> executable = findExecutable();
         Assume.assumeTrue(executable.isPresent());
-        assert executable.isPresent();
         return executable.get();
     }
 

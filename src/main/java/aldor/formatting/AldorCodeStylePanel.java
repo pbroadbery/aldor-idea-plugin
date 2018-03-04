@@ -25,9 +25,9 @@ public class AldorCodeStylePanel extends CodeStyleAbstractPanel {
 
     public static final String ALIGNMENT_SAMPLE = "THINK OF SOMETHING FUN TO WRITE HERE";
     private static final int RIGHT_MARGIN_DEFAULT = 80;
-    private JPanel myPreviewPanel = null;
-    private JPanel myPanel = null;
-    private JCheckBox useLigatures = null;
+    private JPanel myPreviewPanel;
+    private JPanel myPanel;
+    private JCheckBox useLigatures;
 
     public AldorCodeStylePanel(@NotNull CodeStyleSettings settings) {
         super(AldorLanguage.INSTANCE, null, settings);

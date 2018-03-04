@@ -32,7 +32,9 @@ public class AldorFlatHierarchyTreeStructure extends HierarchyTreeStructure {
     }
 
     private static HierarchyNodeDescriptor createBaseNodeDescriptor(Project project, @NotNull Syntax syntax) {
-        return new AldorHierarchyNodeDescriptor(project,  null, psiElementFromSyntax(syntax), syntax, true);
+        PsiElement element = psiElementFromSyntax(syntax);
+        assert element != null; // Let's hope so anyway, otherwise go grab the index & start over.
+        return new AldorHierarchyNodeDescriptor(project,  null, element, syntax, true);
     }
 
     @Override
