@@ -1,5 +1,6 @@
 /out
 /gen
+/lib
 *.ao
 *~
 .idea/workspace.xml

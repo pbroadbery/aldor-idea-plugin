@@ -42,18 +42,23 @@ import de.undercouch.gradle.tasks.download.Download
 
 tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
 tasks.withType(Test) { systemProperties['aldor.build.skip_ci'] = System.getProperty('aldor.build.skip_ci') }
-
+def libSource = "/home/pab/IdeaProjects/aldor-modules/types/index/jars"
+def libLocation = new File(libSource).exists() ? libSource : "extjars"
 
 def libFiles = ["aldor", "algebra", "foam", "foamj", "SpadType"]
 dependencies {
     compile project('jps-plugin')
-    compile files(
-            libFiles.collect({"lib/${it}.jar"}))
+    compile files(libFiles.collect({"lib/${it}.jar"}))
 }
 
 task copyLibraryFiles(type: Copy) {
-    from libFiles.collect({"/home/pab/IdeaProjects/aldor-modules/types/index/jars/${it}.jar"})
+    from libFiles.collect({"${libLocation}/${it}.jar"})
     into 'lib'
+}
+
+task updateExternalJars(type: Copy) {
+    from libFiles.collect({"${libLocation}/${it}.jar"})
+    into 'extjars'
     eachFile {
         if (it.relativePath.getFile(destinationDir).exists()) {
             it.exclude()
@@ -82,7 +87,7 @@ task downloadJFlexSkel(type: Download) {
 }
 
 task downloadJFlex(type: Download) {
-    src 'https://raw.githubusercontent.com/JetBrains/intellij-community/master/tools/lexer/jflex-1.7.0-SNAPSHOT.jar'
+    src 'https://bintray.com/jetbrains/intellij-third-party-dependencies/download_file?file_path=org%2Fjetbrains%2Fintellij%2Fdeps%2Fjflex%2Fjflex%2F1.7.0%2Fjflex-1.7.0-sources.jar'
     dest 'lib/jflex/jflex-1.7.0-SNAPSHOT.jar'
     overwrite false
 }
@@ -142,6 +147,7 @@ tasks.compileJava.dependsOn tasks.generateAldorParser
 tasks.compileJava.dependsOn tasks.generateExpressionParser
 tasks.compileJava.dependsOn tasks.generateLexer
 tasks.compileJava.dependsOn tasks.copyLibraryFiles
+tasks.compileJava.dependsOn tasks.updateExternalJars
 
 def parserTask(project, parserName, pkg) {
     def tt = tasks.create("generate${parserName}Parser", JavaExec) {
