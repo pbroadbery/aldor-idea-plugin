@@ -6,6 +6,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.JavaSdk;
+import com.intellij.openapi.projectRoots.ProjectJdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.CompilerModuleExtension;
 import com.intellij.openapi.roots.ContentEntry;
@@ -17,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 
 public class AldorRoundTripProjectDescriptor extends LightProjectDescriptor {
+    private Sdk sdk = null;
 
     @Override
     public void setUpProject(@NotNull Project project, @NotNull SetupHandler handler) throws Exception {
@@ -37,7 +39,22 @@ public class AldorRoundTripProjectDescriptor extends LightProjectDescriptor {
     // Not needed, except that the compile driver insists on it.
     @Override
     public Sdk getSdk() {
+        if (sdk == null) {
+            sdk = createSDK();
+            ProjectJdkTable.getInstance().addJdk(sdk);
+        }
+        return sdk;
+    }
+
+    private Sdk createSDK() {
         return JavaSdk.getInstance().createJdk("java", "/home/pab/Work/intellij/jdk1.8.0_101");
+    }
+
+    @NotNull
+    @Override
+    public Module createMainModule(@NotNull Project project) {
+        Module m = super.createMainModule(project);
+        return m;
     }
 
     @Override

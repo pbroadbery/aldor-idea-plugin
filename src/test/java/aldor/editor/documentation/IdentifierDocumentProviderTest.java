@@ -7,12 +7,14 @@ import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.Htmls;
 import aldor.test_util.LightPlatformJUnit4TestRule;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.EdtTestUtil;
 import com.intellij.testFramework.fixtures.CodeInsightTestFixture;
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -37,6 +39,13 @@ public class IdentifierDocumentProviderTest {
                     .around(aldorExecutableRule)
                     .around(new LightPlatformJUnit4TestRule(codeTestFixture, ""))
                     .around(annotationTestFixture.rule(codeTestFixture::getProject));
+
+    @After
+    public void doAfter() {
+        EdtTestUtil.runInEdtAndWait(JavaAwareProjectJdkTableImpl::removeInternalJdkInTests);
+
+    }
+
 
     @Test
     public void testExporterIdentifierDocumentation() throws ExecutionException, InterruptedException {

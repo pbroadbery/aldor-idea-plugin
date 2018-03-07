@@ -8,12 +8,15 @@ import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.JUnits;
 import aldor.test_util.LightPlatformJUnit4TestRule;
 import aldor.util.AnnotatedOptional;
+import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.testFramework.EdtTestUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.CodeInsightTestFixture;
 import junit.framework.AssertionFailedError;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -33,6 +36,12 @@ public class AnnotationFileTest {
     public void setUp() {
         JUnits.setLogToDebug();
     }
+
+    @After
+    public void doAfter() {
+        EdtTestUtil.runInEdtAndWait(JavaAwareProjectJdkTableImpl::removeInternalJdkInTests);
+    }
+
 
     @Rule
     public final TestRule platformTestRule =

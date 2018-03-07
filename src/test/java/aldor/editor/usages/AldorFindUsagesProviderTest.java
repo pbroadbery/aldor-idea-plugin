@@ -9,6 +9,7 @@ import com.intellij.find.findUsages.DefaultFindUsagesHandlerFactory;
 import com.intellij.find.findUsages.FindUsagesHandler;
 import com.intellij.find.findUsages.FindUsagesOptions;
 import com.intellij.find.findUsages.PsiElement2UsageTargetAdapter;
+import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -18,6 +19,7 @@ import com.intellij.testFramework.EdtTestUtil;
 import com.intellij.testFramework.fixtures.CodeInsightTestFixture;
 import com.intellij.usageView.UsageInfo;
 import org.jetbrains.annotations.NotNull;
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -41,6 +43,13 @@ public class AldorFindUsagesProviderTest {
                     .around(aldorExecutableRule)
                     .around(new LightPlatformJUnit4TestRule(codeTestFixture, ""))
                     .around(annotationTestFixture.rule(codeTestFixture::getProject));
+
+    @After
+    public void doAfter() {
+        EdtTestUtil.runInEdtAndWait(JavaAwareProjectJdkTableImpl::removeInternalJdkInTests);
+
+    }
+
 
     @Test
     public void testUsage() throws ExecutionException, InterruptedException {

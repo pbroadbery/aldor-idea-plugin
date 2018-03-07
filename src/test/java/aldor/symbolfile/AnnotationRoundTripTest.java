@@ -9,11 +9,13 @@ import aldor.test_util.JUnits;
 import com.intellij.codeInsight.documentation.DocumentationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.testFramework.EdtTestUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import org.jetbrains.annotations.NotNull;
@@ -35,6 +37,13 @@ public class AnnotationRoundTripTest extends LightPlatformCodeInsightFixtureTest
         super.setUp();
         JUnits.setLogToDebug();
     }
+
+    @Override
+    public void tearDown() throws Exception {
+        EdtTestUtil.runInEdtAndWait(JavaAwareProjectJdkTableImpl::removeInternalJdkInTests);
+        super.tearDown();
+    }
+
 
     @Override
     protected boolean shouldRunTest() {

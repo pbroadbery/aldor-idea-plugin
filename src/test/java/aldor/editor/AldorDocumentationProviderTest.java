@@ -10,6 +10,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -17,6 +18,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.testFramework.EdtTestUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import junit.framework.AssertionFailedError;
@@ -37,6 +39,13 @@ public class AldorDocumentationProviderTest extends LightPlatformCodeInsightFixt
     @Override
     protected boolean shouldRunTest() {
         return super.shouldRunTest() && aldorExecutableRule.shouldRunTest();
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        EdtTestUtil.runInEdtAndWait(() -> JavaAwareProjectJdkTableImpl.removeInternalJdkInTests());
+        super.tearDown();
+
     }
 
     @Override

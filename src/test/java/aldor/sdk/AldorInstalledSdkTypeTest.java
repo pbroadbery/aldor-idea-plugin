@@ -9,6 +9,7 @@ import com.intellij.openapi.projectRoots.impl.ProjectJdkImpl;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.fixtures.CodeInsightTestFixture;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -49,12 +50,14 @@ public class AldorInstalledSdkTypeTest {
 
 
     @Test
+    @Ignore
     public void testSetupPaths() {
         AldorInstalledSdkType sdkType = new AldorInstalledSdkType();
         Sdk sdk = new ProjectJdkImpl("Fricas Test SDK", sdkType);
 
         SdkModificator mod = sdk.getSdkModificator();
         mod.setHomePath(aldorExecutableRule.prefix());
+
         mod.commitChanges();
         assertEquals(sdk.getHomePath(), aldorExecutableRule.prefix());
         sdkType.setupSdkPaths(sdk);

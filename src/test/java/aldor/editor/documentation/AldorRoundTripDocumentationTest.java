@@ -9,12 +9,14 @@ import aldor.test_util.LightPlatformJUnit4TestRule;
 import com.google.common.collect.ImmutableMap;
 import com.intellij.codeInsight.documentation.DocumentationManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.EdtTestUtil;
 import com.intellij.testFramework.fixtures.CodeInsightTestFixture;
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -41,6 +43,14 @@ public class AldorRoundTripDocumentationTest {
                     .around(aldorExecutableRule)
                     .around(new LightPlatformJUnit4TestRule(codeTestFixture, ""))
                     .around(annotationTestFixture.rule(codeTestFixture::getProject));
+
+    @After
+    public void doAfter() {
+        EdtTestUtil.runInEdtAndWait(JavaAwareProjectJdkTableImpl::removeInternalJdkInTests);
+
+    }
+
+
     @Test
     public void testIdentifierDocumentation() throws ExecutionException, InterruptedException {
         String makefileText = annotationTestFixture.createMakefile(aldorExecutableRule.executable().getAbsolutePath(),

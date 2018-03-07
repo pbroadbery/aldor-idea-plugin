@@ -12,6 +12,7 @@ import aldor.syntax.components.Id;
 import aldor.test_util.DirectoryPresentRule;
 import aldor.test_util.JUnits;
 import aldor.test_util.LightPlatformJUnit4TestRule;
+import aldor.test_util.SkipCI;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
@@ -61,6 +62,7 @@ public class FricasSpadLibraryTest {
     }
 
     @Test
+    @SkipCI
     public void testOperations() {
         JUnits.setLogToInfo();
         VirtualFile homeDirectory = ProjectRootManager.getInstance(testFixture.getProject()).getProjectSdk().getHomeDirectory();
@@ -90,6 +92,7 @@ public class FricasSpadLibraryTest {
     }
 
     @Test
+    @SkipCI
     public void testCoercibleToOperations() {
         JUnits.setLogToInfo();
         VirtualFile homeDirectory = ProjectRootManager.getInstance(testFixture.getProject()).getProjectSdk().getHomeDirectory();
