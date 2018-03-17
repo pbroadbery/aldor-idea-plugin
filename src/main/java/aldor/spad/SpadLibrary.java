@@ -4,8 +4,8 @@ import aldor.syntax.Syntax;
 import aldor.syntax.components.Id;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public interface SpadLibrary {

@@ -53,7 +53,7 @@ public class AldorDeclareStubCodec implements PsiStubCodec<AldorDeclareStub, Ald
         boolean isCategoryDeclaration = dataStream.readBoolean();
         boolean isDeclareOfId = dataStream.readBoolean();
 
-        AldorDeclareConcreteStub.Builder builder = AldorDeclareConcreteStub.builder();
+        AldorDeclareConcreteStub.Builder builder = new AldorDeclareConcreteStub.Builder();
         builder.setParent(parentStub)
                 .setElementType(eltType)
                 .setBlockType(isCategoryDeclaration ? AldorPsiUtils.WITH : AldorPsiUtils.BODY);

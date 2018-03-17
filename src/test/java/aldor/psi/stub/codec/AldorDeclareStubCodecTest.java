@@ -30,7 +30,7 @@ public class AldorDeclareStubCodecTest {
     @Test
     public void testEncode() throws Exception {
 
-        AldorDeclareStub stub = AldorDeclareConcreteStub.builder()
+        AldorDeclareStub stub = new AldorDeclareConcreteStub.Builder()
                                         .setBlockType(AldorPsiUtils.WITH)
                                         .setElementType(null)
                                         .setExporter(Id.createMissingId(AldorTokenTypes.TK_Id, "Foo"))

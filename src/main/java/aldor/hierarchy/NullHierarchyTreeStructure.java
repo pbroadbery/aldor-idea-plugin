@@ -42,8 +42,7 @@ public class NullHierarchyTreeStructure extends HierarchyTreeStructure {
                 }
                 return true;
             }
-            TextAttributes attrs = null;
-            text.getBeginning().addText(enclosingElement.getText(), attrs);
+            text.getBeginning().addText(enclosingElement.getText(), (TextAttributes) null);
             if (myHighlightedText.equals(text)) {
                 return changes;
             }

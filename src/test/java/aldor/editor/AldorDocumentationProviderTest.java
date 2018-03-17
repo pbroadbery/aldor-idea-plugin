@@ -43,9 +43,12 @@ public class AldorDocumentationProviderTest extends LightPlatformCodeInsightFixt
 
     @Override
     protected void tearDown() throws Exception {
-        EdtTestUtil.runInEdtAndWait(() -> JavaAwareProjectJdkTableImpl.removeInternalJdkInTests());
-        super.tearDown();
-
+        try {
+            EdtTestUtil.runInEdtAndWait(JavaAwareProjectJdkTableImpl::removeInternalJdkInTests);
+        }
+        finally {
+            super.tearDown();
+        }
     }
 
     @Override

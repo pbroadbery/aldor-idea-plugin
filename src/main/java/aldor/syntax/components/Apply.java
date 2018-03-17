@@ -6,6 +6,8 @@ import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Apply node.
@@ -18,6 +20,10 @@ public class Apply extends SyntaxNode<PsiElement> {
 
     public Apply(@NotNull List<Syntax> arguments) {
         super(SyntaxRepresentation.createMissing(), arguments);
+    }
+
+    public Apply(@NotNull Syntax operator, @SuppressWarnings("TypeMayBeWeakened") @NotNull List<Syntax> arguments) {
+        super(SyntaxRepresentation.createMissing(), Stream.concat(Stream.of(operator), arguments.stream()).collect(Collectors.toList()));
     }
 
     public Syntax operator() {

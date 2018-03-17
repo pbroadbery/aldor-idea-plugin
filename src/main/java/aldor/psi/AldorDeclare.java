@@ -7,7 +7,8 @@ import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.StubBasedPsiElement;
 import org.jetbrains.annotations.Nullable;
 
-public interface AldorDeclare extends StubBasedPsiElement<AldorDeclareStub>, NavigatablePsiElement, PsiNamedElement {
+@SuppressWarnings("CyclicClassDependency")
+public interface AldorDeclare extends StubBasedPsiElement<AldorDeclareStub>, NavigatablePsiElement, PsiNamedElement, ScopeFormingElement {
 
     @Nullable
     AldorDeclareStub getGreenStub();

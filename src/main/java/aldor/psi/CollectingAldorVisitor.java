@@ -1,14 +1,12 @@
-package aldor.psi.impl;
+package aldor.psi;
 
-import aldor.psi.AldorVisitor;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CollectingAldorVisitor<T> extends AldorVisitor {
-    @Nullable
     private final List<T> returnValue = new ArrayList<>();
 
     public CollectingAldorVisitor() {
@@ -17,14 +15,10 @@ public class CollectingAldorVisitor<T> extends AldorVisitor {
     void doAcceptChildren(PsiElement o) {
         for (PsiElement child : o.getChildren()) {
             child.accept(this);
-            //noinspection VariableNotUsedInsideIf
-            if (returnValue != null) {
-                break;
-            }
         }
     }
 
-    protected void add(T t) {
+    protected void add(@NotNull T t) {
         this.returnValue.add(t);
     }
 

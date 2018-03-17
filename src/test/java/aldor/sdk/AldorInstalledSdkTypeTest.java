@@ -2,14 +2,15 @@ package aldor.sdk;
 
 import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.LightPlatformJUnit4TestRule;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkModificator;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.projectRoots.impl.ProjectJdkImpl;
 import com.intellij.openapi.roots.OrderRootType;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.fixtures.CodeInsightTestFixture;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -50,7 +51,6 @@ public class AldorInstalledSdkTypeTest {
 
 
     @Test
-    @Ignore
     public void testSetupPaths() {
         AldorInstalledSdkType sdkType = new AldorInstalledSdkType();
         Sdk sdk = new ProjectJdkImpl("Fricas Test SDK", sdkType);
@@ -64,6 +64,7 @@ public class AldorInstalledSdkTypeTest {
 
         VirtualFile[] srcs = sdk.getRootProvider().getFiles(OrderRootType.SOURCES);
         assertTrue(srcs.length > 0);
+        Disposer.dispose((Disposable) sdk);
     }
 
 }

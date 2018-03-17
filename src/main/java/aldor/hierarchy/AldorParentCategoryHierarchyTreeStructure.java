@@ -7,7 +7,6 @@ import aldor.syntax.SyntaxPrinter;
 import com.google.common.collect.Sets;
 import com.intellij.ide.hierarchy.HierarchyNodeDescriptor;
 import com.intellij.ide.hierarchy.HierarchyTreeStructure;
-import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.SmartPointerManager;
@@ -15,6 +14,7 @@ import com.intellij.psi.SmartPsiElementPointer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -27,24 +27,24 @@ public final class AldorParentCategoryHierarchyTreeStructure extends HierarchyTr
 
     public AldorParentCategoryHierarchyTreeStructure(Project project, @NotNull Syntax syntax) {
         super(project, createBaseNodeDescriptor(project, syntax));
-        this.smartPointer = SmartPointerManager.getInstance(project).createSmartPsiElementPointer(psiElementFromSyntax(syntax));
+        PsiElement psiElement = psiElementFromSyntax(syntax);
+        assert psiElement != null;
+        this.smartPointer = SmartPointerManager.getInstance(project).createSmartPsiElementPointer(psiElement);
     }
 
 
     private static HierarchyNodeDescriptor createBaseNodeDescriptor(Project project, @NotNull Syntax syntax) {
-        return new AldorHierarchyNodeDescriptor(project,  null, psiElementFromSyntax(syntax), syntax, true);
-    }
-
-    private static HierarchyNodeDescriptor createNodeDescriptor(Project project, NodeDescriptor<PsiElement> parentDescriptor, Syntax syntax) {
-        return new AldorHierarchyNodeDescriptor(project,  parentDescriptor, psiElementFromSyntax(syntax), syntax, false);
+        return new AldorHierarchyNodeDescriptor(project,  null, Objects.requireNonNull(psiElementFromSyntax(syntax)), syntax, true);
     }
 
     private Object createNodeDescriptorMaybe(AldorHierarchyNodeDescriptor parent, Syntax syntax) {
-        if (psiElementFromSyntax(syntax) == null) {
+        PsiElement psiElement = psiElementFromSyntax(syntax);
+        if (psiElement == null) {
             return new ErrorNodeDescriptor(parent, "Unknown element - " + SyntaxPrinter.instance().toString(syntax));
         }
         else {
-            return createNodeDescriptor(this.myProject, parent, syntax);
+            //noinspection unchecked
+            return new AldorHierarchyNodeDescriptor(this.myProject, parent, psiElement, syntax, false);
         }
     }
 

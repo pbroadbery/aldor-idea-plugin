@@ -1,5 +1,7 @@
 package aldor.references;
 
+import aldor.editor.ProjectPsiDefaults;
+import aldor.editor.PsiElementToLookupElementMapping;
 import aldor.psi.AldorIdentifier;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.TextRange;
@@ -58,7 +60,8 @@ public class AldorNameReference extends PsiReferenceBase<AldorIdentifier> {
     @NotNull
     @Override
     public Object[] getVariants() {
-        VariantScopeProcessor scopeProcessor = new VariantScopeProcessor();
+        PsiElementToLookupElementMapping factory = ProjectPsiDefaults.lookupElementFactory(getElement().getProject());
+        VariantScopeProcessor scopeProcessor = new VariantScopeProcessor(factory);
         resolveAndWalk(scopeProcessor, getElement());
 
         List<Object> result = scopeProcessor.references();
@@ -66,4 +69,5 @@ public class AldorNameReference extends PsiReferenceBase<AldorIdentifier> {
 
         return result.toArray();
     }
+
 }

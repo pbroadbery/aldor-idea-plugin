@@ -1,5 +1,6 @@
 package aldor.references;
 
+import aldor.psi.AldorDeclaration;
 import aldor.psi.AldorDeclare;
 import aldor.psi.AldorDefine;
 import aldor.psi.AldorIdentifier;
@@ -21,6 +22,11 @@ class AldorScopeProcessor extends AbstractAldorScopeProcessor {
     public AldorScopeProcessor(String name) {
         myResultList = new ArrayList<>();
         this.name = name;
+    }
+
+    @Override
+    protected boolean executeDeclaration(AldorDeclaration o, ResolveState state) {
+        return true;
     }
 
     @Override

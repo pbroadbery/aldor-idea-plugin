@@ -1,6 +1,7 @@
 package aldor.syntax;
 
 
+import aldor.lexer.AldorTokenTypes;
 import aldor.syntax.components.Apply;
 import aldor.syntax.components.Comma;
 import aldor.syntax.components.DeclareNode;
@@ -14,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -23,6 +25,9 @@ import java.util.stream.Stream;
 
 public final class SyntaxUtils {
 
+    /* a: X --> {a: X},
+     * a(x: X, y: Y): Z == { x: X, y: Y }
+     */
     public static Iterable<Syntax> childScopesForDefineLhs(@NotNull Syntax syntax) {
         Syntax maybeLhs = syntax;
         if (maybeLhs.is(DeclareNode.class)) {
@@ -113,6 +118,30 @@ public final class SyntaxUtils {
                             syntax1.as(Apply.class).arguments().stream().map(SyntaxUtils::definingId)).collect(Collectors.toList()));
         }
         return new Other(syntax1.psiElement());
+    }
+
+    /**
+     * foo(x: A, y: B): X --> (x: A, y: B) -> X
+     * A: X -> X
+     */
+    private static final Id mapsTo = Id.createMissingId(AldorTokenTypes.KW_RArrow, "->");
+
+    public static Optional<Syntax> definitionToSignature(Syntax syntax) {
+        if (syntax.is(DeclareNode.class)) {
+            DeclareNode<?> declare = syntax.as(DeclareNode.class);
+            Syntax lhs = declare.lhs();
+            Optional<Apply> applyMaybe = lhs.maybeAs(Apply.class);
+            return applyMaybe.<Optional<Syntax>>map(apply -> Optional.of(new Apply(mapsTo,
+                                         Arrays.asList(new Comma(sigParameters(apply.arguments())),
+                                         declare.rhs()))))
+                            .orElseGet(() -> Optional.of(declare.rhs()));
+        }
+        return Optional.empty();
+    }
+
+    private static List<Syntax> sigParameters(Collection<Syntax> arguments) {
+        Id unknown = Id.createMissingId(AldorTokenTypes.TK_Id, "??");
+        return arguments.stream().map(arg -> arg.maybeAs(DeclareNode.class).map(DeclareNode::rhs).orElse(unknown)).collect(Collectors.toList());
     }
 
     /**

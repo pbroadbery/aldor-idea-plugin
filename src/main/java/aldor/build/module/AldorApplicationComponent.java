@@ -63,7 +63,7 @@ public class AldorApplicationComponent implements ApplicationComponent {
             Collection<PsiFile> psiFiles = new ArrayList<>();
             for (Project project : ProjectManager.getInstance().getOpenProjects()) {
                 PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document);
-                if (isPsiFileInProject(project, psiFile)) {
+                if ((psiFile != null) && isPsiFileInProject(project, psiFile)) {
                     psiFiles.add(psiFile);
                 }
             }

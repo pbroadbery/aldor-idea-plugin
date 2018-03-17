@@ -2,6 +2,7 @@ package aldor.psi.impl;
 
 import aldor.psi.AldorComma;
 import aldor.psi.AldorCommaItem;
+import aldor.psi.ScopeFormingElement;
 import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxPsiParser;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
@@ -13,7 +14,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("AbstractClassExtendsConcreteClass")
-public abstract class AldorCommaMixin extends ASTWrapperPsiElement implements AldorComma {
+public abstract class AldorCommaMixin extends ASTWrapperPsiElement implements AldorComma, ScopeFormingElement {
 
     protected AldorCommaMixin(@NotNull ASTNode node) {
         super(node);

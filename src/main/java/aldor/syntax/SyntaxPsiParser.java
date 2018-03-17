@@ -26,8 +26,8 @@ import aldor.psi.AldorUnaryWithExpr;
 import aldor.psi.AldorWith;
 import aldor.psi.JxrightElement;
 import aldor.psi.NegationElement;
+import aldor.psi.ReturningAldorVisitor;
 import aldor.psi.SpadBinaryOp;
-import aldor.psi.impl.ReturningAldorVisitor;
 import aldor.syntax.components.Add;
 import aldor.syntax.components.AldorDeclare;
 import aldor.syntax.components.Apply;
@@ -251,7 +251,7 @@ public final class SyntaxPsiParser {
             else {
                 Syntax all = opsAndArgs.get(opsAndArgs.size() - 1);
                 for (Syntax syntax : Lists.reverse(opsAndArgs).subList(1, opsAndArgs.size() - 2)) {
-                    all = new Apply(null, Lists.newArrayList(syntax, all));
+                    all = new Apply((PsiElement) null, Lists.newArrayList(syntax, all));
                 }
                 visitStack.peek().add(all);
             }
@@ -299,7 +299,7 @@ public final class SyntaxPsiParser {
             visitStack.push(content);
 
             List<AldorExpr> ll = colonExpr.getExprList();
-            if (ll.size() >= 0) {
+            if (ll.size() >= 1) {
                 this.leftOfDeclare = true;
                 ll.get(0).accept(this);
                 this.leftOfDeclare = false;

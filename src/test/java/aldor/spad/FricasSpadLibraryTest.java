@@ -5,6 +5,7 @@ import aldor.parser.ParserFunctions;
 import aldor.parser.SwingThreadTestRule;
 import aldor.psi.AldorDefine;
 import aldor.psi.index.AldorDefineTopLevelIndex;
+import aldor.sdk.SdkTypes;
 import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxPsiParser;
 import aldor.syntax.components.DeclareNode;
@@ -13,11 +14,13 @@ import aldor.test_util.DirectoryPresentRule;
 import aldor.test_util.JUnits;
 import aldor.test_util.LightPlatformJUnit4TestRule;
 import aldor.test_util.SkipCI;
+import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.testFramework.fixtures.CodeInsightTestFixture;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -47,9 +50,8 @@ public class FricasSpadLibraryTest {
 
     @Test
     public void testParents0() {
-        VirtualFile homeDirectory = ProjectRootManager.getInstance(testFixture.getProject()).getProjectSdk().getHomeDirectory();
         FricasSpadLibrary lib = new FricasSpadLibraryBuilder().project(testFixture.getProject())
-                .daaseDirectory(homeDirectory.findFileByRelativePath("algebra"))
+                .daaseDirectory(projectSdkAlgebraDirectory())
                 .createFricasSpadLibrary();
         Syntax syntax = Id.createMissingId(AldorTokenTypes.TK_Id, "Integer");
 
@@ -65,9 +67,8 @@ public class FricasSpadLibraryTest {
     @SkipCI
     public void testOperations() {
         JUnits.setLogToInfo();
-        VirtualFile homeDirectory = ProjectRootManager.getInstance(testFixture.getProject()).getProjectSdk().getHomeDirectory();
         FricasSpadLibrary lib = new FricasSpadLibraryBuilder().project(testFixture.getProject())
-                .daaseDirectory(homeDirectory.findFileByRelativePath("algebra"))
+                .daaseDirectory(projectSdkAlgebraDirectory())
                 .createFricasSpadLibrary();
 
         Collection<AldorDefine> ll = AldorDefineTopLevelIndex.instance.get("Group", getProject(), GlobalSearchScope.allScope(getProject()));
@@ -95,10 +96,9 @@ public class FricasSpadLibraryTest {
     @SkipCI
     public void testCoercibleToOperations() {
         JUnits.setLogToInfo();
-        VirtualFile homeDirectory = ProjectRootManager.getInstance(testFixture.getProject()).getProjectSdk().getHomeDirectory();
         FricasSpadLibrary lib = new FricasSpadLibraryBuilder()
                 .project(testFixture.getProject())
-                .daaseDirectory(homeDirectory.findFileByRelativePath("algebra"))
+                .daaseDirectory(projectSdkAlgebraDirectory())
                 .createFricasSpadLibrary();
 
         Syntax syntax = ParserFunctions.parseToSyntax(testFixture.getProject(), "CoercibleTo OutputForm");
@@ -117,10 +117,9 @@ public class FricasSpadLibraryTest {
     @Test
     public void testListAggregrateRec() {
         JUnits.setLogToInfo();
-        VirtualFile homeDirectory = ProjectRootManager.getInstance(testFixture.getProject()).getProjectSdk().getHomeDirectory();
         FricasSpadLibrary lib = new FricasSpadLibraryBuilder()
                 .project(testFixture.getProject())
-                .daaseDirectory(homeDirectory.findFileByRelativePath("algebra"))
+                .daaseDirectory(projectSdkAlgebraDirectory())
                 .createFricasSpadLibrary();
 
         Syntax syntax = ParserFunctions.parseToSyntax(testFixture.getProject(), "ListAggregate X");
@@ -132,8 +131,17 @@ public class FricasSpadLibraryTest {
                 System.out.println("Operation: " + p + " "+ p.declaration());
             }
         }
-
+        assertNotNull(parents);
         lib.dispose();
+    }
+
+    @NotNull
+    private VirtualFile projectSdkAlgebraDirectory() {
+        Sdk projectSdk = ProjectRootManager.getInstance(testFixture.getProject()).getProjectSdk();
+        assertNotNull(projectSdk);
+        VirtualFile dir = SdkTypes.algebraPath(projectSdk);
+        assertNotNull(dir);
+        return dir;
     }
 
 }

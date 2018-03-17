@@ -4,7 +4,6 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.util.IconUtil;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.Icon;
 
@@ -37,7 +36,7 @@ public final class ExpressionFileType extends LanguageFileType {
         return FILE_EXTENSION;
     }
 
-    @Nullable
+    @NotNull
     @Override
     public Icon getIcon() {
         return IconUtil.getMoveDownIcon();

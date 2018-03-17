@@ -23,6 +23,13 @@
     <depends>com.intellij.modules.lang</depends>
     -->
 
+    <project-components>
+        <component>
+            <interface-class>aldor.editor.ProjectPsiDefaults</interface-class>
+            <implementation-class>aldor.editor.ProjectPsiDefaultsImpl</implementation-class>
+        </component>
+    </project-components>
+
     <extensions defaultExtensionNs="com.intellij">
         <!-- Common-->
         <projectService serviceInterface="aldor.build.AldorCompilationService"
@@ -57,6 +64,8 @@
         <stubIndex implementation="aldor.psi.index.AldorDefineTopLevelIndex"/>
         <stubIndex implementation="aldor.psi.index.AldorDeclareTopIndex"/>
         <moduleRendererFactory implementation="aldor.editor.finder.OptionRendererFactory"/>
+        <completion.contributor language="Aldor" implementationClass="aldor.editor.completion.AldorCompletionContributor"/>
+
         <!-- Aldor extras -->
         <lang.refactoringSupport language="Aldor" implementationClass="aldor.references.AldorRefactoringSupportProvider"/>
         <documentationProvider implementation="aldor.editor.documentation.AldorDocumentationProvider"/>
@@ -88,7 +97,6 @@
 
         <configurationType implementation="aldor.spad.runconfiguration.SpadInputRunConfigurationType" />
         <runConfigurationProducer implementation = "aldor.spad.runconfiguration.SpadInputRunConfigurationProducer"/>
-        <completion.contributor language="Aldor" implementationClass="aldor.editor.completion.AldorCompletionContributor"/>
         <!-- Test language -->
         <fileTypeFactory implementation="aldor.expression.ExpressionFileTypeFactory"/>
         <lang.parserDefinition language="Expression" implementationClass="aldor.expression.ExpressionParserDefinition"/>

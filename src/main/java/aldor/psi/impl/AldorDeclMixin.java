@@ -3,6 +3,8 @@ package aldor.psi.impl;
 import aldor.psi.AldorDeclPart;
 import aldor.psi.AldorDeclare;
 import aldor.psi.stub.AldorDeclareStub;
+import aldor.references.FileScopeWalker;
+import aldor.references.ScopeContext;
 import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxPsiParser;
 import aldor.syntax.SyntaxUtils;
@@ -33,6 +35,9 @@ public abstract class AldorDeclMixin extends AldorDeclareImpl implements AldorDe
         if (!processor.execute(this, state)) {
             return false;
         }
+        if (state.get(FileScopeWalker.scopeContextKey) == ScopeContext.DeclBlock) {
+            return true;
+        }
         PsiElement lhs = this.getFirstChild();
         //noinspection ObjectEquality
         if (lastParent != lhs) {
@@ -48,7 +53,9 @@ public abstract class AldorDeclMixin extends AldorDeclareImpl implements AldorDe
 
     @Override
     public String getName() {
-        return SyntaxUtils.leadingId(SyntaxPsiParser.parse(lhs())).maybeAs(Id.class).map(Id::symbol).orElse(null);
+        return SyntaxUtils.leadingId(SyntaxPsiParser.parse(lhs()))
+                .maybeAs(Id.class)
+                .map(Id::symbol).orElse(null);
     }
 
     @Override

@@ -3,6 +3,7 @@ package aldor.psi.impl;
 import aldor.psi.AldorIterRepeatStatement;
 import aldor.psi.AldorIterator;
 import aldor.psi.AldorIterators;
+import aldor.psi.ScopeFormingElement;
 import aldor.syntax.Syntax;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
@@ -14,7 +15,7 @@ import com.intellij.psi.scope.PsiScopeProcessor;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("AbstractClassExtendsConcreteClass")
-public abstract class AldorIterStatementMixin extends ASTWrapperPsiElement implements AldorIterRepeatStatement {
+public abstract class AldorIterStatementMixin extends ASTWrapperPsiElement implements AldorIterRepeatStatement, ScopeFormingElement {
     private static final Logger LOG = Logger.getInstance(AldorIterStatementMixin.class);
     private static final Key<Syntax> cachedLhsSyntax = new Key<>("LhsSyntax");
 

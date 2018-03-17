@@ -1,6 +1,7 @@
 package aldor.psi.impl;
 
 import aldor.psi.AldorWhereBlock;
+import aldor.psi.ScopeFormingElement;
 import com.intellij.extapi.psi.StubBasedPsiElementBase;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
@@ -13,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("AbstractClassExtendsConcreteClass")
-public abstract class AldorWhereMixin extends StubBasedPsiElementBase<EmptyStub<AldorWhereBlock>> implements AldorWhereBlock {
+public abstract class AldorWhereMixin extends StubBasedPsiElementBase<EmptyStub<AldorWhereBlock>> implements AldorWhereBlock, ScopeFormingElement {
 
     protected AldorWhereMixin(@NotNull EmptyStub<AldorWhereBlock> stub, @NotNull IStubElementType<EmptyStub<AldorWhereBlock>, AldorWhereBlock> nodeType) {
         super(stub, nodeType);

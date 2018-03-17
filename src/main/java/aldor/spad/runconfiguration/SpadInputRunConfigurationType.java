@@ -205,7 +205,7 @@ public class SpadInputRunConfigurationType extends ConfigurationTypeBase {
             if (sdk.getHomePath() == null) {
                 return new GeneralCommandLine().withExePath("missing-sdk-home-path");
             }
-            String execPath = SdkTypes.axiomSysPath(configuration.effectiveSdk());
+            String execPath = SdkTypes.axiomSysPath(sdk);
             if (execPath == null) {
                 return new GeneralCommandLine().withExePath("error");
             }
@@ -223,7 +223,13 @@ public class SpadInputRunConfigurationType extends ConfigurationTypeBase {
 
         @Nullable
         private String findExecutablePath() {
-            return SdkTypes.axiomSysPath(configuration.effectiveSdk());
+            Sdk sdk = configuration.effectiveSdk();
+            if (sdk == null) {
+                return null;
+            }
+            else {
+                return SdkTypes.axiomSysPath(sdk);
+            }
         }
     }
 

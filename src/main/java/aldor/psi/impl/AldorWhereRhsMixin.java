@@ -4,6 +4,8 @@ import aldor.psi.AldorDefine;
 import aldor.psi.AldorLambda;
 import aldor.psi.AldorWhereBlock;
 import aldor.psi.AldorWhereRhs;
+import aldor.psi.ReturningAldorVisitor;
+import aldor.psi.ScopeFormingElement;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
@@ -15,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Function;
 
 @SuppressWarnings("AbstractClassExtendsConcreteClass")
-public abstract class AldorWhereRhsMixin extends ASTWrapperPsiElement implements AldorWhereRhs {
+public abstract class AldorWhereRhsMixin extends ASTWrapperPsiElement implements AldorWhereRhs, ScopeFormingElement {
 
     protected AldorWhereRhsMixin(@NotNull ASTNode node) {
         super(node);

@@ -4,7 +4,9 @@ import aldor.build.module.AnnotationFileManager;
 import aldor.psi.AldorDeclare;
 import aldor.psi.AldorDefine;
 import aldor.psi.AldorIdentifier;
+import aldor.psi.ScopeFormingElement;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
@@ -17,7 +19,7 @@ import static java.util.Optional.ofNullable;
 
 public final class FileScopeWalker {
     private static final Logger LOG = Logger.getInstance(FileScopeWalker.class);
-
+    public static final Key<ScopeContext> scopeContextKey = new Key<>("ScopeContext");
     // idea is that once we get to file level
     // 1) Look for up to date abn file
     //      - if present, try to dig out details
@@ -35,6 +37,9 @@ public final class FileScopeWalker {
 
             lastScope = thisScope;
             thisScope = thisScope.getParent();
+            while ((thisScope != null) && !(thisScope instanceof ScopeFormingElement)) {
+                thisScope = thisScope.getParent();
+            }
         }
     }
 
@@ -56,7 +61,6 @@ public final class FileScopeWalker {
         AldorDeclare declare = PsiTreeUtil.getContextOfType(ident, AldorDeclare.class, true, AldorDefine.class);
         //noinspection ObjectEquality
         if (outerDefineMaybe.flatMap(AldorDefine::defineIdentifier).map(id -> id == ident).orElse(false)) {
-            assert outerDefineMaybe.isPresent();
             return outerDefineMaybe.get();
         }
         if (declare != null) {

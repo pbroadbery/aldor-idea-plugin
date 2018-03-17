@@ -31,7 +31,8 @@ public class AldorBuildTargetTypes {
         this.fileBuildTargetType = new AldorFileBuildTargetType(service);
     }
 
-    public static <Target extends BuildTarget<?>> BuildTargetLoader<Target> createLoader(@NotNull final BuildTargetType<Target> type, @NotNull final JpsModel model) {
+    public static <Target extends BuildTarget<?>> BuildTargetLoader<Target> createLoader(@NotNull final BuildTargetType<Target> type,
+                                                                                         @NotNull final JpsModel model) {
         final Map<String, Target> targetMap = new HashMap<>();
 
         for (Target target : type.computeAllTargets(model)) {

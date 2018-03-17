@@ -3,7 +3,7 @@ package aldor.structure;
 import aldor.file.AldorFile;
 import aldor.file.AxiomFile;
 import aldor.psi.AldorDefine;
-import aldor.psi.impl.CollectingAldorVisitor;
+import aldor.psi.CollectingAldorVisitor;
 import com.intellij.ide.structureView.StructureViewModel;
 import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.ide.structureView.TextEditorBasedStructureViewModel;

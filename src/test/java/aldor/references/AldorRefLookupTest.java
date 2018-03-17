@@ -15,7 +15,6 @@ import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import org.junit.Assert;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -127,8 +126,10 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
         Map<String, String> nameRefToMap = ImmutableMap.<String, String>builder()
                 .put("n+", "n:")
                 .put("m+", "m:")
+                .put("n", "n: Integer")
+                .put("m", "m: Integer")
                 .build();
-        Collection<String> nulls = Arrays.asList("n", "m:");
+        Collection<String> nulls = Collections.emptySet();
         assertReferences(text, nameRefToMap, nulls);
     }
 
@@ -137,8 +138,10 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
         Map<String, String> nameRefToMap = ImmutableMap.<String, String>builder()
                 .put("n+1", "n+m")
                 .put("m+1", "m ")
+                .put("n+m", "n+m")
+                .put("m ", "m ")
                 .build();
-        Collection<String> nulls = Arrays.asList("n+m", "m ");
+        Collection<String> nulls = Collections.emptyList();
         assertReferences(text, nameRefToMap, nulls, SpadLanguage.INSTANCE);
     }
 
@@ -196,8 +199,9 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
         String text = "foo(x: I): I == x + 1";
         Map<String, String> nameRefToMap = ImmutableMap.<String, String>builder()
                 .put("x + 1", "x: I")
+                .put("x: I", "x: I")
                 .build();
-        Set<String> nulls = Collections.singleton("x: I");
+        Set<String> nulls = Collections.emptySet();
         assertReferences(text, nameRefToMap, nulls);
     }
 
@@ -210,7 +214,7 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
                 .put("h + 1", "h: A")
                 .put("h + 2", "h: B")
                 .build();
-        Collection<String> nulls = Arrays.asList("h: A", "h: B");
+        Collection<String> nulls = Collections.emptySet();
         assertReferences(text, nameRefToMap, nulls);
     }
 
@@ -222,8 +226,10 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
         Map<String, String> nameRefToMap = ImmutableMap.<String, String>builder()
                 .put("h + 1", "h: A")
                 .put("h + 2", "h: B")
+                .put("h: A", "h: A")
+                .put("h: B", "h: B")
                 .build();
-        Collection<String> nulls = Arrays.asList("h: A", "h: B");
+        Collection<String> nulls = Collections.emptySet();
         assertReferences(text, nameRefToMap, nulls);
     }
 
@@ -235,9 +241,10 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
         Map<String, String> nameRefToMap = ImmutableMap.<String, String>builder()
                 .put("h\n", "h: A")
                 .put("h + 2", "h: B")
+                .put("h: A", "h: A")
+                .put("h: B", "h: B")
                 .build();
-        Collection<String> nulls = Arrays.asList("h: A", "h: B");
-        assertReferences(text, nameRefToMap, nulls);
+        assertReferences(text, nameRefToMap, Collections.emptySet());
     }
 
 
@@ -248,7 +255,7 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
         Map<String, String> nameRefToMap = ImmutableMap.<String, String>builder()
                 .put("a+1", "a: %")
                 .build();
-        Collection<String> nulls = Collections.singletonList("a: %");
+        Collection<String> nulls = Collections.emptySet();
         assertReferences(text, nameRefToMap, nulls);
     }
 
@@ -260,7 +267,7 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
                 .put("a+b", "a: %")
                 .put("b+1", "b: %")
                 .build();
-        Collection<String> nulls = Arrays.asList("a: %", "b: %");
+        Collection<String> nulls = Collections.emptySet();
         assertReferences(text, nameRefToMap, nulls);
     }
 
@@ -272,8 +279,9 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
                 .put("n)", "n: I")
                 .put("n+R", "n: I")
                 .put("R+1", "R: M n")
+                .put("n: I", "n: I")
                 .build();
-        Collection<String> nulls = Arrays.asList("n: I", "R: M n");
+        Collection<String> nulls = Collections.emptySet();
         assertReferences(text, nameRefToMap, nulls);
     }
 
@@ -286,7 +294,7 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
                 .put("a+1", "a: A")
                 .put("a+2", "a: B")
                 .build();
-        Collection<String> nulls = Arrays.asList("a: A", "a: B");
+        Collection<String> nulls = Collections.emptySet();
         assertReferences(text, nameRefToMap, nulls);
     }
 
@@ -296,19 +304,21 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
 
         Map<String, String> nameRefToMap = ImmutableMap.<String, String>builder()
                 .put("x+1", "x)")
+                .put("x", "x")
                 .build();
-        Collection<String> nulls = Collections.singletonList("x");
+        Collection<String> nulls = Collections.emptySet();
         assertReferences(text, nameRefToMap, nulls);
     }
 
     public void testWhere2() {
-        String text = "foo: bar where { foo == 2; bar == 3}";
+        String text = "foo:: bar where { foo == 2; bar == 3}";
 
         Map<String, String> nameRefToMap = ImmutableMap.<String, String>builder()
-                .put("foo: bar where", "foo ==")
+                .put("foo:: bar where", "foo ==")
                 .put("bar where", "bar ==")
+                .put("foo =", "foo =")
                 .build();
-        Collection<String> nulls = Collections.singletonList("foo =");
+        Collection<String> nulls = Collections.emptySet();
         assertReferences(text, nameRefToMap, nulls);
     }
 
@@ -317,8 +327,9 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
 
         Map<String, String> nameRefToMap = ImmutableMap.<String, String>builder()
                 .put("foo where", "foo =")
+                .put("foo =", "foo =")
                 .build();
-        Collection<String> nulls = Collections.singletonList("foo =");
+        Collection<String> nulls = Collections.emptySet();
         assertReferences(text, nameRefToMap, nulls);
     }
 
@@ -328,8 +339,9 @@ public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase 
         Map<String, String> nameRefToMap = ImmutableMap.<String, String>builder()
                 .put("E == ", "E ==> ")
                 .put("I where ", "I ==> ")
+                .put("E ==>", "E ==>")
                 .build();
-        Collection<String> nulls = Arrays.asList("E ==>", "I ==>");
+        Collection<String> nulls = Collections.emptySet();
         assertReferences(text, nameRefToMap, nulls);
     }
 

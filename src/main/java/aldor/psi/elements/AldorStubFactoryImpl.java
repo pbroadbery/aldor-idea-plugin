@@ -18,7 +18,7 @@ public class AldorStubFactoryImpl implements AldorStubFactory {
     // Add one if any stub format is changed
     @Override
     public int getVersion() {
-        return 9;
+        return 10;
     }
 
     @Override

@@ -72,7 +72,7 @@ public class AnnotatedSyntaxTest extends LightPlatformCodeInsightFixtureTestCase
 
         AnnotatedAbSyn absyn = fromSyntax(env, syntax);
         System.out.println("AbSyn is: " +absyn);
-        Syntax backAgain = toSyntax(GlobalSearchScope.projectScope(getProject()), absyn);
+        Syntax backAgain = toSyntax(getProject(), GlobalSearchScope.projectScope(getProject()), absyn);
 
         Assert.assertEquals(syntax.toString(), backAgain.toString());
     }

@@ -44,7 +44,6 @@ public class AldorCodeStyleSettingsProvider extends CodeStyleSettingsProvider {
             return new MyTabbedLanguageCodeStylePanel(language, currentSettings, settings2);
         }
 
-        @Nullable
         @Override
         public String getHelpTopic() {
             return "reference.settingsdialog.codestyle.json";

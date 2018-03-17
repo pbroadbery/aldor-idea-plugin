@@ -75,6 +75,7 @@ public class AnnotationRoundTripTest extends LightPlatformCodeInsightFixtureTest
                                         return false;
                                     }
                                     Syme syme = symes.stream().filter(s -> "n".equals(s.name())).findFirst().orElse(null);
+                                    Assert.assertNotNull(syme);
                                     String pretty = SyntaxPrinter.instance().toString(syme.type());
                                     return "AldorInteger".equals(pretty);
                     }));

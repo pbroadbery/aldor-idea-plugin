@@ -1,17 +1,18 @@
 package aldor.psi;
 
 import aldor.psi.elements.AldorTypes;
-import aldor.psi.impl.ReturningAldorVisitor;
 import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Streams;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -135,14 +136,13 @@ public final class AldorPsiUtils {
             return Optional.empty();
         } else {
             AldorDefine define = (AldorDefine) form;
-            if (define.definitionType() == AldorDefine.DefinitionType.CONSTANT) {
-                return Optional.of(define);
-            }
-            else if (define.definitionType() == AldorDefine.DefinitionType.MACRO) {
-                return definitionFromMacro(define);
-            }
-            else {
-                return Optional.empty();
+            switch (define.definitionType()) {
+                case CONSTANT:
+                    return Optional.of(define);
+                case MACRO:
+                    return definitionFromMacro(define);
+                default:
+                    return Optional.empty();
             }
         }
     }
@@ -370,4 +370,58 @@ public final class AldorPsiUtils {
         }
         return false;
     }
+
+    @NotNull
+    public static List<Binding> childBindings(@NotNull PsiElement elt) {
+        return (new BindingSearchVisitor().apply(elt));
+    }
+
+    List<Binding> childBindings(StubElement<?> elt) {
+        return null;
+    }
+
+    public static class Binding {
+        private final PsiElement element;
+
+        Binding(PsiElement element) {
+            this.element = element;
+        }
+
+        public PsiElement element() {
+            return element;
+        }
+
+        public <T> Optional<T> maybeAs(Class<T> clss) {
+            return Optional.of(element).flatMap(e -> clss.isAssignableFrom(element.getClass())
+                    ? Optional.<T>of(clss.cast(element))
+                    : Optional.empty());
+        }
+    }
+
+    public static class BindingSearchVisitor extends CollectingAldorVisitor<Binding> {
+
+        @Override
+        public void visitElement(PsiElement element) {
+            element.acceptChildren(this);
+        }
+
+        @Override
+        public void visitDefine(@NotNull AldorDefine o) {
+            super.add(new Binding(o));
+        }
+
+        @Override
+        public void visitDeclare(@NotNull AldorDeclare o) {
+            super.add(new Binding(o));
+        }
+
+        @Override
+        public void visitPrimaryExpr(@NotNull AldorPrimaryExpr o) {
+        }
+
+        @Override
+        public void visitWhereBlock(@NotNull AldorWhereBlock o) {
+        }
+    }
+
 }

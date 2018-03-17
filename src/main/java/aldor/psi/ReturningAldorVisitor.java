@@ -1,6 +1,5 @@
-package aldor.psi.impl;
+package aldor.psi;
 
-import aldor.psi.AldorVisitor;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,7 +11,7 @@ public class ReturningAldorVisitor<T> extends AldorVisitor {
         this.returnValue = null;
     }
 
-    void doAcceptChildren(PsiElement o) {
+    protected void doAcceptChildren(PsiElement o) {
         for (PsiElement child : o.getChildren()) {
             child.accept(this);
             //noinspection VariableNotUsedInsideIf

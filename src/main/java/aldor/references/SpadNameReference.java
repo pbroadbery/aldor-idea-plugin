@@ -1,5 +1,7 @@
 package aldor.references;
 
+import aldor.editor.ProjectPsiDefaults;
+import aldor.editor.PsiElementToLookupElementMapping;
 import aldor.psi.AldorDefine;
 import aldor.psi.AldorIdentifier;
 import aldor.psi.index.AldorDefineTopLevelIndex;
@@ -83,7 +85,8 @@ public class SpadNameReference extends PsiReferenceBase<AldorIdentifier> {
     @NotNull
     @Override
     public Object[] getVariants() {
-        VariantScopeProcessor scopeProcessor = new VariantScopeProcessor();
+        PsiElementToLookupElementMapping factory = ProjectPsiDefaults.lookupElementFactory(getElement().getProject());
+        VariantScopeProcessor scopeProcessor = new VariantScopeProcessor(factory);
         resolveAndWalk(scopeProcessor, getElement());
 
         List<Object> result = scopeProcessor.references();
@@ -91,5 +94,4 @@ public class SpadNameReference extends PsiReferenceBase<AldorIdentifier> {
 
         return result.toArray();
     }
-
 }

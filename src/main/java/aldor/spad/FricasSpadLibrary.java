@@ -151,7 +151,7 @@ public class FricasSpadLibrary implements SpadLibrary, Disposable {
         Collection<TForm> parents = iface.directParents(tf);
         return parents.stream()
                 .map(ptf -> TypePackage.asAbSyn(iface.env(), ptf))
-                .map(ab -> AnnotatedSyntax.toSyntax(scope, ab))
+                .map(ab -> AnnotatedSyntax.toSyntax(project, scope, ab))
                 .collect(Collectors.toList());
     }
 
@@ -174,7 +174,7 @@ public class FricasSpadLibrary implements SpadLibrary, Disposable {
         }
 
         return operations.stream().map(namedExport -> new Operation(namedExport.name().name(),
-                                                             AnnotatedSyntax.toSyntax(scope, TypePackage.asAbSyn(iface.env(), namedExport.type())),
+                                                             toSyntax(project, scope, TypePackage.asAbSyn(iface.env(), namedExport.type())),
                                                             null,
                                                              syntax,
                                                              declarationFor(syntax, namedExport)))
@@ -217,7 +217,7 @@ public class FricasSpadLibrary implements SpadLibrary, Disposable {
     @NotNull
     private Predicate<AldorDeclare> filterBySignature(NamedExport namedExport) {
         AxiomInterface iface = axiomInterfaceContainer.value();
-        Syntax librarySyntax = toSyntax(scope, TypePackage.asAbSyn(iface.env(), namedExport.original()));
+        Syntax librarySyntax = toSyntax(project, scope, TypePackage.asAbSyn(iface.env(), namedExport.original()));
         return decl -> {
             Optional<AldorDeclareStub> stub = Optional.ofNullable(decl.getGreenStub());
             if (!stub.isPresent()) {
@@ -258,7 +258,7 @@ public class FricasSpadLibrary implements SpadLibrary, Disposable {
     public List<Syntax> allTypes() {
         try {
             AxiomInterface iface = axiomInterfaceContainer.value();
-            return this.aldorExecutor.compute(() -> iface.allTypes().stream().map(absyn -> toSyntax(scope, absyn)).collect(Collectors.toList()));
+            return this.aldorExecutor.compute(() -> iface.allTypes().stream().map(absyn -> toSyntax(project, scope, absyn)).collect(Collectors.toList()));
         } catch (InterruptedException e) {
             LOG.error("failed to read types", e);
             return Collections.emptyList();

@@ -6,6 +6,7 @@ import com.intellij.psi.stubs.StubElement;
 
 import java.util.Optional;
 
+@SuppressWarnings("CyclicClassDependency")
 public interface AldorDeclareStub extends StubElement<AldorDeclare> {
 
     Optional<String> declareIdName();

@@ -5,7 +5,7 @@ import aldor.psi.AldorDeclaration;
 import aldor.psi.AldorDeclare;
 import aldor.psi.AldorDefine;
 import aldor.psi.AldorIdentifier;
-import aldor.psi.impl.ReturningAldorVisitor;
+import aldor.psi.ReturningAldorVisitor;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
@@ -35,12 +35,17 @@ public abstract class AbstractAldorScopeProcessor implements PsiScopeProcessor {
 
         @Override
         public void visitDeclaration(@NotNull AldorDeclaration o) {
-            returnValue(executeDeclare((AldorDeclare) o, state));
+            returnValue(executeDeclaration(o, state));
         }
 
         @Override
         public void visitColonExpr(@NotNull AldorColonExpr o) {
             returnValue(executeDeclare((AldorDeclare) o, state));
+        }
+
+        @Override
+        public void visitDeclare(@NotNull AldorDeclare o) {
+            returnValue(executeDeclare(o, state));
         }
 
         @Override
@@ -53,6 +58,8 @@ public abstract class AbstractAldorScopeProcessor implements PsiScopeProcessor {
             returnValue(true);
         }
     }
+
+    protected abstract boolean executeDeclaration(AldorDeclaration o, ResolveState state);
 
     protected abstract boolean executeDefinition(AldorDefine o, ResolveState state);
 

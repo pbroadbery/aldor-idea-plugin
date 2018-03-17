@@ -22,6 +22,7 @@ import com.google.common.collect.Lists;
 import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import org.jetbrains.annotations.Contract;
@@ -38,9 +39,9 @@ import java.util.stream.Collectors;
 public final class AnnotatedSyntax {
     private static final Logger LOG = Logger.getInstance(AnnotatedSyntax.class);
 
-    public static Syntax toSyntax(GlobalSearchScope scope, AnnotatedAbSyn ab) {
+    public static Syntax toSyntax(Project project, GlobalSearchScope scope, AnnotatedAbSyn ab) {
         try {
-            return ReadAction.compute(() -> doToSyntax(scope, ab));
+            return ReadAction.compute(() -> (new ToSyntaxConverter(scope, project).doToSyntax(ab)));
         }
         catch (ProcessCanceledException e) {
             throw e;
@@ -62,98 +63,105 @@ public final class AnnotatedSyntax {
         }
     }
 
-    private static Syntax doToSyntax(GlobalSearchScope scope, AnnotatedAbSyn abIn) {
-        AnnotatedAbSyn ab = abIn;
-        while (true) {
-            if (ab.isApply()) {
-                List<Syntax> all = Lists.newArrayList();
-                all.add(doToSyntax(scope, ab.applyOperator()));
-                all.addAll(abApplyArgs(scope, ab));
-                return new Apply(all);
-            }
-            else if (ab.isId()) {
-                return toSyntax(scope, ab.idSymbol());
-            }
-            else if (ab.isDeclare()) {
-                return new AnnotatedAbSynDeclareNode(scope, ab);
-            }
-            else if (ab.isComma()) {
-                if (ab.commaArgCount() == 0) {
-                    return new Comma(Collections.emptyList());
-                } else if (ab.commaArgCount() == 1) {
-                    ab = ab.commaArgGet(0);
+    private static final class ToSyntaxConverter {
+        private final GlobalSearchScope scope;
+        private final Project project;
+
+        private ToSyntaxConverter(GlobalSearchScope scope, Project project) {
+            this.scope = scope;
+            this.project = project;
+        }
+
+        private Syntax doToSyntax(AnnotatedAbSyn abIn) {
+            AnnotatedAbSyn ab = abIn;
+            while (true) {
+                if (ab.isApply()) {
+                    List<Syntax> all = Lists.newArrayList();
+                    all.add(doToSyntax(ab.applyOperator()));
+                    all.addAll(abApplyArgs(ab));
+                    return new Apply(all);
+                } else if (ab.isId()) {
+                    return toSyntax(ab.idSymbol());
+                } else if (ab.isDeclare()) {
+                    return new AnnotatedAbSynDeclareNode(this, ab);
+                } else if (ab.isComma()) {
+                    switch (ab.commaArgCount()) {
+                        case 0:
+                            return new Comma(Collections.emptyList());
+                        case 1:
+                            ab = ab.commaArgGet(0);
+                            break;
+                        default:
+                            return new Comma(abCommaArgs(scope, ab));
+                    }
+                } else if (ab.isLiteral()) {
+                    return new Literal(ab.literal(), null);
                 } else {
-                    return new Comma(abCommaArgs(scope, ab));
+                    throw new RuntimeException("Unknown syntax type: " + ab);
                 }
             }
-            else if (ab.isLiteral()) {
-                return new Literal(ab.literal(), null);
-            }
-            else {
-                throw new RuntimeException("Unknown syntax type: " + ab);
-            }
         }
-    }
 
 
-    public static Syntax toSyntax(GlobalSearchScope scope, AnnotatedId id) {
-        String name = id.id().name();
-        Collection<AldorDefine> elts = AldorDefineTopLevelIndex.instance.get(name, scope.getProject(), scope);
-        if ("Map".equals(name)) {
+        public Syntax toSyntax(AnnotatedId id) {
+            String name = id.id().name();
+            if ("Map".equals(name)) {
+                return new Id(new SyntaxRepresentation<AldorIdentifier>() {
+                    @Nullable
+                    @Override
+                    public AldorId element() {
+                        return null;
+                    }
+
+                    @Nullable
+                    @Override
+                    public AldorTokenType tokenType() {
+                        return AldorTokenTypes.KW_RArrow;
+                    }
+
+                    @Override
+                    public String text() {
+                        return "->";
+                    }
+                });
+            }
+            Collection<AldorDefine> elts = AldorDefineTopLevelIndex.instance.get(name, project, scope);
             return new Id(new SyntaxRepresentation<AldorIdentifier>() {
                 @Nullable
                 @Override
-                public AldorId element() {
-                    return null;
+                public AldorIdentifier element() {
+                    return elts.stream().findFirst().flatMap(AldorDefine::defineIdentifier).orElse(null);
                 }
 
                 @Nullable
                 @Override
                 public AldorTokenType tokenType() {
-                    return AldorTokenTypes.KW_RArrow;
+                    return AldorTokenTypes.TK_Id;
                 }
 
                 @Override
                 public String text() {
-                    return "->";
+                    return name;
                 }
             });
         }
-        return new Id(new SyntaxRepresentation<AldorIdentifier>() {
-            @Nullable
-            @Override
-            public AldorIdentifier element() {
-                return elts.stream().findFirst().flatMap(AldorDefine::defineIdentifier).orElse(null);
-            }
 
-            @Nullable
-            @Override
-            public AldorTokenType tokenType() {
-                return AldorTokenTypes.TK_Id;
+        private List<Syntax> abApplyArgs(AnnotatedAbSyn ab) {
+            List<Syntax> args = new ArrayList<>(ab.applyArgCount());
+            for (int i = 0; i < ab.applyArgCount(); i++) {
+                args.add(doToSyntax(ab.applyArgGet(i)));
             }
-
-            @Override
-            public String text() {
-                return name;
-            }
-        });
-    }
-
-    private static List<Syntax> abApplyArgs(GlobalSearchScope scope, AnnotatedAbSyn ab) {
-        List<Syntax> args = new ArrayList<>(ab.applyArgCount());
-        for (int i=0; i<ab.applyArgCount(); i++) {
-            args.add(toSyntax(scope, ab.applyArgGet(i)));
+            return args;
         }
-        return args;
-    }
 
 
-    private static List<Syntax> abCommaArgs(GlobalSearchScope scope, AnnotatedAbSyn ab) {
-        List<Syntax> args = new ArrayList<>(ab.commaArgCount());
-        for (int i=0; i<ab.commaArgCount(); i++) {
-            args.add(toSyntax(scope, ab.commaArgGet(i)));
+        private List<Syntax> abCommaArgs(GlobalSearchScope scope, AnnotatedAbSyn ab) {
+            List<Syntax> args = new ArrayList<>(ab.commaArgCount());
+            for (int i = 0; i < ab.commaArgCount(); i++) {
+                args.add(doToSyntax(ab.commaArgGet(i)));
+            }
+            return args;
         }
-        return args;
     }
 
 
@@ -205,9 +213,9 @@ public final class AnnotatedSyntax {
     private static final class AnnotatedAbSynDeclareNode extends DeclareNode<PsiElement> {
         private final AnnotatedAbSyn ab;
 
-        private AnnotatedAbSynDeclareNode(GlobalSearchScope scope, AnnotatedAbSyn ab) {
+        private AnnotatedAbSynDeclareNode(ToSyntaxConverter converter, AnnotatedAbSyn ab) {
             super(new AbSynSyntaxRepresentation(AnnotatedNodeType.Declare, ab),
-                    Arrays.asList(toSyntax(scope, ab.declareId()), toSyntax(scope, ab.declareType())));
+                    Arrays.asList(converter.toSyntax(ab.declareId()), converter.doToSyntax(ab.declareType())));
             this.ab = ab;
         }
 

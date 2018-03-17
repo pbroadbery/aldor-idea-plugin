@@ -4,11 +4,14 @@ import aldor.file.AldorFileType;
 import aldor.file.SpadFileType;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import org.junit.Assert;
 
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static aldor.test_util.LightProjectDescriptors.ALDOR_MODULE_DESCRIPTOR;
@@ -83,28 +86,63 @@ public class AldorPsiUtilsTest extends LightPlatformCodeInsightFixtureTestCase {
         String text = "foo: Category == with {}";
         PsiFile file = createLightFile(AldorFileType.INSTANCE, text);
         AldorDefine define = PsiTreeUtil.findChildOfType(file, AldorDefine.class);
-        assertEquals(AldorPsiUtils.DefinitionClass.CATEGORY, AldorPsiUtils.definitionClassForDefine(define));
+        Assert.assertEquals(AldorPsiUtils.DefinitionClass.CATEGORY, AldorPsiUtils.definitionClassForDefine(define));
     }
 
     public void testDefinitionClass1() {
         String text = "foo: with == add";
         PsiFile file = createLightFile(AldorFileType.INSTANCE, text);
         AldorDefine define = PsiTreeUtil.findChildOfType(file, AldorDefine.class);
-        assertEquals(AldorPsiUtils.DefinitionClass.DOMAIN, AldorPsiUtils.definitionClassForDefine(define));
+        Assert.assertEquals(AldorPsiUtils.DefinitionClass.DOMAIN, AldorPsiUtils.definitionClassForDefine(define));
     }
 
     public void testDefinitionClass2() {
         String text = "foo: AA == add";
         PsiFile file = createLightFile(AldorFileType.INSTANCE, text);
         AldorDefine define = PsiTreeUtil.findChildOfType(file, AldorDefine.class);
-        assertEquals(AldorPsiUtils.DefinitionClass.DOMAIN, AldorPsiUtils.definitionClassForDefine(define));
+        Assert.assertEquals(AldorPsiUtils.DefinitionClass.DOMAIN, AldorPsiUtils.definitionClassForDefine(define));
     }
 
     public void testDefinitionClass3() {
         String text = "foo: AA == bbb";
         PsiFile file = createLightFile(AldorFileType.INSTANCE, text);
         AldorDefine define = PsiTreeUtil.findChildOfType(file, AldorDefine.class);
-        assertEquals(AldorPsiUtils.DefinitionClass.VALUE, AldorPsiUtils.definitionClassForDefine(define));
+        Assert.assertEquals(AldorPsiUtils.DefinitionClass.VALUE, AldorPsiUtils.definitionClassForDefine(define));
+    }
+
+    public void testSearchBindings() {
+        String text = "add { foo(x: String): () == never }";
+        PsiFile file = createLightFile(AldorFileType.INSTANCE, text);
+        List<AldorPsiUtils.Binding> bindings = AldorPsiUtils.childBindings(Objects.requireNonNull(PsiTreeUtil.findChildOfType(file, AldorUnaryAdd.class)));
+        Assert.assertEquals(1, bindings.size());
+        Assert.assertEquals("foo", bindings.get(0)
+                .maybeAs(AldorDefine.class)
+                .flatMap(AldorDefine::defineIdentifier)
+                .map(PsiElement::getText)
+                .orElse(null));
+    }
+
+    public void testSearchLocal() {
+        String text = "add { local foo(x: String): () == never }";
+        PsiFile file = createLightFile(AldorFileType.INSTANCE, text);
+        List<AldorPsiUtils.Binding> bindings = AldorPsiUtils.childBindings(Objects.requireNonNull(PsiTreeUtil.findChildOfType(file, AldorUnaryAdd.class)));
+        Assert.assertEquals(1, bindings.size());
+        Assert.assertEquals("foo", bindings.get(0)
+                .maybeAs(AldorDefine.class)
+                .flatMap(AldorDefine::defineIdentifier)
+                .map(PsiElement::getText)
+                .orElse(null));
+    }
+
+    public void testSearchBindingsWith() {
+        String text = "with { xyz: String }";
+        PsiFile file = createLightFile(AldorFileType.INSTANCE, text);
+        List<AldorPsiUtils.Binding> bindings = AldorPsiUtils.childBindings(Objects.requireNonNull(PsiTreeUtil.findChildOfType(file, AldorUnaryWith.class)));
+        Assert.assertEquals(1, bindings.size());
+        Assert.assertEquals("xyz", bindings.get(0)
+                .maybeAs(PsiNamedElement.class)
+                .map(PsiNamedElement::getName)
+                .orElse(null));
     }
 
     @Override

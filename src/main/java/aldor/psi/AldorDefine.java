@@ -9,7 +9,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
-public interface AldorDefine extends StubBasedPsiElement<AldorDefineStub>, PsiNameIdentifierOwner, NavigatablePsiElement {
+@SuppressWarnings("CyclicClassDependency")
+public interface AldorDefine extends StubBasedPsiElement<AldorDefineStub>, PsiNameIdentifierOwner,
+                                     NavigatablePsiElement, ScopeFormingElement {
     @NotNull
     Optional<AldorIdentifier> defineIdentifier();
     DefinitionType definitionType();

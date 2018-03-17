@@ -9,6 +9,7 @@ import aldor.syntax.components.OtherSx;
 import aldor.syntax.components.SxSyntaxRepresentation;
 import aldor.util.sexpr.SExpression;
 import aldor.util.sexpr.SxType;
+import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -29,7 +30,7 @@ public final class AnnotationFileUtils {
                 return parseSx(lookup, lookup.type(sx.cdr().integer()));
             }
             else if (sx.car().equals(SymbolFileSymbols.Apply)) {
-                return new Apply(null,
+                return new Apply((PsiElement) null,
                         sx.cdr().asList().stream().map(elt -> parseSx(lookup, elt)).collect(Collectors.toList()));
             }
             else if (sx.car().equals(SymbolFileSymbols.Id)) {

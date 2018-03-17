@@ -14,7 +14,7 @@ import com.intellij.psi.stubs.StubElement;
 import java.util.Objects;
 import java.util.Optional;
 
-public class AldorDeclareConcreteStub extends StubBase<AldorDeclare> implements AldorDeclareStub {
+public final class AldorDeclareConcreteStub extends StubBase<AldorDeclare> implements AldorDeclareStub {
     private final Syntax syntax;
     private final boolean isCategoryDeclaration;
     private final Syntax exporter;
@@ -71,10 +71,6 @@ public class AldorDeclareConcreteStub extends StubBase<AldorDeclare> implements 
     @Override
     public Syntax exporter() {
         return exporter;
-    }
-
-    public static Builder builder() {
-        return new Builder();
     }
 
     @SuppressWarnings("FieldHasSetterButNoGetter")

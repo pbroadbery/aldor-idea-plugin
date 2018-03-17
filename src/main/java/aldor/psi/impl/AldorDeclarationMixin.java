@@ -1,6 +1,7 @@
 package aldor.psi.impl;
 
 import aldor.psi.AldorDeclaration;
+import aldor.psi.ScopeFormingElement;
 import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxPsiParser;
 import aldor.syntax.SyntaxUtils;
@@ -13,8 +14,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
+/**
+ * local, free, default, etc
+ */
 @SuppressWarnings("AbstractClassExtendsConcreteClass")
-public abstract class AldorDeclarationMixin extends ASTWrapperPsiElement implements AldorDeclaration {
+public abstract class AldorDeclarationMixin extends ASTWrapperPsiElement implements AldorDeclaration, ScopeFormingElement {
 
     protected AldorDeclarationMixin(@NotNull ASTNode node) {
         super(node);

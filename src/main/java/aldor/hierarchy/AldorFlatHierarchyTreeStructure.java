@@ -7,7 +7,6 @@ import aldor.syntax.SyntaxPrinter;
 import aldor.syntax.SyntaxUtils;
 import com.intellij.ide.hierarchy.HierarchyNodeDescriptor;
 import com.intellij.ide.hierarchy.HierarchyTreeStructure;
-import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
@@ -81,16 +80,14 @@ public class AldorFlatHierarchyTreeStructure extends HierarchyTreeStructure {
 
 
     private Object createNodeDescriptorMaybe(AldorHierarchyNodeDescriptor parent, Syntax syntax) {
-        if (psiElementFromSyntax(syntax) == null) {
+        PsiElement psiElement = psiElementFromSyntax(syntax);
+        if (psiElement == null) {
             return new ErrorNodeDescriptor(parent, "Unknown element - " + SyntaxPrinter.instance().toString(syntax));
         }
         else {
-            return createNodeDescriptor(parent, syntax);
+            //noinspection unchecked
+            return new AldorHierarchyNodeDescriptor(this.myProject, parent, psiElement, syntax, false);
         }
-    }
-
-    private HierarchyNodeDescriptor createNodeDescriptor(NodeDescriptor<PsiElement> parentDescriptor, Syntax syntax) {
-        return new AldorHierarchyNodeDescriptor(this.myProject,  parentDescriptor, psiElementFromSyntax(syntax), syntax, false);
     }
 
     private Object createOperationNodeDescriptorMaybe(@NotNull AldorHierarchyNodeDescriptor parent, SpadLibrary.Operation operation) {

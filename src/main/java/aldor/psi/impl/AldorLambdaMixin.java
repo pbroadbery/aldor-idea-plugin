@@ -1,6 +1,7 @@
 package aldor.psi.impl;
 
 import aldor.psi.AldorLambda;
+import aldor.psi.ScopeFormingElement;
 import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxPsiParser;
 import aldor.syntax.SyntaxUtils;
@@ -14,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
-public class AldorLambdaMixin extends ASTWrapperPsiElement implements AldorLambda {
+public class AldorLambdaMixin extends ASTWrapperPsiElement implements AldorLambda, ScopeFormingElement {
     private static final Key<Optional<Syntax>> cachedLhsSyntax = new Key<>("LhsSyntax");
 
     public AldorLambdaMixin(@NotNull ASTNode node) {

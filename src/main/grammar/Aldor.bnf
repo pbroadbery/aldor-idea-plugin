@@ -1,3 +1,4 @@
+//noinspection BnfSuspiciousTokenForFile
 {
   parserUtilClass="aldor.parser.AldorParserUtil"
 
@@ -41,8 +42,8 @@
   mixin("Iterator")="aldor.psi.impl.AldorIteratorMixin"
   mixin("Collection")="aldor.psi.impl.AldorCollectionMixin"
   mixin("AnyStatement_Collection")="aldor.psi.impl.AldorCollectionMixin"
-  mixin("Comma")="aldor.psi.impl.AldorCommaMixin"
   mixin("Declaration")="aldor.psi.impl.AldorDeclarationMixin"
+  mixin("DeclBlock")="aldor.psi.impl.AldorDeclBlockMixin"
 
   // We need to do some gymnastics for Spad expression stubs.
   // First, all Expressions inherit PsiElementBase, then stubbed expressions use StubbedElementBase.
@@ -90,6 +91,10 @@
   stubClass("WhereBlock")='com.intellij.psi.stubs.EmptyStub<aldor.psi.AldorWhereBlock>'
   mixin("WhereBlock")='aldor.psi.impl.AldorWhereMixin'
   mixin("WhereRhs")='aldor.psi.impl.AldorWhereRhsMixin'
+
+  // Comma
+  //mixin("Comma")="aldor.psi.impl.AldorCommaMixin"
+  //stubClass("Comma")='com.intellij.psi.stubs.EmptyStub<aldor.psi.AldorComma>'
 
   // with
   implements("UnaryWith") = 'aldor.psi.AldorWith'
@@ -505,8 +510,8 @@ E14 ::= (UnaryWith | UnaryAdd | (E15 (WithPart | AddPart | KW_Except E15 | KW_Th
 
 UnaryAdd ::= KW_Add DeclMolecule
 UnaryWith ::= KW_With DeclMolecule
-left WithPart ::= KW_With DeclMolecule
 left AddPart ::= KW_Add DeclMolecule
+left WithPart ::= KW_With DeclMolecule
 
 private E15 ::= Application
 
@@ -676,7 +681,7 @@ private enlist1a_Labelled_SEMICOLON ::= Labelled (Semicolon Labelled)* Semicolon
 TopLevel ::= CurlyContents_Labelled (KW_StartPile Piled_Content KW_EndPile?)?
 
 //Piled_E ::= KW_BlkStart PileContents_E KW_BlkEnd
-Piled_Expression ::= KW_BlkStart Piled_Content <<blockEnd>>
+private Piled_Expression ::= KW_BlkStart Piled_Content <<blockEnd>>
 DeclPiled_Expression ::= KW_BlkStart DeclPiled_Content <<blockEnd>>
 Piled_Content ::= <<parsePiledContent "Pile">>
 DeclPiled_Content ::= <<parsePiledContent "Pile">>
@@ -684,7 +689,7 @@ DeclPiled_Content ::= <<parsePiledContent "Pile">>
 //Piled_Expression ::= KW_BlkStart Doc_Expression (KW_BlkNext Doc_Expression)* KW_BlkNext? <<backTab>>
 
 //Curly_E ::= KW_OCurly CurlyContents_E KW_CCurly
-Curly_Labelled ::= KW_OCurly CurlyContents_Labelled KW_CCurly { pin="KW_OCurly" }
+private Curly_Labelled ::= KW_OCurly CurlyContents_Labelled KW_CCurly { pin="KW_OCurly" }
 
 //PileContents(E)<ablist>: Doc(E) | PileContents(E) KW_BlkNext Doc(E) | error KW_BlkNext Doc(E)
 //PileContents_E ::= Doc_E | PileContents_E KW_BlkNext Doc(E) | error
@@ -693,16 +698,16 @@ Curly_Labelled ::= KW_OCurly CurlyContents_Labelled KW_CCurly { pin="KW_OCurly" 
 //PileContents_Expression ::= Doc_Expression (KW_BlkNext Doc_Expression)* KW_BlkNext?
 
 //CurlyContents_E ::= CurlyContentsList_E
-CurlyContents_Labelled ::= CurlyContentsList_Labelled
+private CurlyContents_Labelled ::= CurlyContentsList_Labelled
 
 //CurlyContentsList_E ::= CurlyContent1_E
 //            | CurlyContent1_E CurlyContentB_E
-CurlyContentsList_Labelled ::= CurlyContent1_Labelled Documented_Labelled?
+private CurlyContentsList_Labelled ::= CurlyContent1_Labelled Documented_Labelled?
 
 //CurlyContent1_E ::= Nothing
 //        | CurlyContent1_E CurlyContentA_E
 
-CurlyContent1_Labelled ::= CurlyContentA_Labelled*
+private CurlyContent1_Labelled ::= CurlyContentA_Labelled*
 
 //CurlyContentA_E ::= CurlyContentB_E KW_Semicolon PostDocument
 //        | error KW_Semicolon PostDocument

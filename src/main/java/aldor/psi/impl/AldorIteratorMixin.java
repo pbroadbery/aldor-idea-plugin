@@ -4,6 +4,7 @@ import aldor.psi.AldorForLhs;
 import aldor.psi.AldorId;
 import aldor.psi.AldorIterator;
 import aldor.psi.AldorRecursiveVisitor;
+import aldor.psi.ScopeFormingElement;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
@@ -16,12 +17,11 @@ import java.util.Collection;
 import java.util.Collections;
 
 @SuppressWarnings({"AbstractClassExtendsConcreteClass", "AbstractClassWithOnlyOneDirectInheritor"})
-public abstract class AldorIteratorMixin extends ASTWrapperPsiElement implements AldorIterator {
+public abstract class AldorIteratorMixin extends ASTWrapperPsiElement implements AldorIterator, ScopeFormingElement {
 
     protected AldorIteratorMixin(@NotNull ASTNode node) {
         super(node);
     }
-
 
     @Override
     public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement place) {

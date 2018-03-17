@@ -1,6 +1,6 @@
 package aldor.spad;
 
-import aldor.language.SpadLanguage;
+import aldor.language.AldorLanguage;
 import aldor.sdk.FricasSdkType;
 import aldor.sdk.SdkTypes;
 import com.intellij.openapi.module.Module;
@@ -47,11 +47,15 @@ public class SpadLibraryManager {
         }
         if (SdkTypes.isLocalSdk(moduleSdk)) {
             VirtualFile path = rootManager.getModuleExtension(CompilerModuleExtension.class).getCompilerOutputPath();
+            VirtualFile algebraPath = (path == null) ? null : path.findFileByRelativePath("src/algebra");
+            if (algebraPath == null) {
+                return null;
+            }
             VirtualFile likelySourceDirectory = Optional.ofNullable((rootManager.getSourceRoots().length < 1) ? null : rootManager)
                     .map(mgr -> mgr.getSourceRoots()[0])
                     .flatMap(root -> Optional.ofNullable(root.findFileByRelativePath("algebra")))
                     .orElse(null);
-            return forNRLibDirectory(module.getProject(), path.findFileByRelativePath("src/algebra"), likelySourceDirectory);
+            return forNRLibDirectory(module.getProject(), algebraPath, likelySourceDirectory);
         }
         else {
             return forSdk(module.getProject(), moduleSdk);
@@ -82,7 +86,11 @@ public class SpadLibraryManager {
         if (sdk.getUserData(key) != null) {
             return sdk.getUserData(key);
         }
-        SpadLibrary lib = new FricasSpadLibraryBuilder().project(project).daaseDirectory(sdk.getHomeDirectory().findFileByRelativePath("algebra")).createFricasSpadLibrary();
+        VirtualFile algebra = SdkTypes.algebraPath(sdk);
+        if (algebra == null) {
+            return null;
+        }
+        SpadLibrary lib = new FricasSpadLibraryBuilder().project(project).daaseDirectory(algebra).createFricasSpadLibrary();
         sdk.putUserData(key, lib);
         return lib;
     }
@@ -96,7 +104,7 @@ public class SpadLibraryManager {
     @Nullable
     public SpadLibrary spadLibraryForElement(PsiElement psiElement) {
         Module module = ModuleUtilCore.findModuleForPsiElement(psiElement);
-        if (!psiElement.getContainingFile().getLanguage().is(SpadLanguage.INSTANCE)) {
+        if (!psiElement.getContainingFile().getLanguage().isKindOf(AldorLanguage.INSTANCE)) {
             return null;
         }
         if (module != null) {
@@ -106,8 +114,12 @@ public class SpadLibraryManager {
             }
         }
 
-        DirectoryInfo info = DirectoryIndex.getInstance(psiElement.getProject()).getInfoForFile(psiElement.getContainingFile().getVirtualFile());
-        if (info.isInLibrarySource(psiElement.getContainingFile().getVirtualFile())) {
+        VirtualFile file = psiElement.getContainingFile().getVirtualFile();
+        if (file == null) {
+            return null;
+        }
+        DirectoryInfo info = DirectoryIndex.getInstance(psiElement.getProject()).getInfoForFile(file);
+        if (info.isInLibrarySource(file)) {
             for (Sdk sdk : ProjectJdkTable.getInstance().getAllJdks()) {
                 if (!(sdk.getSdkType() instanceof FricasSdkType)) {
                     continue;

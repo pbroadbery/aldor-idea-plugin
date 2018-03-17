@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.Icon;
 
 public class AldorFileTypeFactory extends FileTypeFactory {
+
     @Override
     public void createFileTypes(@NotNull FileTypeConsumer fileTypeConsumer) {
         fileTypeConsumer.consume(AldorFileType.INSTANCE);
@@ -56,7 +57,6 @@ public class AldorFileTypeFactory extends FileTypeFactory {
             return extension;
         }
 
-        @Nullable
         @Override
         public Icon getIcon() {
             return IconUtil.addText(IconUtil.getMoveDownIcon(), extension);

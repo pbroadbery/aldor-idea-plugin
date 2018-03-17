@@ -19,6 +19,7 @@ import java.util.List;
 import static aldor.test_util.LightPlatformJUnit4TestRule.createFixture;
 import static aldor.test_util.SdkProjectDescriptors.fricasLocalSdkProjectDescriptor;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 public class FricasLocalSpadLibraryTest {
 
@@ -34,7 +35,10 @@ public class FricasLocalSpadLibraryTest {
 
     @Test
     public void testParents0() {
-        VirtualFile baseBuildPath = CompilerModuleExtension.getInstance(testFixture.getModule()).getCompilerOutputPath();
+        CompilerModuleExtension instance = CompilerModuleExtension.getInstance(testFixture.getModule());
+        assertNotNull(instance);
+        VirtualFile baseBuildPath = instance.getCompilerOutputPath();
+        assertNotNull(baseBuildPath);
         FricasSpadLibrary lib = new FricasSpadLibraryBuilder()
                 .project(testFixture.getProject())
                 .nrlibDirectory(baseBuildPath.findFileByRelativePath("src/algebra"), baseBuildPath.findFileByRelativePath("../fricas/src/algebra"))

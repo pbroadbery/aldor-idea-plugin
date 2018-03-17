@@ -1,13 +1,12 @@
 package aldor.builder.test;
 
 import com.google.common.base.Charsets;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
-import static org.junit.Assert.assertEquals;
 
 public class ProcessBuilderTest {
 
@@ -27,7 +26,7 @@ public class ProcessBuilderTest {
                 count++;
             }
         }
-        assertEquals(1, count);
+        Assert.assertEquals(1, count);
     }
 
 

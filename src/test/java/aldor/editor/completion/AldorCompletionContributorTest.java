@@ -1,14 +1,18 @@
 package aldor.editor.completion;
 
+import aldor.sdk.SdkTypes;
 import aldor.spad.FricasSpadLibraryBuilder;
 import aldor.spad.SpadLibrary;
 import aldor.test_util.DirectoryPresentRule;
 import aldor.test_util.SdkProjectDescriptors;
 import aldor.test_util.Timer;
 import com.intellij.codeInsight.lookup.LookupElement;
+import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Assume;
 
@@ -25,9 +29,10 @@ public class AldorCompletionContributorTest extends LightPlatformCodeInsightFixt
     }
 
     public void testLoadAllBenchmark() {
+        VirtualFile algebraDirectory = projectSdkAlgebraDirectory();
         SpadLibrary lib = new FricasSpadLibraryBuilder()
                 .project(getProject())
-                .daaseDirectory(ProjectRootManager.getInstance(getProject()).getProjectSdk().getHomeDirectory().findFileByRelativePath("algebra"))
+                .daaseDirectory(algebraDirectory)
                 .createFricasSpadLibrary();
         for (int i=0; i<1; i++) {
             Timer timer = new Timer("loadAllTypes-" + i);
@@ -42,11 +47,20 @@ public class AldorCompletionContributorTest extends LightPlatformCodeInsightFixt
 
     public void testLoadAll() {
         SpadLibrary lib = new FricasSpadLibraryBuilder().project(getProject())
-                .daaseDirectory(ProjectRootManager.getInstance(getProject()).getProjectSdk().getHomeDirectory().findFileByRelativePath("algebra"))
+                .daaseDirectory(projectSdkAlgebraDirectory())
                 .createFricasSpadLibrary();
         List<LookupElement> allTypes = AldorCompletionContributor.allTypes(lib);
         System.out.println("All types: " + allTypes.size());
         Assert.assertFalse(allTypes.isEmpty());
+    }
+
+    @NotNull
+    private VirtualFile projectSdkAlgebraDirectory() {
+        Sdk projectSdk = ProjectRootManager.getInstance(getProject()).getProjectSdk();
+        Assert.assertNotNull(projectSdk);
+        VirtualFile algebraDirectory = SdkTypes.algebraPath(projectSdk);
+        Assert.assertNotNull(algebraDirectory);
+        return algebraDirectory;
     }
 
     @Override

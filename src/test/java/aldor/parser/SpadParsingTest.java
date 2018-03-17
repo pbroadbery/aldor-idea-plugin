@@ -522,6 +522,7 @@ public class SpadParsingTest {
         for (Map.Entry<FailReason, File> ent: badFiles.entries()) {
             System.out.println("Failed: " + ent.getKey() + " --> " + ent.getValue());
         }
+
         Assert.assertTrue(badFiles.isEmpty());
     }
 

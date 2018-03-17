@@ -3,6 +3,8 @@ package aldor.psi.impl;
 import aldor.psi.AldorDefine;
 import aldor.psi.AldorIdentifier;
 import aldor.psi.stub.AldorDefineStub;
+import aldor.references.FileScopeWalker;
+import aldor.references.ScopeContext;
 import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxPsiParser;
 import aldor.syntax.SyntaxUtils;
@@ -79,7 +81,9 @@ public class AldorDefineMixin extends StubBasedPsiElementBase<AldorDefineStub> i
         if (!processor.execute(this, state)) {
             return false;
         }
-
+        if (state.get(FileScopeWalker.scopeContextKey) == ScopeContext.DeclBlock) {
+            return true;
+        }
         Optional<Syntax> syntax = syntax();
 
         if (syntax.isPresent()) {
@@ -124,4 +128,5 @@ public class AldorDefineMixin extends StubBasedPsiElementBase<AldorDefineStub> i
         }
         return this;
     }
+
 }

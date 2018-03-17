@@ -215,6 +215,4 @@ public class ParseStatementsTest extends LightPlatformCodeInsightFixtureTestCase
         return LightProjectDescriptor.EMPTY_PROJECT_DESCRIPTOR;
     }
 
-
-
 }

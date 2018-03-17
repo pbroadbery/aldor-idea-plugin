@@ -90,14 +90,16 @@ public class AldorCompletionContributor extends CompletionContributor {
                         .withTailText(tailTextForElement(spadLibrary, id.get()), true)
                 );
             }
-            if (isApply.filter(apply -> apply.arguments().size() == 1).isPresent()) {
+            else if (isApply.filter(apply -> apply.arguments().size() == 1).isPresent()) {
                 return Optional.of(LookupElementBuilder.create(id.get().symbol())
+                        .withIcon(AldorIcons.IDENTIFIER)
+                        .withTailText(tailTextForElement(spadLibrary, id.get()), true)
                         .withInsertHandler(AddSpaceInsertHandler.INSTANCE_WITH_AUTO_POPUP));
             }
             else {
                 return Optional.of(LookupElementBuilder.create(id.get().symbol())
-                        .withTailText(tailTextForElement(spadLibrary, id.get()), true)
-                );
+                        .withIcon(AldorIcons.IDENTIFIER)
+                        .withTailText(tailTextForElement(spadLibrary, id.get()), true));
             }
         }
     }

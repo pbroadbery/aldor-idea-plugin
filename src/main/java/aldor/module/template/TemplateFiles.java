@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.util.Map;
 
-public class TemplateFiles {
+public final class TemplateFiles {
     private static final Logger LOG = Logger.getInstance(TemplateFiles.class);
 
     public static void saveFile(@NotNull VirtualFile file, @NotNull String templateName, @Nullable Map<String, String> templateAttributes)

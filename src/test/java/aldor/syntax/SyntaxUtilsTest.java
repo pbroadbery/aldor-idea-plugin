@@ -43,6 +43,33 @@ public class SyntaxUtilsTest {
         assertEquals("Foo(n, M)", SyntaxPrinter.instance().toString(name));
     }
 
+    @Test
+    public void testDefToSig0() {
+        Syntax syntax = parseToSyntax("Foo(): Y");
+        Syntax name = SyntaxUtils.definitionToSignature(syntax).orElse(null);
+        assertEquals("() -> Y", SyntaxPrinter.instance().toString(name));
+    }
+
+    @Test
+    public void testDefToSig1() {
+        Syntax syntax = parseToSyntax("Foo(n: Integer): Y");
+        Syntax name = SyntaxUtils.definitionToSignature(syntax).orElse(null);
+        assertEquals("Integer -> Y", SyntaxPrinter.instance().toString(name));
+    }
+
+    @Test
+    public void testDefToSig2() {
+        Syntax syntax = parseToSyntax("Foo(n: Integer, M: Ring): Y");
+        Syntax name = SyntaxUtils.definitionToSignature(syntax).orElse(null);
+        assertEquals("(Integer, Ring) -> Y", SyntaxPrinter.instance().toString(name));
+    }
+
+    @Test
+    public void testDefToSigR2() {
+        Syntax syntax = parseToSyntax("Foo(n: Integer): (String, Y)");
+        Syntax name = SyntaxUtils.definitionToSignature(syntax).orElse(null);
+        assertEquals("Integer -> (String, Y)", SyntaxPrinter.instance().toString(name));
+    }
 
     private Syntax parseToSyntax(CharSequence text) {
         PsiElement element = parseText(text);

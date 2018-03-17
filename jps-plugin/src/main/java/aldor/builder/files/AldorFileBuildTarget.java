@@ -36,6 +36,11 @@ public class AldorFileBuildTarget extends BuildTarget<AldorFileRootDescriptor> {
         assert rootDescriptor.getRootId().equals(file.getPath());
     }
 
+    @Override
+    public String toString() {
+        return "{FileTarget: " + this.outputLocation +"}";
+    }
+
     @NotNull
     @Contract(pure = true)
     public static String trimExtension(@NotNull String name) {

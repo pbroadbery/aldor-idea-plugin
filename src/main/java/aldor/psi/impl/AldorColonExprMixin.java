@@ -3,6 +3,8 @@ package aldor.psi.impl;
 import aldor.psi.AldorColonExpr;
 import aldor.psi.AldorDeclare;
 import aldor.psi.stub.AldorDeclareStub;
+import aldor.references.FileScopeWalker;
+import aldor.references.ScopeContext;
 import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxPsiParser;
 import aldor.syntax.SyntaxUtils;
@@ -35,6 +37,9 @@ public abstract class AldorColonExprMixin extends StubBasedPsiElementBase<AldorD
         if (!processor.execute(this, state)) {
             return false;
         }
+        if (state.get(FileScopeWalker.scopeContextKey) == ScopeContext.DeclBlock) {
+            return true;
+        }
         PsiElement lhs = this.getFirstChild();
         //noinspection ObjectEquality
         if (lastParent != lhs) {
@@ -50,8 +55,9 @@ public abstract class AldorColonExprMixin extends StubBasedPsiElementBase<AldorD
 
     @Override
     public String getName() {
-        return SyntaxUtils.leadingId(SyntaxPsiParser.parse(lhs())).maybeAs(Id.class).map(Id::symbol).orElse(null);
-
+        return SyntaxUtils.leadingId(SyntaxPsiParser.parse(lhs()))
+                .maybeAs(Id.class)
+                .map(Id::symbol).orElse(null);
     }
 
     @Override
