@@ -19,7 +19,7 @@ import java.util.Objects;
 import static com.intellij.testFramework.LightPlatformTestCase.getProject;
 import static org.junit.Assert.assertNotNull;
 
-public abstract class SpadLibraryManagerTest {
+public abstract class SpadLibraryManagerTestCase {
 
     public abstract String basePath();
     public abstract CodeInsightTestFixture testFixture();

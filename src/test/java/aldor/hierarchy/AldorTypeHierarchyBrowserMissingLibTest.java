@@ -9,6 +9,7 @@ import aldor.syntax.components.Id;
 import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.LightPlatformJUnit4TestRule;
 import aldor.test_util.SdkProjectDescriptors;
+import aldor.typelib.Env;
 import aldor.util.Assertions;
 import com.intellij.ide.hierarchy.HierarchyProvider;
 import com.intellij.openapi.Disposable;
@@ -16,10 +17,12 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.CodeInsightTestFixture;
 import org.jetbrains.annotations.NotNull;
@@ -92,6 +95,7 @@ public class AldorTypeHierarchyBrowserMissingLibTest {
             return syntax;
         }
 
+        @NotNull
         @Override
         public List<Syntax> allTypes() {
             return Collections.emptyList();
@@ -100,6 +104,25 @@ public class AldorTypeHierarchyBrowserMissingLibTest {
         @Override
         public String definingFile(Id id) {
             return "nope";
+        }
+
+        @Override
+        public Env environment() {
+            return null;
+        }
+
+        @Override
+        public GlobalSearchScope scope(Project project) {
+            return null;
+        }
+
+        @Override
+        public void addDependant(SpadLibrary lib) {
+
+        }
+
+        @Override
+        public void needsReload() {
         }
     }
 }

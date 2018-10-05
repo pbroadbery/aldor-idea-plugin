@@ -11,9 +11,9 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ui.util.CompositeAppearance;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Iconable;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.Icon;
 import java.awt.Font;
@@ -34,9 +34,6 @@ public class AldorHierarchyNodeDescriptor extends HierarchyNodeDescriptor implem
     @Override
     public final boolean update() {
         final CompositeAppearance oldText = myHighlightedText;
-        final Icon oldIcon = getIcon();
-
-        int flags = Iconable.ICON_FLAG_VISIBILITY | (isMarkReadOnly() ? Iconable.ICON_FLAG_READ_STATUS: 0);
 
         final PsiElement enclosingElement = getPsiElement();
         if (enclosingElement == null) {
@@ -47,8 +44,7 @@ public class AldorHierarchyNodeDescriptor extends HierarchyNodeDescriptor implem
             return true;
         }
         boolean changes = super.update();
-        Icon newIcon = AldorIcons.IDENTIFIER;
-        setIcon(newIcon);
+        boolean tmp = changes;
 
         myHighlightedText = new CompositeAppearance();
         TextAttributes mainTextAttributes = null;
@@ -59,12 +55,17 @@ public class AldorHierarchyNodeDescriptor extends HierarchyNodeDescriptor implem
         myHighlightedText.getBeginning().addText(SyntaxPrinter.instance().toString(syntax), mainTextAttributes);
         myName = myHighlightedText.getText();
 
-        if (!Comparing.equal(myHighlightedText, oldText) || !Comparing.equal(getIcon(), oldIcon)) {
+        if (!Comparing.equal(myHighlightedText, oldText)) {
             changes = true;
         }
-        LOG.info("changes: " + changes);
 
         return changes;
+    }
+
+    @Nullable
+    @Override
+    protected Icon getIcon(@NotNull PsiElement element) {
+        return AldorIcons.TYPE;
     }
 
     @Override

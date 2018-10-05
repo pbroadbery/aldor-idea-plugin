@@ -34,7 +34,6 @@ public abstract class AldorDeclBlockMixin extends ASTWrapperPsiElement implement
             if (PsiTreeUtil.isAncestor(lastParent, binding.element(), false)) {
                 continue;
             }
-            LOG.info("Checking binding: '" + binding.element().getText() + "' lastParent: " + lastParent.getClass().getSimpleName() +" " + lastParent.getText() );
             boolean ret = processor.execute(binding.element(), state.put(scopeContextKey, ScopeContext.DeclBlock));
             if (!ret) {
                 return false;

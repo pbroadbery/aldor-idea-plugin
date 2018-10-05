@@ -23,6 +23,12 @@
     <depends>com.intellij.modules.lang</depends>
     -->
 
+    <application-components>
+        <component>
+            <interface-class>aldor.spad.AldorExecutor</interface-class>
+            <implementation-class>aldor.spad.AldorExecutorComponent</implementation-class>
+        </component>
+    </application-components>
     <project-components>
         <component>
             <interface-class>aldor.editor.ProjectPsiDefaults</interface-class>
@@ -65,6 +71,10 @@
         <stubIndex implementation="aldor.psi.index.AldorDeclareTopIndex"/>
         <moduleRendererFactory implementation="aldor.editor.finder.OptionRendererFactory"/>
         <completion.contributor language="Aldor" implementationClass="aldor.editor.completion.AldorCompletionContributor"/>
+        <lang.psiStructureViewFactory language="Aldor" implementationClass="aldor.structure.AldorPsiStructureViewFactory"/>
+
+        <typeHierarchyProvider implementationClass="aldor.hierarchy.AldorTypeHierarchyProvider" language="Aldor"/>
+        <methodHierarchyProvider implementationClass="aldor.hierarchy.AldorMissingHierarchyProvider" language="Aldor"/>
 
         <!-- Aldor extras -->
         <lang.refactoringSupport language="Aldor" implementationClass="aldor.references.AldorRefactoringSupportProvider"/>
@@ -90,10 +100,6 @@
         <gotoClassContributor implementation="aldor.editor.finder.SpadAbbrevGotoClassContributor"/>
         <sdkType implementation="aldor.sdk.FricasInstalledSdkType"/>
         <sdkType implementation="aldor.sdk.FricasLocalSdkType"/>
-
-        <lang.psiStructureViewFactory language="Spad" implementationClass="aldor.structure.AldorPsiStructureViewFactory"/>
-        <typeHierarchyProvider implementationClass="aldor.hierarchy.AldorTypeHierarchyProvider" language="Spad"/>
-        <methodHierarchyProvider implementationClass="aldor.hierarchy.AldorMissingHierarchyProvider" language="Spad"/>
 
         <configurationType implementation="aldor.spad.runconfiguration.SpadInputRunConfigurationType" />
         <runConfigurationProducer implementation = "aldor.spad.runconfiguration.SpadInputRunConfigurationProducer"/>

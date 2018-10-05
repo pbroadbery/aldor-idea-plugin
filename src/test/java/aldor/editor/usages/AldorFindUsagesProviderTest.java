@@ -47,9 +47,7 @@ public class AldorFindUsagesProviderTest {
     @After
     public void doAfter() {
         EdtTestUtil.runInEdtAndWait(JavaAwareProjectJdkTableImpl::removeInternalJdkInTests);
-
     }
-
 
     @Test
     public void testUsage() throws ExecutionException, InterruptedException {

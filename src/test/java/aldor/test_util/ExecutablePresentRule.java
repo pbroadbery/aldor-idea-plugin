@@ -89,6 +89,13 @@ public class ExecutablePresentRule implements TestRule {
         }
     }
 
+
+    public static class AldorDev extends ExecutablePresentRule {
+        public AldorDev() {
+            super(Collections.singletonList("/home/pab/Work/aldorgit/opt/bin"), "aldor");
+        }
+    }
+
     public static class Aldor extends ExecutablePresentRule {
         public Aldor() {
             super(Collections.singletonList("/home/pab/IdeaProjects/aldor-codebase/opt/bin"), "aldor");

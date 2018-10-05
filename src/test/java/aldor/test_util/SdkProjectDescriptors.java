@@ -3,10 +3,13 @@ package aldor.test_util;
 import aldor.build.module.AldorModuleType;
 import aldor.sdk.AldorInstalledSdkType;
 import aldor.sdk.AldorLocalSdkType;
+import aldor.sdk.AldorSdkType;
 import aldor.sdk.FricasInstalledSdkType;
 import aldor.sdk.FricasLocalSdkType;
+import aldor.sdk.FricasSdkType;
 import aldor.sdk.SdkTypes;
 import com.intellij.openapi.application.WriteAction;
+import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.project.Project;
@@ -19,10 +22,12 @@ import com.intellij.openapi.roots.CompilerModuleExtension;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.LightProjectDescriptor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -94,28 +99,52 @@ public final class SdkProjectDescriptors {
         @Override
         public void setUpProject(@NotNull Project project, @NotNull SetupHandler handler) throws Exception {
             WriteAction.run( () -> ProjectRootManager.getInstance(project).setProjectSdk(getSdk()));
+            ApplicationManagerEx.getApplicationEx().setSaveAllowed(true);
             super.setUpProject(project, handler);
+            project.save();
         }
-
-        static Module lastModule;
 
         @Override
         protected void configureModule(@NotNull Module module, @NotNull ModifiableRootModel model, @NotNull ContentEntry contentEntry) {
             super.configureModule(module, model, contentEntry);
             System.out.println("Configuring module " + module + " " + model);
-            if (SdkTypes.isLocalSdk(sdk)) {
+            if (SdkTypes.isLocalSdk(sdk) && (sdk.getSdkType() instanceof FricasSdkType)) {
                 ContentEntry newContentEntry = model.addContentEntry("file://" + prefix);
                 newContentEntry.addSourceFolder("file://" + prefix +"/fricas/src", false);
                 CompilerModuleExtension moduleExtension = model.getModuleExtension(CompilerModuleExtension.class);
                 moduleExtension.inheritCompilerOutputPath(false);
                 moduleExtension.setCompilerOutputPath("file://" + prefix + "/build");
             }
-            lastModule = module;
+
+            if (sdk.getSdkType() instanceof AldorSdkType) {
+                CompilerModuleExtension compilerModuleExtension = model.getModuleExtension(CompilerModuleExtension.class);
+                compilerModuleExtension.setCompilerOutputPath("file:///tmp/test_output");
+                compilerModuleExtension.inheritCompilerOutputPath(false);
+            }
         }
 
         @Override
         protected Module createModule(@NotNull Project project, @NotNull String moduleFilePath) {
             return super.createModule(project, moduleFilePath);
+        }
+
+        @Override
+        protected VirtualFile createSourceRoot(@NotNull Module module, String srcPath) {
+            try {
+                VirtualFile root = module.getProject().getBaseDir().getFileSystem().findFileByPath("/tmp");
+                assert root != null;
+                String moduleName = module.getProject().getName() + "_" + module.getName();
+                VirtualFile srcRoot = root.findChild(moduleName);
+                if (srcRoot == null) {
+                    return root.createChildDirectory(null, moduleName);
+                }
+                else {
+                    srcRoot.refresh(false, false);
+                    return srcRoot;
+                }
+            }catch (IOException e) {
+                throw new RuntimeException("No way", e);
+            }
         }
 
         @Nullable

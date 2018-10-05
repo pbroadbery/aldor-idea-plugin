@@ -1,5 +1,8 @@
 package aldor.sdk;
 
-public interface AxiomSdk {
+import com.intellij.openapi.projectRoots.SdkTypeId;
+
+public interface AxiomSdk extends SdkTypeId {
     boolean isLocalInstall();
+
 }

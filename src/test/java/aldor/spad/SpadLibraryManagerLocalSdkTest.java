@@ -11,7 +11,7 @@ import org.junit.rules.TestRule;
 import static aldor.test_util.LightPlatformJUnit4TestRule.createFixture;
 import static aldor.test_util.SdkProjectDescriptors.fricasLocalSdkProjectDescriptor;
 
-public class SpadLibraryManagerLocalSdkTest extends SpadLibraryManagerTest {
+public class SpadLibraryManagerLocalSdkTest extends SpadLibraryManagerTestCase {
 
 
     private final DirectoryPresentRule directoryPresentRule = new DirectoryPresentRule("/home/pab/tmp/plugin/test/fricas_git");

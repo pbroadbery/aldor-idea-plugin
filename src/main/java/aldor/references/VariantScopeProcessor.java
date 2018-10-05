@@ -35,6 +35,9 @@ public class VariantScopeProcessor extends AbstractAldorScopeProcessor {
 
     @Override
     protected boolean executeDefinition(AldorDefine o, ResolveState state) {
+        if (!o.isValid()) {
+            return true;
+        }
         switch (o.definitionType()) {
             case MACRO:
                 references.add(lookupElementFactory.forMacro(o));
@@ -48,7 +51,7 @@ public class VariantScopeProcessor extends AbstractAldorScopeProcessor {
 
     @Override
     protected boolean executeDeclare(AldorDeclare declare, ResolveState state) {
-        if (declare.getName() != null) {
+        if (declare.isValid() && (declare.getName() != null)) {
             references.add(lookupElementFactory.forDeclare(declare));
         }
         return true;

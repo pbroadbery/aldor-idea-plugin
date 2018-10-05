@@ -22,6 +22,7 @@ import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -61,6 +62,15 @@ public class AnnotationFileTestFixture extends BaseFixture {
         return fileForName.get(name);
     }
 
+    public void writeFile(Project project, String name, String text) {
+        Assert.assertNotNull(project);
+        ApplicationManager.getApplication().invokeAndWait(() -> {
+            VirtualFile file = fileForName.get(name);
+            VirtualFileTests.writeFile(file, text.getBytes(StandardCharsets.UTF_8));
+        });
+    }
+
+
     public VirtualFile sourceDirectory(Project project) {
         return ProjectRootManager.getInstance(project).getContentSourceRoots()[0];
     }
@@ -97,10 +107,10 @@ public class AnnotationFileTestFixture extends BaseFixture {
         String abnRule =
                 "$(addsuffix .abn, $(ALDOR_FILES)): %.abn: %.as\n" +
                 "\techo Making $@\n"+
-                "\t$(ALDOR) -Fabn=$@ $<\n" +
+                "\t$(ALDOR) -Fasy -Fabn=$@ $<\n" +
                 "$(addsuffix .ao, $(ALDOR_FILES)): %.ao: %.as\n" +
                 "\techo Making $@\n"+
-                "\t$(ALDOR) -Fao=$@ $<\n"
+                "\t$(ALDOR) -Fasy -Fao=$@ $<\n"
         ;
         String text = "ALDOR = %s\nALDOR_FILES=%s\n%s\n%s\n";
         String dependencyRules = dependencies.entrySet().stream()

@@ -55,7 +55,7 @@ public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
     }
 
     public void testParseMap() {
-        String text = "((A: Tuple Type) -> (R: Tuple Type)): with == add;";
+        String text = "((A: Tuple TYPE) -> (R: Tuple TYPE)): with == add;";
         PsiElement psi = parseText(text);
         logPsi(psi);
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);

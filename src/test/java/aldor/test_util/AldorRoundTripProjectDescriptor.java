@@ -23,7 +23,7 @@ public class AldorRoundTripProjectDescriptor extends LightProjectDescriptor {
     @Override
     public void setUpProject(@NotNull Project project, @NotNull SetupHandler handler) throws Exception {
         super.setUpProject(project, handler);
-        ApplicationManagerEx.getApplicationEx().doNotSave(false);
+        ApplicationManagerEx.getApplicationEx().setSaveAllowed(true);
         project.save();
     }
 

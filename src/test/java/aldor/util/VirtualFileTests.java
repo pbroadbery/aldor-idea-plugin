@@ -51,6 +51,16 @@ public final class VirtualFileTests {
         return dir.findChild(name);
     }
 
+    public static void writeFile(VirtualFile file, byte[] bytes) {
+        ApplicationManager.getApplication().runWriteAction(() -> {
+            try {
+                file.setBinaryContent(bytes);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
     public static VirtualFile createChildDirectory(VirtualFile dir, String dirName) {
         ApplicationManager.getApplication().runWriteAction(() -> {
             try {

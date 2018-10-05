@@ -6,7 +6,6 @@ import aldor.file.AldorFileType;
 import com.google.common.collect.Lists;
 import com.intellij.compiler.impl.BuildTargetScopeProvider;
 import com.intellij.openapi.compiler.CompileScope;
-import com.intellij.openapi.compiler.CompilerFilter;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleType;
@@ -32,7 +31,6 @@ public class AldorBuildTargetScopeProvider extends BuildTargetScopeProvider {
     @Override
     public List<TargetTypeBuildScope> getBuildTargetScopes(
             @NotNull final CompileScope baseScope,
-            @NotNull @SuppressWarnings("deprecation") final CompilerFilter filter,
             @NotNull final Project project,
             final boolean forceBuild) {
 

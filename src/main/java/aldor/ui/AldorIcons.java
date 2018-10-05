@@ -16,4 +16,5 @@ public final class AldorIcons {
 
     public static final Icon MACRO = IconUtil.addText(IDENTIFIER, "M");
     public static final Icon OPERATION = IconUtil.addText(IDENTIFIER, "O");
+    public static final Icon TYPE = IconUtil.addText(IDENTIFIER, "T");
 }

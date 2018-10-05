@@ -10,6 +10,7 @@ import com.intellij.openapi.roots.ui.util.CompositeAppearance;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.Icon;
 import java.awt.Font;
@@ -21,8 +22,19 @@ public class AldorHierarchyOperationDescriptor  extends HierarchyNodeDescriptor 
 
     protected AldorHierarchyOperationDescriptor(@NotNull Project project, HierarchyNodeDescriptor parentDescriptor, Operation operation) {
         //noinspection ConstantConditions
-        super(project, parentDescriptor, (operation.declaration() == null) ? parentDescriptor.getPsiElement() : operation.declaration(), false);
+        super(project, parentDescriptor, anchorElement(parentDescriptor, operation), false);
         this.operation = operation;
+    }
+
+    private static PsiElement anchorElement(HierarchyNodeDescriptor parentDescriptor, Operation operation) {
+        if (operation.declaration() != null) {
+            return operation.declaration();
+        } else if (operation.containingForm() != null) {
+            return operation.containingForm();
+        }
+        else {
+            return parentDescriptor.getPsiElement();
+        }
     }
 
     public Operation operation() {
@@ -32,7 +44,6 @@ public class AldorHierarchyOperationDescriptor  extends HierarchyNodeDescriptor 
     @Override
     public final boolean update() {
         final CompositeAppearance oldText = myHighlightedText;
-        final Icon oldIcon = getIcon();
 
         final PsiElement enclosingElement = getPsiElement();
         if (enclosingElement == null) {
@@ -44,8 +55,6 @@ public class AldorHierarchyOperationDescriptor  extends HierarchyNodeDescriptor 
         }
 
         boolean changes = super.update();
-        Icon newIcon = AldorIcons.OPERATION;
-        setIcon(newIcon);
 
         myHighlightedText = new CompositeAppearance();
         int fontStyle = (this.operation.declaration() == null) ? Font.ITALIC : Font.PLAIN;
@@ -54,8 +63,7 @@ public class AldorHierarchyOperationDescriptor  extends HierarchyNodeDescriptor 
         myHighlightedText.getBeginning().addText(operation.name() + ": " + SyntaxPrinter.instance().toString(operation.type()), mainTextAttributes);
         myName = myHighlightedText.getText();
 
-        assert getIcon().equals(newIcon);
-        if (!Comparing.equal(myHighlightedText, oldText) || !Comparing.equal(getIcon(), oldIcon)) {
+        if (!Comparing.equal(myHighlightedText, oldText)) {
             changes = true;
         }
 
@@ -65,5 +73,11 @@ public class AldorHierarchyOperationDescriptor  extends HierarchyNodeDescriptor 
     @Override
     public int priority() {
         return 1;
+    }
+
+    @Nullable
+    @Override
+    protected Icon getIcon(@NotNull PsiElement element) {
+        return AldorIcons.IDENTIFIER;
     }
 }

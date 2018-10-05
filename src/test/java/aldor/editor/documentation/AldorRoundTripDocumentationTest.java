@@ -5,6 +5,7 @@ import aldor.symbolfile.AnnotationFileTestFixture;
 import aldor.test_util.AldorRoundTripProjectDescriptor;
 import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.Htmls;
+import aldor.test_util.JUnits;
 import aldor.test_util.LightPlatformJUnit4TestRule;
 import com.google.common.collect.ImmutableMap;
 import com.intellij.codeInsight.documentation.DocumentationManager;
@@ -53,6 +54,7 @@ public class AldorRoundTripDocumentationTest {
 
     @Test
     public void testIdentifierDocumentation() throws ExecutionException, InterruptedException {
+        JUnits.setLogToInfo();
         String makefileText = annotationTestFixture.createMakefile(aldorExecutableRule.executable().getAbsolutePath(),
                                                                     Arrays.asList("define.as", "use.as"),
                 ImmutableMap.<String, List<String>>builder().put("use", Collections.singletonList("define")).build());

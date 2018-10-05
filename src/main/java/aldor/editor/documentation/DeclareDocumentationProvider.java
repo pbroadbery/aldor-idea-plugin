@@ -28,8 +28,8 @@ class DeclareDocumentationProvider extends TypedDocumentationProvider<AldorDecla
                                                                 .map(Syme::type);
         String exportType = declareExporterType(o).map(e -> "<b>Exporter:</b> " + e).orElse("");
 
-        String header = "<b>Type:</b> " + type1;
-        String importType = "<br/>" + syme.map(s -> "<b>Imported Type:</b> " + SyntaxPrinter.instance().toString(s)).orElse(msg -> "");
+        String header = "<b>TYPE:</b> " + type1;
+        String importType = "<br/>" + syme.map(s -> "<b>Imported TYPE:</b> " + SyntaxPrinter.instance().toString(s)).orElse(msg -> "");
         String docco = docUtils.aldorDocStringFromContainingElement(o);
         return header + "<br/>" + exportType + importType + "<hr/>" + docco;
     }

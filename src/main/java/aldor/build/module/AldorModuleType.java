@@ -1,6 +1,7 @@
 package aldor.build.module;
 
 import aldor.ui.AldorIcons;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.module.ModuleTypeManager;
 import org.jetbrains.annotations.NotNull;
@@ -50,6 +51,10 @@ public class AldorModuleType extends ModuleType<AldorModuleBuilder> {
     @Override
     public boolean isSupportedRootType(@SuppressWarnings("rawtypes") JpsModuleSourceRootType type) {
         return type == JavaSourceRootType.SOURCE;
+    }
+
+    public boolean is(Module module) {
+        return ModuleType.is(module, this);
     }
 
 }

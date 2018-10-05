@@ -13,9 +13,10 @@ import org.jetbrains.annotations.Nullable;
 public class AldorPsiStructureViewFactory implements PsiStructureViewFactory {
     @Nullable
     @Override
-    public StructureViewBuilder getStructureViewBuilder(PsiFile psiFile) {
-        if (!(psiFile instanceof AxiomFile))
+    public StructureViewBuilder getStructureViewBuilder(@NotNull PsiFile psiFile) {
+        if (!(psiFile instanceof AxiomFile)) {
             return null;
+        }
         return new TreeBasedStructureViewBuilder() {
             @NotNull
             @Override

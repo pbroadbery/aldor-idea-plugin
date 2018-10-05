@@ -1,6 +1,9 @@
 package aldor.spad;
 
+import aldor.build.module.AldorModuleType;
 import aldor.language.AldorLanguage;
+import aldor.sdk.AldorSdkType;
+import aldor.sdk.AxiomSdk;
 import aldor.sdk.FricasSdkType;
 import aldor.sdk.SdkTypes;
 import com.intellij.openapi.module.Module;
@@ -8,6 +11,7 @@ import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.ProjectJdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.CompilerModuleExtension;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.OrderRootType;
@@ -39,6 +43,7 @@ public class SpadLibraryManager {
         return lib;
     }
 
+    @Nullable
     private SpadLibrary forModule0(Module module) {
         ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
         Sdk moduleSdk = rootManager.getSdk();
@@ -57,6 +62,9 @@ public class SpadLibraryManager {
                     .orElse(null);
             return forNRLibDirectory(module.getProject(), algebraPath, likelySourceDirectory);
         }
+        else if (AldorModuleType.instance().is(module)) {
+            return forAldorModule(module);
+        }
         else {
             return forSdk(module.getProject(), moduleSdk);
         }
@@ -68,6 +76,19 @@ public class SpadLibraryManager {
 
     public void spadLibraryForSdk(@SuppressWarnings("TypeMayBeWeakened") @NotNull Sdk sdk, @NotNull SpadLibrary spadLibrary) {
         sdk.putUserData(key, spadLibrary);
+    }
+
+    @Nullable
+    private SpadLibrary forAldorModule(Module module) {
+        ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
+        SpadLibrary sdkLibrary = Optional.ofNullable(rootManager.getSdk()).map(sdk -> forSdk(module.getProject(), sdk)).orElse(forProject(module.getProject()));
+        VirtualFile[] roots = rootManager.getSourceRoots();
+        if (roots.length == 0) {
+            return sdkLibrary;
+        }
+        else {
+            return new AldorModuleSpadLibraryBuilder(module).rootDirectory(roots[0]).dependency(sdkLibrary).createFricasSpadLibrary();
+        }
     }
 
     @Nullable
@@ -86,13 +107,34 @@ public class SpadLibraryManager {
         if (sdk.getUserData(key) != null) {
             return sdk.getUserData(key);
         }
-        VirtualFile algebra = SdkTypes.algebraPath(sdk);
-        if (algebra == null) {
+        SpadLibrary lib = doForSdk(project, sdk);
+        if (lib == null) {
             return null;
         }
-        SpadLibrary lib = new FricasSpadLibraryBuilder().project(project).daaseDirectory(algebra).createFricasSpadLibrary();
         sdk.putUserData(key, lib);
         return lib;
+    }
+
+    @Nullable
+    private SpadLibrary doForSdk(Project project, @NotNull Sdk sdk) {
+        if (!(sdk.getSdkType() instanceof AxiomSdk)) {
+            return null;
+        }
+        SdkType sdkType = (SdkType) sdk.getSdkType();
+        if (sdkType instanceof AldorSdkType) {
+            return new AldorSdkSpadLibraryBuilder(project, sdk.getHomeDirectory()).createFricasSpadLibrary();
+        }
+        else if (sdkType instanceof FricasSdkType) {
+            VirtualFile algebra = SdkTypes.algebraPath(sdk);
+            SpadLibrary lib = null;
+            if (algebra != null) {
+                lib = new FricasSpadLibraryBuilder().project(project).daaseDirectory(algebra).createFricasSpadLibrary();
+            }
+            return lib;
+        }
+        else {
+            return null;
+        }
     }
 
     @Nullable
@@ -121,7 +163,7 @@ public class SpadLibraryManager {
         DirectoryInfo info = DirectoryIndex.getInstance(psiElement.getProject()).getInfoForFile(file);
         if (info.isInLibrarySource(file)) {
             for (Sdk sdk : ProjectJdkTable.getInstance().getAllJdks()) {
-                if (!(sdk.getSdkType() instanceof FricasSdkType)) {
+                if (!(sdk.getSdkType() instanceof AxiomSdk)) {
                     continue;
                 }
                 Optional<VirtualFile> any = Arrays.stream(sdk.getRootProvider().getFiles(OrderRootType.SOURCES))

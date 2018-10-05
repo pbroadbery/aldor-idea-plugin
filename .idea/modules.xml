@@ -3,8 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/aldor-common/aldor-common.iml" filepath="$PROJECT_DIR$/aldor-common/aldor-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jps-plugin/aldor-jps-plugin.iml" filepath="$PROJECT_DIR$/jps-plugin/aldor-jps-plugin.iml" />
       <module fileurl="file://$PROJECT_DIR$/aldorparse.iml" filepath="$PROJECT_DIR$/aldorparse.iml" />
-      <module fileurl="file://$PROJECT_DIR$/jps-plugin/jps-plugin.iml" filepath="$PROJECT_DIR$/jps-plugin/jps-plugin.iml" />
     </modules>
   </component>
 </project>

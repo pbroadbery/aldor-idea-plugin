@@ -11,7 +11,7 @@ import org.junit.rules.TestRule;
 import static aldor.test_util.LightPlatformJUnit4TestRule.createFixture;
 import static aldor.test_util.SdkProjectDescriptors.fricasSdkProjectDescriptor;
 
-public class SpadLibraryManagerDistSdkTest extends SpadLibraryManagerTest {
+public class SpadLibraryManagerDistSdkTest extends SpadLibraryManagerTestCase {
 
     @Rule
     public final DirectoryPresentRule directory = new DirectoryPresentRule("/home/pab/Work/fricas/opt/lib/fricas/target/x86_64-unknown-linux");

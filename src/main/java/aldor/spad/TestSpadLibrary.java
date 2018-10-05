@@ -10,6 +10,7 @@ import aldor.syntax.components.Apply;
 import aldor.syntax.components.Comma;
 import aldor.syntax.components.Id;
 import aldor.syntax.components.SyntaxRepresentation;
+import aldor.typelib.Env;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -68,6 +69,7 @@ public class TestSpadLibrary implements SpadLibrary {
         return syntax;
     }
 
+    @NotNull
     @Override
     public List<Syntax> allTypes() {
         return Collections.emptyList();
@@ -76,6 +78,26 @@ public class TestSpadLibrary implements SpadLibrary {
     @Override
     public String definingFile(Id id) {
         return "list.spad (probably)";
+    }
+
+    @Override
+    public Env environment() {
+        return null;
+    }
+
+    @Override
+    public GlobalSearchScope scope(Project project) {
+        return null;
+    }
+
+    @Override
+    public void addDependant(SpadLibrary lib) {
+
+    }
+
+    @Override
+    public void needsReload() {
+
     }
 
     private ParentInfo parentInfo(Syntax syntax) {

@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="PLUGIN_MODULE" version="4">
   <component name="DevKit.ModuleBuildProperties" url="file://$MODULE_DIR$/resources/META-INF/plugin.xml" />
-  <component name="NewModuleRootManager">
-    <output url="file://$MODULE_DIR$/out/production/aldorparse" />
-    <output-test url="file://$MODULE_DIR$/out/test/aldorparse" />
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <annotation-paths>
       <root url="file://$MODULE_DIR$/src/annotations" />
@@ -22,7 +20,7 @@
       <excludeFolder url="file://$MODULE_DIR$/build/reports" />
       <excludeFolder url="file://$MODULE_DIR$/src/gen" />
     </content>
-    <orderEntry type="jdk" jdkName="IntelliJ IDEA Community Edition IC-173.4548.28" jdkType="IDEA JDK" />
+    <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="TEST" name="org.mockito:mockito-all:1.10.19" level="project" />
     <orderEntry type="library" name="com.google.guava:guava:19.0" level="project" />
@@ -73,14 +71,6 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/aldor-jps-plugin.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
+    <orderEntry type="module" module-name="aldor-jps-plugin" />
   </component>
 </module>

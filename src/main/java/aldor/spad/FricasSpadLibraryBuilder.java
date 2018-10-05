@@ -38,10 +38,9 @@ public class FricasSpadLibraryBuilder {
         return this;
     }
 
-    public FricasSpadLibrary.FricasEnvironment createFricasEnvironment() {
-        return new FricasSpadLibrary.FricasEnvironment(daaseDirectory, daaseSourceDirectory, nrlibDirectories, nrlibSourceDirectories);
+    public FricasEnvironment createFricasEnvironment() {
+        return new FricasEnvironment(daaseDirectory, daaseSourceDirectory, nrlibDirectories, nrlibSourceDirectories);
     }
-
 
     public FricasSpadLibrary createFricasSpadLibrary() {
         return new FricasSpadLibrary(project, createFricasEnvironment());
