@@ -1,6 +1,7 @@
 package aldor.library;
 
 import com.intellij.openapi.roots.libraries.LibraryProperties;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class AldorLibraryProperties extends LibraryProperties<AldorLibraryProperties> {
@@ -28,7 +29,7 @@ public class AldorLibraryProperties extends LibraryProperties<AldorLibraryProper
     }
 
     @Override
-    public void loadState(AldorLibraryProperties state) {
+    public void loadState(@NotNull AldorLibraryProperties state) {
 
     }
 

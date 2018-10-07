@@ -12,8 +12,8 @@ public class FricasSpadLibraryBuilder {
     private Project project = null;
     private VirtualFile daaseDirectory = null;
     private VirtualFile daaseSourceDirectory = null;
-    private List<VirtualFile> nrlibDirectories = new ArrayList<>();
-    private List<VirtualFile> nrlibSourceDirectories = new ArrayList<>();
+    private final List<VirtualFile> nrlibDirectories = new ArrayList<>();
+    private final List<VirtualFile> nrlibSourceDirectories = new ArrayList<>();
 
     public FricasSpadLibraryBuilder project(Project project) {
         this.project = project;
@@ -24,7 +24,7 @@ public class FricasSpadLibraryBuilder {
         return daaseDirectory(daaseDirectory, daaseDirectory.findFileByRelativePath("../src/algebra"));
     }
 
-    public FricasSpadLibraryBuilder daaseDirectory(VirtualFile daaseDirectory, VirtualFile daaseSourceDirectory) {
+    public FricasSpadLibraryBuilder daaseDirectory(@NotNull VirtualFile daaseDirectory, VirtualFile daaseSourceDirectory) {
         this.daaseDirectory = daaseDirectory;
         this.daaseSourceDirectory = daaseSourceDirectory;
         return this;

@@ -1,7 +1,7 @@
 package aldor.editor.documentation;
 
 import aldor.build.module.AldorModuleManager;
-import aldor.build.module.AnnotationFileManager;
+import aldor.build.module.AnnotationFileNavigator;
 import aldor.psi.AldorDefine;
 import aldor.psi.AldorDocumented;
 import aldor.psi.AldorIdentifier;
@@ -72,7 +72,7 @@ public class DocumentationUtils {
 
     public String aldorDocString(Syme syme, PsiElement element, PsiElement originalElement) {
         AldorModuleManager moduleManager = AldorModuleManager.getInstance(element.getProject());
-        AnnotatedOptional<AnnotationFileManager, String> annotationManager = moduleManager.annotationFileManagerForFile(element.getProject(), element.getContainingFile().getVirtualFile());
+        AnnotatedOptional<AnnotationFileNavigator, String> annotationManager = moduleManager.annotationFileManagerForFile(element.getProject(), element.getContainingFile().getVirtualFile());
         if (!annotationManager.isPresent()) {
             return annotationManager.failInfo();
         }
@@ -96,7 +96,7 @@ public class DocumentationUtils {
             return missing("No file for element");
         }
         AldorModuleManager moduleManager = AldorModuleManager.getInstance(project);
-        AnnotatedOptional<AnnotationFileManager, String> annotationManager = moduleManager.annotationFileManagerForFile(element.getProject(), virtualFile);
+        AnnotatedOptional<AnnotationFileNavigator, String> annotationManager = moduleManager.annotationFileManagerForFile(element.getProject(), virtualFile);
 
         return annotationManager.flatMap(am -> am.symeForElement(element));
     }

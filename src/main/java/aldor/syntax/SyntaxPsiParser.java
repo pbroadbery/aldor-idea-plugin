@@ -91,6 +91,7 @@ public final class SyntaxPsiParser {
         return visitor.apply(element);
     }
 
+    @SuppressWarnings("CyclicClassDependency")
     private static final class SurroundingApplicationVisitor extends ReturningAldorVisitor<Syntax> {
         private final SurroundType type;
 
@@ -163,7 +164,7 @@ public final class SyntaxPsiParser {
         }
 
         @Override
-        public void visitId(AldorId id) {
+        public void visitId(@NotNull AldorId id) {
             visitElement(id);
             if (returnValue() == null) {
                 returnValue(parse(id));
@@ -182,7 +183,7 @@ public final class SyntaxPsiParser {
 
         @Override
         public void visitNegationElement(@NotNull NegationElement o) {
-            visitStack.peek().add(new Other(o.getLastChild()));
+            parentParts().add(new Other(o.getLastChild()));
         }
 
         /**
@@ -197,11 +198,11 @@ public final class SyntaxPsiParser {
             o.acceptChildren(this);
             visitStack.pop();
             if (fnOrAtom.size() == 1) {
-                visitStack.peek().add(fnOrAtom.get(0));
+                parentParts().add(fnOrAtom.get(0));
             }
             else {
                 // FIXME: Obviously wrong(!)
-                visitStack.peek().add(new Other(o));
+                parentParts().add(new Other(o));
             }
         }
 
@@ -216,7 +217,7 @@ public final class SyntaxPsiParser {
             }
 
             if (fnOrAtom.size() == 1) {
-                visitStack.peek().add(fnOrAtom.get(0));
+                parentParts().add(fnOrAtom.get(0));
             } else {
                 if (fnOrAtom.get(1).is(Comma.class)) {
                     List<Syntax> args = fnOrAtom.get(1).as(Comma.class).children();
@@ -226,7 +227,7 @@ public final class SyntaxPsiParser {
                     fnOrAtom.addAll(args);
                 }
                 Syntax syntax = new Apply(o, fnOrAtom);
-                visitStack.peek().add(syntax);
+                parentParts().add(syntax);
             }
         }
 
@@ -241,38 +242,44 @@ public final class SyntaxPsiParser {
 
             if (opsAndArgs.isEmpty()) {
                 // We're almost surely throwing something away here...
-                visitStack.peek().add(new Other(o));
+                parentParts().add(new Other(o));
             }
             else if (opsAndArgs.size() == 1) {
-                visitStack.peek().add(opsAndArgs.get(0));
+                parentParts().add(opsAndArgs.get(0));
             } else if (opsAndArgs.size() == 2) {
-                visitStack.peek().add(new Apply(o, opsAndArgs));
+                parentParts().add(new Apply(o, opsAndArgs));
             }
             else {
                 Syntax all = opsAndArgs.get(opsAndArgs.size() - 1);
                 for (Syntax syntax : Lists.reverse(opsAndArgs).subList(1, opsAndArgs.size() - 2)) {
                     all = new Apply((PsiElement) null, Lists.newArrayList(syntax, all));
                 }
-                visitStack.peek().add(all);
+                parentParts().add(all);
             }
+        }
+
+        @NotNull
+        private List<Syntax> parentParts() {
+            assert visitStack.peek() != null;
+            return visitStack.peek();
         }
 
         @Override
         public void visitQuotedIds(@NotNull AldorQuotedIds ids) {
             List<Syntax> last = buildChildren(ids);
-            visitStack.peek().add(new EnumList(ids, last));
+            parentParts().add(new EnumList(ids, last));
         }
 
         @Override
         public void visitId(@NotNull AldorId o) {
-            visitStack.peek().add(new Id(o));
+            parentParts().add(new Id(o));
         }
 
         @Override
         public void visitLiteral(@NotNull AldorLiteral o) {
             String text = o.getText();
             Syntax elt = leftOfDeclare ? new InfixedId(o) : new Literal(text, o);
-            visitStack.peek().add(elt);
+            parentParts().add(elt);
         }
 
         @Override
@@ -289,7 +296,7 @@ public final class SyntaxPsiParser {
             } else {
                 next = new Comma(parened, parenContent);
             }
-            visitStack.peek().add(next);
+            parentParts().add(next);
         }
 
 
@@ -315,7 +322,7 @@ public final class SyntaxPsiParser {
             else {
                 result = new SpadDeclare(colonExpr, last);
             }
-            visitStack.peek().add(result);
+            parentParts().add(result);
         }
 
         @Override
@@ -337,27 +344,27 @@ public final class SyntaxPsiParser {
             List<Syntax> last = visitStack.pop();
 
             Syntax result = new AldorDeclare(decl, last);
-            visitStack.peek().add(result);
+            parentParts().add(result);
         }
 
         @Override
         public void visitBinaryWithExpr(@NotNull AldorBinaryWithExpr o) {
-            visitStack.peek().add(new With(o));
+            parentParts().add(new With(o));
         }
 
         @Override
         public void visitUnaryWithExpr(@NotNull AldorUnaryWithExpr o) {
-            visitStack.peek().add(new With(o));
+            parentParts().add(new With(o));
         }
 
         @Override
         public void visitWith(@NotNull AldorWith o) {
-            visitStack.peek().add(new With(o));
+            parentParts().add(new With(o));
         }
 
         @Override
         public void visitAddPart(@NotNull AldorAddPart o) {
-            visitStack.peek().add(new Add(o));
+            parentParts().add(new Add(o));
         }
 
 
@@ -379,18 +386,18 @@ public final class SyntaxPsiParser {
                 Syntax op = exprContent.get(i);
                 lhs = new Apply(expr, Lists.newArrayList(op, lhs, exprContent.get(i+1)));
             }
-            visitStack.peek().add(lhs);
+            parentParts().add(lhs);
         }
 
         @Override
         public void visitInfixedTok(@NotNull AldorInfixedTok tok) {
-            visitStack.peek().add(new Id(tok));
+            parentParts().add(new Id(tok));
         }
 
         @Override
         public void visitDefine(@NotNull AldorDefine define) {
             List<Syntax> last = buildChildren(define);
-            visitStack.peek().add(new Define(define, last));
+            parentParts().add(new Define(define, last));
         }
 
         @Override
@@ -398,7 +405,7 @@ public final class SyntaxPsiParser {
             List<Syntax> last = buildChildren(brackets);
             Syntax implicitOp = createImplicitId("bracket");
             last.add(0, implicitOp);
-            visitStack.peek().add(new Apply(brackets, last));
+            parentParts().add(new Apply(brackets, last));
         }
 
 
@@ -421,7 +428,7 @@ public final class SyntaxPsiParser {
         public void visitRightArrow1002Expr(@NotNull AldorRightArrow1002Expr rightArrow1002Expr) {
             List<Syntax> last = new ArrayList<>(buildChildren(rightArrow1002Expr));
             last.add(0, createImplicitId(rightArrow1002Expr.getKWRArrow(), "->"));
-            visitStack.peek().add(new Apply(rightArrow1002Expr, last));
+            parentParts().add(new Apply(rightArrow1002Expr, last));
         }
 
         @Override
@@ -437,7 +444,7 @@ public final class SyntaxPsiParser {
                 elt.accept(this);
             }
             visitStack.pop();
-            visitStack.peek().add(new Apply(expr, args));
+            parentParts().add(new Apply(expr, args));
         }
 
         private List<Syntax> buildChildren(PsiElement psi) {
@@ -449,7 +456,7 @@ public final class SyntaxPsiParser {
 
         @Override
         public void visitQuoteExpr(@NotNull AldorQuoteExpr o) {
-            visitStack.peek().add(new QuotedSymbol(o));
+            parentParts().add(new QuotedSymbol(o));
         }
     }
 

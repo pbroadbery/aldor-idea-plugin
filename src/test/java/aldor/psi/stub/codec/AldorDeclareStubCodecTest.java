@@ -16,15 +16,13 @@ import aldor.test_util.SimpleStringEnumerator;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
 import com.intellij.util.io.AbstractStringEnumerator;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertNull;
 
 public class AldorDeclareStubCodecTest {
     @Test
@@ -38,9 +36,9 @@ public class AldorDeclareStubCodecTest {
                                         .setSyntax(Id.createMissingId(AldorTokenTypes.TK_Id, "op")).build();
 
         AldorDeclareStub inStub = encodeDecode(stub);
-        assertTrue(SyntaxUtils.match(stub.syntax(), inStub.syntax()));
-        assertTrue(SyntaxUtils.match(stub.exporter(), inStub.exporter()));
-        assertNull(inStub.getParentStub());
+        Assert.assertTrue(SyntaxUtils.match(stub.syntax(), inStub.syntax()));
+        Assert.assertTrue(SyntaxUtils.match(stub.exporter(), inStub.exporter()));
+        Assert.assertNull(inStub.getParentStub());
     }
 
 

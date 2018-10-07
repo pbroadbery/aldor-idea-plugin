@@ -15,6 +15,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.CodeInsightTestFixture;
+import junit.framework.AssertionFailedError;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -39,16 +40,12 @@ public class AldorTypeHierarchyBrowserTestAldorSdk {
                     .around(new TestRule() {
                         @Override
                         public Statement apply(Statement statement, Description description) {
-                            return JUnits.prePostStatement(JUnits::setLogToInfo, () -> checkUIState(), statement);
+                            return JUnits.prePostStatement(JUnits::setLogToInfo, () -> System.out.println("Done"), statement);
                         }
                     })
                     .around(aldorExecutableRule)
                     .around(new LightPlatformJUnit4TestRule(codeTestFixture, ""))
                     .around(new SwingThreadTestRule());
-
-    private void checkUIState() {
-        System.out.println("Done");
-    }
 
     @Test
     public void testReference() {
@@ -68,7 +65,7 @@ public class AldorTypeHierarchyBrowserTestAldorSdk {
                 .filter(x -> x instanceof AldorHierarchyOperationDescriptor)
                 .map(x -> (AldorHierarchyOperationDescriptor) x)
                 .filter(x -> "findAll".equals(x.operation().name()))
-                .findFirst().get();
+                .findFirst().orElseThrow(AssertionFailedError::new);
 
         assertNotNull(findAll.operation().containingForm());
         assertNull(findAll.operation().declaration());

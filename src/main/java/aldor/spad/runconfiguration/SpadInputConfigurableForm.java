@@ -11,8 +11,9 @@ import javax.swing.JPanel;
 
 import static aldor.spad.runconfiguration.SpadInputRunConfigurationType.SpadInputConfigurationBean;
 
-@SuppressWarnings("InstanceVariableMayNotBeInitialized")
+@SuppressWarnings({"serial", "SerializableHasSerializationMethods"})
 public class SpadInputConfigurableForm extends JComponent {
+    @SuppressWarnings("NonSerializableFieldInSerializableClass")
     private final Project project;
     private JPanel wholePanel;
     private TextFieldWithBrowseButton myInputFile;

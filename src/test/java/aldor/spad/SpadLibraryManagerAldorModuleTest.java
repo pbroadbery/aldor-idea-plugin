@@ -72,6 +72,7 @@ public class SpadLibraryManagerAldorModuleTest {
         annotationTestFixture.compileFile(testFile, getProject());
 
         mgr = SpadLibraryManager.instance().forModule(codeTestFixture.getModule());
+        assertNotNull(mgr);
         List<Syntax> tt2 = mgr.allTypes();
         System.out.println("All types: "+ tt2);
         assertTrue(tt2.stream().map(Object::toString).collect(Collectors.toList()).contains("Foo"));

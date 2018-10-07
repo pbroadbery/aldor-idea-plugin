@@ -19,8 +19,6 @@ public class AnnotationFileBuilderImpl implements AnnotationFileBuilder {
 
     @Override
     public Future<Void> invokeAnnotationBuild(PsiFile psiFile) {
-
-        final VirtualFile file = psiFile.getVirtualFile();
         final Project project = psiFile.getProject();
         final SettableFuture<Void> completion = SettableFuture.create();
         ApplicationManager.getApplication().invokeLater(new Runnable() {

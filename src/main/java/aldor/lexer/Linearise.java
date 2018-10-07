@@ -159,6 +159,7 @@ public class Linearise {
      *  language keyword, e.g.  "return", "then", "else", etc.
      *  (Note, this does not include user-definable operators such as "quo".)
      */
+    @SuppressWarnings("MethodOnlyUsedFromInnerClass")
     private static boolean isPileRequired(SrcLine lastLine, SrcLine thisLine) {
         if (lastLine.isBlank()) {
             return false;
@@ -320,8 +321,7 @@ public class Linearise {
         }
 
         Iterable<Integer> localLineEnds() {
-            Collection<Integer> lines = new TreeSet<>();
-            lines.addAll(new IntegerRange(startLine, endLine));
+            Collection<Integer> lines = new TreeSet<>(new IntegerRange(startLine, endLine));
 
             for (IndentNode child : children) {
                 lines.removeAll(new IntegerRange(child.startLine(), child.endLine()));
@@ -528,7 +528,6 @@ public class Linearise {
             return endOffset;
         }
 
-        @SuppressWarnings("ReturnOfCollectionOrArrayField")
         public List<SrcLine> lines() {
             return lines;
         }
@@ -537,7 +536,6 @@ public class Linearise {
             lineEndForLineStart.put(startIndex, endIndex);
         }
 
-        @SuppressWarnings("ReturnOfCollectionOrArrayField")
         public NavigableMap<Integer, Integer> blockMarkers() {
             return lineEndForLineStart;
         }
@@ -647,12 +645,10 @@ public class Linearise {
             return indent;
         }
 
-        @SuppressWarnings("ReturnOfCollectionOrArrayField")
         public Iterable<IElementType> tokens() {
             return tokens;
         }
 
-        @SuppressWarnings("ReturnOfCollectionOrArrayField")
         public Collection<IElementType> allTokens() {
             return allTokens;
         }
@@ -686,7 +682,6 @@ public class Linearise {
             if (isBlank()) {
                 return "{SL: " + startPosition + " indent: " + indent + "}";
             } else {
-                //noinspection StringConcatenationMissingWhitespace
                 return "{SL: " + startPosition + " indent: " + indent + " " + tokens.get(0) + (tokens.size() == 1 ? "" : " .. " + lastToken()) + " " + bc + "}";
             }
         }

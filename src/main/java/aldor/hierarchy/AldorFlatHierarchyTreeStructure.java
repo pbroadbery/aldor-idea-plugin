@@ -5,6 +5,7 @@ import aldor.spad.SpadLibraryManager;
 import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxPrinter;
 import aldor.syntax.SyntaxUtils;
+import aldor.util.Try;
 import com.intellij.ide.hierarchy.HierarchyNodeDescriptor;
 import com.intellij.ide.hierarchy.HierarchyTreeStructure;
 import com.intellij.openapi.project.Project;
@@ -14,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -94,8 +96,6 @@ public class AldorFlatHierarchyTreeStructure extends HierarchyTreeStructure {
         return new AldorHierarchyOperationDescriptor(this.myProject, parent, operation);
     }
 
-
-
     private List<Syntax> parents(SpadLibrary library, Syntax syntax) {
         Deque<Syntax> candidates = new ArrayDeque<>();
         candidates.add(syntax);
@@ -104,7 +104,7 @@ public class AldorFlatHierarchyTreeStructure extends HierarchyTreeStructure {
             Syntax candidate = candidates.pop();
             if (allParents.stream().noneMatch(pp -> SyntaxUtils.match(pp, candidate))) {
                 allParents.add(candidate);
-                List<Syntax> parents = library.parentCategories(candidate);
+                List<Syntax> parents = Try.of(() -> library.parentCategories(candidate)).orElse(e -> Collections.emptyList());
                 candidates.addAll(parents);
             }
         }
@@ -112,7 +112,11 @@ public class AldorFlatHierarchyTreeStructure extends HierarchyTreeStructure {
     }
 
     private List<SpadLibrary.Operation> operations(SpadLibrary library, Collection<Syntax> allParents) {
-        return allParents.stream().flatMap(syntax -> library.operations(syntax).stream()).collect(Collectors.toList());
+        return allParents.stream().flatMap(syntax -> safeOperations(library, syntax).stream()).collect(Collectors.toList());
+    }
+
+    private List<SpadLibrary.Operation> safeOperations(SpadLibrary library, Syntax syntax) {
+        return Try.of(() -> library.operations(syntax)).orElse(e -> Collections.emptyList());
     }
 
 }

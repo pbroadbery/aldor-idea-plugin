@@ -29,8 +29,10 @@ public class AldorCodeStylePanel extends CodeStyleAbstractPanel {
     private JPanel myPanel;
     private JCheckBox useLigatures;
 
+    @SuppressWarnings("OverridableMethodCallDuringObjectConstruction")
     public AldorCodeStylePanel(@NotNull CodeStyleSettings settings) {
         super(AldorLanguage.INSTANCE, null, settings);
+        addPanelToWatch(myPanel);
         addPanelToWatch(myPanel);
         installPreviewPanel(myPreviewPanel);
     }

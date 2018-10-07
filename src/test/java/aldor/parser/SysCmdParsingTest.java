@@ -26,7 +26,6 @@ public class SysCmdParsingTest extends LightPlatformCodeInsightTestCase {
         Assert.assertEquals(0, errors.size());
     }
     private PsiElement parseText(CharSequence text) {
-        //noinspection StringConcatenationMissingWhitespace
         System.out.println(LexerFunctions.tokens(Spad, text).values().stream().map(t -> (t + (AldorTokenTypes.isNewLine(t) ? "\n" : " "))).collect(Collectors.joining()));
         return parseText(text, AldorTypes.SPAD_TOP_LEVEL);
     }

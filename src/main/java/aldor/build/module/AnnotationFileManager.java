@@ -1,12 +1,9 @@
 package aldor.build.module;
 
-import aldor.psi.AldorIdentifier;
 import aldor.symbolfile.AnnotationFile;
 import aldor.symbolfile.MissingAnnotationFile;
 import aldor.symbolfile.PopulatedAnnotationFile;
-import aldor.symbolfile.SrcPos;
 import aldor.symbolfile.Syme;
-import aldor.util.AnnotatedOptional;
 import aldor.util.sexpr.SExpressions;
 import aldor.util.sexpr.SymbolPolicy;
 import aldor.util.sexpr.impl.SExpressionReadException;
@@ -23,10 +20,8 @@ import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.openapi.vfs.newvfs.BulkFileListener;
 import com.intellij.openapi.vfs.newvfs.events.VFileContentChangeEvent;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileSystemItem;
-import com.intellij.psi.search.FilenameIndex;
 import com.intellij.util.messages.MessageBusConnection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,11 +30,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.nio.charset.StandardCharsets;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.Future;
 
@@ -48,8 +41,7 @@ import static aldor.builder.files.AldorFileBuildTarget.trimExtension;
 public class AnnotationFileManager implements Disposable {
     private static final Logger LOG = Logger.getInstance(AnnotationFileManager.class);
 
-    private static final Key<AnnotationFileManager> MGR_KEY = new Key<>("AnnotationFileManager");
-    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection") // TODO: Need to track these, and use them
+    private static final Key<AnnotationFileManager> MGR_KEY = new Key<>(AnnotationFileManager.class.getSimpleName());
     private final Set<String> dirtyFiles;
     @SuppressWarnings("unused")
     private final Set<String> updatingFiles;
@@ -66,11 +58,10 @@ public class AnnotationFileManager implements Disposable {
         annotationFileForFile = Maps.newHashMap();
         lineNumberMapForFile = Maps.newHashMap();
         annotationFileBuilder = new AnnotationFileBuilderImpl();
-        project.putUserData(MGR_KEY, this);
         setupFileWatcher();
     }
 
-    void setupFileWatcher() {
+    private void setupFileWatcher() {
         myBusConnection = ApplicationManager.getApplication().getMessageBus().connect();
         myBusConnection.subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener() {
             @Override
@@ -141,7 +132,7 @@ public class AnnotationFileManager implements Disposable {
         annotationFileForFile.remove(file.getPath());
     }
 
-        @NotNull
+    @NotNull
     private AnnotationFile annotatedFile(PsiFileSystemItem psiFile) {
         VirtualFile virtualFile = psiFile.getVirtualFile();
         VirtualFileSystem vfs = virtualFile.getFileSystem();
@@ -183,26 +174,7 @@ public class AnnotationFileManager implements Disposable {
     }
 
     @Nullable
-    public SrcPos findSrcPosForElement(PsiElement element) {
-        LineNumberMap map = lineNumberMapForFile(element.getContainingFile());
-        if (map == null) {
-            return null;
-        }
-        return map.findSrcPosForElement(element);
-    }
-
-    @Nullable
-    public AldorIdentifier findElementForSrcPos(PsiFile file, SrcPos srcPos) {
-        AldorModuleManager moduleManager = AldorModuleManager.getInstance(file.getProject());
-        String buildFilePath = moduleManager.annotationFileForSourceFile(file);
-        LineNumberMap map = lineNumberMapForFile(file);
-        if (map == null) {
-            return null;
-        }
-        return map.findPsiElementForSrcPos(file, srcPos.lineNumber(), srcPos.columnNumber());
-    }
-
-    private LineNumberMap lineNumberMapForFile(PsiFile file) {
+    public LineNumberMap lineNumberMapForFile(PsiFile file) {
         AldorModuleManager moduleManager = AldorModuleManager.getInstance(file.getProject());
         String buildFilePath = moduleManager.annotationFileForSourceFile(file);
         if (file.getVirtualFile() == null) {
@@ -217,65 +189,8 @@ public class AnnotationFileManager implements Disposable {
         return annotationFileBuilder.invokeAnnotationBuild(psiFile);
     }
 
-    public AnnotatedOptional<Syme,String> symeForElement(PsiElement element) {
-        AnnotationFile annotationFile = annotationFile(element.getContainingFile());
-
-        AnnotatedOptional<SrcPos, String> srcPosMaybe = AnnotatedOptional.ofNullable(findSrcPosForElement(element), () -> "No source found");
-
-        return srcPosMaybe.flatMap(srcPos -> {
-            Optional<Syme> symeMaybe = annotationFile.lookupSyme(srcPos).stream().filter(s -> s.name().equals(element.getText())).findFirst();
-
-            return AnnotatedOptional.fromOptional(symeMaybe, () -> "Failed to find symbol " + element.getText() + " at " + srcPos);
-        });
-    }
-
     @Nullable
-    public AldorIdentifier lookupReference(@NotNull PsiElement element) {
-        SrcPos srcPos = findSrcPosForElement(element);
-        if (srcPos == null) {
-            return null;
-        }
-        AnnotationFile annotationFile = annotationFile(element.getContainingFile());
-        Syme syme = lookupAndSelectSyme(element, srcPos, annotationFile);
-        if (syme == null) {
-            LOG.info("No Symbol found at " + srcPos);
-            return null;
-        }
-
-        if (syme.srcpos() != null) {
-            PsiFile theFile = psiFileForFileName(element.getProject(), element.getContainingFile(), syme.srcpos().fileName() + ".as");
-            return (theFile == null) ? null : findElementForSrcPos(theFile, syme.srcpos());
-        }
-
-        String refSourceFile = refSourceFile(syme);
-        if (refSourceFile == null) {
-            return null;
-        }
-        PsiFile refFile = psiFileForFileName(element.getProject(), element.getContainingFile(), refSourceFile);
-        if (refFile == null) {
-            return null;
-        }
-        AnnotationFile refAnnotationFile = annotationFile(refFile);
-        Syme refSyme = refAnnotationFile.symeForNameAndCode(syme.name(), syme.typeCode());
-        if (refSyme == null) {
-            return null;
-
-        }
-        if (refSyme.srcpos() == null) {
-            LOG.info("No source pos for " + refSourceFile + " " + element.getText());
-            return null;
-        }
-        LOG.info("Found reference to " + element.getText() + " at " + refSyme.srcpos());
-        return findElementForSrcPos(refFile, refSyme.srcpos());
-    }
-
-    private Syme lookupAndSelectSyme(@NotNull PsiElement element, SrcPos srcPos, AnnotationFile annotationFile) {
-        Collection<Syme> symes = annotationFile.lookupSyme(srcPos);
-        return symes.stream().filter(s -> s.name().equals(element.getText())).findFirst().orElse(null);
-    }
-
-    @Nullable
-    private String refSourceFile(Syme syme) {
+    public String refSourceFile(Syme syme) {
         Syme original = syme.original();
         @Nullable
         String refName;
@@ -294,24 +209,6 @@ public class AnnotationFileManager implements Disposable {
             return null;
         }
         return trimExtension(refName) + ".as";
-    }
-
-    @Nullable
-    private PsiFile psiFileForFileName(Project project, PsiElement referer, String sourceFile) {
-        PsiFile[] refFiles = FilenameIndex.getFilesByName(project, sourceFile, referer.getResolveScope());
-        @Nullable PsiFile refFile;
-        if (refFiles.length > 1) {
-            LOG.info("Multiple files called " + sourceFile);
-            refFile = null; // ?? Multi???
-        }
-        else if (refFiles.length == 0) {
-            LOG.info("No file " + sourceFile);
-            refFile = null;
-        }
-        else {
-            refFile = refFiles[0];
-        }
-        return refFile;
     }
 
 }

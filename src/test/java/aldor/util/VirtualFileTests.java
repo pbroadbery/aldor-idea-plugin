@@ -51,6 +51,7 @@ public final class VirtualFileTests {
         return dir.findChild(name);
     }
 
+    @SuppressWarnings("MethodCanBeVariableArityMethod")
     public static void writeFile(VirtualFile file, byte[] bytes) {
         ApplicationManager.getApplication().runWriteAction(() -> {
             try {

@@ -5,11 +5,13 @@ import aldor.test_util.DirectoryPresentRule;
 import aldor.test_util.LightPlatformJUnit4TestRule;
 import com.intellij.testFramework.fixtures.CodeInsightTestFixture;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.RuleChain;
 import org.junit.rules.TestRule;
 
 import static aldor.test_util.LightPlatformJUnit4TestRule.createFixture;
 import static aldor.test_util.SdkProjectDescriptors.fricasLocalSdkProjectDescriptor;
+import static org.junit.Assert.assertTrue;
 
 public class SpadLibraryManagerLocalSdkTest extends SpadLibraryManagerTestCase {
 
@@ -32,5 +34,11 @@ public class SpadLibraryManagerLocalSdkTest extends SpadLibraryManagerTestCase {
     @Override
     public CodeInsightTestFixture testFixture() {
         return testFixture;
+    }
+
+    @Test
+    public void test() {
+        //noinspection ConstantJUnitAssertArgument
+        assertTrue(true);
     }
 }

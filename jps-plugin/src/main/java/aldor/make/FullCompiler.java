@@ -76,6 +76,7 @@ public class FullCompiler implements AldorFileTargetBuilder.Compiler {
             stdErrFut.get();
             stdOutFut.get();
         } catch (InterruptedException ignored) {
+            //noinspection ResultOfMethodCallIgnored
             Thread.interrupted();
         } catch (ExecutionException e) {
             LOG.error("Message read threw an error: ", e);

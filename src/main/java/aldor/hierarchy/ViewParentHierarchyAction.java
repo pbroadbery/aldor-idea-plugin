@@ -4,7 +4,6 @@ import aldor.ui.AldorIcons;
 
 import static com.intellij.ide.hierarchy.TypeHierarchyBrowserBase.SUPERTYPES_HIERARCHY_TYPE;
 
-@SuppressWarnings("ComponentNotRegistered")
 public class ViewParentHierarchyAction extends AbstractChangeHierarchyViewAction {
     ViewParentHierarchyAction() {
         super("Parent View", "View hierarchy", AldorIcons.OPERATION); // TODO: Wrong icon

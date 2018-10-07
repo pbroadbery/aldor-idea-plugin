@@ -12,7 +12,7 @@ import java.util.Optional;
  * Core representation of Syntax.. We don't use PSI as it's probably too heavyweight,
  * and somewhat subject to change.
  */
-@SuppressWarnings("AbstractClassNamingConvention")
+@SuppressWarnings("NewClassNamingConvention")
 public abstract class Syntax {
     public abstract String name();
 

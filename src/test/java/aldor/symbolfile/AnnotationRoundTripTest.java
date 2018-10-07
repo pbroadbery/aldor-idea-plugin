@@ -1,6 +1,8 @@
 package aldor.symbolfile;
 
 import aldor.build.module.AnnotationFileManager;
+import aldor.build.module.AnnotationFileNavigator;
+import aldor.build.module.DefaultAnnotationFileNavigator;
 import aldor.psi.AldorIdentifier;
 import aldor.syntax.SyntaxPrinter;
 import aldor.test_util.AldorRoundTripProjectDescriptor;
@@ -40,8 +42,12 @@ public class AnnotationRoundTripTest extends LightPlatformCodeInsightFixtureTest
 
     @Override
     public void tearDown() throws Exception {
-        EdtTestUtil.runInEdtAndWait(JavaAwareProjectJdkTableImpl::removeInternalJdkInTests);
-        super.tearDown();
+        try {
+            EdtTestUtil.runInEdtAndWait(JavaAwareProjectJdkTableImpl::removeInternalJdkInTests);
+        }
+        finally {
+            super.tearDown();
+        }
     }
 
 
@@ -62,13 +68,15 @@ public class AnnotationRoundTripTest extends LightPlatformCodeInsightFixtureTest
             PsiFile psiFile = PsiManager.getInstance(project).findFile(sourceFile);
             AnnotationFileManager annotationManager = AnnotationFileManager.getAnnotationFileManager(project);
             Assert.assertNotNull(psiFile);
+
             AnnotationFile annotationFile = annotationManager.annotationFile(psiFile);
+            AnnotationFileNavigator navigator = new DefaultAnnotationFileNavigator(annotationManager);
             Assert.assertNull(annotationFile.errorMessage());
             Collection<AldorIdentifier> elts = PsiTreeUtil.findChildrenOfType(psiFile, AldorIdentifier.class);
             List<AldorIdentifier> nInstances = elts.stream().filter(id -> "n".equals(id.getText())).collect(Collectors.toList());
             Assert.assertFalse(nInstances.isEmpty());
             Assert.assertTrue(nInstances.stream()
-                                        .map(annotationManager::findSrcPosForElement)
+                                        .map(navigator::findSrcPosForElement)
                                         .map(annotationFile::lookupSyme)
                     .allMatch(symes -> {
                                     if (symes.isEmpty()) {

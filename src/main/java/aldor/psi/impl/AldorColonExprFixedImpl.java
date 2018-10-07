@@ -52,7 +52,6 @@ public class AldorColonExprFixedImpl extends AldorColonExprMixin {
     @Override
     @NotNull
     public PsiElement getKWColon() {
-        //noinspection ConstantConditions
         return notNullChild(findChildByType(KW_COLON));
     }
 

@@ -125,6 +125,7 @@ public class PopulatedAnnotationFile implements AnnotationFile {
         return null;
     }
 
+    @NotNull
     @Override
     public Collection<Syme> lookupSyme(@NotNull SrcPos srcPos) {
         Collection<SExpression> sExpressions = sxForSrcPos.get(srcPos);

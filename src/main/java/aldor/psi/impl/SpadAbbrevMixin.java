@@ -65,7 +65,6 @@ public class SpadAbbrevMixin extends StubBasedPsiElementBase<SpadAbbrevStub> imp
         if (ref == null) {
             return this;
         }
-        //noinspection StringConcatenationMissingWhitespace
         String text = ref.getText().substring(0, abbrevInfo().nameIndex()) + newElementName;
         PsiElement newAbbrev = AldorElementFactory.createIdentifier(getProject(), text);
         ASTNode newRef = newAbbrev.getNode().findChildByType(AldorTokenTypes.TK_SysCmdAbbrev);

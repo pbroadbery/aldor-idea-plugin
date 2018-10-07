@@ -7,9 +7,6 @@ import aldor.test_util.LightPlatformJUnit4TestRule;
 import aldor.test_util.SdkProjectDescriptors;
 import com.intellij.codeInsight.documentation.DocumentationManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.FilenameIndex;
@@ -46,9 +43,6 @@ public class FricasSdkProjectTest {
     public void test() {
         // Not an especially good test, just shows parsing happened, and we can find some docs
         Project project = codeTestFixture.getProject();
-        Collection<VirtualFile> allFiles = FilenameIndex.getAllFilesByExt(project, "spad",
-                GlobalSearchScope.moduleWithLibrariesScope(codeTestFixture.getModule()));
-        Sdk sdk = ModuleRootManager.getInstance(codeTestFixture.getModule()).getSdk();
         PsiFile[] files = FilenameIndex.getFilesByName(project, "catdef.spad", GlobalSearchScope.allScope(project));
 
         Assert.assertEquals(1, files.length);

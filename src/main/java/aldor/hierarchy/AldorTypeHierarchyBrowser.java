@@ -9,7 +9,6 @@ import aldor.ui.AldorActions;
 import com.intellij.ide.hierarchy.HierarchyBrowserBaseEx;
 import com.intellij.ide.hierarchy.HierarchyNodeDescriptor;
 import com.intellij.ide.hierarchy.HierarchyTreeStructure;
-import com.intellij.ide.hierarchy.TypeHierarchyBrowserBase;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.ActionManager;
@@ -32,16 +31,15 @@ import static aldor.syntax.SyntaxPsiParser.SurroundType.Leading;
 import static aldor.syntax.SyntaxUtils.psiElementFromSyntax;
 
 @SuppressWarnings("serial")
-public class AldorTypeHierarchyBrowser extends TypeHierarchyBrowserBase {
+public class AldorTypeHierarchyBrowser extends TypeHierarchyBrowserBaseEx {
     private static final Logger LOG = Logger.getInstance(AldorTypeHierarchyBrowser.class);
-    public static final String FLAT_HIERARCHY_TYPE = "Categories and Operations";
 
     public AldorTypeHierarchyBrowser(Project project, PsiElement element) {
         super(project, element);
     }
 
     @Override
-    protected boolean isInterface(PsiElement psiElement) {
+    protected boolean isInterface(@NotNull PsiElement psiElement) {
         return false;
     }
 
@@ -75,7 +73,7 @@ public class AldorTypeHierarchyBrowser extends TypeHierarchyBrowserBase {
         PopupHandler.installPopupHandler(tree1, group, ActionPlaces.TYPE_HIERARCHY_VIEW_POPUP, ActionManager.getInstance());
         baseOnThisTypeAction
                 .registerCustomShortcutSet(ActionManager.getInstance().getAction(IdeActions.ACTION_TYPE_HIERARCHY).getShortcutSet(), tree1);
-        trees.put(FLAT_HIERARCHY_TYPE, tree1);
+        trees.put(AldorTypeHierarchyConstants.FLAT_HIERARCHY_TYPE, tree1);
     }
 
     @Override
@@ -97,7 +95,6 @@ public class AldorTypeHierarchyBrowser extends TypeHierarchyBrowserBase {
         actionGroup.add(new ViewParentHierarchyAction());
         actionGroup.add(new ViewFlatHierarchyAction());
         actionGroup.add(new AlphaSortAction());
-
     }
 
     @Override
@@ -124,7 +121,7 @@ public class AldorTypeHierarchyBrowser extends TypeHierarchyBrowserBase {
         if (SUPERTYPES_HIERARCHY_TYPE.equals(typeName)) {
             return new AldorParentCategoryHierarchyTreeStructure(myProject, syntax);
         }
-        else if (FLAT_HIERARCHY_TYPE.equals(typeName)) {
+        else if (AldorTypeHierarchyConstants.FLAT_HIERARCHY_TYPE.equals(typeName)) {
             return new AldorFlatHierarchyTreeStructure(myProject, syntax);
         }
         else {
@@ -138,7 +135,7 @@ public class AldorTypeHierarchyBrowser extends TypeHierarchyBrowserBase {
     protected Comparator<NodeDescriptor> getComparator() {
         return Comparator
                 .comparing(this::descriptorPriority)
-                .reversed().<NodeDescriptor, Integer>thenComparing(Comparator.comparing(NodeDescriptor::toString));
+                .reversed().thenComparing(NodeDescriptor::toString);
     }
 
     @SuppressWarnings("rawtypes")
@@ -147,10 +144,6 @@ public class AldorTypeHierarchyBrowser extends TypeHierarchyBrowserBase {
             return ((ComparatorPriority) descriptor).priority();
         }
         return ComparatorPriority.UNKNOWN;
-    }
-
-    public String typeName() {
-        return this.getCurrentViewType();
     }
 
     public static class AldorBaseOnThisTypeAction extends BaseOnThisTypeAction {

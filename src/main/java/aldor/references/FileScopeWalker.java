@@ -1,6 +1,7 @@
 package aldor.references;
 
-import aldor.build.module.AnnotationFileManager;
+import aldor.build.module.AnnotationFileNavigator;
+import aldor.build.module.AnnotationFileNavigatorManager;
 import aldor.psi.AldorDeclare;
 import aldor.psi.AldorDefine;
 import aldor.psi.AldorIdentifier;
@@ -45,9 +46,9 @@ public final class FileScopeWalker {
 
     @Nullable
     public static PsiElement lookupBySymbolFile(PsiElement element) {
-        AnnotationFileManager fileManager = AnnotationFileManager.getAnnotationFileManager(element.getProject());
+        AnnotationFileNavigator fileNavigator = AnnotationFileNavigatorManager.instance.getInstance(element.getProject());
 
-        AldorIdentifier ident = fileManager.lookupReference(element);
+        AldorIdentifier ident = fileNavigator.lookupReference(element);
 
         if (ident == null) {
             return null;

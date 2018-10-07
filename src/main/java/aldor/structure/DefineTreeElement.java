@@ -30,7 +30,7 @@ final class DefineTreeElement extends PsiTreeElementBase<AldorDefine> {
         if (getElement() == null) {
             return Collections.emptyList();
         }
-        return Arrays.stream(getElement().getChildren()).flatMap(elt -> AldorStructureViewModel.getDirectChildren(elt).stream()).collect(Collectors.toList());
+        return Arrays.stream(getElement().getChildren()).flatMap(elt -> DirectChildVisitor.getDirectChildren(elt).stream()).collect(Collectors.toList());
     }
 
     @Override
@@ -38,7 +38,9 @@ final class DefineTreeElement extends PsiTreeElementBase<AldorDefine> {
         if ((getElement() != null) && !getElement().isValid()) {
             return "<invalid>";
         }
-
+        if (getElement() == null) {
+            return "<missing>";
+        }
         return getElement().defineIdentifier().map(PsiElement::getText).orElse("<missing id>");
     }
 
@@ -101,7 +103,7 @@ final class DefineTreeElement extends PsiTreeElementBase<AldorDefine> {
             case VALUE:
                 return AldorTextAttributes.ALDOR_VALUE_ATTRIBUTES;
         }
-        throw new RuntimeException("Missing");
+        throw new IllegalArgumentException("Missing " + defClass);
     }
 
 }

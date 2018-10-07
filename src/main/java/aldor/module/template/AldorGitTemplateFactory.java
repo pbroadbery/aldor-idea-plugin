@@ -46,13 +46,13 @@ public class AldorGitTemplateFactory extends ProjectTemplatesFactory {
                 new BuilderBasedTemplate(new AldorEmptyModuleBuilder())
         )));
         templateRegisties.add(new TemplateRegistry("Aldor", Lists.newArrayList(
-                new BuilderBasedTemplate(new AldorGitModuleBuilder(AldorGitModuleBuilder.GitModuleType.Aldor)),
+                new BuilderBasedTemplate(new AldorGitModuleBuilder(GitModuleType.Aldor)),
                 new BuilderBasedTemplate(new AldorSimpleModuleBuilder())
                 )));
 
 
         templateRegisties.add(new TemplateRegistry("Spad", Lists.newArrayList(
-                new BuilderBasedTemplate(new  AldorGitModuleBuilder(AldorGitModuleBuilder.GitModuleType.Fricas)),
+                new BuilderBasedTemplate(new  AldorGitModuleBuilder(GitModuleType.Fricas)),
                 new BuilderBasedTemplate(new SpadSimpleModuleBuilder())
                 )));
     }
@@ -76,7 +76,7 @@ public class AldorGitTemplateFactory extends ProjectTemplatesFactory {
     @Override
     public ProjectTemplate[] createTemplates(@Nullable String group, WizardContext context) {
         Optional<TemplateRegistry> registry = templateRegisties.stream().filter(r -> r.name().equals(group)).findFirst();
-        return registry.map(r -> r.templates().toArray(new ProjectTemplate[r.templates().size()])).orElse(EMPTY_TEMPLATES);
+        return registry.map(r -> r.templates().toArray(EMPTY_TEMPLATES)).orElse(EMPTY_TEMPLATES);
     }
 
     @Override

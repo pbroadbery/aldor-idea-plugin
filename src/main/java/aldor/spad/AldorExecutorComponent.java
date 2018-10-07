@@ -22,7 +22,7 @@ public class AldorExecutorComponent implements AldorExecutor {
     public void run(Runnable r) throws InterruptedException {
         boolean hasLock = lock.tryLock(5, TimeUnit.SECONDS);
         if (!hasLock) {
-            throw new RuntimeException("Aldor operation not available");
+            throw new AldorExecutorException("Aldor operation not available");
         }
         try {
             FoamHelper.setContext(context);
@@ -37,7 +37,7 @@ public class AldorExecutorComponent implements AldorExecutor {
     public <T, E extends Throwable> T compute(@NotNull ThrowableComputable<T, E> action) throws E, InterruptedException {
         boolean hasLock = lock.tryLock(5, TimeUnit.SECONDS);
         if (!hasLock) {
-            throw new RuntimeException("Aldor operation not available");
+            throw new AldorExecutorException("Aldor operation not available");
         }
         try {
             FoamHelper.setContext(context);
@@ -52,4 +52,5 @@ public class AldorExecutorComponent implements AldorExecutor {
     public Clos createLoadFn(String className) {
         return context.createLoadFn(className);
     }
+
 }

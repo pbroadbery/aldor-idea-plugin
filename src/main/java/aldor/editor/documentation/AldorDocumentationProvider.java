@@ -31,7 +31,6 @@ public class AldorDocumentationProvider extends DocumentationProviderEx {
             return docTypes.getQuickNavigateInfo(element, originalElement);
         }
         catch (RuntimeException e) {
-            //noinspection InstanceofCatchParameter
             if (!(e instanceof ControlFlowException)) {
                 LOG.error("Exception thrown: ", e);
             }

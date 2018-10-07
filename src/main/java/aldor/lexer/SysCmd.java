@@ -9,7 +9,6 @@ import java.util.Collection;
 /**
  * Fun facts about system commands - #foo
  */
-@SuppressWarnings("ClassNamingConvention")
 public class SysCmd {
 
     public enum SysCommandType {

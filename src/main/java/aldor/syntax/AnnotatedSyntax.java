@@ -97,7 +97,7 @@ public final class AnnotatedSyntax {
                 } else if (ab.isLiteral()) {
                     return new Literal(ab.literal(), null);
                 } else {
-                    throw new RuntimeException("Unknown syntax type: " + ab);
+                    throw new SyntaxConversionException("Unknown syntax type: " + ab);
                 }
             }
         }
@@ -187,7 +187,7 @@ public final class AnnotatedSyntax {
         private final AnnotatedNodeType type;
         private final AnnotatedAbSyn ab;
 
-        public AbSynSyntaxRepresentation(AnnotatedNodeType type, AnnotatedAbSyn ab) {
+        AbSynSyntaxRepresentation(AnnotatedNodeType type, AnnotatedAbSyn ab) {
             this.type = type;
             this.ab = ab;
         }
@@ -228,14 +228,14 @@ public final class AnnotatedSyntax {
     private static class AnnotatedAbSynSyntaxVisitor extends SyntaxVisitor<AnnotatedAbSyn> {
         private final Env env;
 
-        public AnnotatedAbSynSyntaxVisitor(Env env) {
+        AnnotatedAbSynSyntaxVisitor(Env env) {
             this.env = env;
         }
 
         @Nullable
         @Override
         public AnnotatedAbSyn visitSyntax(Syntax s) {
-            throw new RuntimeException("oops: " + s);
+            throw new SyntaxConversionException("No method to annotate " + s);
         }
 
         @Nullable
@@ -256,7 +256,7 @@ public final class AnnotatedSyntax {
 
         @Override
         public AnnotatedAbSyn visitComma(Comma comma) {
-            throw new RuntimeException("oops - comma");
+            throw new SyntaxConversionException("Can't annotate comma " + comma);
         }
 
         @Override

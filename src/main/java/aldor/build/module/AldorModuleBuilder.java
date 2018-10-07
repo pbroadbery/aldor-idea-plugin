@@ -12,9 +12,9 @@ import com.intellij.openapi.roots.ModifiableRootModel;
 public class AldorModuleBuilder extends ModuleBuilder {
     public static final ProjectType ALDOR_PROJECT_TYPE = new ProjectType("Aldor/Spad");
 
-    private final AldorModuleType type;
+    private final ModuleType<?> type;
 
-    protected AldorModuleBuilder(AldorModuleType type) {
+    protected AldorModuleBuilder(ModuleType<?> type) {
         this.type = type;
     }
 

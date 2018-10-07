@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 public class AldorModuleSpadLibraryBuilder {
     private final Module module;
-    private List<SpadLibrary> dependencies = new ArrayList<>();
+    private final List<SpadLibrary> dependencies = new ArrayList<>();
     private VirtualFile rootDirectory = null;
 
     public AldorModuleSpadLibraryBuilder(Module module) {

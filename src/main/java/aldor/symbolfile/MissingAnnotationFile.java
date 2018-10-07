@@ -1,6 +1,7 @@
 package aldor.symbolfile;
 
 import com.intellij.openapi.vfs.VirtualFile;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
@@ -32,6 +33,7 @@ public class MissingAnnotationFile implements AnnotationFile {
         return errorMessage;
     }
 
+    @NotNull
     @Override
     public Collection<Syme> lookupSyme(SrcPos srcPos) {
         return Collections.emptyList();

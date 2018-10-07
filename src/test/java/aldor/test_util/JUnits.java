@@ -7,6 +7,7 @@ import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.PatternLayout;
+import org.junit.rules.TestRule;
 import org.junit.runners.model.Statement;
 
 import static org.apache.log4j.Level.DEBUG;
@@ -32,6 +33,10 @@ public final class JUnits {
         LogManager.getRootLogger().addAppender(appender);
         LogManager.getRootLogger().setLevel(level);
         Logger.setFactory(TestLoggerFactory.class);
+    }
+
+    public static TestRule prePostTestRule(UnsafeRunnable pre, UnsafeRunnable post) {
+        return (statement, description) -> prePostStatement(pre, post, statement);
     }
 
     public static Statement prePostStatement(UnsafeRunnable pre, UnsafeRunnable post, Statement statement) {

@@ -78,6 +78,7 @@ public class FricasSpadLibrary implements SpadLibrary, Disposable {
         axiomInterfaceContainer.removeDependant(other);
     }
 
+    @NotNull
     @Override
     public Env environment() {
         return axiomInterfaceContainer.value().env();

@@ -39,7 +39,7 @@ public class AldorFileTargetBuilder extends TargetBuilder<AldorFileRootDescripto
 
     @Override
     public void build(@NotNull final AldorFileBuildTarget target,
-                      final DirtyFilesHolder<AldorFileRootDescriptor, AldorFileBuildTarget> holder,
+                      @NotNull final DirtyFilesHolder<AldorFileRootDescriptor, AldorFileBuildTarget> holder,
                       @NotNull final BuildOutputConsumer outputConsumer, @NotNull final CompileContext context) throws ProjectBuildException, IOException {
         LOG.info("Building " + target + " " + holder.hasDirtyFiles());
 

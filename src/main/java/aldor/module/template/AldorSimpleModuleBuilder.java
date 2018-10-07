@@ -68,13 +68,13 @@ class AldorSimpleModuleBuilder extends AldorModuleBuilder {
         map.put("MODULE", model.getModule().getName());
         map.put("ALDOR_SDK", (model.getSdk() == null) ? "\"SDK path goes here\"" : model.getSdk().getHomePath());
         map.put("INITIAL_ALDOR_FILES", "example");
-        saveFile(file, "Makefile.none", map);
+        saveFile(model.getProject(), file, "Makefile.none", map);
 
         file = getOrCreateExternalProjectConfigFile(contentRootDir.getPath(), "example.as");
         if (file == null) {
             return;
         }
-        saveFile(file, "example.as", map);
+        saveFile(model.getProject(), file, "example.as", map);
 
     }
 

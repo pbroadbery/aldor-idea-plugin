@@ -34,7 +34,7 @@ public class AxiomInterfaceContainer {
             fn.call();
             return aldorExecutor.compute(environment::create);
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            throw new AldorExecutorException("Interrupted while executing", e);
         }
     }
 

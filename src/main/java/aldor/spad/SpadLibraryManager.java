@@ -74,7 +74,7 @@ public class SpadLibraryManager {
         return instance;
     }
 
-    public void spadLibraryForSdk(@SuppressWarnings("TypeMayBeWeakened") @NotNull Sdk sdk, @NotNull SpadLibrary spadLibrary) {
+    public void spadLibraryForSdk(@SuppressWarnings("TypeMayBeWeakened") @NotNull Sdk sdk, SpadLibrary spadLibrary) {
         sdk.putUserData(key, spadLibrary);
     }
 

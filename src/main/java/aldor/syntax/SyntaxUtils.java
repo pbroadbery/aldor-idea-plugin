@@ -9,7 +9,7 @@ import aldor.syntax.components.Define;
 import aldor.syntax.components.Id;
 import aldor.syntax.components.Literal;
 import aldor.syntax.components.Other;
-import com.google.common.collect.Streams;
+import aldor.util.Streams;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

@@ -24,6 +24,7 @@ public interface SpadLibrary {
 
     String definingFile(Id id);
 
+    @NotNull
     Env environment();
 
     GlobalSearchScope scope(Project project);

@@ -92,6 +92,7 @@ public class AldorMacroMixin extends StubBasedPsiElementBase<AldorDefineStub> im
     @NotNull
     private Optional<Syntax> syntax() {
         Optional<Syntax> syntax = this.getUserData(cachedLhsSyntax);
+        //noinspection OptionalAssignedToNull
         if (syntax == null) {
             PsiElement lhs = getFirstChild();
             Syntax calculatedSyntax = SyntaxPsiParser.parse(lhs);

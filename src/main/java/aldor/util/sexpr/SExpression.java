@@ -52,7 +52,7 @@ public abstract class SExpression {
         }
 
         SExpression other = (SExpression) otherObj;
-        if (this.type() != other.type()) {
+        if (!this.type().equals(other.type())) {
             return false;
         }
 

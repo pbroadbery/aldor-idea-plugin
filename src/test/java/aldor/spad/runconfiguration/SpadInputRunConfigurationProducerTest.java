@@ -46,7 +46,7 @@ public class SpadInputRunConfigurationProducerTest extends LightPlatformCodeInsi
         PsiFile whole = PsiManager.getInstance(getProject()).findFile(file);
         Assert.assertNotNull(whole);
         MyMapDataContext dataContext = new MyMapDataContext();
-        dataContext.put("module", super.myModule);
+        dataContext.put("module", myModule);
         dataContext.put("Location", new PsiLocation<>(whole));
         dataContext.put("project", getProject());
 
@@ -55,7 +55,7 @@ public class SpadInputRunConfigurationProducerTest extends LightPlatformCodeInsi
         Assert.assertNotNull(runContext.getConfiguration());
         RunnerAndConfigurationSettings runnerAndConfigurationSettings = runContext.getConfiguration();
 
-        Assert.assertTrue(runnerAndConfigurationSettings.canRunOn(ExecutionTargetManager.getActiveTarget(getProject())));
+        ExecutionTargetManager.canRun(runnerAndConfigurationSettings, ExecutionTargetManager.getActiveTarget(getProject()));
         Assert.assertTrue(runnerAndConfigurationSettings.getName().contains("foo"));
 
         RunConfiguration runConfiguration = runnerAndConfigurationSettings.getConfiguration();

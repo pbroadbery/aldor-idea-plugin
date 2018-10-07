@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-class AldorScopeProcessor extends AbstractAldorScopeProcessor {
+public class AldorScopeProcessor extends AbstractAldorScopeProcessor {
     private final List<PsiElement> myResultList;
     private final String name;
 

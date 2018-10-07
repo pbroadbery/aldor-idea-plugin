@@ -100,6 +100,7 @@ public class AldorDefineMixin extends StubBasedPsiElementBase<AldorDefineStub> i
     @NotNull
     private Optional<Syntax> syntax() {
         Optional<Syntax> syntax = this.getUserData(cachedLhsSyntax);
+        //noinspection OptionalAssignedToNull
         if (syntax == null) {
             PsiElement lhs = getFirstChild();
             Syntax calculatedSyntax = SyntaxPsiParser.parse(lhs);

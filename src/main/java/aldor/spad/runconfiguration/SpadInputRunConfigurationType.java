@@ -141,7 +141,7 @@ public class SpadInputRunConfigurationType extends ConfigurationTypeBase {
 
         @SuppressWarnings("ThrowsRuntimeException")
         @Override
-        public void writeExternal(Element parentElement) throws WriteExternalException {
+        public void writeExternal(@NotNull Element parentElement) throws WriteExternalException {
             super.writeExternal(parentElement);
             final Element element = new Element(SPAD_INPUT_CONF_ELT);
             parentElement.addContent(element);
@@ -152,7 +152,7 @@ public class SpadInputRunConfigurationType extends ConfigurationTypeBase {
 
         @SuppressWarnings("ThrowsRuntimeException")
         @Override
-        public void readExternal(Element parentElement) throws InvalidDataException {
+        public void readExternal(@NotNull Element parentElement) throws InvalidDataException {
             super.readExternal(parentElement);
             final Element element = parentElement.getChild(SPAD_INPUT_CONF_ELT);
             if (element == null) {

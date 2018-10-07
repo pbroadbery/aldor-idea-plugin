@@ -57,7 +57,7 @@ public abstract class AldorIdentifierMixin extends ASTWrapperPsiElement implemen
     public PsiReference[] getReferences() {
         final PsiReference[] fromProviders = ReferenceProvidersRegistry.getReferencesFromProviders(this);
 
-        PsiReference ref = (getContainingFile().getLanguage() == SpadLanguage.INSTANCE) ? new SpadNameReference(this) : new AldorNameReference(this);
+        PsiReference ref = (SpadLanguage.INSTANCE.equals(getContainingFile().getLanguage())) ? new SpadNameReference(this) : new AldorNameReference(this);
         return ArrayUtil.prepend(ref, fromProviders);
     }
 

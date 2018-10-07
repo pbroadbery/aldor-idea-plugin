@@ -56,8 +56,8 @@ public final class AldorModuleManager {
 
 
     @NotNull
-    public AnnotatedOptional<AnnotationFileManager, String> annotationFileManagerForFile(Project project, @NotNull VirtualFile virtualFile) {
-        AnnotationFileManager qq = AnnotationFileManager.getAnnotationFileManager(project);
+    public AnnotatedOptional<AnnotationFileNavigator, String> annotationFileManagerForFile(Project project, @NotNull VirtualFile virtualFile) {
+        AnnotationFileNavigator qq = AnnotationFileNavigatorManager.instance().getInstance(project);
         return AnnotatedOptional.of(qq);
     }
 

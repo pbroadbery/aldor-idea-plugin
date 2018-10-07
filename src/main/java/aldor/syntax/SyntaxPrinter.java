@@ -90,18 +90,21 @@ public final class SyntaxPrinter {
         }
     }
 
+    @SuppressWarnings("MethodOnlyUsedFromInnerClass")
     private void printEnumList(SyntaxPrintVisitor visitor, EnumList enumList) {
         visitor.write("'");
         printCommaSeq(visitor, enumList, enumList.children());
         visitor.write("'");
     }
 
+    @SuppressWarnings("MethodOnlyUsedFromInnerClass")
     private void printDeclaration(SyntaxPrintVisitor visitor, DeclareNode<?> node) {
         node.lhs().accept(visitor);
         visitor.write(": ");
         node.rhs().accept(visitor);
     }
 
+    @SuppressWarnings("MethodOnlyUsedFromInnerClass")
     private void printApply(SyntaxPrintVisitor visitor, Apply apply) {
         Syntax operator = apply.operator();
         AldorTokenType opToken = tokenForSyntax(operator);

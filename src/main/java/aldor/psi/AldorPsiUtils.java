@@ -3,7 +3,6 @@ package aldor.psi;
 import aldor.psi.elements.AldorTypes;
 import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
-import com.google.common.collect.Streams;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -15,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 public final class AldorPsiUtils {
     private static final Logger LOG = Logger.getInstance(AldorPsiUtils.class);
@@ -134,17 +134,17 @@ public final class AldorPsiUtils {
         // Need to deal with macro/where here.
         if (!(form instanceof AldorDefine)) {
             return Optional.empty();
-        } else {
+        }
+        else {
             AldorDefine define = (AldorDefine) form;
             switch (define.definitionType()) {
                 case CONSTANT:
                     return Optional.of(define);
                 case MACRO:
                     return definitionFromMacro(define);
-                default:
-                    return Optional.empty();
             }
         }
+        return Optional.empty();
     }
 
     /**
@@ -165,7 +165,7 @@ public final class AldorPsiUtils {
         AldorIdentifier id = define.defineIdentifier().get();
         Optional<PsiElement> lhsMaybe = whereBlock.map(PsiElement::getFirstChild);
 
-        Optional<AldorId> usages = Streams.stream(lhsMaybe)
+        Optional<AldorId> usages = lhsMaybe.map(Stream::of).orElse(Stream.empty())
                 .flatMap(lhsElt -> PsiTreeUtil.findChildrenOfType(lhsElt, AldorId.class).stream())
                 .filter(someId -> id.getText().equals(someId.getText()))
                 .findFirst();
@@ -393,7 +393,7 @@ public final class AldorPsiUtils {
 
         public <T> Optional<T> maybeAs(Class<T> clss) {
             return Optional.of(element).flatMap(e -> clss.isAssignableFrom(element.getClass())
-                    ? Optional.<T>of(clss.cast(element))
+                    ? Optional.of(clss.cast(element))
                     : Optional.empty());
         }
     }
@@ -407,12 +407,12 @@ public final class AldorPsiUtils {
 
         @Override
         public void visitDefine(@NotNull AldorDefine o) {
-            super.add(new Binding(o));
+            add(new Binding(o));
         }
 
         @Override
         public void visitDeclare(@NotNull AldorDeclare o) {
-            super.add(new Binding(o));
+            add(new Binding(o));
         }
 
         @Override

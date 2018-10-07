@@ -18,7 +18,7 @@ public abstract class AbstractChangeHierarchyViewAction extends ToggleAction {
 
     @Override
     public final boolean isSelected(final AnActionEvent event) {
-        final AldorTypeHierarchyBrowser browser = (AldorTypeHierarchyBrowser) getTypeHierarchyBrowser(event.getDataContext());
+        final TypeHierarchyBrowserBaseEx browser = (TypeHierarchyBrowserBaseEx) getTypeHierarchyBrowser(event.getDataContext());
         return (browser != null) && getTypeName().equals(browser.typeName());
     }
 

@@ -40,16 +40,12 @@ public class AldorTypeHierarchyBrowserTest {
                     .around(new TestRule() {
                         @Override
                         public Statement apply(Statement statement, Description description) {
-                            return JUnits.prePostStatement(JUnits::setLogToInfo, () -> checkUIState(), statement);
+                            return JUnits.prePostStatement(JUnits::setLogToInfo, () -> System.out.println("Done"), statement);
                         }
                     })
                     .around(fricasExecutableRule)
                     .around(new LightPlatformJUnit4TestRule(codeTestFixture, ""))
                     .around(new SwingThreadTestRule());
-
-    private void checkUIState() {
-        System.out.println("Done");
-    }
 
     @Test
     public void testReference() {

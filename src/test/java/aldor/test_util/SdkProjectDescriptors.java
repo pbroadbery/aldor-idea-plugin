@@ -122,12 +122,7 @@ public final class SdkProjectDescriptors {
                 compilerModuleExtension.inheritCompilerOutputPath(false);
             }
         }
-
-        @Override
-        protected Module createModule(@NotNull Project project, @NotNull String moduleFilePath) {
-            return super.createModule(project, moduleFilePath);
-        }
-
+        
         @Override
         protected VirtualFile createSourceRoot(@NotNull Module module, String srcPath) {
             try {
@@ -158,7 +153,7 @@ public final class SdkProjectDescriptors {
         }
 
         Sdk createSDK() {
-            Sdk theSdk = new ProjectJdkImpl("Fricas Test SDK", sdkType);
+            Sdk theSdk = new ProjectJdkImpl("Fricas Test SDK " + prefix, sdkType);
 
             SdkModificator mod = theSdk.getSdkModificator();
             mod.setHomePath(prefix);

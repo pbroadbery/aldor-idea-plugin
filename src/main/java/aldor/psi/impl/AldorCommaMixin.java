@@ -13,7 +13,7 @@ import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings("AbstractClassExtendsConcreteClass")
+@SuppressWarnings({"AbstractClassExtendsConcreteClass", "unused"})
 public abstract class AldorCommaMixin extends ASTWrapperPsiElement implements AldorComma, ScopeFormingElement {
 
     protected AldorCommaMixin(@NotNull ASTNode node) {

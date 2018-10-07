@@ -4,9 +4,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -60,8 +58,7 @@ public final class Strings {
 
 	private <X extends Enum<X>> StringCodec<X> stringCodecForEnum(final Class<X> enumClass) {
 		final Map<String, X> enumForString = new HashMap<>();
-			List<X> constants = Arrays.asList(enumClass.getEnumConstants());
-			for (X x: constants) {
+		for (X x: enumClass.getEnumConstants()) {
 				enumForString.put(x.name(), x);
 			}
 		return new StringCodec<X>() {
@@ -99,7 +96,7 @@ public final class Strings {
 	 * @param <From>
 	 * @param <To>
 	 */
-	@SuppressWarnings({"InterfaceNamingConvention", "InterfaceWithOnlyOneDirectInheritor"})
+	@SuppressWarnings({"InterfaceWithOnlyOneDirectInheritor", "NewClassNamingConvention"})
 	public interface Codec<From, To> {
 		To encode(From from);
 		From decode(To to);

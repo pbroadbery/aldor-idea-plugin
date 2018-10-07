@@ -29,12 +29,12 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static aldor.spad.TestSpadLibrary.SyntaxUtils.apply;
-import static aldor.spad.TestSpadLibrary.SyntaxUtils.comma;
-import static aldor.spad.TestSpadLibrary.SyntaxUtils.id;
-import static aldor.spad.TestSpadLibrary.SyntaxUtils.map;
-
-
+/**
+ * Not real code, just test harness to get the browser working
+ * Deprecated Test only
+ */
+@SuppressWarnings("DeprecatedIsStillUsed")
+@Deprecated
 public class TestSpadLibrary implements SpadLibrary {
     private final VirtualFile path; // Probably should be a search scope - or maybe a module..
     private final Project project;
@@ -80,14 +80,15 @@ public class TestSpadLibrary implements SpadLibrary {
         return "list.spad (probably)";
     }
 
+    @NotNull
     @Override
     public Env environment() {
-        return null;
+        return new Env(null);
     }
 
     @Override
     public GlobalSearchScope scope(Project project) {
-        return null;
+        return GlobalSearchScope.EMPTY_SCOPE;
     }
 
     @Override
@@ -168,25 +169,23 @@ public class TestSpadLibrary implements SpadLibrary {
         });
     }
 
-    public static final class SyntaxUtils {
-        static Syntax apply(Syntax op, Syntax... args) {
-            List<Syntax> all = new ArrayList<>();
-            all.add(op);
-            all.addAll(Arrays.asList(args));
-            return new Apply(all);
-        }
+    static Syntax apply(Syntax op, Syntax... args) {
+        List<Syntax> all = new ArrayList<>();
+        all.add(op);
+        all.addAll(Arrays.asList(args));
+        return new Apply(all);
+    }
 
-        static Syntax id(String id) {
-            return Id.createMissingId(AldorTokenTypes.TK_Id, id);
-        }
+    static Syntax id(String id) {
+        return Id.createMissingId(AldorTokenTypes.TK_Id, id);
+    }
 
-        static Syntax comma(Syntax ... syntax) {
-            return new Comma(Arrays.asList(syntax));
-        }
+    static Syntax comma(Syntax ... syntax) {
+        return new Comma(Arrays.asList(syntax));
+    }
 
-        static Syntax map(Syntax arg, Syntax ret) {
-            return new Apply(Arrays.asList(Id.createMissingId(AldorTokenTypes.KW_MArrow, "->"), arg, ret));
-        }
+    static Syntax map(Syntax arg, Syntax ret) {
+        return new Apply(Arrays.asList(Id.createMissingId(AldorTokenTypes.KW_MArrow, "->"), arg, ret));
     }
 
     public static class ParentInfo {

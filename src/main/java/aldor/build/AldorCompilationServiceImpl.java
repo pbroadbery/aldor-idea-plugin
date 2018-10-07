@@ -38,6 +38,7 @@ public class AldorCompilationServiceImpl extends AldorCompilationService {
     }
 
     private static class FinishedCompileState extends CompileState {
+        @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
         private final List<CompilerMessage> messages;
 
         FinishedCompileState(Collection<CompilerMessage> messages) {

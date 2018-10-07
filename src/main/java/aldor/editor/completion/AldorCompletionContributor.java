@@ -13,7 +13,6 @@ import aldor.ui.AldorIcons;
 import com.google.common.annotations.VisibleForTesting;
 import com.intellij.codeInsight.completion.AddSpaceInsertHandler;
 import com.intellij.codeInsight.completion.CompletionContributor;
-import com.intellij.codeInsight.completion.CompletionInitializationContext;
 import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.codeInsight.completion.CompletionProvider;
 import com.intellij.codeInsight.completion.CompletionResultSet;
@@ -106,21 +105,6 @@ public class AldorCompletionContributor extends CompletionContributor {
 
     private static String tailTextForElement(SpadLibrary spadLibrary, Id symbol) {
         return " (" + spadLibrary.definingFile(symbol) + ")";
-    }
-
-    @Override
-    public void beforeCompletion(@NotNull CompletionInitializationContext context) {
-        super.beforeCompletion(context);
-    }
-
-    @Override
-    public void duringCompletion(@NotNull CompletionInitializationContext context) {
-        super.duringCompletion(context);
-    }
-
-    @Override
-    public void fillCompletionVariants(@NotNull CompletionParameters parameters, @NotNull CompletionResultSet result) {
-        super.fillCompletionVariants(parameters, result);
     }
 
     private static final class AldorPatterns {

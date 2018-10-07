@@ -53,7 +53,7 @@ public class WizardTextField extends WizardInputField<JComponent> {
 
         private final Function<String, String> validator;
 
-        public ValidatingValueEditor(String defaultValue, String label, Function<String, String> validator) {
+        ValidatingValueEditor(String defaultValue, String label, Function<String, String> validator) {
             super(new JTextField(defaultValue), label, defaultValue);
             this.validator = validator;
         }
@@ -75,6 +75,7 @@ public class WizardTextField extends WizardInputField<JComponent> {
         }
     }
 
+    @SuppressWarnings({"serial", "SerializableHasSerializationMethods"})
     private static class ValidatingTextField extends JBTextField {
         final TextFieldValueEditor<String> myValueEditor;
 

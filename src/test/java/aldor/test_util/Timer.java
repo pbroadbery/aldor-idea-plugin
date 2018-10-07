@@ -29,7 +29,7 @@ public class Timer {
         return "{Timer: " + name + " - " + duration() + (endTime == 0 ? " ms (Still running)": "") + "}";
     }
 
-    private void stop() {
+    public void stop() {
         this.endTime = System.currentTimeMillis();
     }
 

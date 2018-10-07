@@ -5,9 +5,7 @@ import aldor.psi.AldorDefine;
 import aldor.test_util.LightPlatformJUnit4TestRule;
 import aldor.test_util.LightProjectDescriptors;
 import aldor.util.VirtualFileTests;
-import com.google.common.base.Charsets;
 import com.google.common.collect.Sets;
-import com.google.common.io.Files;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.FileIndexFacade;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -26,12 +24,15 @@ import org.junit.rules.TestRule;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.HashSet;
 
 import static aldor.psi.AldorPsiUtils.logPsi;
 import static aldor.util.VirtualFileTests.createFile;
 import static com.intellij.testFramework.LightPlatformTestCase.getSourceRoot;
+import static java.nio.file.Files.readAllLines;
 
 public final class AldorDefineNameIndexTest {
     private final CodeInsightTestFixture testFixture = LightPlatformJUnit4TestRule.createFixture(getProjectDescriptor());
@@ -142,7 +143,7 @@ public final class AldorDefineNameIndexTest {
     @Test
     public void testDefineFRA() throws IOException {
         Assume.assumeTrue(new File("/home/pab/IdeaProjects/fricas-codebase/fricas/src/algebra/algcat.spad").exists());
-        String fraText = Files.toString(new File("/home/pab/IdeaProjects/fricas-codebase/fricas/src/algebra/algcat.spad"), Charsets.US_ASCII);
+        String fraText = String.join("\n", readAllLines(Paths.get("/home/pab/IdeaProjects/fricas-codebase/fricas/src/algebra/algcat.spad"), StandardCharsets.US_ASCII));
         VirtualFile file = null;
         try {
             Project project = testFixture.getProject();
@@ -165,7 +166,7 @@ public final class AldorDefineNameIndexTest {
         }
     }
 
-    protected LightProjectDescriptor getProjectDescriptor() {
+    private static LightProjectDescriptor getProjectDescriptor() {
         return LightProjectDescriptors.ALDOR_MODULE_DESCRIPTOR;
     }
 }

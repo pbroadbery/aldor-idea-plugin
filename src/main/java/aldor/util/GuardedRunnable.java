@@ -1,5 +1,8 @@
-package aldor.syntax;
+package aldor.util;
 
+import aldor.syntax.GuardedException;
+
+@SuppressWarnings({"unused", "InterfaceNeverImplemented"})
 @FunctionalInterface
 public interface GuardedRunnable<E extends Exception> {
 

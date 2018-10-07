@@ -17,8 +17,8 @@ import org.junit.Ignore;
 import java.util.Arrays;
 import java.util.List;
 
-@SuppressWarnings("JUnitTestCaseWithNoTests")
-@Ignore("Need to revisit & turn into junit4") public class AldorModuleWizardTest extends PlatformTestCase {
+@Ignore("Need to revisit & turn into junit4")
+public class AldorModuleWizardTest extends PlatformTestCase {
 
     @SkipCI
     public void testCreateProject() {

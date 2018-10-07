@@ -18,6 +18,7 @@ import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("AbstractClassExtendsConcreteClass")
 public abstract class AldorColonExprMixin extends StubBasedPsiElementBase<AldorDeclareStub> implements AldorColonExpr, AldorDeclare {
 
     @SuppressWarnings("ConstructorNotProtectedInAbstractClass")

@@ -2,6 +2,7 @@ package aldor.util.sexpr;
 
 import aldor.util.sexpr.impl.SExpressionTypes;
 
+@SuppressWarnings("CyclicClassDependency")
 public class SxType<T extends SExpression> {
     public static final SxType<SExpression> Any = new SxType<>("Any", SExpression.class);
     public static final SxType<SExpressionTypes.Cons> Cons = new SxType<>("Cons", SExpressionTypes.Cons.class);

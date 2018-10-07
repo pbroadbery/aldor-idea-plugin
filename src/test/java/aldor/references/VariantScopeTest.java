@@ -85,8 +85,7 @@ public class VariantScopeTest extends LightPlatformCodeInsightFixtureTestCase {
         if (x instanceof LookupElement) {
             return Objects.requireNonNull(((LookupElement) x).getPsiElement()).getText();
         }
-        //noinspection ChainOfInstanceofChecks
-        if (x instanceof PsiElement) {
+        else if (x instanceof PsiElement) {
             return ((PsiElement) x).getText();
         }
         return x.toString();

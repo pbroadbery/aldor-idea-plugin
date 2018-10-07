@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
 import static aldor.test_util.LightPlatformJUnit4TestRule.createFixture;
 import static aldor.test_util.SdkProjectDescriptors.fricasSdkProjectDescriptor;
 import static com.intellij.testFramework.LightPlatformTestCase.getProject;
+import static com.intellij.testFramework.PlatformTestUtil.notNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -46,7 +47,13 @@ public class FricasSpadLibraryTest {
             RuleChain.emptyRuleChain()
                     .around(directoryPresentRule)
                     .around(new LightPlatformJUnit4TestRule(testFixture, ""))
+                    .around(JUnits.prePostTestRule(this::showSDK, () -> {}))
                     .around(new SwingThreadTestRule());
+
+    private void showSDK() {
+        Sdk projectSdk = ProjectRootManager.getInstance(testFixture.getProject()).getProjectSdk();
+        System.out.println("SDK IS: "+  projectSdk);
+    }
 
     @Test
     public void testParents0() {
@@ -73,7 +80,7 @@ public class FricasSpadLibraryTest {
 
         Collection<AldorDefine> ll = AldorDefineTopLevelIndex.instance.get("Group", getProject(), GlobalSearchScope.allScope(getProject()));
 
-        Syntax syntax = SyntaxPsiParser.parse(ll.iterator().next().lhs()).as(DeclareNode.class).lhs();
+        Syntax syntax = notNull(SyntaxPsiParser.parse(ll.iterator().next().lhs())).as(DeclareNode.class).lhs();
         System.out.println("Syntax is " + syntax);
         List<SpadLibrary.Operation> pp = lib.operations(syntax);
         for (SpadLibrary.Operation p: pp) {

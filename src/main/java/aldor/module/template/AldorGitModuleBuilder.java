@@ -17,7 +17,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 final class AldorGitModuleBuilder extends AldorModuleBuilder {
@@ -28,9 +27,10 @@ final class AldorGitModuleBuilder extends AldorModuleBuilder {
     private final List<WizardInputField<?>> additionalFields;
     private final GitModuleDetail detail;
 
+    @SuppressWarnings("ThisEscapedInObjectConstruction")
     AldorGitModuleBuilder(GitModuleType type) {
         super(AldorModuleType.instance());
-        this.detail = type.fn.apply(this);
+        this.detail = type.fn().apply(this);
         additionalFields = createAdditionalFields();
         this.additionalFieldsByName = additionalFields.stream().collect(Collectors.toMap(WizardInputField::getId, f -> f));
     }
@@ -85,26 +85,8 @@ final class AldorGitModuleBuilder extends AldorModuleBuilder {
         detail.setupRootModel(modifiableRootModel);
     }
 
-    private interface GitModuleDetail {
-        boolean isSuitableSdkType(SdkTypeId sdkType);
 
-        String name();
-        void setupRootModel(ModifiableRootModel model) throws ConfigurationException;
-    }
-
-    enum GitModuleType {
-        Aldor((b -> b.new AldorGitModuleDetail())),
-        Fricas(b-> b.new FricasGitModuleDetail());
-
-        Function<AldorGitModuleBuilder, GitModuleDetail> fn;
-
-        GitModuleType(Function<AldorGitModuleBuilder, GitModuleDetail> fn) {
-            this.fn = fn;
-        }
-    }
-
-
-    private class AldorGitModuleDetail implements GitModuleDetail {
+    public class AldorGitModuleDetail implements GitModuleDetail {
 
         @Override
         public boolean isSuitableSdkType(SdkTypeId sdkType) {
@@ -147,7 +129,7 @@ final class AldorGitModuleBuilder extends AldorModuleBuilder {
 
     }
 
-    private class FricasGitModuleDetail implements GitModuleDetail {
+    public class FricasGitModuleDetail implements GitModuleDetail {
 
         @Override
         public boolean isSuitableSdkType(SdkTypeId sdkType) {

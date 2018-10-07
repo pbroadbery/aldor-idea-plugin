@@ -21,7 +21,6 @@ public class AldorHierarchyOperationDescriptor  extends HierarchyNodeDescriptor 
     private final Operation operation;
 
     protected AldorHierarchyOperationDescriptor(@NotNull Project project, HierarchyNodeDescriptor parentDescriptor, Operation operation) {
-        //noinspection ConstantConditions
         super(project, parentDescriptor, anchorElement(parentDescriptor, operation), false);
         this.operation = operation;
     }

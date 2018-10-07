@@ -1,6 +1,8 @@
 package aldor.symbolfile;
 
 import aldor.build.module.AnnotationFileManager;
+import aldor.build.module.AnnotationFileNavigator;
+import aldor.build.module.DefaultAnnotationFileNavigator;
 import aldor.psi.AldorIdentifier;
 import aldor.syntax.SyntaxPrinter;
 import aldor.test_util.AldorRoundTripProjectDescriptor;
@@ -61,11 +63,11 @@ public class AnnotationFileTest {
 
         annotationTestFixture.runInEdtAndWait(() -> {
             AnnotationFileManager fileManager = AnnotationFileManager.getAnnotationFileManager(insightTestFixture.getProject());
-
+            AnnotationFileNavigator navigator = new DefaultAnnotationFileNavigator(fileManager);
             PsiFile file = insightTestFixture.getPsiManager().findFile(sourceFile);
             assertNotNull(file);
             AldorIdentifier fooReference = PsiTreeUtil.findElementOfClassAtOffset(file, program.indexOf("foo();"), AldorIdentifier.class, true);
-            AnnotatedOptional<Syme, String> fooRef = fileManager.symeForElement(fooReference);
+            AnnotatedOptional<Syme, String> fooRef = navigator.symeForElement(fooReference);
             Syme fooSyme = fooRef.orElseThrowError(msg -> new AssertionFailedError("Missing ref for foo: " + msg));
             assertEquals("Dom", fooSyme.exporter().toString());
             assertEquals("() -> Dom", SyntaxPrinter.instance().toString(fooSyme.type()));

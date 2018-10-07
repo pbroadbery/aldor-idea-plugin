@@ -52,6 +52,7 @@ public class AldorLambdaMixin extends ASTWrapperPsiElement implements AldorLambd
     private Optional<Syntax> syntax() {
         PsiElement lhs = getFirstChild();
         Optional<Syntax> syntax = this.getUserData(cachedLhsSyntax);
+        //noinspection OptionalAssignedToNull
         if (syntax == null) {
             Syntax calculatedSyntax = SyntaxPsiParser.parse(lhs);
             syntax = Optional.ofNullable(calculatedSyntax);

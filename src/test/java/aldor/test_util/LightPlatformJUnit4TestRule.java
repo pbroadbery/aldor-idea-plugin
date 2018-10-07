@@ -18,7 +18,7 @@ import java.io.File;
 @SuppressWarnings("ClassWithTooManyDependents")
 public class LightPlatformJUnit4TestRule implements TestRule {
     private final String basePath;
-    private CodeInsightTestFixture myFixture = null;
+    private final CodeInsightTestFixture myFixture;
 
     public LightPlatformJUnit4TestRule(CodeInsightTestFixture fixture, String basePath) {
         this.myFixture = fixture;
@@ -33,7 +33,6 @@ public class LightPlatformJUnit4TestRule implements TestRule {
     @NonNls
     protected String getTestDataPath() {
         String path = PlatformTestUtil.getCommunityPath();
-        //noinspection StringConcatenationMissingWhitespace
         return path.replace(File.separatorChar, '/') + basePath;
     }
 
@@ -53,8 +52,12 @@ public class LightPlatformJUnit4TestRule implements TestRule {
     public static CodeInsightTestFixture createFixture(LightProjectDescriptor descriptor) {
         IdeaTestFixtureFactory factory = IdeaTestFixtureFactory.getFixtureFactory();
         TestFixtureBuilder<IdeaProjectTestFixture> fixtureBuilder = factory.createLightFixtureBuilder(descriptor);
+//        System.out.println("create fixture; SDK is: " + descriptor.getSdk());
         final IdeaProjectTestFixture fixture = fixtureBuilder.getFixture();
-        return IdeaTestFixtureFactory.getFixtureFactory().createCodeInsightFixture(fixture, new LightTempDirTestFixtureImpl(true));
+        CodeInsightTestFixture testFixture = IdeaTestFixtureFactory.getFixtureFactory().createCodeInsightFixture(fixture, new LightTempDirTestFixtureImpl(true));
+
+        System.out.println("createFixture - " + testFixture.getProject());
+        return testFixture;
     }
 
 }

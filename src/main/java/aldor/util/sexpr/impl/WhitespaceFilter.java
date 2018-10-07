@@ -14,7 +14,6 @@ public class WhitespaceFilter implements ITokeniser {
 			underlying.next();
 			tok = underlying.peek();
 		}
-		assert (!tok.isWhitespace());
 		return tok;
 	}
 

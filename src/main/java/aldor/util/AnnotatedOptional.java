@@ -97,7 +97,12 @@ public final class AnnotatedOptional<T, X> {
 
     @Override
     public int hashCode() {
-        return this.map(Object::hashCode).orElse(Object::hashCode);
+        if (isPresent()) {
+            return get().hashCode();
+        }
+        else {
+            return failInfo.hashCode();
+        }
     }
 
     @Override

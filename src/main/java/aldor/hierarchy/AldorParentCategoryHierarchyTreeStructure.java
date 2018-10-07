@@ -4,6 +4,7 @@ import aldor.spad.SpadLibrary;
 import aldor.spad.SpadLibraryManager;
 import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxPrinter;
+import aldor.util.Try;
 import com.google.common.collect.Sets;
 import com.intellij.ide.hierarchy.HierarchyNodeDescriptor;
 import com.intellij.ide.hierarchy.HierarchyTreeStructure;
@@ -13,6 +14,7 @@ import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiElementPointer;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -72,10 +74,11 @@ public final class AldorParentCategoryHierarchyTreeStructure extends HierarchyTr
             return new Object[] { "Missing library"};
         }
         Syntax syntax = aldorDescriptor.syntax();
-        List<Syntax> parents = library.parentCategories(syntax);
+        List<Syntax> parents = Try.of(() -> library.parentCategories(syntax)).orElse(e -> Collections.emptyList());
 
         Stream<Object> parentNodes = parents.stream().map(psyntax -> createNodeDescriptorMaybe(aldorDescriptor, psyntax));
-        Stream<Object> operationNodes = library.operations(syntax).stream().map(op -> createOperationNodeDescriptorMaybe(aldorDescriptor, op));
+        List<SpadLibrary.Operation> operations = Try.of(() -> library.operations(syntax)).orElse(e -> Collections.emptyList());
+        Stream<Object> operationNodes = operations.stream().map(op -> createOperationNodeDescriptorMaybe(aldorDescriptor, op));
 
         return Stream.concat(parentNodes, operationNodes).toArray();
     }
