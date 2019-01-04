@@ -1,5 +1,6 @@
 package aldor.hierarchy;
 
+import aldor.hierarchy.util.ComparatorPriority;
 import aldor.syntax.SyntaxPrinter;
 import aldor.ui.AldorIcons;
 import com.intellij.ide.IdeBundle;

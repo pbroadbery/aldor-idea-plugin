@@ -1,5 +1,6 @@
 package aldor.hierarchy;
 
+import aldor.hierarchy.util.ErrorNodeDescriptor;
 import aldor.spad.SpadLibrary;
 import aldor.spad.SpadLibraryManager;
 import aldor.syntax.Syntax;

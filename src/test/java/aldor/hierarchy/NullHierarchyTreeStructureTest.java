@@ -1,5 +1,6 @@
 package aldor.hierarchy;
 
+import aldor.hierarchy.util.NullHierarchyTreeStructure;
 import aldor.parser.SwingThreadTestRule;
 import aldor.test_util.LightPlatformJUnit4TestRule;
 import com.intellij.ide.hierarchy.HierarchyNodeDescriptor;

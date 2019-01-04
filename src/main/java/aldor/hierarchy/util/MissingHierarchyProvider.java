@@ -1,4 +1,4 @@
-package aldor.hierarchy;
+package aldor.hierarchy.util;
 
 import com.intellij.ide.hierarchy.HierarchyBrowser;
 import com.intellij.ide.hierarchy.HierarchyProvider;
@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 
-public class AldorMissingHierarchyProvider implements HierarchyProvider {
+public class MissingHierarchyProvider implements HierarchyProvider {
     @Nullable
     @Override
     public PsiElement getTarget(@NotNull DataContext dataContext) {

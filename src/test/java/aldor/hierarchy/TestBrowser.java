@@ -14,8 +14,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.intellij.ide.hierarchy.TypeHierarchyBrowserBase.SUPERTYPES_HIERARCHY_TYPE;
-
 class TestBrowser implements Disposable {
     @Nonnull
     public final AldorTypeHierarchyBrowser browser;
@@ -29,7 +27,7 @@ class TestBrowser implements Disposable {
         Assert.assertNotNull(target);
         browser = (AldorTypeHierarchyBrowser) provider.createHierarchyBrowser(target);
         provider.browserActivated(browser);
-        HierarchyTreeStructure tmp = browser.createHierarchyTreeStructure(SUPERTYPES_HIERARCHY_TYPE, target);
+        HierarchyTreeStructure tmp = browser.createHierarchyTreeStructure(hierarchyType, target);
         Assert.assertNotNull(tmp);
         hierarchy = tmp;
     }

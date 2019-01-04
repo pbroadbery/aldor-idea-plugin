@@ -1,5 +1,6 @@
-package aldor.hierarchy;
+package aldor.hierarchy.util;
 
+import aldor.hierarchy.AldorHierarchyNodeDescriptor;
 import com.intellij.ide.hierarchy.HierarchyNodeDescriptor;
 import com.intellij.openapi.roots.ui.util.CompositeAppearance;
 import org.jetbrains.annotations.NotNull;

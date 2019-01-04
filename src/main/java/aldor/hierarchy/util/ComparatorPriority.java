@@ -1,4 +1,4 @@
-package aldor.hierarchy;
+package aldor.hierarchy.util;
 
 public interface ComparatorPriority {
     Integer UNKNOWN = -1;

@@ -1,4 +1,4 @@
-package aldor.hierarchy;
+package aldor.hierarchy.util;
 
 import com.intellij.ide.hierarchy.TypeHierarchyBrowserBase;
 import com.intellij.openapi.project.Project;

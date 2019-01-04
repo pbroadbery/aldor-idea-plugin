@@ -8,6 +8,8 @@ import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.JUnits;
 import aldor.test_util.LightPlatformJUnit4TestRule;
 import aldor.test_util.SdkProjectDescriptors;
+import com.intellij.codeInsight.documentation.DocumentationManager;
+import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.psi.PsiElement;
@@ -24,6 +26,8 @@ import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
 import java.util.Collection;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.intellij.ide.hierarchy.TypeHierarchyBrowserBase.SUPERTYPES_HIERARCHY_TYPE;
 import static org.junit.Assert.assertNotNull;
@@ -73,6 +77,26 @@ public class AldorTypeHierarchyBrowserTestAldorSdk {
         assertNotNull(findAllElt);
         System.out.println("FindAll: " + findAllElt);
         assertTrue(findAllElt.getContainingFile().getVirtualFile().getPath().contains("sal_list.as"));
+        browser.dispose();
+        ((Disposable) ProgressManager.getInstance()).dispose();
+    }
+
+    @Test
+    public void testGrouped() {
+        String text = "Ring";
+        PsiFile whole = codeTestFixture.addFileToProject("test.as", text);
+
+        PsiElement elt = whole.findElementAt(text.indexOf("Ring"));
+
+        TestBrowser browser = new TestBrowser(new AldorTypeHierarchyProvider(), elt, AldorTypeHierarchyConstants.GROUPED_HIERARCHY_TYPE);
+        browser.update();
+
+        System.out.println("Root: " + browser.rootDescriptor());
+
+        System.out.println("Children: " + browser.childElements().stream().map(e -> e.getClass()).collect(Collectors.toSet()));
+
+        Optional<NodeDescriptor<?>> groupedElement = browser.childElements().stream().filter(e -> e instanceof GroupingHierarchyDescriptor).findFirst();
+        DocumentationManager.getInstance(codeTestFixture.getProject());
         browser.dispose();
         ((Disposable) ProgressManager.getInstance()).dispose();
     }

@@ -1,5 +1,6 @@
 package aldor.hierarchy;
 
+import aldor.hierarchy.util.TypeHierarchyBrowserBaseEx;
 import com.intellij.ide.hierarchy.TypeHierarchyBrowserBase;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataContext;

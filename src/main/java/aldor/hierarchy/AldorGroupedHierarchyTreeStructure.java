@@ -19,16 +19,18 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static aldor.syntax.SyntaxUtils.psiElementFromSyntax;
+import static java.util.Objects.requireNonNull;
 
-public class AldorFlatHierarchyTreeStructure extends HierarchyTreeStructure {
+public class AldorGroupedHierarchyTreeStructure extends HierarchyTreeStructure {
     private static final Object[] EMPTY_ARRAY = new Object[0];
     //private final SmartPsiElementPointer<PsiElement> smartPointer;
 
-    public AldorFlatHierarchyTreeStructure(Project project, @NotNull Syntax syntax) {
+    public AldorGroupedHierarchyTreeStructure(Project project, @NotNull Syntax syntax) {
         super(project, createBaseNodeDescriptor(project, syntax));
         //this.smartPointer = SmartPointerManager.getInstance(project).createSmartPsiElementPointer(psiElementFromSyntax(syntax));
     }
@@ -64,6 +66,11 @@ public class AldorFlatHierarchyTreeStructure extends HierarchyTreeStructure {
             return EMPTY_ARRAY;
         }
 
+        return buildRootChildren(descriptor);
+    }
+
+    @NotNull
+    private Object[] buildRootChildren(@NotNull HierarchyNodeDescriptor descriptor) {
         AldorHierarchyNodeDescriptor nodeDescriptor = (AldorHierarchyNodeDescriptor) descriptor;
         SpadLibrary library = SpadLibraryManager.instance().spadLibraryForElement(descriptor.getPsiElement());
         if (library == null) {
@@ -73,14 +80,22 @@ public class AldorFlatHierarchyTreeStructure extends HierarchyTreeStructure {
         List<Syntax> parents = this.parents(library, syntax);
         //noinspection ObjectEquality
         assert parents.get(0) == syntax;
-        List<SpadLibrary.Operation> operations = this.operations(library, parents);
+        List<Grouping> groupings = this.operations(library, parents);
 
         Stream<Object> parentNodes = parents.subList(1, parents.size()-1).stream().map(psyntax -> createNodeDescriptorMaybe(nodeDescriptor, psyntax));
-        Stream<Object> operationNodes = operations.stream().map(op -> createOperationNodeDescriptorMaybe(nodeDescriptor, op));
+        Stream<Object> operationNodes = groupings.stream().map(grp -> createNodeDescriptorMaybe(nodeDescriptor, grp));
 
         return Stream.concat(parentNodes, operationNodes).toArray();
     }
 
+    private Object createNodeDescriptorMaybe(AldorHierarchyNodeDescriptor parent, Grouping grouping) {
+        if (grouping.operations().size() == 1) {
+            return createOperationNodeDescriptorMaybe(parent, grouping.operations().get(0));
+        }
+        else {
+            return new GroupingHierarchyDescriptor(parent, requireNonNull(parent.getPsiElement()), grouping);
+        }
+    }
 
     private Object createNodeDescriptorMaybe(AldorHierarchyNodeDescriptor parent, Syntax syntax) {
         PsiElement psiElement = psiElementFromSyntax(syntax);
@@ -112,12 +127,70 @@ public class AldorFlatHierarchyTreeStructure extends HierarchyTreeStructure {
         return allParents;
     }
 
-    private List<SpadLibrary.Operation> operations(SpadLibrary library, Collection<Syntax> allParents) {
-        return allParents.stream().flatMap(syntax -> safeOperations(library, syntax).stream()).collect(Collectors.toList());
+    private List<Grouping> operations(SpadLibrary library, Collection<Syntax> allParents) {
+        Stream<SpadLibrary.Operation> operations = allParents.stream().flatMap(syntax -> safeOperations(library, syntax).stream());
+        Map<GroupingKey, List<SpadLibrary.Operation>> collected = operations.collect(Collectors.groupingBy(this::groupingKey));
+
+        return collected.entrySet().stream().map(x -> new Grouping(x.getKey(), x.getValue())).collect(Collectors.toList());
     }
 
     private List<SpadLibrary.Operation> safeOperations(SpadLibrary library, Syntax syntax) {
         return Try.of(() -> library.operations(syntax)).orElse(e -> Collections.emptyList());
+    }
+
+    GroupingKey groupingKey(SpadLibrary.Operation op) {
+        return new GroupingKey(op.name(), op.type());
+    }
+
+    public static class GroupingKey {
+        private final String name;
+        private final Syntax type;
+
+        GroupingKey(String name, Syntax type) {
+            this.name = name;
+            this.type = type;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj.getClass() != getClass()) {
+                return false;
+            }
+            GroupingKey other = (GroupingKey) obj;
+
+            return name.equals(other.name()) && SyntaxUtils.match(other.type(), type);
+        }
+
+        public String name() {
+            return name;
+        }
+
+        public Syntax type() {
+            return type;
+        }
+
+        @Override
+        public int hashCode() {
+            return name.hashCode();
+        }
+    }
+
+    static class Grouping {
+        private final GroupingKey key;
+        private final List<SpadLibrary.Operation> operations;
+
+        Grouping(GroupingKey type, List<SpadLibrary.Operation> operations) {
+            this.key = type;
+            this.operations = operations;
+        }
+
+        public GroupingKey key() {
+            return key;
+        }
+
+        public List<SpadLibrary.Operation> operations() {
+            return operations;
+        }
     }
 
 }

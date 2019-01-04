@@ -1,5 +1,8 @@
 package aldor.hierarchy;
 
+import aldor.hierarchy.util.ComparatorPriority;
+import aldor.hierarchy.util.NullHierarchyTreeStructure;
+import aldor.hierarchy.util.TypeHierarchyBrowserBaseEx;
 import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxPsiParser;
 import aldor.syntax.SyntaxUtils;
@@ -74,6 +77,7 @@ public class AldorTypeHierarchyBrowser extends TypeHierarchyBrowserBaseEx {
         baseOnThisTypeAction
                 .registerCustomShortcutSet(ActionManager.getInstance().getAction(IdeActions.ACTION_TYPE_HIERARCHY).getShortcutSet(), tree1);
         trees.put(AldorTypeHierarchyConstants.FLAT_HIERARCHY_TYPE, tree1);
+        trees.put(AldorTypeHierarchyConstants.GROUPED_HIERARCHY_TYPE, tree1);
     }
 
     @Override
@@ -94,6 +98,7 @@ public class AldorTypeHierarchyBrowser extends TypeHierarchyBrowserBaseEx {
     protected void prependActions(@NotNull DefaultActionGroup actionGroup) {
         actionGroup.add(new ViewParentHierarchyAction());
         actionGroup.add(new ViewFlatHierarchyAction());
+        actionGroup.add(new ViewGroupedHierarchyAction());
         actionGroup.add(new AlphaSortAction());
     }
 
@@ -123,6 +128,9 @@ public class AldorTypeHierarchyBrowser extends TypeHierarchyBrowserBaseEx {
         }
         else if (AldorTypeHierarchyConstants.FLAT_HIERARCHY_TYPE.equals(typeName)) {
             return new AldorFlatHierarchyTreeStructure(myProject, syntax);
+        }
+        else if (AldorTypeHierarchyConstants.GROUPED_HIERARCHY_TYPE.equals(typeName)) {
+            return new AldorGroupedHierarchyTreeStructure(myProject, syntax);
         }
         else {
             return new NullHierarchyTreeStructure(element, "No '" + typeName + "' structure - not implemented" );

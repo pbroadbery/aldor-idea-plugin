@@ -1,4 +1,4 @@
-package aldor.hierarchy;
+package aldor.hierarchy.util;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.hierarchy.HierarchyNodeDescriptor;

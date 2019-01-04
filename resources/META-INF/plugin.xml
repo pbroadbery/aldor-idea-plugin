@@ -74,7 +74,7 @@
         <lang.psiStructureViewFactory language="Aldor" implementationClass="aldor.structure.AldorPsiStructureViewFactory"/>
 
         <typeHierarchyProvider implementationClass="aldor.hierarchy.AldorTypeHierarchyProvider" language="Aldor"/>
-        <methodHierarchyProvider implementationClass="aldor.hierarchy.AldorMissingHierarchyProvider" language="Aldor"/>
+        <methodHierarchyProvider implementationClass="aldor.hierarchy.util.MissingHierarchyProvider" language="Aldor"/>
 
         <!-- Aldor extras -->
         <lang.refactoringSupport language="Aldor" implementationClass="aldor.references.AldorRefactoringSupportProvider"/>

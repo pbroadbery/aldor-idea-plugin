@@ -73,7 +73,6 @@ public class FricasSpadLibraryTest {
     @Test
     @SkipCI
     public void testOperations() {
-        JUnits.setLogToInfo();
         FricasSpadLibrary lib = new FricasSpadLibraryBuilder().project(testFixture.getProject())
                 .daaseDirectory(projectSdkAlgebraDirectory())
                 .createFricasSpadLibrary();
@@ -102,7 +101,6 @@ public class FricasSpadLibraryTest {
     @Test
     @SkipCI
     public void testCoercibleToOperations() {
-        JUnits.setLogToInfo();
         FricasSpadLibrary lib = new FricasSpadLibraryBuilder()
                 .project(testFixture.getProject())
                 .daaseDirectory(projectSdkAlgebraDirectory())

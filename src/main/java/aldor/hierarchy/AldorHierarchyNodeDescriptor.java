@@ -1,5 +1,6 @@
 package aldor.hierarchy;
 
+import aldor.hierarchy.util.ComparatorPriority;
 import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxPrinter;
 import aldor.ui.AldorIcons;
@@ -44,7 +45,6 @@ public class AldorHierarchyNodeDescriptor extends HierarchyNodeDescriptor implem
             return true;
         }
         boolean changes = super.update();
-        boolean tmp = changes;
 
         myHighlightedText = new CompositeAppearance();
         TextAttributes mainTextAttributes = null;
