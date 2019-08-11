@@ -201,6 +201,11 @@ public class ParseStatementsTest extends LightPlatformCodeInsightFixtureTestCase
     }
 
 
+    public void testSysCommand() {
+        PsiElement psi = parseText("\n#if Foo\n#\n");
+        logPsi(psi);
+    }
+
     private PsiElement parseText(CharSequence text) {
         return ParserFunctions.parseAldorText(getProject(), text);
     }

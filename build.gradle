@@ -1,8 +1,11 @@
 plugins {
-    id 'org.jetbrains.intellij' version "0.2.7"
+    id 'org.jetbrains.intellij' version "0.4.8"
     id "de.undercouch.download" version "3.2.0"
 }
 
+configurations {
+    register("grammar-kit")
+}
 
 allprojects {
     apply plugin: 'java'
@@ -17,7 +20,7 @@ allprojects {
         test.resources.srcDir 'test/src/resources'
     }
     intellij {
-        version 'IC-2017.3' //IntelliJ IDEA 2016.3 dependency; for releases: https://www.jetbrains.com/intellij-repository/releases
+        version 'IC-2018.3' //IntelliJ IDEA 2016.3 dependency; for releases: https://www.jetbrains.com/intellij-repository/releases
         pluginName 'Aldor Plugin'
 
         plugins = []
@@ -49,6 +52,8 @@ def libFiles = ["aldor", "algebra", "foam", "foamj", "SpadType"]
 dependencies {
     compile project('jps-plugin')
     compile files(libFiles.collect({"lib/${it}.jar"}))
+
+     "grammar-kit"("org.jetbrains.idea:grammar-kit:2019.1")
 }
 
 task copyLibraryFiles(type: Copy) {
@@ -73,7 +78,7 @@ task list(dependsOn: configurations.compile) {
 }
 
 task downloadGrammarKit(type: Download) {
-    src 'https://github.com/JetBrains/Grammar-Kit/files/1459993/GrammarKit-2017.1.1.zip'
+    src 'https://github.com/JetBrains/Grammar-Kit/releases/download/2019.1/grammar-kit-2019.1.zip'
     dest 'download/GrammarKit.zip'
     overwrite false
     outputs.file file(dest)
@@ -115,7 +120,7 @@ task unzipGrammar(type: Copy) {
     into outputDir
 
     inputs.files tasks.downloadGrammarKit.outputs.files
-    outputs.file file('lib/GrammarKit/lib/grammar-kit.jar')
+    outputs.file file('lib/GrammarKit/lib/grammar-kit-2019.1.jar')
 }
 
 task generateLexer (type: JavaExec) {
@@ -154,8 +159,8 @@ def parserTask(project, parserName, pkg) {
         def dstRoot = "$project.projectDir/src/gen/grammar"
         def src = "$project.projectDir/src/main/grammar/${parserName}.bnf"
 	    def dst = "$dstRoot/$pkg"
-        classpath(configurations.compile + files('lib/GrammarKit/lib/grammar-kit-2017.1.1.jar'))
-
+        //classpath(configurations.compile + files('lib/grammar-kit/lib/grammar-kit-2019.1.jar'))
+	classpath = configurations["grammar-kit"]
         args = [dstRoot, file(src)]
         main = 'org.intellij.grammar.Main'
         inputs.file src

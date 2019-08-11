@@ -22,7 +22,7 @@ public class GitProcess {
         executorService = Executors.newSingleThreadExecutor();
     }
 
-    void runCommand(File path, List<String> args) throws IOException {
+    public void runCommand(File path, List<String> args) throws IOException {
         ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.command(args.toArray(new String[args.size()]));
         processBuilder.directory(path);

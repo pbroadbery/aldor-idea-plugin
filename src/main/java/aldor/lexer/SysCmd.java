@@ -44,6 +44,9 @@ public class SysCmd {
             throw new IllegalArgumentException("Text must start with '#' or ')'" + text);
         }
         String[] words = text.substring(1).split(" ");
+        if (words.length == 0) {
+            return new SysCmd(SysCommandType.Invalid, words);
+        }
         SysCommandType type = SysCommandType.lookup(words[0]);
         if (type == null) {
             return new SysCmd(SysCommandType.Invalid, words);

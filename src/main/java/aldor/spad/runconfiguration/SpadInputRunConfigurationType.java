@@ -62,7 +62,7 @@ public class SpadInputRunConfigurationType extends ConfigurationTypeBase {
     /**
      * Configuration - the settings (file name, how to run, etc)
      */
-    public static class SpadInputConfiguration extends ModuleBasedConfiguration<RunConfigurationModule> implements SpadRunProfile, RunConfigurationWithSuppressedDefaultDebugAction {
+    public static class SpadInputConfiguration extends ModuleBasedConfiguration<RunConfigurationModule, Element> implements SpadRunProfile, RunConfigurationWithSuppressedDefaultDebugAction {
         private final SpadInputConfigurationBean bean = new SpadInputConfigurationBean();
 
         public SpadInputConfiguration(String name, @NotNull RunConfigurationModule configurationModule, @NotNull ConfigurationFactory factory) {

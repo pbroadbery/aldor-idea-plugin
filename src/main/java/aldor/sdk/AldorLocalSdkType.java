@@ -1,5 +1,6 @@
 package aldor.sdk;
 
+import com.google.common.collect.Lists;
 import com.intellij.openapi.projectRoots.AdditionalDataConfigurable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkAdditionalData;
@@ -13,8 +14,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.JComponent;
+import java.util.List;
 
 public class AldorLocalSdkType extends SdkType implements AldorSdkType {
+    public static List<String> ALDOR_SOURCE_DIRS = Lists.newArrayList("aldor/aldor/lib/libfoam/al", "aldor/lib/aldor", "aldor/lib/algebra", "aldor/lib/libaxllib");
+    public static List<String> ALDOR_TEST_DIRS = Lists.newArrayList("aldor/aldor/test");
 
     public AldorLocalSdkType() {
         super("Aldor Local SDK");

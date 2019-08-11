@@ -115,8 +115,20 @@ public final class SdkProjectDescriptors {
                 moduleExtension.inheritCompilerOutputPath(false);
                 moduleExtension.setCompilerOutputPath("file://" + prefix + "/build");
             }
+            else if (SdkTypes.isLocalSdk(sdk) && (sdk.getSdkType() instanceof AldorSdkType)) {
+                ContentEntry newContentEntry = model.addContentEntry("file://" + prefix);
+                for (String sourceDir: AldorLocalSdkType.ALDOR_SOURCE_DIRS) {
+                    newContentEntry.addSourceFolder("file://" + prefix + "/aldor/" + sourceDir, false);
+                }
+                for (String testDir: AldorLocalSdkType.ALDOR_TEST_DIRS) {
+                    newContentEntry.addSourceFolder("file://" + prefix + "/aldor" + testDir, true);
+                }
 
-            if (sdk.getSdkType() instanceof AldorSdkType) {
+                CompilerModuleExtension moduleExtension = model.getModuleExtension(CompilerModuleExtension.class);
+                moduleExtension.inheritCompilerOutputPath(false);
+                moduleExtension.setCompilerOutputPath("file://" + prefix + "/build");
+            }
+            else if (sdk.getSdkType() instanceof AldorSdkType) {
                 CompilerModuleExtension compilerModuleExtension = model.getModuleExtension(CompilerModuleExtension.class);
                 compilerModuleExtension.setCompilerOutputPath("file:///tmp/test_output");
                 compilerModuleExtension.inheritCompilerOutputPath(false);

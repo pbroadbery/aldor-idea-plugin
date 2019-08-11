@@ -96,6 +96,8 @@ public final class AnnotatedSyntax {
                     }
                 } else if (ab.isLiteral()) {
                     return new Literal(ab.literal(), null);
+                } else if (ab.isNone()) {
+                    return new Comma(Collections.emptyList());
                 } else {
                     throw new SyntaxConversionException("Unknown syntax type: " + ab);
                 }
