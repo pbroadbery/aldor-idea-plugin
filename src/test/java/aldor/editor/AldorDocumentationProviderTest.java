@@ -4,8 +4,9 @@ import aldor.psi.AldorIdentifier;
 import aldor.symbolfile.AnnotationFileTestFixture;
 import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.JUnits;
-import aldor.test_util.LightProjectDescriptors;
+import aldor.test_util.SdkProjectDescriptors;
 import com.intellij.codeInsight.documentation.DocumentationManager;
+import com.intellij.compiler.server.BuildManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -64,6 +65,8 @@ public class AldorDocumentationProviderTest extends LightPlatformCodeInsightFixt
                 this.addTmpFileToKeep(new File(module.getModuleFile().getCanonicalPath()));
             }
         }
+        System.setProperty("compiler.process.debug.port", "28771");
+        BuildManager.getInstance().setBuildProcessDebuggingEnabled(true);
     }
 
     public void testDocumentationLocal() throws Exception {
@@ -73,7 +76,10 @@ public class AldorDocumentationProviderTest extends LightPlatformCodeInsightFixt
                 + "Dom: with == add;\n"
                 + "f(x: Dom): Dom == x;\n";
         VirtualFile sourceFile = annotationTextFixture.createFile(getProject(),"foo.as", program);
-        annotationTextFixture.createFile(getProject(),"Makefile", "foo.abn: foo.as\n\t" + aldorExecutableRule.executable() + " -Fabn=foo.abn foo.as");
+        annotationTextFixture.createFile(getProject(),"Makefile",
+                "out/ao/foo.ao: foo.as\n" +
+                "\tmkdir -p out/ao\n" +
+                "\t" + aldorExecutableRule.executable() + " -Fabn=out/ao/foo.abn -Fabn=out/ao/foo.abn foo.as\n");
 
         annotationTextFixture.compileFile(sourceFile, getProject());
 
@@ -93,7 +99,10 @@ public class AldorDocumentationProviderTest extends LightPlatformCodeInsightFixt
                 + "Dom: with { foo: () -> % } == add { foo(): % == never }\n"
                 + "f(): Dom == foo();\n";
         VirtualFile sourceFile = annotationTextFixture.createFile(getProject(), "foo.as", program);
-        annotationTextFixture.createFile(getProject(), "Makefile", "foo.abn: foo.as\n\t" + aldorExecutableRule.executable() + " -Fabn=foo.abn foo.as");
+        annotationTextFixture.createFile(getProject(), "Makefile",
+                "out/ao/foo.ao: foo.as\n" +
+                    "\tmkdir -p out/ao\n" +
+                "\t" + aldorExecutableRule.executable() + " -Fao=out/ao/foo.ao -Fabn=out/ao/foo.abn foo.as");
 
         annotationTextFixture.compileFile(sourceFile, getProject());
 
@@ -134,7 +143,12 @@ public class AldorDocumentationProviderTest extends LightPlatformCodeInsightFixt
                 + "import from Integer;\n"
                 + "myabs := abs;\n";
         VirtualFile sourceFile = annotationTextFixture.createFile(getProject(), "bar.as", program);
-        annotationTextFixture.createFile(getProject(), "Makefile", "bar.abn: bar.as\n\t" + aldorExecutableRule.executable() + " -Fabn=bar.abn bar.as");
+        String sourceBaseName = annotationTextFixture.sourceDirectory(getProject()).getName();
+        annotationTextFixture.createFile(getProject(), "Makefile",
+                "out/ao/bar.ao: bar.as\n\tmkdir -p out/ao\n" +
+                    "\t" + aldorExecutableRule.executable() + " -Fabn=out/ao/bar.abn -Fao=out/ao/bar.ao bar.as\n" +
+                "out/jar/" + sourceBaseName + ".jar:\n" +
+                "\tmkdir -p $(dir $@); touch $@\n");
 
         annotationTextFixture.compileFile(sourceFile, getProject());
         annotationTextFixture.runInEdtAndWait(() -> {
@@ -164,6 +178,6 @@ public class AldorDocumentationProviderTest extends LightPlatformCodeInsightFixt
 
     @Override
     protected LightProjectDescriptor getProjectDescriptor() {
-       return LightProjectDescriptors.ALDOR_ROUND_TRIP_PROJECT_DESCRIPTOR;
+       return SdkProjectDescriptors.aldorSdkProjectDescriptor(aldorExecutableRule.prefix());
     }
 }

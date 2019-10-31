@@ -6,7 +6,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="IntelliJ IDEA Community Edition IC-183.5912.21 (2)" jdkType="IDEA JDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

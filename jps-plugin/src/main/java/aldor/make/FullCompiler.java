@@ -1,12 +1,9 @@
 package aldor.make;
 
-import aldor.builder.files.AldorFileBuildTarget;
-import aldor.builder.files.AldorFileBuildTargetType;
-import aldor.builder.files.AldorFileRootDescriptor;
+import aldor.builder.AldorBuilderService;
 import aldor.builder.files.AldorFileTargetBuilder;
 import com.intellij.openapi.diagnostic.Logger;
-import org.jetbrains.jps.builders.BuildOutputConsumer;
-import org.jetbrains.jps.builders.DirtyFilesHolder;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.jps.incremental.CompileContext;
 import org.jetbrains.jps.incremental.messages.BuildMessage;
 import org.jetbrains.jps.incremental.messages.CompilerMessage;
@@ -29,24 +26,20 @@ public class FullCompiler implements AldorFileTargetBuilder.Compiler {
     private static final Logger LOG = Logger.getInstance(FullCompiler.class);
     public static final String ALDOR_COMPILER = "aldor compiler";
     private final CompileContext context;
+    private final AldorBuilderService builderService;
 
-    public FullCompiler(DirtyFilesHolder<AldorFileRootDescriptor, AldorFileBuildTarget> holder, BuildOutputConsumer outputConsumer, CompileContext context) {
+    public FullCompiler(AldorBuilderService builderService, CompileContext context) {
         this.context = context;
+        this.builderService = builderService;
     }
 
     @Override
-    public boolean compileOneFile(AldorFileBuildTarget target, File file, AldorFileRootDescriptor descriptor) {
-        ExecutorService service = AldorFileBuildTargetType.executorFor(descriptor);
-        File buildDirectory = descriptor.buildDirectoryForFile(file);
-        if (buildDirectory == null) {
-            context.processMessage(new CompilerMessage(ALDOR_COMPILER, BuildMessage.Kind.ERROR, "Missing configuration for " + file));
-            return false;
-        }
-        if (!buildDirectory.exists()) {
-            context.processMessage(new CompilerMessage(ALDOR_COMPILER, BuildMessage.Kind.ERROR, "Build directory does not exist: " + buildDirectory));
-        }
+    public boolean compileOneFile(@NotNull File buildDirectory, @NotNull String targetName) {
         try {
-            doBuild(service, buildDirectory, target.targetForFile(file.getName()));
+            if (!buildDirectory.getCanonicalFile().exists()) {
+                context.processMessage(new CompilerMessage(ALDOR_COMPILER, BuildMessage.Kind.ERROR, "Build directory does not exist: " + buildDirectory));
+            }
+            doBuild(builderService.executorService(), buildDirectory.getCanonicalFile(), targetName);
         } catch (IOException e) {
             context.processMessage(new CompilerMessage(ALDOR_COMPILER, BuildMessage.Kind.ERROR, "IO Error on build: " + e.getMessage()));
             return false;

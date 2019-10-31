@@ -1,7 +1,7 @@
 package aldor.build.module;
 
-import aldor.sdk.AldorInstalledSdkType;
-import aldor.sdk.FricasInstalledSdkType;
+import aldor.sdk.aldor.AldorInstalledSdkType;
+import aldor.sdk.fricas.FricasInstalledSdkType;
 import com.intellij.ide.util.projectWizard.ModuleBuilder;
 import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.options.ConfigurationException;

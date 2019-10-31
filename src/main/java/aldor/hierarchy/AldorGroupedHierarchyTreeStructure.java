@@ -82,7 +82,7 @@ public class AldorGroupedHierarchyTreeStructure extends HierarchyTreeStructure {
         assert parents.get(0) == syntax;
         List<Grouping> groupings = this.operations(library, parents);
 
-        Stream<Object> parentNodes = parents.subList(1, parents.size()-1).stream().map(psyntax -> createNodeDescriptorMaybe(nodeDescriptor, psyntax));
+        Stream<Object> parentNodes = parents.subList(1, parents.size()).stream().map(psyntax -> createNodeDescriptorMaybe(nodeDescriptor, psyntax));
         Stream<Object> operationNodes = groupings.stream().map(grp -> createNodeDescriptorMaybe(nodeDescriptor, grp));
 
         return Stream.concat(parentNodes, operationNodes).toArray();

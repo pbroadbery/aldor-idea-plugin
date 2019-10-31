@@ -44,7 +44,7 @@ public class AldorNameReference extends PsiReferenceBase<AldorIdentifier> {
     }
 
     // Suppress to keep logging - slightly worried that we rescan the codebase when not required.
-    @SuppressWarnings({"EmptyMethod", "RedundantMethodOverride"})
+    @SuppressWarnings({"EmptyMethod"})
     @Override
     public boolean isReferenceTo(PsiElement element) {
         //LOG.info("IsRefTo: " + this.getElement() + "@" + this.getElement().getContainingFile().getName() + ":" + getElement().getTextOffset()

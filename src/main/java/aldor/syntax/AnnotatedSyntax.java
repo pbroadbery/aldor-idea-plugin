@@ -11,6 +11,7 @@ import aldor.syntax.components.Apply;
 import aldor.syntax.components.Comma;
 import aldor.syntax.components.DeclareNode;
 import aldor.syntax.components.Id;
+import aldor.syntax.components.If;
 import aldor.syntax.components.Literal;
 import aldor.syntax.components.SyntaxRepresentation;
 import aldor.typelib.AnnotatedAbSyn;
@@ -94,7 +95,10 @@ public final class AnnotatedSyntax {
                         default:
                             return new Comma(abCommaArgs(scope, ab));
                     }
-                } else if (ab.isLiteral()) {
+                } else if (ab.isIf()) {
+                    return new If(new Literal(ab.toString(), null), doToSyntax(ab.ifTruePart()), doToSyntax(ab.ifFalsePart()));
+                }
+                else if (ab.isLiteral()) {
                     return new Literal(ab.literal(), null);
                 } else if (ab.isNone()) {
                     return new Comma(Collections.emptyList());

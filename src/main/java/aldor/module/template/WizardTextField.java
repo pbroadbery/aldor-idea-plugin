@@ -19,7 +19,6 @@ public class WizardTextField extends WizardInputField<JComponent> {
     public WizardTextField(String id, String label, String defaultValue, Function<String, String> validator) {
         super(id, defaultValue);
         this.label = label;
-        //noinspection serial
         TextFieldValueEditor<String> valueEditor = new ValidatingValueEditor(defaultValue, label, validator);
         this.field = new ValidatingTextField(valueEditor);
         this.validator = validator;

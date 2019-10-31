@@ -6,6 +6,7 @@ import aldor.syntax.components.Comma;
 import aldor.syntax.components.DeclareNode;
 import aldor.syntax.components.EnumList;
 import aldor.syntax.components.Id;
+import aldor.syntax.components.If;
 import aldor.syntax.components.InfixedId;
 import aldor.syntax.components.Other;
 import aldor.syntax.components.SyntaxNode;
@@ -58,5 +59,9 @@ public abstract class SyntaxVisitor<T> {
 
     public T visitEnumList(EnumList enumList) {
         return visitSyntax(enumList);
+    }
+
+    public T visitIf(If anIf) {
+        return visitSyntax(anIf);
     }
 }

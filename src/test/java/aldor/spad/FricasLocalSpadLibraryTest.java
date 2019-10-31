@@ -1,10 +1,10 @@
 package aldor.spad;
 
 import aldor.lexer.AldorTokenTypes;
-import aldor.parser.SwingThreadTestRule;
 import aldor.syntax.Syntax;
 import aldor.syntax.components.Id;
 import aldor.test_util.DirectoryPresentRule;
+import aldor.test_util.JUnits;
 import aldor.test_util.LightPlatformJUnit4TestRule;
 import com.intellij.openapi.roots.CompilerModuleExtension;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -32,7 +32,7 @@ public class FricasLocalSpadLibraryTest {
             RuleChain.emptyRuleChain()
                     .around(directoryPresentRule)
                     .around(new LightPlatformJUnit4TestRule(testFixture, ""))
-                    .around(new SwingThreadTestRule());
+                    .around(JUnits.swingThreadTestRule());
 
     @Test
     public void testParents0() {

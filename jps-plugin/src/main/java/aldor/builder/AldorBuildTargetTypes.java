@@ -2,6 +2,7 @@ package aldor.builder;
 
 import aldor.builder.files.AldorFileBuildTargetType;
 import aldor.builder.files.AldorFileTargetBuilder;
+import aldor.builder.jars.AldorJarBuildTargetType;
 import com.intellij.openapi.diagnostic.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -12,7 +13,7 @@ import org.jetbrains.jps.incremental.TargetBuilder;
 import org.jetbrains.jps.model.JpsModel;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,10 +26,12 @@ public class AldorBuildTargetTypes {
     private static final Logger LOG = Logger.getInstance(AldorBuildTargetTypes.class);
 
     public final AldorFileBuildTargetType fileBuildTargetType;
+    public final AldorJarBuildTargetType jarBuildTargetType;
 
-    AldorBuildTargetTypes(AldorBuilderService service) {
+    public AldorBuildTargetTypes(AldorBuilderService service) {
         LOG.info("Builder: " + service);
         this.fileBuildTargetType = new AldorFileBuildTargetType(service);
+        this.jarBuildTargetType = new AldorJarBuildTargetType(service);
     }
 
     public static <Target extends BuildTarget<?>> BuildTargetLoader<Target> createLoader(@NotNull final BuildTargetType<Target> type,
@@ -54,12 +57,13 @@ public class AldorBuildTargetTypes {
 
 
     public List<BuildTargetType<? extends BuildTarget<?>>> targetTypes() {
-        return Collections.singletonList(fileBuildTargetType);
+        return Arrays.asList(/*jarBuildTargetType, */fileBuildTargetType);
     }
 
     public List<? extends TargetBuilder<?, ?>> createBuilders() {
         List<TargetBuilder<?, ?>> list = new ArrayList<>();
         list.add(new AldorFileTargetBuilder(fileBuildTargetType));
+        //list.add(new AldorJarTargetBuilder(jarBuildTargetType));
         return list;
     }
 

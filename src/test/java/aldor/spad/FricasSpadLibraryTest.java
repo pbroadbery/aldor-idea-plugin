@@ -2,7 +2,6 @@ package aldor.spad;
 
 import aldor.lexer.AldorTokenTypes;
 import aldor.parser.ParserFunctions;
-import aldor.parser.SwingThreadTestRule;
 import aldor.psi.AldorDefine;
 import aldor.psi.index.AldorDefineTopLevelIndex;
 import aldor.sdk.SdkTypes;
@@ -48,7 +47,7 @@ public class FricasSpadLibraryTest {
                     .around(directoryPresentRule)
                     .around(new LightPlatformJUnit4TestRule(testFixture, ""))
                     .around(JUnits.prePostTestRule(this::showSDK, () -> {}))
-                    .around(new SwingThreadTestRule());
+                    .around(JUnits.swingThreadTestRule());
 
     private void showSDK() {
         Sdk projectSdk = ProjectRootManager.getInstance(testFixture.getProject()).getProjectSdk();

@@ -1,43 +1,36 @@
 package aldor.builder.files;
 
+import aldor.util.FileFilterAldorUtils;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.util.io.FileFilters;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.jps.builders.BuildRootDescriptor;
-import org.jetbrains.jps.model.module.JpsModule;
-import org.jetbrains.jps.util.JpsPathUtil;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Collections;
+import java.util.Set;
 
 public class AldorFileRootDescriptor extends BuildRootDescriptor {
     private static final Logger LOG = Logger.getInstance(AldorFileRootDescriptor.class);
-    private final File path;
+    private final File sourceFile;
     private final AldorFileBuildTarget target;
-    private final List<File> contentRoots;
+    private final File sourceRoot;
 
-    AldorFileRootDescriptor(AldorFileBuildTarget target, @NotNull JpsModule module, File file) {
-        this.path = file;
+    AldorFileRootDescriptor(AldorFileBuildTarget target, File sourceRoot, File sourceFile) {
+        this.sourceFile = sourceFile;
         this.target = target;
-        //assert module.getContentRootsList() != null;
-        this.contentRoots = module.getContentRootsList().getUrls().stream().map(JpsPathUtil::urlToFile).collect(Collectors.toList());
+        this.sourceRoot = sourceRoot;
     }
 
     @Override
     public String getRootId() {
-        return path.getAbsolutePath();
+        return sourceFile.getAbsolutePath();
     }
 
     @Override
     public File getRootFile() {
-        return path;
-    }
-
-    public File getSourceFile() {
-        return path;
+        return sourceRoot;
     }
 
     @Override
@@ -45,19 +38,19 @@ public class AldorFileRootDescriptor extends BuildRootDescriptor {
         return target;
     }
 
-    @Nullable
-    public File buildDirectoryForFile(File file) {
-        return BuildFiles.buildDirectoryForFile(contentRoots, file);
+    @NotNull
+    @Override
+    public FileFilter createFileFilter() {
+        return FileFilterAldorUtils.or(FileFilterAldorUtils.nameFileFilter("Makefile"), FileFilters.filesWithExtension(".as"));
     }
 
     @NotNull
     @Override
-    public FileFilter createFileFilter() {
-        return pathname -> {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Accept: " + this.getRootId() + " " + pathname);
-            }
-            return FileUtil.filesEqual(path, pathname);
-        };
+    public Set<File> getExcludedRoots() {
+        return Collections.singleton(new File(sourceRoot, "out"));
+    }
+
+    public File buildDirectoryForFile(File file) {
+        return null;
     }
 }

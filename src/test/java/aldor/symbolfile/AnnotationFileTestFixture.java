@@ -104,24 +104,26 @@ public class AnnotationFileTestFixture extends BaseFixture {
     }
 
     public String createMakefile(String aldorLocation, Collection<String> files, Map<String, List<String>> dependencies) {
-        String abnRule =
-                "$(addsuffix .abn, $(ALDOR_FILES)): %.abn: %.as\n" +
-                "\techo Making $@\n"+
-                "\t$(ALDOR) -Fasy -Fabn=$@ $<\n" +
-                "$(addsuffix .ao, $(ALDOR_FILES)): %.ao: %.as\n" +
-                "\techo Making $@\n"+
-                "\t$(ALDOR) -Fasy -Fao=$@ $<\n"
-        ;
+        String aoRule =
+                "$(patsubst %,out/ao/%.ao, $(ALDOR_FILES)): out/ao/%.ao: %.as\n" +
+                "\techo Making $@ - $^\n"+
+                "\tmkdir -p out/ao\n" +
+                "\t$(ALDOR) -Y out/ao -Fasy -Fao=out/ao/$*.ao -Fabn=out/ao/$*.abn $*.as\n" +
+                "\n";
         String text = "ALDOR = %s\nALDOR_FILES=%s\n%s\n%s\n";
         String dependencyRules = dependencies.entrySet().stream()
-                                                        .map(e -> StringUtil.trimExtensions(e.getKey())
-                                                                + ".ao " + StringUtil.trimExtensions(e.getKey()) + ".abn: " + e.getValue().stream()
-                                                                                        .map(StringUtil::trimExtensions)
-                                                                                        .map(x -> x + ".ao").collect(Joining.with(" ")))
-                                                                 .collect(Joining.with("\n"));
-        return String.format(text, aldorLocation, files.stream().map(StringUtil::trimExtensions).collect(Joining.with(" ")),
-                            dependencyRules,
-                abnRule);
+                                                        .map(e -> "out/ao/" + StringUtil.trimExtensions(e.getKey()) + ".ao: "
+                                                                + e.getValue().stream()
+                                                                        .map(StringUtil::trimExtensions)
+                                                                        .map(x -> "out/ao/" + x + ".ao").collect(Joining.with(" ")))
+                                                                        .collect(Joining.with("\n"));
+        String makefile =  String.format(text, aldorLocation,
+                                         files.stream().map(StringUtil::trimExtensions).collect(Joining.with(" ")),
+                                         dependencyRules,
+                                         aoRule);
+
+        LOG.info("Makefile: " + makefile);
+        return makefile;
     }
 
     public void runInEdtAndWait(@NotNull Runnable runnable) {

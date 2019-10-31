@@ -2,11 +2,18 @@ package aldor.module.template;
 
 import aldor.build.module.AldorModuleBuilder;
 import aldor.build.module.AldorModuleType;
+import aldor.sdk.aldor.AldorInstalledSdkType;
 import com.google.common.collect.Maps;
+import com.intellij.ide.util.projectWizard.ModuleWizardStep;
+import com.intellij.ide.util.projectWizard.SdkSettingsStep;
+import com.intellij.ide.util.projectWizard.SettingsStep;
+import com.intellij.ide.util.projectWizard.WizardInputField;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.roots.ContentEntry;
+import com.intellij.openapi.roots.ExcludeFolder;
 import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.roots.SourceFolder;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
@@ -15,15 +22,30 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static aldor.module.template.TemplateFiles.saveFile;
 
-class AldorSimpleModuleBuilder extends AldorModuleBuilder {
+public class AldorSimpleModuleBuilder extends AldorModuleBuilder {
     private static final Logger LOG = Logger.getInstance(AldorSimpleModuleBuilder.class);
+    private final Map<String, WizardInputField<?>> additionalFieldsByName = new HashMap<>();
 
     protected AldorSimpleModuleBuilder() {
         super(AldorModuleType.instance());
+    }
+
+    @Override
+    public ModuleWizardStep modifySettingsStep(@NotNull SettingsStep settingsStep) {
+        return new SdkSettingsStep(settingsStep, this, id -> id instanceof AldorInstalledSdkType);
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Override
+    public List<WizardInputField> getAdditionalFields() {
+        return Collections.emptyList();
     }
 
     @Override
@@ -35,6 +57,7 @@ class AldorSimpleModuleBuilder extends AldorModuleBuilder {
     public String getDescription() {
         return "Aldor module with Makefile created";
     }
+
 
     @Override
     public void setupRootModel(final ModifiableRootModel modifiableRootModel) throws ConfigurationException {
@@ -49,17 +72,18 @@ class AldorSimpleModuleBuilder extends AldorModuleBuilder {
 
         ContentEntry entry = modifiableRootModel.getContentEntries()[0];
         if (entry.getFile() != null) {
-            VirtualFile file = entry.getFile().findFileByRelativePath(contentRootDir.getAbsolutePath());
+            VirtualFile file = entry.getFile();
 
             if (file != null) {
-                entry.addSourceFolder(file, false);
+                SourceFolder sourceFolder = entry.addSourceFolder(file + "/src", false);
+                ExcludeFolder excluded = entry.addExcludeFolder(file + "/src/out");
             }
         }
-
     }
 
+
     private void createFileLayout(File contentRootDir, ModifiableRootModel model) throws ConfigurationException {
-        VirtualFile file = getOrCreateExternalProjectConfigFile(contentRootDir.getPath(), "Makefile");
+        VirtualFile file = getOrCreateExternalProjectConfigFile(contentRootDir.getPath() + "/src", "Makefile");
         if (file == null) {
             return;
         }
@@ -70,12 +94,15 @@ class AldorSimpleModuleBuilder extends AldorModuleBuilder {
         map.put("INITIAL_ALDOR_FILES", "example");
         saveFile(model.getProject(), file, "Makefile.none", map);
 
-        file = getOrCreateExternalProjectConfigFile(contentRootDir.getPath(), "example.as");
+        file = getOrCreateExternalProjectConfigFile(contentRootDir.getPath() + "/src", "example.as");
         if (file == null) {
             return;
         }
         saveFile(model.getProject(), file, "example.as", map);
-
+        boolean created = FileUtilRt.createDirectory(new File(contentRootDir + "/src/out"));
+        if (!created) {
+            throw new ConfigurationException("Unable to create directory " + contentRootDir+"/src/out");
+        }
     }
 
     @Nullable

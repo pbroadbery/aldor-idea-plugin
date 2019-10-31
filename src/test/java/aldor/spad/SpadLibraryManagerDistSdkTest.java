@@ -1,7 +1,7 @@
 package aldor.spad;
 
-import aldor.parser.SwingThreadTestRule;
 import aldor.test_util.DirectoryPresentRule;
+import aldor.test_util.JUnits;
 import aldor.test_util.LightPlatformJUnit4TestRule;
 import com.intellij.testFramework.fixtures.CodeInsightTestFixture;
 import org.junit.Rule;
@@ -25,7 +25,7 @@ public class SpadLibraryManagerDistSdkTest extends SpadLibraryManagerTestCase {
             RuleChain.emptyRuleChain()
                     .around(directory)
                     .around(new LightPlatformJUnit4TestRule(testFixture, ""))
-                    .around(new SwingThreadTestRule());
+                    .around(JUnits.swingThreadTestRule());
 
     @Override
     public String basePath() {

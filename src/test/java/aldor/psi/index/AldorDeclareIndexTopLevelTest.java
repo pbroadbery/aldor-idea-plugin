@@ -1,8 +1,8 @@
 package aldor.psi.index;
 
 import aldor.parser.NavigatorFactory;
-import aldor.parser.SwingThreadTestRule;
 import aldor.psi.AldorDeclare;
+import aldor.test_util.JUnits;
 import aldor.test_util.LightPlatformJUnit4TestRule;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.project.Project;
@@ -34,7 +34,7 @@ public class AldorDeclareIndexTopLevelTest {
     public final TestRule platformTestRule =
             RuleChain.emptyRuleChain()
                     .around(new LightPlatformJUnit4TestRule(testFixture, ""))
-                    .around(new SwingThreadTestRule());
+                    .around(JUnits.swingThreadTestRule());
 
 
     @Test

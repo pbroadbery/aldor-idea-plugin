@@ -14,7 +14,7 @@ import java.util.NavigableMap;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-import static aldor.builder.files.AldorFileBuildTarget.trimExtension;
+import static aldor.util.StringUtilsAldorRt.trimExtension;
 
 class LineNumberMap {
     private final NavigableMap<Integer, Integer> lineNumberForOffset;

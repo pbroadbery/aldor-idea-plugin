@@ -112,6 +112,26 @@ public final class AldorPsiUtils {
         }
     }
 
+    /**
+     * Outermost definition containing the given element
+     * @param elt an Element
+     * @return the outermost definition
+     */
+    public static Optional<AldorDefine> topLevelDefininingForm(@NotNull PsiElement elt) {
+        PsiElement current = elt;
+        AldorDefine define = null;
+        do {
+            AldorDefine next = definingForm(current).orElse(null);
+            System.out.println("conv: " + current + " --> " + next);
+            if (next == null) {
+                break;
+            }
+            current = next.getParent();
+            define = next;
+        } while (true);
+        return Optional.ofNullable(define);
+    }
+
     /** Find the Define element that contains this element.
      * Note that in the case of the "A: E == I where ..." idiom we should return "A: E == I" for any element in E or I.
      * @param element a starting point
@@ -153,7 +173,7 @@ public final class AldorPsiUtils {
      * @return the definition where the value of the macro is used (X: E == I).
      */
     @NotNull
-    private static Optional<AldorDefine> definitionFromMacro(@SuppressWarnings("TypeMayBeWeakened") AldorDefine define) {
+    private static Optional<AldorDefine> definitionFromMacro(AldorDefine define) {
         Optional<AldorWhereBlock> whereBlock = Optional.ofNullable(new WhereClauseVisitor().apply(define.getParent()));
 
         if (!whereBlock.isPresent()) {

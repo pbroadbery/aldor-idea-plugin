@@ -9,6 +9,8 @@ import aldor.syntax.SyntaxUtils;
 import aldor.util.Try;
 import com.intellij.ide.hierarchy.HierarchyNodeDescriptor;
 import com.intellij.ide.hierarchy.HierarchyTreeStructure;
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
@@ -25,6 +27,8 @@ import java.util.stream.Stream;
 import static aldor.syntax.SyntaxUtils.psiElementFromSyntax;
 
 public class AldorFlatHierarchyTreeStructure extends HierarchyTreeStructure {
+    private static final Logger LOG = Logger.getInstance(AldorFlatHierarchyTreeStructure.class);
+
     private static final Object[] EMPTY_ARRAY = new Object[0];
     //private final SmartPsiElementPointer<PsiElement> smartPointer;
 
@@ -56,7 +60,17 @@ public class AldorFlatHierarchyTreeStructure extends HierarchyTreeStructure {
 
     @NotNull
     @Override
-    protected Object[] buildChildren(@NotNull HierarchyNodeDescriptor descriptor) {
+    public Object[] buildChildren(@NotNull HierarchyNodeDescriptor descriptor) {
+        try {
+            return buildChildren1(descriptor);
+        }
+        catch (ProcessCanceledException e) {
+            return new Object[] {new ErrorNodeDescriptor(descriptor, "Failed to find children", e)};
+        }
+    }
+
+    @NotNull
+    private Object[] buildChildren1(@NotNull HierarchyNodeDescriptor descriptor) {
         if (descriptor instanceof ErrorNodeDescriptor) {
             return EMPTY_ARRAY;
         }
@@ -73,10 +87,13 @@ public class AldorFlatHierarchyTreeStructure extends HierarchyTreeStructure {
         List<Syntax> parents = this.parents(library, syntax);
         //noinspection ObjectEquality
         assert parents.get(0) == syntax;
-        List<SpadLibrary.Operation> operations = this.operations(library, parents);
+        List<Try<SpadLibrary.Operation>> operations = this.operations(library, parents);
+        LOG.info("Looking for operations: " + syntax + " parents " + parents);
+        LOG.info("Looking for operations: " + operations.stream().map(x -> x.map(op -> op.name()).orElse(e -> e.getMessage())).collect(Collectors.joining(", ")));
 
-        Stream<Object> parentNodes = parents.subList(1, parents.size()-1).stream().map(psyntax -> createNodeDescriptorMaybe(nodeDescriptor, psyntax));
-        Stream<Object> operationNodes = operations.stream().map(op -> createOperationNodeDescriptorMaybe(nodeDescriptor, op));
+        Stream<Object> parentNodes = parents.subList(1, parents.size()).stream().map(psyntax -> createNodeDescriptorMaybe(nodeDescriptor, psyntax));
+        Stream<Object> operationNodes = operations.stream().map(opMaybe -> opMaybe.map(op -> createOperationNodeDescriptorMaybe(nodeDescriptor, op))
+                .orElse(e -> new ErrorNodeDescriptor(nodeDescriptor, e.getMessage(), e)));
 
         return Stream.concat(parentNodes, operationNodes).toArray();
     }
@@ -112,12 +129,16 @@ public class AldorFlatHierarchyTreeStructure extends HierarchyTreeStructure {
         return allParents;
     }
 
-    private List<SpadLibrary.Operation> operations(SpadLibrary library, Collection<Syntax> allParents) {
-        return allParents.stream().flatMap(syntax -> safeOperations(library, syntax).stream()).collect(Collectors.toList());
+    private List<Try<SpadLibrary.Operation>> operations(SpadLibrary library, Collection<Syntax> allParents) {
+        return allParents.stream()
+                .map(parent -> safeOperations(library, parent))
+                .flatMap(syntaxTryList -> syntaxTryList.map(l -> l.stream().map(Try::success))
+                        .orElse(e -> Stream.of(Try.failed(e))))
+                .collect(Collectors.toList());
     }
 
-    private List<SpadLibrary.Operation> safeOperations(SpadLibrary library, Syntax syntax) {
-        return Try.of(() -> library.operations(syntax)).orElse(e -> Collections.emptyList());
+    private Try<List<SpadLibrary.Operation>> safeOperations(SpadLibrary library, Syntax syntax) {
+        return Try.of(() -> library.operations(syntax));
     }
 
 }

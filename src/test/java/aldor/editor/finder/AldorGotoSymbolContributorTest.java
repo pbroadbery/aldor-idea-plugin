@@ -1,6 +1,5 @@
 package aldor.editor.finder;
 
-import aldor.parser.SwingThreadTestRule;
 import aldor.symbolfile.AnnotationFileTestFixture;
 import aldor.test_util.JUnits;
 import aldor.test_util.LightPlatformJUnit4TestRule;
@@ -39,7 +38,7 @@ public final class AldorGotoSymbolContributorTest {
             RuleChain.emptyRuleChain()
                     .around(new LightPlatformJUnit4TestRule(testFixture, ""))
                     .around(annotationTestFixture.rule(testFixture::getProject))
-                    .around(new SwingThreadTestRule());
+                    .around(JUnits.swingThreadTestRule());
 
     @Rule
     public final TestRule rule = new SkipOnCIBuildRule();

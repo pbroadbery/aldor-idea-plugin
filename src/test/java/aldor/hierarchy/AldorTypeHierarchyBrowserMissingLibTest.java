@@ -1,7 +1,6 @@
 package aldor.hierarchy;
 
 import aldor.lexer.AldorTokenTypes;
-import aldor.parser.SwingThreadTestRule;
 import aldor.spad.AldorExecutor;
 import aldor.spad.SpadLibrary;
 import aldor.spad.SpadLibraryManager;
@@ -55,7 +54,7 @@ public class AldorTypeHierarchyBrowserMissingLibTest {
                     .around(fricasExecutableRule)
                     .around(new LightPlatformJUnit4TestRule(codeTestFixture, ""))
                     .around(new MockSpadLibraryTestRule(codeTestFixture))
-                    .around(new SwingThreadTestRule());
+                    .around(JUnits.swingThreadTestRule());
 
     private final class MockSpadLibraryTestRule implements TestRule {
         private final CodeInsightTestFixture fixture;

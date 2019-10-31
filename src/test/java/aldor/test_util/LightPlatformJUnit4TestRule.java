@@ -1,6 +1,8 @@
 package aldor.test_util;
 
+import com.intellij.idea.IdeaTestApplication;
 import com.intellij.openapi.project.Project;
+import com.intellij.testFramework.LightPlatformTestCase;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.PlatformTestUtil;
 import com.intellij.testFramework.fixtures.CodeInsightTestFixture;
@@ -43,6 +45,7 @@ public class LightPlatformJUnit4TestRule implements TestRule {
 
     private void tearDown() throws Exception {
         myFixture.tearDown();
+        LightPlatformTestCase.reportTestExecutionStatistics();
     }
 
     public Project getProject() {
@@ -50,9 +53,10 @@ public class LightPlatformJUnit4TestRule implements TestRule {
     }
 
     public static CodeInsightTestFixture createFixture(LightProjectDescriptor descriptor) {
+        IdeaTestApplication application = LightPlatformTestCase.initApplication();
         IdeaTestFixtureFactory factory = IdeaTestFixtureFactory.getFixtureFactory();
         TestFixtureBuilder<IdeaProjectTestFixture> fixtureBuilder = factory.createLightFixtureBuilder(descriptor);
-//        System.out.println("create fixture; SDK is: " + descriptor.getSdk());
+        //        System.out.println("create fixture; SDK is: " + descriptor.getSdk());
         final IdeaProjectTestFixture fixture = fixtureBuilder.getFixture();
         CodeInsightTestFixture testFixture = IdeaTestFixtureFactory.getFixtureFactory().createCodeInsightFixture(fixture, new LightTempDirTestFixtureImpl(true));
 

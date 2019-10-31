@@ -1,7 +1,7 @@
 package aldor.psi.index;
 
-import aldor.parser.SwingThreadTestRule;
 import aldor.psi.AldorDefine;
+import aldor.test_util.JUnits;
 import aldor.test_util.LightPlatformJUnit4TestRule;
 import aldor.test_util.LightProjectDescriptors;
 import aldor.util.VirtualFileTests;
@@ -41,7 +41,7 @@ public final class AldorDefineNameIndexTest {
     public final TestRule platformTestRule =
             RuleChain.emptyRuleChain()
                     .around(new LightPlatformJUnit4TestRule(testFixture, ""))
-                    .around(new SwingThreadTestRule());
+                    .around(JUnits.swingThreadTestRule());
 
 
     @Test

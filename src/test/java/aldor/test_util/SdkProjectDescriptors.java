@@ -1,18 +1,25 @@
 package aldor.test_util;
 
 import aldor.build.module.AldorModuleType;
-import aldor.sdk.AldorInstalledSdkType;
-import aldor.sdk.AldorLocalSdkType;
-import aldor.sdk.AldorSdkType;
-import aldor.sdk.FricasInstalledSdkType;
-import aldor.sdk.FricasLocalSdkType;
-import aldor.sdk.FricasSdkType;
-import aldor.sdk.SdkTypes;
+import aldor.module.template.AldorSimpleModuleBuilder;
+import aldor.module.template.AldorTemplateFactory;
+import aldor.sdk.NamedSdk;
+import aldor.sdk.aldor.AldorInstalledSdkType;
+import aldor.sdk.aldor.AldorLocalSdkType;
+import aldor.sdk.aldor.AldorSdkAdditionalData;
+import aldor.sdk.aldorunit.AldorUnitSdkType;
+import aldor.sdk.fricas.FricasInstalledSdkType;
+import aldor.sdk.fricas.FricasLocalSdkType;
+import com.intellij.ide.util.projectWizard.WizardContext;
+import com.intellij.openapi.CompositeDisposable;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleType;
+import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.projectRoots.JavaSdk;
 import com.intellij.openapi.projectRoots.ProjectJdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkModificator;
@@ -23,11 +30,14 @@ import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.platform.ProjectTemplate;
 import com.intellij.testFramework.LightProjectDescriptor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.junit.Assert;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -39,8 +49,14 @@ public final class SdkProjectDescriptors {
         descriptorForPrefix = new ConcurrentHashMap<>();
     }
 
-    @SuppressWarnings("NonSerializableFieldInSerializableClass")
-    private enum SdkOption {
+    private interface SdkDescriptor {
+        SdkOption sdkOption();
+        String name(String prefix);
+
+        Sdk editSdk(Sdk theSdk);
+    }
+
+    private enum SdkOption implements SdkDescriptor {
 
         Fricas(new FricasInstalledSdkType()),
         Aldor(new AldorInstalledSdkType()),
@@ -53,8 +69,73 @@ public final class SdkProjectDescriptors {
             this.sdkType = type;
         }
 
+        @Nullable
         public SdkType sdkType() {
             return sdkType;
+        }
+
+        @Override
+        public SdkOption sdkOption() {
+            return this;
+        }
+
+        @Override
+        public String name(String prefix) {
+            return name() + "_" + prefix;
+        }
+
+        @Override
+        public Sdk editSdk(Sdk theSdk) {
+            return theSdk;
+        }
+    }
+
+    private static class WithAldorUnit implements SdkDescriptor {
+        SdkDescriptor innerSdkDescriptor;
+
+        WithAldorUnit(SdkDescriptor descriptor) {
+            this.innerSdkDescriptor = descriptor;
+        }
+
+        @Override
+        public SdkOption sdkOption() {
+            return innerSdkDescriptor.sdkOption();
+        }
+
+        @Override
+        public String name(String prefix) {
+            return innerSdkDescriptor.name(prefix) + "_AldorUnit";
+        }
+
+        @Override
+        public Sdk editSdk(Sdk theSdk) {
+            createJDK();
+            Sdk aldorUnitSdk = createAldorUnitSdk();
+            AldorSdkAdditionalData additionalData = new AldorSdkAdditionalData();
+            additionalData.aldorUnitSdk = new NamedSdk(aldorUnitSdk);
+            additionalData.aldorUnitEnabled = true;
+            SdkModificator mod = theSdk.getSdkModificator();
+            mod.setSdkAdditionalData(additionalData);
+            mod.commitChanges();
+            return theSdk;
+        }
+
+
+        private Sdk createJDK() {
+            Sdk jdk = JavaSdk.getInstance().createJdk("java", "/home/pab/Work/intellij/jdk1.8.0_101");
+            ProjectJdkTable.getInstance().addJdk(jdk);
+            return jdk;
+        }
+
+
+        private Sdk createAldorUnitSdk() {
+            Sdk theSdk = new ProjectJdkImpl("AldorUnit SDK", AldorUnitSdkType.instance());
+
+            SdkModificator mod = theSdk.getSdkModificator();
+            //mod.setHomePath(prefix);
+            mod.commitChanges();
+            ProjectJdkTable.getInstance().addJdk(theSdk);
+            return theSdk;
         }
     }
 
@@ -66,6 +147,10 @@ public final class SdkProjectDescriptors {
         return instance.getProjectDescriptor(SdkOption.Aldor, prefix);
     }
 
+    public static LightProjectDescriptor aldorSdkProjectDescriptorWithAldorUnit(String prefix) {
+        return instance.getProjectDescriptor(new WithAldorUnit(SdkOption.Aldor), prefix);
+    }
+
     public static LightProjectDescriptor fricasLocalSdkProjectDescriptor(String prefix) {
         return instance.getProjectDescriptor(SdkOption.FricasLocal, prefix);
     }
@@ -74,19 +159,17 @@ public final class SdkProjectDescriptors {
         return instance.getProjectDescriptor(SdkOption.AldorLocal, prefix);
     }
 
-
-
-    private LightProjectDescriptor getProjectDescriptor(SdkOption sdkOption, String prefix) {
-        return descriptorForPrefix.computeIfAbsent(prefix, k -> new SdkLightProjectDescriptor(sdkOption.sdkType, prefix));
+    private LightProjectDescriptor getProjectDescriptor(SdkDescriptor sdkDescriptor, String prefix) {
+        return descriptorForPrefix.computeIfAbsent(sdkDescriptor.name(prefix), k -> new SdkLightProjectDescriptor(sdkDescriptor, prefix));
     }
 
     private static class SdkLightProjectDescriptor extends LightProjectDescriptor {
         private final String prefix;
-        private final SdkType sdkType;
+        private final SdkDescriptor sdkDescriptor;
         private Sdk sdk = null;
 
-        SdkLightProjectDescriptor(SdkType sdkType, String prefix) {
-            this.sdkType = sdkType;
+        SdkLightProjectDescriptor(SdkDescriptor sdkDescriptor, String prefix) {
+            this.sdkDescriptor = sdkDescriptor;
             this.prefix = prefix;
         }
 
@@ -108,33 +191,67 @@ public final class SdkProjectDescriptors {
         protected void configureModule(@NotNull Module module, @NotNull ModifiableRootModel model, @NotNull ContentEntry contentEntry) {
             super.configureModule(module, model, contentEntry);
             System.out.println("Configuring module " + module + " " + model);
-            if (SdkTypes.isLocalSdk(sdk) && (sdk.getSdkType() instanceof FricasSdkType)) {
-                ContentEntry newContentEntry = model.addContentEntry("file://" + prefix);
-                newContentEntry.addSourceFolder("file://" + prefix +"/fricas/src", false);
-                CompilerModuleExtension moduleExtension = model.getModuleExtension(CompilerModuleExtension.class);
-                moduleExtension.inheritCompilerOutputPath(false);
-                moduleExtension.setCompilerOutputPath("file://" + prefix + "/build");
-            }
-            else if (SdkTypes.isLocalSdk(sdk) && (sdk.getSdkType() instanceof AldorSdkType)) {
-                ContentEntry newContentEntry = model.addContentEntry("file://" + prefix);
-                for (String sourceDir: AldorLocalSdkType.ALDOR_SOURCE_DIRS) {
-                    newContentEntry.addSourceFolder("file://" + prefix + "/aldor/" + sourceDir, false);
+            switch (this.sdkDescriptor.sdkOption()) {
+                case FricasLocal: {
+                    configureLocalFricas(model);
+                    break;
                 }
-                for (String testDir: AldorLocalSdkType.ALDOR_TEST_DIRS) {
-                    newContentEntry.addSourceFolder("file://" + prefix + "/aldor" + testDir, true);
+                case AldorLocal: {
+                    configureLocalAldor(model);
+                    break;
                 }
-
-                CompilerModuleExtension moduleExtension = model.getModuleExtension(CompilerModuleExtension.class);
-                moduleExtension.inheritCompilerOutputPath(false);
-                moduleExtension.setCompilerOutputPath("file://" + prefix + "/build");
-            }
-            else if (sdk.getSdkType() instanceof AldorSdkType) {
-                CompilerModuleExtension compilerModuleExtension = model.getModuleExtension(CompilerModuleExtension.class);
-                compilerModuleExtension.setCompilerOutputPath("file:///tmp/test_output");
-                compilerModuleExtension.inheritCompilerOutputPath(false);
+                case Aldor: {
+                    configureInstalledAldor(model);
+                    break;
+                }
+                default:
             }
         }
-        
+
+        private void configureInstalledAldor(@NotNull ModifiableRootModel model) {
+            CompilerModuleExtension compilerModuleExtension = model.getModuleExtension(CompilerModuleExtension.class);
+            compilerModuleExtension.setCompilerOutputPath("file:///tmp/test_output");
+            compilerModuleExtension.inheritCompilerOutputPath(false);
+
+            Disposable disposable = new CompositeDisposable();
+            WizardContext context = new WizardContext(model.getProject(), disposable);
+            ProjectTemplate[] templates = new AldorTemplateFactory().createTemplates("Aldor", context);
+
+            ProjectTemplate template = Arrays.stream(templates).filter(t -> "Simple Aldor module".equals(t.getName())).findFirst().orElse(null);
+            Assert.assertNotNull(template);
+
+            AldorSimpleModuleBuilder builder = (AldorSimpleModuleBuilder) template.createModuleBuilder();
+            try {
+                builder.setupRootModel(model);
+            } catch (ConfigurationException e) {
+                throw new RuntimeException("Failed to build module ", e);
+            }
+            disposable.dispose();
+
+        }
+
+        private void configureLocalAldor(@NotNull ModifiableRootModel model) {
+            ContentEntry newContentEntry = model.addContentEntry("file://" + prefix);
+            for (String sourceDir: AldorLocalSdkType.ALDOR_SOURCE_DIRS) {
+                newContentEntry.addSourceFolder("file://" + prefix + "/aldor/" + sourceDir, false);
+            }
+            for (String testDir: AldorLocalSdkType.ALDOR_TEST_DIRS) {
+                newContentEntry.addSourceFolder("file://" + prefix + "/aldor" + testDir, true);
+            }
+
+            CompilerModuleExtension moduleExtension = model.getModuleExtension(CompilerModuleExtension.class);
+            moduleExtension.inheritCompilerOutputPath(false);
+            moduleExtension.setCompilerOutputPath("file://" + prefix + "/build");
+        }
+
+        private void configureLocalFricas(@NotNull ModifiableRootModel model) {
+            ContentEntry newContentEntry = model.addContentEntry("file://" + prefix);
+            newContentEntry.addSourceFolder("file://" + prefix +"/fricas/src", false);
+            CompilerModuleExtension moduleExtension = model.getModuleExtension(CompilerModuleExtension.class);
+            moduleExtension.inheritCompilerOutputPath(false);
+            moduleExtension.setCompilerOutputPath("file://" + prefix + "/build");
+        }
+
         @Override
         protected VirtualFile createSourceRoot(@NotNull Module module, String srcPath) {
             try {
@@ -165,12 +282,13 @@ public final class SdkProjectDescriptors {
         }
 
         Sdk createSDK() {
-            Sdk theSdk = new ProjectJdkImpl("Fricas Test SDK " + prefix, sdkType);
+            Sdk theSdk = new ProjectJdkImpl(sdkDescriptor.name(prefix), sdkDescriptor.sdkOption().sdkType());
 
             SdkModificator mod = theSdk.getSdkModificator();
             mod.setHomePath(prefix);
             mod.commitChanges();
-            sdkType.setupSdkPaths(theSdk);
+            sdkDescriptor.sdkOption().sdkType().setupSdkPaths(theSdk);
+            sdkDescriptor.editSdk(theSdk);
             return theSdk;
         }
 

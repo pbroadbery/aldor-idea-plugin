@@ -1,16 +1,19 @@
 <!--suppress XmlHighlighting -->
 <idea-plugin>
     <id>pab.aldor</id>
-    <name>Aldor Plugin</name>
+    <name>AldorAndSpad</name>
     <version>1.1</version>
     <vendor email="p.broadbery@gmail.com" url="http://www.notreally.org">Peter Broadbery</vendor>
 
     <description><![CDATA[
-      Aldor/Spad plugin.
+      Aldor/Spad plugin - Provides editing facilities for Aldor and SPAD programs.
     ]]></description>
 
     <change-notes><![CDATA[
-      Version the second
+      This version provides more features
+      - running SPAD and .input files
+      - full edit support
+      - limited suport for SPAD type hierarchies
     ]]>
     </change-notes>
 
@@ -22,6 +25,8 @@
     <!-- uncomment to enable plugin in all products
     <depends>com.intellij.modules.lang</depends>
     -->
+
+    <depends>com.intellij.modules.java</depends>
 
     <application-components>
         <component>
@@ -83,13 +88,18 @@
         <lang.parserDefinition language="Aldor" implementationClass="aldor.parser.AldorParserDefinition"/>
 
         <library.type implementation="aldor.library.AldorLibraryType"/>
-        <sdkType implementation="aldor.sdk.AldorInstalledSdkType"/>
-        <sdkType implementation="aldor.sdk.AldorLocalSdkType"/>
+        <sdkType implementation="aldor.sdk.aldor.AldorInstalledSdkType"/>
+        <sdkType implementation="aldor.sdk.aldor.AldorLocalSdkType"/>
+
+        <sdkType implementation="aldor.sdk.aldorunit.AldorUnitSdkType"/>
 
         <lang.findUsagesProvider language="Aldor" implementationClass="aldor.editor.AldorFindUsagesProvider"/>
         <usageTypeProvider implementation="aldor.editor.AldorUsageTypeProvider"/>
         <breadcrumbsInfoProvider implementation="aldor.editor.AldorBreadcrumbsProvider"/>
         <lang.psiStructureViewFactory language="Aldor" implementationClass="aldor.structure.AldorPsiStructureViewFactory"/>
+
+        <configurationType implementation="aldor.runconfiguration.aldor.AldorUnitRunConfigurationType" />
+        <runConfigurationProducer implementation = "aldor.runconfiguration.aldor.AldorUnitConfigurationProducer"/>
         <!--<elementDescriptionProvider implementation="aldor.editor.AldorElementDescriptionProvider"/> -->
 
         <!-- Spad extras -->
@@ -98,11 +108,11 @@
         <stubIndex implementation="aldor.psi.index.AbbrevNameIndex"/>
         <stubIndex implementation="aldor.psi.index.AbbrevAbbrevIndex"/>
         <gotoClassContributor implementation="aldor.editor.finder.SpadAbbrevGotoClassContributor"/>
-        <sdkType implementation="aldor.sdk.FricasInstalledSdkType"/>
-        <sdkType implementation="aldor.sdk.FricasLocalSdkType"/>
+        <sdkType implementation="aldor.sdk.fricas.FricasInstalledSdkType"/>
+        <sdkType implementation="aldor.sdk.fricas.FricasLocalSdkType"/>
 
-        <configurationType implementation="aldor.spad.runconfiguration.SpadInputRunConfigurationType" />
-        <runConfigurationProducer implementation = "aldor.spad.runconfiguration.SpadInputRunConfigurationProducer"/>
+        <configurationType implementation="aldor.runconfiguration.spad.SpadInputRunConfigurationType" />
+        <runConfigurationProducer implementation = "aldor.runconfiguration.spad.SpadInputRunConfigurationProducer"/>
         <!-- Test language -->
         <fileTypeFactory implementation="aldor.expression.ExpressionFileTypeFactory"/>
         <lang.parserDefinition language="Expression" implementationClass="aldor.expression.ExpressionParserDefinition"/>
@@ -110,7 +120,7 @@
         <stubIndex implementation="aldor.expression.ExpressionDefineStubIndex"/>
 
         <!-- Project Templates -->
-        <projectTemplatesFactory implementation="aldor.module.template.AldorGitTemplateFactory"/>
+        <projectTemplatesFactory implementation="aldor.module.template.AldorTemplateFactory"/>
     </extensions>
 
     <actions>

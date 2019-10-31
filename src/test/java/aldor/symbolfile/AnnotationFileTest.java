@@ -5,17 +5,16 @@ import aldor.build.module.AnnotationFileNavigator;
 import aldor.build.module.DefaultAnnotationFileNavigator;
 import aldor.psi.AldorIdentifier;
 import aldor.syntax.SyntaxPrinter;
-import aldor.test_util.AldorRoundTripProjectDescriptor;
 import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.JUnits;
 import aldor.test_util.LightPlatformJUnit4TestRule;
+import aldor.test_util.SdkProjectDescriptors;
 import aldor.util.AnnotatedOptional;
 import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.EdtTestUtil;
-import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.CodeInsightTestFixture;
 import junit.framework.AssertionFailedError;
 import org.junit.After;
@@ -32,7 +31,7 @@ public class AnnotationFileTest {
 
     private final AnnotationFileTestFixture annotationTestFixture = new AnnotationFileTestFixture();
     private final ExecutablePresentRule aldorExecutableRule = new ExecutablePresentRule.Aldor();
-    private final CodeInsightTestFixture insightTestFixture = LightPlatformJUnit4TestRule.createFixture(getProjectDescriptor());
+    private final CodeInsightTestFixture insightTestFixture = LightPlatformJUnit4TestRule.createFixture(SdkProjectDescriptors.aldorSdkProjectDescriptor(aldorExecutableRule.prefix()));
 
     @Before
     public void setUp() {
@@ -57,7 +56,8 @@ public class AnnotationFileTest {
                 "Dom: with { foo: () -> % } == add { foo(): % == never }\n" +
                 "f(): Dom == foo();\n";
         VirtualFile sourceFile = annotationTestFixture.createFile(insightTestFixture.getProject(), "foo.as", program);
-        annotationTestFixture.createFile(insightTestFixture.getProject(), "Makefile", "foo.abn: foo.as\n\t" + aldorExecutableRule.executable() + " -Fabn=foo.abn foo.as");
+        annotationTestFixture.createFile(insightTestFixture.getProject(), "Makefile",
+                "out/ao/foo.ao: foo.as\n\tmkdir -p out/ao\n\t" + aldorExecutableRule.executable() + " -Fao=out/ao/foo.ao -Fabn=out/ao/foo.abn foo.as");
 
         annotationTestFixture.compileFile(sourceFile, insightTestFixture.getProject());
 
@@ -74,10 +74,5 @@ public class AnnotationFileTest {
         });
 
     }
-
-    private LightProjectDescriptor getProjectDescriptor() {
-        return new AldorRoundTripProjectDescriptor();
-    }
-
 
 }

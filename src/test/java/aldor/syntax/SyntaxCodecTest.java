@@ -1,8 +1,8 @@
 package aldor.syntax;
 
 import aldor.parser.ParserFunctions;
-import aldor.parser.SwingThreadTestRule;
 import aldor.syntax.components.Other;
+import aldor.test_util.JUnits;
 import aldor.test_util.LightPlatformJUnit4TestRule;
 import aldor.test_util.SimpleStringEnumerator;
 import aldor.util.StubCodec;
@@ -30,7 +30,7 @@ public class SyntaxCodecTest {
     public final TestRule platformTestRule =
             RuleChain.emptyRuleChain()
                     .around(new LightPlatformJUnit4TestRule(testFixture, ""))
-                    .around(new SwingThreadTestRule());
+                    .around(JUnits.swingThreadTestRule());
 
     @Test
     public void testStubCodec() throws IOException {

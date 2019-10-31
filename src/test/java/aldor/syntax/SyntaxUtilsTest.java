@@ -1,9 +1,9 @@
 package aldor.syntax;
 
 import aldor.parser.ParserFunctions;
-import aldor.parser.SwingThreadTestRule;
 import aldor.psi.elements.AldorTypes;
 import aldor.syntax.components.Id;
+import aldor.test_util.JUnits;
 import aldor.test_util.LightPlatformJUnit4TestRule;
 import com.intellij.psi.PsiElement;
 import com.intellij.testFramework.fixtures.CodeInsightTestFixture;
@@ -21,7 +21,7 @@ public class SyntaxUtilsTest {
     public final TestRule platformTestRule =
             RuleChain.emptyRuleChain()
                     .around(new LightPlatformJUnit4TestRule(testFixture, ""))
-                    .around(new SwingThreadTestRule());
+                    .around(JUnits.swingThreadTestRule());
 
     @Test
     public void testTypeNameId() {

@@ -33,7 +33,6 @@ import java.util.function.Supplier;
  * Not real code, just test harness to get the browser working
  * Deprecated Test only
  */
-@SuppressWarnings("DeprecatedIsStillUsed")
 @Deprecated
 public class TestSpadLibrary implements SpadLibrary {
     private final VirtualFile path; // Probably should be a search scope - or maybe a module..

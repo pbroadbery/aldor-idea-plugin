@@ -1,8 +1,8 @@
 package aldor.psi.stub;
 
-import aldor.parser.SwingThreadTestRule;
 import aldor.psi.AldorDeclare;
 import aldor.psi.elements.AldorElementTypeFactory;
+import aldor.test_util.JUnits;
 import aldor.test_util.LightPlatformJUnit4TestRule;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -28,7 +28,7 @@ public class AldorStubUtilsTest {
     public final TestRule platformTestRule =
             RuleChain.emptyRuleChain()
                     .around(new LightPlatformJUnit4TestRule(testFixture, ""))
-                    .around(new SwingThreadTestRule());
+                    .around(JUnits.swingThreadTestRule());
 
     @Test
     public void definingForm() throws Exception {

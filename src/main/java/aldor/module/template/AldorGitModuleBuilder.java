@@ -2,8 +2,8 @@ package aldor.module.template;
 
 import aldor.build.module.AldorModuleBuilder;
 import aldor.build.module.AldorModuleType;
-import aldor.sdk.AldorLocalSdkType;
-import aldor.sdk.FricasLocalSdkType;
+import aldor.sdk.aldor.AldorLocalSdkType;
+import aldor.sdk.fricas.FricasLocalSdkType;
 import com.intellij.ide.util.projectWizard.WizardInputField;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.projectRoots.SdkTypeId;

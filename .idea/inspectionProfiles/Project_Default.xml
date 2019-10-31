@@ -101,7 +101,6 @@
     <inspection_tool class="BooleanParameter" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="BreakStatementWithLabel" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="BusyWait" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="CStyleArrayDeclaration" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="CallToNativeMethodWhileLocked" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="CallToSimpleGetterInClass" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="ignoreGetterCallsOnOtherObjects" value="false" />
@@ -241,7 +240,6 @@
     <inspection_tool class="EqualsAndHashcode" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="EqualsCalledOnEnumConstant" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="EqualsHashCodeCalledOnUrl" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="EqualsReplaceableByObjectsCall" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
     <inspection_tool class="EqualsUsesNonFinalVariable" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ErrorRethrown" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ExceptionFromCatchWhichDoesntWrap" enabled="true" level="WARNING" enabled_by_default="true">
@@ -369,7 +367,7 @@
       <option name="m_ignoreStaticMethods" value="true" />
     </inspection_tool>
     <inspection_tool class="LogStatementGuardedByLogCondition" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="LoggerInitializedWithForeignClass" enabled="true" level="WARNING" enabled_by_default="true">
+    <inspection_tool class="LoggerInitializedWithForeignClass" enabled="true" level="ERROR" enabled_by_default="true">
       <option name="loggerClassName" value="org.apache.log4j.Logger,org.slf4j.LoggerFactory,org.apache.commons.logging.LogFactory,java.util.logging.Logger,com.intellij.openapi.diagnostic.Logger" />
       <option name="loggerFactoryMethodName" value="getLogger,getLogger,getLog,getLogger,getInstance" />
     </inspection_tool>
@@ -466,7 +464,15 @@
     <inspection_tool class="NestingDepth" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="m_limit" value="5" />
     </inspection_tool>
+    <inspection_tool class="NewClassNamingConvention" enabled="true" level="WARNING" enabled_by_default="true">
+      <extension name="AbstractClassNamingConvention" enabled="true" />
+      <extension name="InterfaceNamingConvention" enabled="true" />
+      <extension name="JUnitAbstractTestClassNamingConvention" enabled="true" />
+    </inspection_tool>
     <inspection_tool class="NewExceptionWithoutArguments" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="NewGroovyClassNamingConvention" enabled="true" level="WARNING" enabled_by_default="true">
+      <extension name="JUnitAbstractTestClassNamingConvention" enabled="true" />
+    </inspection_tool>
     <inspection_tool class="NonCommentSourceStatements" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="m_limit" value="30" />
     </inspection_tool>
@@ -591,12 +597,12 @@
     <inspection_tool class="ReadObjectInitialization" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ReadResolveAndWriteReplaceProtected" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="RecordStoreResource" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="RedundantCast" enabled="true" level="ERROR" enabled_by_default="true" />
     <inspection_tool class="RedundantImplements" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="ignoreSerializable" value="false" />
       <option name="ignoreCloneable" value="false" />
     </inspection_tool>
     <inspection_tool class="RedundantMethodOverride" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="RedundantSuppression" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="RedundantThrowsDeclaration" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="RefusedBequest" enabled="true" level="ERROR" enabled_by_default="true">
       <option name="ignoreEmptySuperMethods" value="false" />
@@ -702,9 +708,6 @@
       <option name="m_limit" value="20" />
     </inspection_tool>
     <inspection_tool class="SwitchStatementWithConfusingDeclaration" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="SwitchStatementWithTooFewBranches" enabled="true" level="WARNING" enabled_by_default="true">
-      <option name="m_limit" value="2" />
-    </inspection_tool>
     <inspection_tool class="SwitchStatementWithTooManyBranches" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="m_limit" value="10" />
     </inspection_tool>
@@ -799,7 +802,6 @@
     <inspection_tool class="UnnecessaryBlockStatement" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="ignoreSwitchBranches" value="false" />
     </inspection_tool>
-    <inspection_tool class="UnnecessaryCallToStringValueOf" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="UnnecessaryConstantArrayCreationExpression" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="UnnecessaryDefault" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="UnnecessaryExplicitNumericCast" enabled="true" level="WARNING" enabled_by_default="true" />

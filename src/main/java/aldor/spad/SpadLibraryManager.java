@@ -2,10 +2,10 @@ package aldor.spad;
 
 import aldor.build.module.AldorModuleType;
 import aldor.language.AldorLanguage;
-import aldor.sdk.AldorSdkType;
 import aldor.sdk.AxiomSdk;
-import aldor.sdk.FricasSdkType;
 import aldor.sdk.SdkTypes;
+import aldor.sdk.aldor.AldorSdkType;
+import aldor.sdk.fricas.FricasSdkType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;

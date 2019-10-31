@@ -9,10 +9,16 @@ import static aldor.util.Assertions.isNotNull;
 
 public class ErrorNodeDescriptor extends HierarchyNodeDescriptor implements ComparatorPriority {
     private final String text;
+    private final Throwable e;
 
     public ErrorNodeDescriptor(@NotNull AldorHierarchyNodeDescriptor parent, String s) {
+        this(parent, s, null);
+    }
+
+    public ErrorNodeDescriptor(HierarchyNodeDescriptor parent, String s, Throwable e) {
         super(isNotNull(parent.getProject()), parent, isNotNull(parent.getPsiElement()), false);
         this.text = s;
+        this.e = e;
     }
 
     @Override

@@ -33,10 +33,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.Future;
 
-import static aldor.builder.files.AldorFileBuildTarget.trimExtension;
+import static aldor.util.StringUtilsAldorRt.trimExtension;
 
 public class AnnotationFileManager implements Disposable {
     private static final Logger LOG = Logger.getInstance(AnnotationFileManager.class);
@@ -149,7 +150,7 @@ public class AnnotationFileManager implements Disposable {
              * here, but might deadlock from a non EDT thread, so bottle it.
              */
 
-            LOG.info("Looking for build file: " + buildFilePath);
+            LOG.info("Looking for build file: " + buildFilePath + " " + Optional.ofNullable(buildFile).map(VirtualFile::exists));
             if (buildFile == null) {
                 return new MissingAnnotationFile(virtualFile, "Missing .abn file: "+ buildFilePath);
             }

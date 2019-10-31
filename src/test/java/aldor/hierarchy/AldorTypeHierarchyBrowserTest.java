@@ -1,6 +1,5 @@
 package aldor.hierarchy;
 
-import aldor.parser.SwingThreadTestRule;
 import aldor.psi.AldorDefine;
 import aldor.psi.AldorIdentifier;
 import aldor.psi.index.AldorDefineTopLevelIndex;
@@ -22,8 +21,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
 import org.junit.rules.TestRule;
-import org.junit.runner.Description;
-import org.junit.runners.model.Statement;
 
 import java.util.Collection;
 import java.util.List;
@@ -37,15 +34,10 @@ public class AldorTypeHierarchyBrowserTest {
     @Rule
     public final TestRule platformTestRule =
             RuleChain.emptyRuleChain()
-                    .around(new TestRule() {
-                        @Override
-                        public Statement apply(Statement statement, Description description) {
-                            return JUnits.prePostStatement(JUnits::setLogToInfo, () -> System.out.println("Done"), statement);
-                        }
-                    })
+                    .around(JUnits.setLogToInfoTestRule)
                     .around(fricasExecutableRule)
                     .around(new LightPlatformJUnit4TestRule(codeTestFixture, ""))
-                    .around(new SwingThreadTestRule());
+                    .around(JUnits.swingThreadTestRule());
 
     @Test
     public void testReference() {
@@ -88,8 +80,6 @@ public class AldorTypeHierarchyBrowserTest {
 
     @Test
     public void testEltAgg() {
-        String text = "Ring";
-
         Collection<AldorDefine> items = AldorDefineTopLevelIndex.instance.get("EltableAggregate", codeTestFixture.getProject(), GlobalSearchScope.allScope(codeTestFixture.getProject()));
 
         AldorIdentifier theId = items.stream().findFirst().flatMap(AldorDefine::defineIdentifier).orElse(null);

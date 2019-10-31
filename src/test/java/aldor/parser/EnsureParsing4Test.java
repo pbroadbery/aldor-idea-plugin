@@ -1,6 +1,7 @@
 package aldor.parser;
 
 import aldor.psi.elements.AldorTypes;
+import aldor.test_util.JUnits;
 import aldor.test_util.LightPlatformJUnit4TestRule;
 import aldor.test_util.SkipCI;
 import aldor.test_util.SkipOnCIBuildRule;
@@ -38,7 +39,7 @@ public class EnsureParsing4Test {
     public final TestRule platformTestRule =
             RuleChain.emptyRuleChain()
                     .around(new LightPlatformJUnit4TestRule(testFixture, ""))
-                    .around(new SwingThreadTestRule());
+                    .around(JUnits.swingThreadTestRule());
 
     @Test
     public void testOne() {

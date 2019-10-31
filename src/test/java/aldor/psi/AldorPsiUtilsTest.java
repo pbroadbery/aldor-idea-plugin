@@ -145,6 +145,33 @@ public class AldorPsiUtilsTest extends LightPlatformCodeInsightFixtureTestCase {
                 .orElse(null));
     }
 
+    public void testTopLevelDefiningForm() {
+        String text = "foo: with blah == add";
+        PsiFile file = createLightFile(AldorFileType.INSTANCE, text);
+        PsiElement elt = PsiTreeUtil.findChildOfType(file, AldorWith.class);
+        PsiElement define = PsiTreeUtil.findChildOfType(file, AldorDefine.class);
+        Assert.assertNotNull(elt);
+        Assert.assertEquals(define, AldorPsiUtils.topLevelDefininingForm(elt).orElse(null));
+    }
+
+    public void testTopLevelDefiningForm_top() {
+        String text = "foo: with blah == add";
+        PsiFile file = createLightFile(AldorFileType.INSTANCE, text);
+        PsiElement elt = PsiTreeUtil.findChildOfType(file, AldorDefine.class);
+        PsiElement define = PsiTreeUtil.findChildOfType(file, AldorDefine.class);
+        Assert.assertNotNull(elt);
+        Assert.assertEquals(define, AldorPsiUtils.topLevelDefininingForm(elt).orElse(null));
+    }
+
+    public void testTopLevelDefiningForm_inner() {
+        String text = "foo: with blah == add { qq == return }";
+        PsiFile file = createLightFile(AldorFileType.INSTANCE, text);
+        PsiElement elt = PsiTreeUtil.findChildOfType(file, AldorReturnStatement.class);
+        PsiElement define = PsiTreeUtil.findChildOfType(file, AldorDefine.class);
+        Assert.assertNotNull(elt);
+        Assert.assertEquals(define, AldorPsiUtils.topLevelDefininingForm(elt).orElse(null));
+    }
+
     @Override
     protected LightProjectDescriptor getProjectDescriptor() {
         return ALDOR_MODULE_DESCRIPTOR;

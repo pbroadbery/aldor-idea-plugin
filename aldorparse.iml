@@ -20,55 +20,25 @@
       <excludeFolder url="file://$MODULE_DIR$/build/reports" />
       <excludeFolder url="file://$MODULE_DIR$/src/gen" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="IntelliJ IDEA Community Edition IC-183.5912.21 (2)" jdkType="IDEA JDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="TEST" name="org.mockito:mockito-all:1.10.19" level="project" />
     <orderEntry type="library" name="com.google.guava:guava:19.0" level="project" />
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../aldor-modules/types/index/jars/aldor.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../aldor-modules/types/index/jars/SpadType.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../type-library/aldor-types/types/index/jars/aldor.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../type-library/aldor-types/types/index/jars/foamj.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../type-library/aldor-types/types/index/jars/SpadType.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../type-library/aldor-types/types/index/jars/foam.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../type-library/aldor-types/types/index/jars/algebra.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://$MODULE_DIR$/../../aldor-modules/types/index/jars/SpadType.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../type-library/aldor-types/types/index/jars/SpadType.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../type-library/aldor-types/types/index/jars/foam-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../type-library/aldor-types/types/index/jars/foamj-sources.jar!/" />
         </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../aldor-modules/types/index/jars/foamj.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../aldor-modules/types/index/jars/foam.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../aldor-modules/types/index/jars/algebra.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="aldor-jps-plugin" />

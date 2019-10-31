@@ -1,10 +1,10 @@
 package aldor.editor.documentation;
 
 import aldor.parser.ParserFunctions;
-import aldor.parser.SwingThreadTestRule;
 import aldor.psi.AldorDefine;
 import aldor.psi.elements.AldorTypes;
 import aldor.symbolfile.AnnotationFileTestFixture;
+import aldor.test_util.JUnits;
 import aldor.test_util.LightPlatformJUnit4TestRule;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -29,7 +29,7 @@ public class AldorDefineDocumentationProviderTest {
             RuleChain.emptyRuleChain()
                     .around(new LightPlatformJUnit4TestRule(testFixture, ""))
                     .around(annotationTestFixture.rule(testFixture::getProject))
-                    .around(new SwingThreadTestRule());
+                    .around(JUnits.swingThreadTestRule());
 
     @Test
     public void testOne() {

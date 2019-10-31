@@ -1,6 +1,7 @@
 package aldor.parser;
 
 import aldor.psi.elements.AldorTypes;
+import aldor.test_util.JUnits;
 import aldor.test_util.LightPlatformJUnit4TestRule;
 import aldor.test_util.SkipOnCIBuildRule;
 import aldor.test_util.Timer;
@@ -35,7 +36,7 @@ public class ParseBenchTest {
     public final TestRule platformTestRule =
             RuleChain.emptyRuleChain()
                     .around(new LightPlatformJUnit4TestRule(testFixture, ""))
-                    .around(new SwingThreadTestRule());
+                    .around(JUnits.swingThreadTestRule());
 
     @Test
     public void testParseFF2GE() throws Exception {

@@ -5,6 +5,8 @@ import com.intellij.openapi.module.ModuleType;
 import com.intellij.testFramework.LightProjectDescriptor;
 import org.jetbrains.annotations.NotNull;
 
+// @Deprecated "Use SDK Project Descriptors"
+@Deprecated
 public final class LightProjectDescriptors {
     public static final AldorRoundTripProjectDescriptor ALDOR_ROUND_TRIP_PROJECT_DESCRIPTOR = new AldorRoundTripProjectDescriptor();
 

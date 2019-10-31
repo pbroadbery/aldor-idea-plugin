@@ -3,7 +3,6 @@ package aldor.build.module;
 import aldor.util.AnnotatedOptional;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.Key;
@@ -18,7 +17,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static aldor.builder.files.AldorFileBuildTarget.trimExtension;
+import static aldor.util.StringUtilsAldorRt.trimExtension;
 import static java.util.Optional.ofNullable;
 
 public final class AldorModuleManager {
@@ -49,7 +48,7 @@ public final class AldorModuleManager {
     public Collection<Module> aldorModules(Project project) {
         Stream<Module> modules = Arrays.stream(ModuleManager.getInstance(project).getModules());
 
-        modules = modules.filter(module -> ModuleType.get(module).equals(AldorModuleType.instance()));
+        modules = modules.filter(module -> AldorModuleType.instance().is(module));
 
         return modules.collect(Collectors.toList());
     }
@@ -81,8 +80,16 @@ public final class AldorModuleManager {
         return ofNullable(buildPathForFile(project, virtualFile)).map(p -> p+"/"+virtualFile.getName()).orElse(null);
     }
 
+    public String annotationFileForSourceFile(Project project, @NotNull VirtualFile file) {
+        return buildPathForFile(project, file) + "/" + trimExtension(file.getName()) + ".abn";
+    }
+
     @Nullable
     public String buildPathForFile(Project project, @NotNull VirtualFile virtualFile) {
+        VirtualFile sourceRoot = ProjectRootManager.getInstance(project).getFileIndex().getSourceRootForFile(virtualFile);
+        if (sourceRoot != null) {
+            return sourceRoot.getPath() + "/out/ao";
+        }
         VirtualFile root = ProjectRootManager.getInstance(project).getFileIndex().getContentRootForFile(virtualFile);
         if (root == null) {
             return (virtualFile.getParent() == null) ? null : virtualFile.getParent().getPath();
@@ -110,7 +117,4 @@ public final class AldorModuleManager {
         return annotationFileForSourceFile(file.getProject(), file.getVirtualFile());
     }
 
-    public String annotationFileForSourceFile(Project project, @NotNull VirtualFile file) {
-        return buildPathForFile(project, file) + "/" + trimExtension(file.getName()) + ".abn";
-    }
 }

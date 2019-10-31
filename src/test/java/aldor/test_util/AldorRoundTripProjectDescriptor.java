@@ -17,6 +17,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
+// Use Sdk Project Descriptors
+@Deprecated
 public class AldorRoundTripProjectDescriptor extends LightProjectDescriptor {
     private Sdk sdk = null;
 

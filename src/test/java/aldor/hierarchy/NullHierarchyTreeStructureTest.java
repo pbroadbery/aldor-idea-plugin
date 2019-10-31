@@ -1,7 +1,7 @@
 package aldor.hierarchy;
 
 import aldor.hierarchy.util.NullHierarchyTreeStructure;
-import aldor.parser.SwingThreadTestRule;
+import aldor.test_util.JUnits;
 import aldor.test_util.LightPlatformJUnit4TestRule;
 import com.intellij.ide.hierarchy.HierarchyNodeDescriptor;
 import com.intellij.ide.util.treeView.NodeDescriptor;
@@ -23,7 +23,7 @@ public class NullHierarchyTreeStructureTest {
     public final TestRule platformTestRule =
             RuleChain.emptyRuleChain()
                     .around(new LightPlatformJUnit4TestRule(codeTestFixture, ""))
-                    .around(new SwingThreadTestRule());
+                    .around(JUnits.swingThreadTestRule());
 
 
     @Test

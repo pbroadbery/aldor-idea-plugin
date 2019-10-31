@@ -1,26 +1,22 @@
 package aldor.builder.files;
 
-import com.intellij.openapi.util.io.FileUtil;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.util.Collection;
-import java.util.Optional;
+
+import static aldor.util.StringUtilsAldorRt.trimExtension;
 
 /**
  * Utilities for build files (Jps style).
  */
 public final class BuildFiles {
 
-    @Nullable
-    public static File buildDirectoryForFile(Collection<File> contentRoots, File file) {
-        Optional<File> maybeRoot = contentRoots.stream().filter(root -> FileUtil.isAncestor(root, file, false)).findFirst();
-        if (!maybeRoot.isPresent()) {
-            return null;
-        }
-        File theRoot = maybeRoot.get();
-        File buildRootDirectory = new File(theRoot, "build");
-        return buildDirectoryFor(buildRootDirectory, file.getParentFile());
+    @NotNull
+    @Contract(pure = true)
+    public static String buildTargetName(@NotNull File sourceRoot, @NotNull File file) {
+        return "out/ao/" + trimExtension(file.getName()) + ".ao";
     }
 
     @Nullable
@@ -42,5 +38,7 @@ public final class BuildFiles {
         }
     }
 
-
+    public static String localBuildTargetName(File sourceRoot, File sourceFile) {
+        return trimExtension(sourceFile.getName()) + ".ao";
+    }
 }

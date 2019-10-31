@@ -4,9 +4,10 @@ import aldor.psi.AldorDeclare;
 import aldor.psi.AldorDefine;
 import aldor.psi.AldorIdentifier;
 import aldor.symbolfile.AnnotationFileTestFixture;
-import aldor.test_util.AldorRoundTripProjectDescriptor;
 import aldor.test_util.ExecutablePresentRule;
+import aldor.test_util.JUnits;
 import aldor.test_util.LightPlatformJUnit4TestRule;
+import aldor.test_util.SdkProjectDescriptors;
 import com.google.common.collect.ImmutableMap;
 import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -17,6 +18,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.EdtTestUtil;
 import com.intellij.testFramework.fixtures.CodeInsightTestFixture;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -33,9 +35,9 @@ import static org.junit.Assert.assertTrue;
 
 public class AldorRoundTripReferenceTest {
 
-    private final CodeInsightTestFixture codeTestFixture = LightPlatformJUnit4TestRule.createFixture(new AldorRoundTripProjectDescriptor());
-    private final AnnotationFileTestFixture annotationTestFixture= new AnnotationFileTestFixture();
     private final ExecutablePresentRule aldorExecutableRule = new ExecutablePresentRule.Aldor();
+    private final CodeInsightTestFixture codeTestFixture = LightPlatformJUnit4TestRule.createFixture(SdkProjectDescriptors.aldorSdkProjectDescriptor(aldorExecutableRule.prefix()));
+    private final AnnotationFileTestFixture annotationTestFixture= new AnnotationFileTestFixture();
 
     @Rule
     public final TestRule platformTestRule =
@@ -43,6 +45,11 @@ public class AldorRoundTripReferenceTest {
                     .around(aldorExecutableRule)
                     .around(new LightPlatformJUnit4TestRule(codeTestFixture, ""))
                     .around(annotationTestFixture.rule(codeTestFixture::getProject));
+
+    @Before
+    public void doBefore() {
+        JUnits.setLogToDebug();
+    }
 
     @After
     public void doAfter() {
