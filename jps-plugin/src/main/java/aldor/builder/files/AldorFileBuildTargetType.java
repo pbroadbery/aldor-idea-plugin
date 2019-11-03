@@ -3,6 +3,8 @@ package aldor.builder.files;
 import aldor.builder.AldorBuildTargetTypes;
 import aldor.builder.AldorBuilderService;
 import aldor.builder.jps.JpsAldorExtension;
+import aldor.builder.jps.JpsAldorModuleProperties;
+import aldor.builder.jps.JpsAldorModuleType;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileUtil;
 import org.jetbrains.annotations.NotNull;
@@ -10,16 +12,17 @@ import org.jetbrains.jps.builders.BuildTargetLoader;
 import org.jetbrains.jps.builders.BuildTargetType;
 import org.jetbrains.jps.model.JpsDummyElement;
 import org.jetbrains.jps.model.JpsModel;
-import org.jetbrains.jps.model.java.impl.JavaModuleExtensionRole;
+import org.jetbrains.jps.model.JpsSimpleElement;
 import org.jetbrains.jps.model.library.sdk.JpsSdk;
 import org.jetbrains.jps.model.module.JpsModule;
 import org.jetbrains.jps.model.module.JpsModuleSourceRoot;
+import org.jetbrains.jps.model.module.JpsTypedModule;
 import org.jetbrains.jps.util.JpsPathUtil;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -48,13 +51,27 @@ public class AldorFileBuildTargetType extends BuildTargetType<AldorFileBuildTarg
 
     @NotNull
     private List<AldorFileBuildTarget> moduleBuildTargets(JpsModule module) {
-        List<String> contentRoots = module.getContentRootsList().getUrls();
-        List<File> rootFiles = contentRoots.stream().filter(url -> url.startsWith("file://")).map(JpsPathUtil::urlToFile).collect(Collectors.toList());
-        List<JpsModuleSourceRoot> sourceRoots = module.getSourceRoots();
+        JpsTypedModule<JpsSimpleElement<JpsAldorModuleProperties>> aldorModule = module.asTyped(JpsAldorModuleType.INSTANCE);
+        if (aldorModule == null) {
+            return Collections.emptyList();
+        }
+        else {
+            return aldorModuleBuildTargets(aldorModule);
+        }
+    }
 
+    @NotNull
+    private List<AldorFileBuildTarget> aldorModuleBuildTargets(JpsModule aldorModule) {
+        List<String> contentRoots = aldorModule.getContentRootsList().getUrls();
+        List<File> rootFiles = contentRoots.stream().filter(url -> url.startsWith("file://")).map(JpsPathUtil::urlToFile).collect(Collectors.toList());
+        List<JpsModuleSourceRoot> sourceRoots = aldorModule.getSourceRoots();
+        JpsAldorModuleProperties properties = JpsAldorModuleType.INSTANCE.moduleProperties(aldorModule);
+        if (!properties.isValid()) {
+            LOG.error("Cannot create targets for " + aldorModule.getName());
+        }
         LOG.info("Creating build targets");
         List<AldorFileBuildTarget> targets = new ArrayList<>();
-        Optional<JpsSdk<?>> localSdk = localSdk(module);
+        Optional<JpsSdk<?>> localSdk = localSdk(aldorModule);
         for (JpsModuleSourceRoot sourceRoot: sourceRoots) {
             LOG.info("Source root: " + sourceRoot.getFile() + " type: " + sourceRoot.getRootType());
             File file = sourceRoot.getFile();
@@ -66,13 +83,15 @@ public class AldorFileBuildTargetType extends BuildTargetType<AldorFileBuildTarg
             }
             File contentRoot = maybeRoot.get();
             for (File sourceFile: findFilesByMask(SOURCE_FILES, file)) {
-                LOG.info("Adding target {}" + sourceFile);
-                if (!localSdk.isPresent()) {
-                    targets.add(new AldorFileBuildTarget(this, sourceRoot, sourceFile));
-                }
-                else {
-                    targets.add(new AldorFileBuildTarget(this, sourceRoot, sourceFile, localModuleOutputDirectory(module)));
-                }
+
+                String targetName = JpsAldorModuleType.INSTANCE.targetName(properties, sourceRoot.getFile(), sourceFile);
+                File buildDirectory = JpsAldorModuleType.INSTANCE.buildDirectory(properties, contentRoot, sourceRoot.getFile(), sourceFile);
+                final AldorFileBuildTarget target = new AldorFileBuildTarget(this, targetName,
+                        sourceFile, sourceRoot.getFile(),
+                        buildDirectory);
+
+                LOG.info("Adding target " + target);
+                targets.add(target);
             }
 
         }
@@ -83,11 +102,6 @@ public class AldorFileBuildTargetType extends BuildTargetType<AldorFileBuildTarg
     private Optional<JpsSdk<?>> localSdk(JpsModule module) {
         JpsSdk<JpsDummyElement> sdk = module.getSdk(JpsAldorExtension.JpsAldorSdkType.LOCAL);
         return Optional.ofNullable(sdk);
-    }
-
-    private File localModuleOutputDirectory(@Nonnull JpsModule module) {
-        String url = module.getContainer().getOrSetChild(JavaModuleExtensionRole.INSTANCE).getOutputUrl();
-        return JpsPathUtil.urlToFile(url);
     }
 
     /*@NotNull

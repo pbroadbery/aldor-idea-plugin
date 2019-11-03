@@ -1,8 +1,8 @@
 package aldor.symbolfile;
 
-import aldor.build.module.AnnotationFileManager;
-import aldor.build.module.AnnotationFileNavigator;
-import aldor.build.module.DefaultAnnotationFileNavigator;
+import aldor.annotations.AnnotationFileManager;
+import aldor.annotations.AnnotationFileNavigator;
+import aldor.annotations.DefaultAnnotationFileNavigator;
 import aldor.psi.AldorIdentifier;
 import aldor.syntax.SyntaxPrinter;
 import aldor.test_util.ExecutablePresentRule;

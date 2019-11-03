@@ -13,8 +13,10 @@ import org.jetbrains.jps.model.module.JpsModule;
 import org.jetbrains.jps.model.serialization.JpsModelSerializerExtension;
 import org.jetbrains.jps.model.serialization.library.JpsLibraryRootTypeSerializer;
 import org.jetbrains.jps.model.serialization.library.JpsSdkPropertiesSerializer;
+import org.jetbrains.jps.model.serialization.module.JpsModulePropertiesSerializer;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +31,17 @@ public class JpsAldorExtension extends JpsModelSerializerExtension {
     @Override
     public void loadRootModel(@NotNull JpsModule module, @NotNull Element rootModel) {
         super.loadRootModel(module, rootModel);
+    }
+
+    @NotNull
+    @Override
+    public List<? extends JpsModulePropertiesSerializer<?>> getModulePropertiesSerializers() {
+        return Collections.singletonList(new AldorModulePropertiesSerializer());
+    }
+
+    @Override
+    public void loadModuleOptions(@NotNull JpsModule module, @NotNull Element rootElement) {
+        super.loadModuleOptions(module, rootElement);
     }
 
     @NotNull

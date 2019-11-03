@@ -1,4 +1,4 @@
-package aldor.build.module;
+package aldor.annotations;
 
 import com.intellij.openapi.project.Project;
 

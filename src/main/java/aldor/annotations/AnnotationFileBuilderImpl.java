@@ -1,4 +1,4 @@
-package aldor.build.module;
+package aldor.annotations;
 
 import com.google.common.util.concurrent.SettableFuture;
 import com.intellij.compiler.impl.OneProjectItemCompileScope;

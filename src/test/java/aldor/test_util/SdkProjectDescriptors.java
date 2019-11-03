@@ -1,5 +1,7 @@
 package aldor.test_util;
 
+import aldor.build.module.AldorMakeDirectoryOption;
+import aldor.build.module.AldorModulePathService;
 import aldor.build.module.AldorModuleType;
 import aldor.module.template.AldorSimpleModuleBuilder;
 import aldor.module.template.AldorTemplateFactory;
@@ -202,6 +204,9 @@ public final class SdkProjectDescriptors {
                 }
                 case Aldor: {
                     configureInstalledAldor(model);
+                    AldorModulePathService pathService = AldorModulePathService.getInstance(module);
+                    pathService.getState().setOutputDirectory("out/ao");
+                    pathService.getState().setMakeDirectory(AldorMakeDirectoryOption.Source);
                     break;
                 }
                 default:
@@ -227,7 +232,6 @@ public final class SdkProjectDescriptors {
                 throw new RuntimeException("Failed to build module ", e);
             }
             disposable.dispose();
-
         }
 
         private void configureLocalAldor(@NotNull ModifiableRootModel model) {

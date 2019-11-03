@@ -116,7 +116,7 @@ public class AldorUnitConfigurationProducerTest extends LightPlatformCodeInsight
 
 
     @Ignore("Disabled until I work out how to free the editor safely")
-    public void xtestRun() throws ExecutionException, InterruptedException {
+    public void testRun() throws ExecutionException, InterruptedException {
         JUnits.setLogToInfo();
         VirtualFile file = createFile(getSourceRoot(), "foo.as", "#include \"aldor.as\"\nFooTest: with == add\n");
 

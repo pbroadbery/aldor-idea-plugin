@@ -40,7 +40,7 @@ public class AldorFileBuildTargetTypeTest {
         assertTrue((new File(tmpdir, "foo.as")).createNewFile());
         JpsModel modifiable = model.createModifiableModel(dispatcher("mod-1"));
 
-        JpsModule module = modifiable.getProject().addModule("foo", new JpsAldorModuleType());
+        JpsModule module = modifiable.getProject()./*<JpsSimpleElement<JpsAldorModuleProperties>, JpsAldorModuleType>*/addModule("foo", new JpsAldorModuleType());
         module.addSourceRoot(new JpsModuleSourceRootImpl<JavaSourceRootProperties>(tmpdir.toURI().toURL().toExternalForm(), JavaSourceRootType.SOURCE,
                     JavaSourceRootType.SOURCE.createDefaultProperties()));
         modifiable.commit();

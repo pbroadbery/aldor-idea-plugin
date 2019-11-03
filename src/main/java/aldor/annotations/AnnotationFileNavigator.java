@@ -1,4 +1,4 @@
-package aldor.build.module;
+package aldor.annotations;
 
 import aldor.psi.AldorIdentifier;
 import aldor.symbolfile.SrcPos;

@@ -51,4 +51,5 @@ public class AldorModuleBuilder extends ModuleBuilder {
         //noinspection ObjectEquality
         return (sdkType == AldorInstalledSdkType.instance()) || (sdkType == FricasInstalledSdkType.instance());
     }
+
 }

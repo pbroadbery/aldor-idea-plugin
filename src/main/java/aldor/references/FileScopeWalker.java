@@ -1,7 +1,7 @@
 package aldor.references;
 
-import aldor.build.module.AnnotationFileNavigator;
-import aldor.build.module.AnnotationFileNavigatorManager;
+import aldor.annotations.AnnotationFileNavigator;
+import aldor.annotations.AnnotationFileNavigatorManager;
 import aldor.psi.AldorDeclare;
 import aldor.psi.AldorDefine;
 import aldor.psi.AldorIdentifier;

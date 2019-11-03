@@ -36,17 +36,17 @@ public class JpsAldorLocalBuildTest extends AldorJpsTestCase {
         Assert.assertTrue(fileForProjectPath("aldor-codebase/aldor/Makefile.in").exists());
         Assert.assertTrue(fileForProjectPath("aldor-codebase/build/Makefile").exists());
 
-        Assert.assertTrue(toString(fileForProjectPath("aldor-codebase/build/bar.abn"),
+        Assert.assertTrue(toString(fileForProjectPath("aldor-codebase/build/bar.ao"),
                                                 StandardCharsets.US_ASCII).contains("X: with"));
 
-        change("aldor-codebase/bar.as", "Y: with == add");
+        change("aldor-codebase/aldor/bar.as", "Y: with == add");
 
         result = doBuild(CompileScopeTestBuilder.make().all()).assertSuccessful();
         LOG.info("Mappings: " + result.getMappingsDump());
-        Assert.assertTrue(toString(fileForProjectPath("aldor-codebase/bar.as"),
+        Assert.assertTrue(toString(fileForProjectPath("aldor-codebase/aldor/bar.as"),
                                             StandardCharsets.US_ASCII).contains("Y: with"));
 
-        Assert.assertTrue(toString(fileForProjectPath("aldor-codebase/build/bar.abn"),
+        Assert.assertTrue(toString(fileForProjectPath("aldor-codebase/build/bar.ao"),
                                             StandardCharsets.US_ASCII).contains("Y: with"));
     }
 
@@ -58,14 +58,14 @@ public class JpsAldorLocalBuildTest extends AldorJpsTestCase {
     public void testErrors() throws IOException {
         aldorFixture.createModule();
 
-        createFile("aldor-codebase/foo.as", "X: with == add");
-        createFile("aldor-codebase/error.txt", "\"../foo.as\", line 1: \n" +
+        createFile("aldor-codebase/aldor/foo.as", "X: with == add");
+        createFile("aldor-codebase/aldor/error.txt", "\"../foo.as\", line 1: \n" +
                 "foo\n" +
                 "^\n" +
                 "[L1 C1] #1 (Error) No meaning for identifier `foo'.\n");
         createFile("aldor-codebase/configure.ac", "DUMMY_TEXT");
 
-        createFile("aldor-codebase/build/Makefile", "foo.abn: ../foo.as\n\tcat ../error.txt\n\tcat $< > $@\n\tfalse\n");
+        createFile("aldor-codebase/build/Makefile", "foo.abn: ../aldor/foo.as\n\tcat ../aldor/error.txt\n\tcat $< > $@\n\tfalse\n");
 
         LOG.info("RebuildAll STARTS");
         BuildResult result = rebuildAllAndFail();

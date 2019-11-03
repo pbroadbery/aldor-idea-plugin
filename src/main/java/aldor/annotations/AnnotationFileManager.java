@@ -1,5 +1,6 @@
-package aldor.build.module;
+package aldor.annotations;
 
+import aldor.build.module.AldorModuleManager;
 import aldor.symbolfile.AnnotationFile;
 import aldor.symbolfile.MissingAnnotationFile;
 import aldor.symbolfile.PopulatedAnnotationFile;
@@ -22,6 +23,7 @@ import com.intellij.openapi.vfs.newvfs.events.VFileContentChangeEvent;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileSystemItem;
+import com.intellij.util.PathUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -209,7 +211,8 @@ public class AnnotationFileManager implements Disposable {
         if (refName == null) {
             return null;
         }
-        return trimExtension(refName) + ".as";
+
+        return trimExtension(PathUtil.getFileName(refName)) + ".as";
     }
 
 }

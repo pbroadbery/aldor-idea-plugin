@@ -6,4 +6,8 @@ import javax.swing.JTextField;
 @SuppressWarnings({"serial", "SerializableHasSerializationMethods"})
 public class AldorBuildLocationForm extends JComponent {
     private JTextField buildDirectory;
+
+    public String buildDirectory() {
+        return buildDirectory.getText();
+    }
 }

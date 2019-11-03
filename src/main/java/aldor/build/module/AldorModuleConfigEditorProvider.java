@@ -1,5 +1,6 @@
 package aldor.build.module;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleConfigurationEditor;
 import com.intellij.openapi.module.ModuleType;
@@ -23,8 +24,11 @@ import java.awt.Component;
  * UI for editing module config.
  */
 public class AldorModuleConfigEditorProvider implements ModuleConfigurationEditorProviderEx {
+    private static final Logger LOG = Logger.getInstance(AldorModuleConfigEditorProvider.class);
+
     @Override
     public ModuleConfigurationEditor[] createEditors(ModuleConfigurationState state) {
+        LOG.info("Creating module config editors for " + state.getProject().getName());
         ModifiableRootModel rootModel = state.getRootModel();
         Module rootModule = rootModel.getModule();
         if (!(ModuleType.get(rootModule) instanceof AldorModuleType)) {
@@ -33,6 +37,7 @@ public class AldorModuleConfigEditorProvider implements ModuleConfigurationEdito
         return new ModuleConfigurationEditor[]{
                 new CommonContentEntriesEditor(rootModule.getName(), state, JavaSourceRootType.SOURCE),
                 new OutputDirectoryEditor(state),
+                new AldorOutputDirectoryEditor(state),
                 new ModuleJdkEditor(state)
         };
     }
@@ -80,28 +85,6 @@ public class AldorModuleConfigEditorProvider implements ModuleConfigurationEdito
         }
     }
 
-    /* Giving up and using the output editor instead.
-     * Would be nice to have a custom editor
-
-    private static class LocalBuildElementsEditor extends ModuleElementsEditor {
- AldorBuildLocationForm locationForm = new AldorBuildLocationForm();
-        protected LocalBuildElementsEditor(@NotNull ModuleConfigurationState state) {
-            super(state);
-        }
-
-        @Override
-        protected JComponent createComponentImpl() {
-            return locationForm;
-        }
-
-        @Nls
-        @Override
-        public String getDisplayName() {
-            return "Local Build Location";
-        }
-
-    }
-    */
     /**
      * Classpath editor tweaked to hide class path boxes (keeps the module setting)
      */

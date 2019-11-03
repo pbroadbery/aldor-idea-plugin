@@ -1,7 +1,6 @@
 package aldor.builder.files;
 
 import aldor.builder.AldorTargetIds;
-import com.intellij.openapi.util.io.FileUtilRt;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.jps.builders.BuildRootIndex;
@@ -13,7 +12,6 @@ import org.jetbrains.jps.incremental.CompileContext;
 import org.jetbrains.jps.indices.IgnoredFileIndex;
 import org.jetbrains.jps.indices.ModuleExcludeIndex;
 import org.jetbrains.jps.model.JpsModel;
-import org.jetbrains.jps.model.module.JpsModuleSourceRoot;
 
 import java.io.File;
 import java.util.Collection;
@@ -28,32 +26,20 @@ public class AldorFileBuildTarget extends BuildTarget<AldorFileRootDescriptor> {
     private final File sourceFile;
     @NotNull
     private final File sourceRoot;
+    @NotNull
     private final File buildDirectory;
-    private final boolean isLocalSdk;
 
-    public AldorFileBuildTarget(AldorFileBuildTargetType targetType,
-                                JpsModuleSourceRoot sourceRoot, @NotNull File sourceFile) {
+    public AldorFileBuildTarget(AldorFileBuildTargetType targetType, @NotNull String makeTargetName, @NotNull File sourceFile, @NotNull File sourceRoot, @NotNull File buildDirectory) {
         super(targetType);
+        this.makeTargetName = makeTargetName;
         this.sourceFile = sourceFile;
-        this.sourceRoot = sourceRoot.getFile();
-        this.makeTargetName = BuildFiles.buildTargetName(sourceRoot.getFile(), sourceFile);
-        this.buildDirectory = sourceRoot.getFile();
-        this.isLocalSdk = false;
-    }
-
-    public AldorFileBuildTarget(AldorFileBuildTargetType targetType,
-                                JpsModuleSourceRoot sourceRoot, @NotNull File sourceFile, @NotNull File outputDir) {
-        super(targetType);
-        this.sourceFile = sourceFile;
-        this.sourceRoot = sourceRoot.getFile();
-        this.makeTargetName = BuildFiles.localBuildTargetName(sourceRoot.getFile(), sourceFile);
-        this.buildDirectory = new File(outputDir, FileUtilRt.getRelativePath(sourceRoot.getFile(), sourceFile.getParentFile()));
-        this.isLocalSdk = true;
+        this.sourceRoot = sourceRoot;
+        this.buildDirectory = buildDirectory;
     }
 
     @Override
     public String toString() {
-        return "{FileTarget: " + makeTargetName +"}";
+        return "{FileTarget: " + makeTargetName + "@" + buildDirectory +"}";
     }
 
     public AldorFileBuildTargetType getAldorTargetType() {
@@ -104,11 +90,7 @@ public class AldorFileBuildTarget extends BuildTarget<AldorFileRootDescriptor> {
     @NotNull
     @Override
     public Collection<File> getOutputRoots(CompileContext context) {
-        if (isLocalSdk) {
-            return Collections.singletonList(this.buildDirectory);
-        } else {
-            return Collections.singletonList(new File(sourceFile.getParentFile(), "out/ao")); // TODO: Move to BuildFiles
-        }
+        return Collections.singletonList(this.buildDirectory);
     }
 
     public ExecutorService executor() {

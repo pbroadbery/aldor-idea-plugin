@@ -16,6 +16,9 @@
 package aldor.builder.test;
 
 import aldor.builder.jps.JpsAldorExtension;
+import aldor.builder.jps.JpsAldorMakeDirectoryOption;
+import aldor.builder.jps.JpsAldorModuleProperties;
+import aldor.builder.jps.JpsAldorModuleType;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileSystemUtil;
 import com.intellij.openapi.util.io.FileUtil;
@@ -48,15 +51,15 @@ import org.jetbrains.jps.indices.ModuleExcludeIndex;
 import org.jetbrains.jps.indices.impl.IgnoredFileIndexImpl;
 import org.jetbrains.jps.indices.impl.ModuleExcludeIndexImpl;
 import org.jetbrains.jps.model.JpsDummyElement;
-import org.jetbrains.jps.model.JpsElement;
 import org.jetbrains.jps.model.JpsElementFactory;
 import org.jetbrains.jps.model.JpsModel;
 import org.jetbrains.jps.model.JpsProject;
+import org.jetbrains.jps.model.JpsSimpleElement;
 import org.jetbrains.jps.model.java.JavaSourceRootType;
-import org.jetbrains.jps.model.java.JpsJavaModuleType;
 import org.jetbrains.jps.model.java.impl.JavaModuleExtensionRole;
 import org.jetbrains.jps.model.library.sdk.JpsSdkReference;
 import org.jetbrains.jps.model.module.JpsModule;
+import org.jetbrains.jps.model.module.impl.JpsModuleImpl;
 import org.jetbrains.jps.service.JpsServiceManager;
 import org.jetbrains.jps.util.JpsPathUtil;
 import org.junit.Assert;
@@ -137,9 +140,26 @@ public abstract class AldorJpsTestCase extends UsefulTestCase {
         return FileUtil.createTempDirectory("prj", null);
     }
 
-    protected <T extends JpsElement> JpsModule addModule(String moduleName) {
-        JpsModule module = myProject.addModule(moduleName, JpsJavaModuleType.INSTANCE);
+    protected JpsModule addModule(String moduleName) {
+        JpsModule module = myProject.addModule(moduleName, JpsAldorModuleType.INSTANCE);
+        module.getContentRootsList().addUrl(JpsPathUtil.pathToUrl(new File(getOrCreateProjectDir(), moduleName).toString()));
+        return module;
+    }
 
+    JpsModule addAldorModule(String moduleName) {
+        JpsSimpleElement<JpsAldorModuleProperties> simpleElement = JpsElementFactory.getInstance().createSimpleElement(new JpsAldorModuleProperties("out/ao", JpsAldorMakeDirectoryOption.Source));
+        JpsModule module = new JpsModuleImpl<>(JpsAldorModuleType.INSTANCE, moduleName, simpleElement);
+        myProject.addModule(module);
+        module.getContentRootsList().addUrl(JpsPathUtil.pathToUrl(new File(getOrCreateProjectDir(), moduleName).toString()));
+
+        return module;
+    }
+
+    private JpsModule addLocalAldorModule(String moduleName, String outputDirectoryName) {
+        JpsAldorModuleProperties data = new JpsAldorModuleProperties(outputDirectoryName, JpsAldorMakeDirectoryOption.BuildRelative);
+        JpsSimpleElement<JpsAldorModuleProperties> simpleElement = JpsElementFactory.getInstance().createSimpleElement(data);
+        JpsModule module = new JpsModuleImpl<>(JpsAldorModuleType.INSTANCE, moduleName, simpleElement);
+        myProject.addModule(module);
         module.getContentRootsList().addUrl(JpsPathUtil.pathToUrl(new File(getOrCreateProjectDir(), moduleName).toString()));
 
         return module;
@@ -168,6 +188,7 @@ public abstract class AldorJpsTestCase extends UsefulTestCase {
      */
     @SuppressWarnings({"EmptyMethod"})
     protected void beforeBuildStarted(@NotNull ProjectDescriptor descriptor) {
+        LOG.info("Staring build ");
     }
 
     protected BuildResult rebuildAllAndSucceed() {
@@ -295,13 +316,13 @@ public abstract class AldorJpsTestCase extends UsefulTestCase {
         public JpsModule createModule() {
             myProject.getModel().getGlobal().addSdk(sdkName, "", "1.0", JpsAldorExtension.JpsAldorSdkType.LOCAL);
 
-            JpsModule module = addModule(moduleName);
+            JpsModule module = addLocalAldorModule(moduleName, outputDirectoryName);
             Assert.assertNotNull(module);
             File basePath = new File(getOrCreateProjectDir(), moduleName);
             module.addSourceRoot(JpsPathUtil.pathToUrl(new File(basePath, sourceDirectoryName).getAbsolutePath()), JavaSourceRootType.SOURCE);
             File outputDirectory = new File(basePath, outputDirectoryName);
 
-            module.getContainer().getOrSetChild(JavaModuleExtensionRole.INSTANCE).setOutputUrl(JpsPathUtil.pathToUrl(outputDirectory.getAbsolutePath()));
+            module.getContainer().getOrSetChild(JavaModuleExtensionRole.INSTANCE).setOutputUrl(JpsPathUtil.pathToUrl("java-build-directory"));
             JpsSdkReference<JpsDummyElement> sdkReference = JpsElementFactory.getInstance().createSdkReference(sdkName, JpsAldorExtension.JpsAldorSdkType.LOCAL);
             module.getSdkReferencesTable().setSdkReference(JpsAldorExtension.JpsAldorSdkType.LOCAL, sdkReference);
             return module;
@@ -317,7 +338,7 @@ public abstract class AldorJpsTestCase extends UsefulTestCase {
         }
 
         public JpsModule createModule() {
-            JpsModule module = addModule("aldor-module");
+            JpsModule module = addAldorModule("aldor-module");
 
             Assert.assertNotNull(module);
             module.setName("AldorModule");

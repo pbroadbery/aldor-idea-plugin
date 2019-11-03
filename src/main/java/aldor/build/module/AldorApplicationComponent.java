@@ -1,5 +1,8 @@
 package aldor.build.module;
 
+import aldor.annotations.AnnotationFileNavigatorManager;
+import aldor.annotations.DefaultAnnotationFileNavigator;
+import aldor.annotations.SaveActionProcessor;
 import aldor.editor.navigation.DefaultNavigator;
 import aldor.parser.NavigatorFactory;
 import com.intellij.openapi.application.ApplicationManager;
@@ -25,7 +28,6 @@ public class AldorApplicationComponent implements ApplicationComponent {
         connection.subscribe(FILE_DOCUMENT_SYNC, new SaveActionProcessor());
 
         initialiseComponents();
-
     }
 
     private void initialiseComponents() {

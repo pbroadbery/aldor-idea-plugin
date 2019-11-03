@@ -1,5 +1,6 @@
-package aldor.build.module;
+package aldor.annotations;
 
+import aldor.build.module.AldorModuleType;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManagerListener;
@@ -17,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
 
-class SaveActionProcessor implements FileDocumentManagerListener {
+public class SaveActionProcessor implements FileDocumentManagerListener {
     private static final Logger LOG = Logger.getInstance(SaveActionProcessor.class);
     @Override
     public void beforeDocumentSaving(@NotNull Document document) {

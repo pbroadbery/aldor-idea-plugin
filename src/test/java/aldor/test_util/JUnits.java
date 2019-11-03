@@ -1,5 +1,6 @@
 package aldor.test_util;
 
+import com.intellij.compiler.server.BuildManager;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
 import com.intellij.execution.ProgramRunnerUtil;
@@ -72,6 +73,13 @@ public final class JUnits {
         LogManager.getRootLogger().setLevel(level);
         Logger.setFactory(TestLoggerFactory.class);
     }
+
+    public static void enableJpsDebugging(boolean enabled) {
+        System.setProperty("compiler.process.debug.port", "28771");
+        BuildManager.getInstance().setBuildProcessDebuggingEnabled(enabled);
+    }
+
+
 
     public static TestRule prePostTestRule(UnsafeRunnable pre, UnsafeRunnable post) {
         return (statement, description) -> prePostStatement(pre, post, statement);

@@ -1,4 +1,4 @@
-package aldor.build.module;
+package aldor.annotations;
 
 import aldor.lexer.IndentWidthCalculator;
 import aldor.psi.AldorIdentifier;

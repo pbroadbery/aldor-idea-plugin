@@ -2,10 +2,10 @@ package aldor.editor.documentation;
 
 import aldor.psi.AldorIdentifier;
 import aldor.symbolfile.AnnotationFileTestFixture;
-import aldor.test_util.AldorRoundTripProjectDescriptor;
 import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.Htmls;
 import aldor.test_util.LightPlatformJUnit4TestRule;
+import aldor.test_util.SdkProjectDescriptors;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -29,9 +29,9 @@ import static org.junit.Assert.assertTrue;
 
 public class IdentifierDocumentProviderTest {
 
-    private final CodeInsightTestFixture codeTestFixture = LightPlatformJUnit4TestRule.createFixture(new AldorRoundTripProjectDescriptor());
-    private final AnnotationFileTestFixture annotationTestFixture= new AnnotationFileTestFixture();
     private final ExecutablePresentRule aldorExecutableRule = new ExecutablePresentRule.Aldor();
+    private final CodeInsightTestFixture codeTestFixture = LightPlatformJUnit4TestRule.createFixture(SdkProjectDescriptors.aldorSdkProjectDescriptor(aldorExecutableRule.prefix()));
+    private final AnnotationFileTestFixture annotationTestFixture= new AnnotationFileTestFixture();
 
     @Rule
     public final TestRule platformTestRule =

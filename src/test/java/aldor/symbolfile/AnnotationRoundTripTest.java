@@ -1,13 +1,13 @@
 package aldor.symbolfile;
 
-import aldor.build.module.AnnotationFileManager;
-import aldor.build.module.AnnotationFileNavigator;
-import aldor.build.module.DefaultAnnotationFileNavigator;
+import aldor.annotations.AnnotationFileManager;
+import aldor.annotations.AnnotationFileNavigator;
+import aldor.annotations.DefaultAnnotationFileNavigator;
 import aldor.psi.AldorIdentifier;
 import aldor.syntax.SyntaxPrinter;
-import aldor.test_util.AldorRoundTripProjectDescriptor;
 import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.JUnits;
+import aldor.test_util.SdkProjectDescriptors;
 import com.intellij.codeInsight.documentation.DocumentationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
@@ -59,7 +59,9 @@ public class AnnotationRoundTripTest extends LightPlatformCodeInsightFixtureTest
     public void testFullRoundTrip() throws Exception {
         Project project = getProject();
 
-        annotationTextFixture.createFile(getProject(), "Makefile", "foo.abn: foo.as\n\t" + aldorExecutableRule.executable() + " -Fabn=foo.abn foo.as");
+        annotationTextFixture.createFile(getProject(), "Makefile", "out/ao/foo.ao: foo.as\n" +
+                "\tmkdir -p out/ao\n" +
+                "\t" + aldorExecutableRule.executable() + " -Fabn=out/ao/foo.abn -Fao=out/ao/foo.ao foo.as");
         VirtualFile sourceFile = annotationTextFixture.createFile(getProject(), "foo.as", "#include \"aldor\"\nfoo(n: Integer): Integer == n+" + System.currentTimeMillis());
 
         annotationTextFixture.compileFile(sourceFile, getProject());
@@ -108,7 +110,7 @@ public class AnnotationRoundTripTest extends LightPlatformCodeInsightFixtureTest
 
     @Override
     protected LightProjectDescriptor getProjectDescriptor() {
-        return new AldorRoundTripProjectDescriptor();
+        return SdkProjectDescriptors.aldorSdkProjectDescriptor(aldorExecutableRule.prefix());
     }
 
 }

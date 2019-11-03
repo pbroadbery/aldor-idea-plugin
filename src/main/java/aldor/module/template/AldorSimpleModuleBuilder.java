@@ -1,6 +1,8 @@
 package aldor.module.template;
 
+import aldor.build.module.AldorMakeDirectoryOption;
 import aldor.build.module.AldorModuleBuilder;
+import aldor.build.module.AldorModulePathService;
 import aldor.build.module.AldorModuleType;
 import aldor.sdk.aldor.AldorInstalledSdkType;
 import com.google.common.collect.Maps;
@@ -9,11 +11,10 @@ import com.intellij.ide.util.projectWizard.SdkSettingsStep;
 import com.intellij.ide.util.projectWizard.SettingsStep;
 import com.intellij.ide.util.projectWizard.WizardInputField;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.roots.ContentEntry;
-import com.intellij.openapi.roots.ExcludeFolder;
 import com.intellij.openapi.roots.ModifiableRootModel;
-import com.intellij.openapi.roots.SourceFolder;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
@@ -75,8 +76,8 @@ public class AldorSimpleModuleBuilder extends AldorModuleBuilder {
             VirtualFile file = entry.getFile();
 
             if (file != null) {
-                SourceFolder sourceFolder = entry.addSourceFolder(file + "/src", false);
-                ExcludeFolder excluded = entry.addExcludeFolder(file + "/src/out");
+                entry.addSourceFolder(file + "/src", false);
+                entry.addExcludeFolder(file + "/src/out");
             }
         }
     }
@@ -119,5 +120,14 @@ public class AldorSimpleModuleBuilder extends AldorModuleBuilder {
         }
         LocalFileSystem fileSystem = LocalFileSystem.getInstance();
         return fileSystem.findFileByIoFile(new File(getContentEntryPath()));
+    }
+
+
+    @Override
+    protected void setupModule(Module module) throws ConfigurationException {
+        super.setupModule(module);
+        AldorModulePathService pathService = AldorModulePathService.getInstance(module);
+        pathService.getState().setOutputDirectory("out/ao");
+        pathService.getState().setMakeDirectory(AldorMakeDirectoryOption.Source);
     }
 }

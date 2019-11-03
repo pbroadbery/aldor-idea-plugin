@@ -6,7 +6,6 @@ import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.JUnits;
 import aldor.test_util.SdkProjectDescriptors;
 import com.intellij.codeInsight.documentation.DocumentationManager;
-import com.intellij.compiler.server.BuildManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -65,8 +64,7 @@ public class AldorDocumentationProviderTest extends LightPlatformCodeInsightFixt
                 this.addTmpFileToKeep(new File(module.getModuleFile().getCanonicalPath()));
             }
         }
-        System.setProperty("compiler.process.debug.port", "28771");
-        BuildManager.getInstance().setBuildProcessDebuggingEnabled(true);
+        JUnits.enableJpsDebugging(false);
     }
 
     public void testDocumentationLocal() throws Exception {

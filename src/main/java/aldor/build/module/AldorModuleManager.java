@@ -1,5 +1,7 @@
 package aldor.build.module;
 
+import aldor.annotations.AnnotationFileNavigator;
+import aldor.annotations.AnnotationFileNavigatorManager;
 import aldor.util.AnnotatedOptional;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;

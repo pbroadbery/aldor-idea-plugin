@@ -80,6 +80,7 @@
 
         <typeHierarchyProvider implementationClass="aldor.hierarchy.AldorTypeHierarchyProvider" language="Aldor"/>
         <methodHierarchyProvider implementationClass="aldor.hierarchy.util.MissingHierarchyProvider" language="Aldor"/>
+        <moduleService serviceImplementation="aldor.build.module.AldorModulePathService"/>
 
         <!-- Aldor extras -->
         <lang.refactoringSupport language="Aldor" implementationClass="aldor.references.AldorRefactoringSupportProvider"/>

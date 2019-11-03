@@ -1,6 +1,6 @@
 package aldor.symbolfile;
 
-import aldor.build.module.AnnotationFileManager;
+import aldor.annotations.AnnotationFileManager;
 import aldor.util.VirtualFileTests;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
