@@ -1,6 +1,6 @@
 language: java
 jdk:
-  - oraclejdk8
+  - openjdk8
 
 before_install:
   - echo "task wrapper (type" ":Wrapper) {gradleVersion='3.4'}" > nada.gradle
