@@ -1,5 +1,6 @@
 package aldor.builder.jars;
 
+import com.intellij.openapi.util.io.FileUtil;
 import org.jetbrains.jps.builders.BuildRootDescriptor;
 import org.jetbrains.jps.builders.BuildTarget;
 
@@ -14,9 +15,15 @@ public class AldorJarRootDescriptor extends BuildRootDescriptor {
         this.target = target;
     }
 
+
+    @Override
+    public boolean isGenerated() {
+        return false;
+    }
+
     @Override
     public String getRootId() {
-        return sourceRoot + "-jar";
+        return FileUtil.toSystemIndependentName(sourceRoot.getPath()) + "-jar";
     }
 
     @Override

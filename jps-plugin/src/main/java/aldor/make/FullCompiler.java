@@ -50,7 +50,7 @@ public class FullCompiler implements AldorFileTargetBuilder.Compiler {
 
     void doBuild(ExecutorService executorService, final File path, final String target) throws IOException {
         ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.command("make", target);
+        processBuilder.command("make", "--trace", target);
         processBuilder.directory(path);
         processBuilder.redirectError(ProcessBuilder.Redirect.PIPE);
         processBuilder.redirectOutput(ProcessBuilder.Redirect.PIPE);

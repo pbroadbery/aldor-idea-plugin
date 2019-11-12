@@ -66,7 +66,13 @@ public class JpsAldorModuleType implements JpsModuleType<JpsSimpleElement<JpsAld
     public String targetName(JpsAldorModuleProperties properties, @NotNull File sourceRoot, @NotNull File file) {
         switch (properties.makeDirectoryOption()) {
             case Source:
-                return sourceTargetName(JpsPathUtil.urlToFile(properties.outputDirectory()), sourceRoot, file);
+                String url = properties.outputDirectory();
+                if (url == null) {
+                    return sourceTargetName(new File(sourceRoot, "out/ao"), sourceRoot, file);
+                }
+                else {
+                    return sourceTargetName(JpsPathUtil.urlToFile(url), sourceRoot, file);
+                }
             case BuildRelative:
                 return buildRelativeTargetName(file);
             case Invalid:

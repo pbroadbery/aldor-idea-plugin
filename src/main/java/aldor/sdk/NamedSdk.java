@@ -1,17 +1,19 @@
 package aldor.sdk;
 
+import com.intellij.openapi.projectRoots.ProjectJdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ui.configuration.JdkComboBox;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 public class NamedSdk {
     @Nullable
     private final String sdkName;
     @Nullable
-    private final Sdk sdk;
+    private Sdk sdk;
 
     public NamedSdk(@Nullable String name) {
         this.sdkName = name;
@@ -19,7 +21,7 @@ public class NamedSdk {
     }
 
     public NamedSdk(@NotNull Sdk sdk) {
-        this.sdkName = null;
+        this.sdkName = sdk.getName();
         this.sdk = sdk;
     }
 
@@ -30,6 +32,9 @@ public class NamedSdk {
 
     @Nullable
     public Sdk sdk() {
+        if (sdk == null) {
+            sdk = Arrays.stream(ProjectJdkTable.getInstance().getAllJdks()).filter(s -> s.getName().equals(sdkName)).findFirst().orElse(null);
+        }
         return sdk;
     }
 
@@ -60,12 +65,12 @@ public class NamedSdk {
             return false;
         }
         NamedSdk other = (NamedSdk) obj;
-        return Objects.equals(this.sdk, other.sdk()) && Objects.equals(this.sdkName, other.sdkName);
+        return Objects.equals(this.sdkName, other.sdkName);
     }
 
     @Override
     public int hashCode() {
         //noinspection ObjectInstantiationInEqualsHashCode
-        return Objects.hash(sdk, sdkName);
+        return Objects.hash(sdkName);
     }
 }

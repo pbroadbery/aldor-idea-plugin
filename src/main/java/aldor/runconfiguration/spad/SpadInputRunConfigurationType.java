@@ -35,6 +35,7 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -164,11 +165,10 @@ public class SpadInputRunConfigurationType extends ConfigurationTypeBase {
         }
     }
 
-    @SuppressWarnings({"InstanceVariableMayNotBeInitialized", "PublicField"})
     public static class SpadInputConfigurationBean {
         public String inputFile = "";
         public boolean loadSpad = false;
-        public boolean keepRunning;
+        public boolean keepRunning = false;
     }
 
     /**
@@ -197,7 +197,7 @@ public class SpadInputRunConfigurationType extends ConfigurationTypeBase {
             return processHandler;
         }
 
-        protected GeneralCommandLine createCommandLine() throws ExecutionException {
+        protected GeneralCommandLine createCommandLine() {
             Sdk sdk = configuration.effectiveSdk();
             if (sdk == null) {
                 return new GeneralCommandLine().withExePath("missing-sdk");
@@ -217,7 +217,7 @@ public class SpadInputRunConfigurationType extends ConfigurationTypeBase {
                 commandLine.addParameter(")q");
             }
             commandLine.withEnvironment("AXIOM", sdk.getHomePath());
-
+            commandLine.setWorkDirectory(new File(configuration.inputFile()).getParent());
             return commandLine;
         }
 

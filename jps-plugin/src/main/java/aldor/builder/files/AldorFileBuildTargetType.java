@@ -42,6 +42,11 @@ public class AldorFileBuildTargetType extends BuildTargetType<AldorFileBuildTarg
 
     private static final Pattern SOURCE_FILES = Pattern.compile(".*\\.as");
 
+    @Override
+    public String toString() {
+        return "{AldorFileBuildTargetType}";
+    }
+
     @NotNull
     @Override
     public List<AldorFileBuildTarget> computeAllTargets(@NotNull final JpsModel model) {

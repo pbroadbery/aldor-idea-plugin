@@ -15,4 +15,8 @@ public final class AldorTargetIds {
     public static String aldorJarTargetId(JpsModuleSourceRoot sourceRoot) {
         return sourceRoot.getFile().toString();
     }
+
+    public static String aldorJarTargetId(String sourceRoot) {
+        return sourceRoot;
+    }
 }

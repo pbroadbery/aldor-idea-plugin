@@ -41,8 +41,12 @@ class AldorOutputDirectoryEditor extends ModuleElementsEditor {
     @Override
     public void saveData() {
         String directory = locationForm.buildDirectory();
-        AldorModuleExtension extension = AldorModuleExtension.getInstance(getState().getRootModel().getModule());
-        extension.getState().setOutputDirectory(directory);
+        AldorModulePathService pathService = AldorModulePathService.getInstance(getState().getRootModel().getModule());
+        if (pathService == null) {
+            LOG.error("Missing path service for " + getState().getRootModel().getModule());
+            return;
+        }
+        pathService.getState().setOutputDirectory(directory);
         fireConfigurationChanged();
     }
 }

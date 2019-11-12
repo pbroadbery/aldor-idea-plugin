@@ -36,7 +36,7 @@ public class AldorModuleConfigEditorProvider implements ModuleConfigurationEdito
         }
         return new ModuleConfigurationEditor[]{
                 new CommonContentEntriesEditor(rootModule.getName(), state, JavaSourceRootType.SOURCE),
-                new OutputDirectoryEditor(state),
+                //new OutputDirectoryEditor(state),
                 new AldorOutputDirectoryEditor(state),
                 new ModuleJdkEditor(state)
         };

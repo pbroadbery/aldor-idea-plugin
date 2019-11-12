@@ -14,13 +14,10 @@ import com.intellij.execution.RunnerAndConfigurationSettings;
 import com.intellij.execution.actions.ConfigurationContext;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.executors.DefaultRunExecutor;
-import com.intellij.execution.process.ProcessAdapter;
-import com.intellij.execution.process.ProcessEvent;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.runners.ProgramRunner;
-import com.intellij.execution.ui.ExecutionConsole;
-import com.intellij.execution.ui.RunContentDescriptor;
-import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -28,12 +25,8 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Assume;
-import org.junit.Ignore;
-
-import java.util.concurrent.CountDownLatch;
 
 import static aldor.util.VirtualFileTests.createFile;
 import static com.intellij.testFramework.LightPlatformTestCase.getSourceRoot;
@@ -50,7 +43,6 @@ public class AldorUnitConfigurationProducerTest extends LightPlatformCodeInsight
     }
 
     public void testRunSimpleConfiguration() throws ExecutionException {
-        JUnits.setLogToInfo();
         VirtualFile file = createFile(getSourceRoot(), "foo.as",
                 "#include \"aldor.as\"\n" +
                         "#pile\n" +
@@ -76,9 +68,16 @@ public class AldorUnitConfigurationProducerTest extends LightPlatformCodeInsight
         RunnerAndConfigurationSettings runnerAndConfigurationSettings = runContext.getConfiguration();
 
         Assert.assertEquals("FooTest (foo.as)", runnerAndConfigurationSettings.getName());
+
+        RunConfiguration config = runContext.getConfiguration().getConfiguration();
+        Assert.assertTrue(config instanceof AldorUnitConfiguration);
+        AldorUnitConfiguration aldorConfig = (AldorUnitConfiguration) config;
+        Assert.assertEquals(getSourceRoot().getPath() + "/foo.as", aldorConfig.bean().inputFile);
+        Assert.assertEquals("FooTest", aldorConfig.bean().typeName);
+        Assert.assertEquals("aldor.test", aldorConfig.bean().packageName);
     }
 
-    public void testStartOutside() throws ExecutionException {
+    public void testStartOutside() {
         JUnits.setLogToInfo();
         VirtualFile file = createFile(getSourceRoot(), "foo.as",
                 "#include \"aldor.as\"\n" +
@@ -103,8 +102,7 @@ public class AldorUnitConfigurationProducerTest extends LightPlatformCodeInsight
     }
 
     private void executeRunner(RunnerAndConfigurationSettings settings) throws ExecutionException {
-        ExecutionTargetManager.canRun(settings, ExecutionTargetManager.getActiveTarget(getProject()));
-        Assert.assertTrue(settings.getName().contains("foo"));
+        Assert.assertTrue(ExecutionTargetManager.canRun(settings, ExecutionTargetManager.getActiveTarget(getProject())));
         RunConfiguration runConfiguration = settings.getConfiguration();
 
         JUnits.ProcessOutput output = JUnits.doStartTestsProcess(runConfiguration);
@@ -114,17 +112,17 @@ public class AldorUnitConfigurationProducerTest extends LightPlatformCodeInsight
         LOG.info("Sys: " + output.sys);
     }
 
-
-    @Ignore("Disabled until I work out how to free the editor safely")
-    public void testRun() throws ExecutionException, InterruptedException {
-        JUnits.setLogToInfo();
+    public void testRun() throws ExecutionException {
         VirtualFile file = createFile(getSourceRoot(), "foo.as", "#include \"aldor.as\"\nFooTest: with == add\n");
 
         PsiFile whole = PsiManager.getInstance(getProject()).findFile(file);
         Assert.assertNotNull(whole);
+        PsiElement elt = PsiTreeUtil.findChildOfType(whole, AldorWith.class);
+        Assert.assertNotNull(elt);
+
         MyMapDataContext dataContext = new MyMapDataContext();
         dataContext.put("module", myModule);
-        dataContext.put("Location", new PsiLocation<>(whole));
+        dataContext.put("Location", new PsiLocation<>(elt));
         dataContext.put("project", getProject());
 
         ConfigurationContext runContext = ConfigurationContext.getFromContext(dataContext);
@@ -143,39 +141,15 @@ public class AldorUnitConfigurationProducerTest extends LightPlatformCodeInsight
         Assert.assertNotNull(runner);
         ExecutionEnvironment executionEnvironment = new ExecutionEnvironment(executor, runner, runnerAndConfigurationSettings, getProject());
 
-        final Ref<RunContentDescriptor> descriptorBox = new Ref<>();
-        CountDownLatch latch = new CountDownLatch(1);
-        ExecutionConsole console = null;
         try {
-            runner.execute(executionEnvironment, new ProgramRunner.Callback() {
-                @Override
-                public void processStarted(RunContentDescriptor descriptor) {
-                    descriptor.getProcessHandler().addProcessListener(new ProcessAdapter() {
-                        @Override
-                        public void processTerminated(@NotNull ProcessEvent event) {
-                            latch.countDown();
-                        }
-                    });
-                    descriptorBox.set(descriptor);
-                }
-            });
-            descriptorBox.get().getProcessHandler().waitFor();
-            console = descriptorBox.get().getExecutionConsole();
-
-        } catch (RuntimeException e) {
-            LOG.error("ouch", e);
-            throw e;
-        } finally {
-   /*         Assert.assertNotNull(descriptorBox.get());
-            RunContentDescriptor descriptor = descriptorBox.get();
-
-            Assert.assertNotNull(descriptor.getProcessHandler());
-            Assert.assertTrue(descriptor.getProcessHandler().waitFor());
-            if (console != null) {
-                console.dispose();
-            }
-     */
+            runner.execute(executionEnvironment, descriptor -> LOG.info("Started process - " + descriptor.getDisplayName()));
         }
+        finally {
+            Editor[] editors = EditorFactory.getInstance().getAllEditors();
+            for (Editor editor : editors) {
+                EditorFactory.getInstance().releaseEditor(editor);
+            }
+         }
     }
 
     @Override

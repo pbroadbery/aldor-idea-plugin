@@ -2,7 +2,9 @@ package aldor.runconfiguration.aldor;
 
 import aldor.build.module.AldorModuleManager;
 import aldor.build.module.AldorModuleType;
-import aldor.psi.AldorId;
+import aldor.psi.AldorDefine;
+import aldor.psi.AldorIdentifier;
+import aldor.psi.index.AldorDefineTopLevelIndex;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.ConfigurationFactory;
@@ -13,21 +15,29 @@ import com.intellij.execution.junit.RefactoringListeners;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.testframework.sm.runner.SMRunnerConsolePropertiesProvider;
 import com.intellij.execution.testframework.sm.runner.SMTRunnerConsoleProperties;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.options.SettingsEditorGroup;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiManager;
+import com.intellij.psi.search.GlobalSearchScope;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
 public class AldorUnitConfiguration extends ModuleBasedConfiguration<AldorRunConfigurationModule, Element>
                     implements SMRunnerConsolePropertiesProvider {
+    private static final Logger LOG = Logger.getInstance(AldorUnitConfiguration.class);
+
     private final Bean bean = new Bean();
 
     public AldorUnitConfiguration(@NotNull AldorRunConfigurationModule configurationModule, @NotNull ConfigurationFactory factory) {
@@ -41,7 +51,7 @@ public class AldorUnitConfiguration extends ModuleBasedConfiguration<AldorRunCon
     @Nullable
     @Override
     public String suggestedName() {
-        return bean.typeName + " (" + bean.inputFile+ ")";
+        return bean.typeName + " (" + new File(bean.inputFile).getName() + ")";
     }
 
     @Override
@@ -108,7 +118,7 @@ public class AldorUnitConfiguration extends ModuleBasedConfiguration<AldorRunCon
         void copyInto(Bean other) {
             other.inputFile = inputFile;
             other.typeName = typeName;
-
+            other.packageName = packageName;
         }
     }
 
@@ -124,18 +134,28 @@ public class AldorUnitConfiguration extends ModuleBasedConfiguration<AldorRunCon
         }
 
         @Override
+        @Nullable
         public PsiFile getPsiElement() {
             final String qualifiedName = bean.inputFile;
-            return null; // FIXME: Need to find the file PSI element for this configuration
+            VirtualFile file = VirtualFileManager.getInstance().findFileByUrl("file://" + qualifiedName);
+            if (file == null) {
+                return null;
+            }
+            PsiFile psiFile = PsiManager.getInstance(getProject()).findFile(file);
+            if (psiFile == null) {
+                return null;
+            }
+            LOG.info("PsiElement for AldorUnit: " + getName() + " --> " + psiFile.getVirtualFile().getPath());
+            return psiFile;
         }
 
         @Override
         public void setPsiElement(final PsiFile psiFile) {
-            setName(psiFile.getName());
+            setName(psiFile.getVirtualFile().getPath());
         }
     };
 
-    final RefactoringListeners.Accessor<AldorId> myTypeName = new RefactoringListeners.Accessor<AldorId>() {
+    final RefactoringListeners.Accessor<AldorIdentifier> myTypeName = new RefactoringListeners.Accessor<AldorIdentifier>() {
         @Override
         public void setName(final String name) {
             final boolean generatedName = isGeneratedName();
@@ -145,13 +165,22 @@ public class AldorUnitConfiguration extends ModuleBasedConfiguration<AldorRunCon
         }
 
         @Override
-        public AldorId getPsiElement() {
-            final String qualifiedName = bean.typeName;
-            return null; // FIXME: Need to find the definition PSI element for this configuration
+        public AldorIdentifier getPsiElement() {
+            final String qualifiedName = bean.inputFile;
+            VirtualFile file = VirtualFileManager.getInstance().findFileByUrl(qualifiedName);
+            if (file == null) {
+                return null;
+            }
+            PsiFile psiFile = PsiManager.getInstance(getProject()).findFile(file);
+            if (psiFile == null) {
+                return null;
+            }
+            Collection<AldorDefine> def = AldorDefineTopLevelIndex.instance.get(bean.typeName, getProject(), GlobalSearchScope.fileScope(getProject(), file));
+            return def.stream().findFirst().flatMap(AldorDefine::defineIdentifier).orElse(null); // FIXME: Need to find the file PSI element for this configuration
         }
 
         @Override
-        public void setPsiElement(final AldorId id) {
+        public void setPsiElement(final AldorIdentifier id) {
             setName(id.getName());
         }
     };

@@ -86,7 +86,7 @@ public final class AldorModuleManager {
         return buildPathForFile(project, file) + "/" + trimExtension(file.getName()) + ".abn";
     }
 
-    @Nullable
+    @Nullable // TODO: Return a File
     public String buildPathForFile(Project project, @NotNull VirtualFile virtualFile) {
         VirtualFile sourceRoot = ProjectRootManager.getInstance(project).getFileIndex().getSourceRootForFile(virtualFile);
         if (sourceRoot != null) {

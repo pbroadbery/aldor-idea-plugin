@@ -92,7 +92,7 @@ public class ExecutablePresentRule implements TestRule {
 
     public static class AldorDev extends ExecutablePresentRule {
         public AldorDev() {
-            super(Collections.singletonList("/home/pab/Work/aldorgit/opt/bin"), "aldor");
+            super(Collections.singletonList("/home/pab/Work/aldorgit/utypes/opt/bin"), "aldor");
         }
     }
 

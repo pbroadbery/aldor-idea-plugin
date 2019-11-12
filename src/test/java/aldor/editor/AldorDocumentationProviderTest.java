@@ -27,6 +27,7 @@ import org.junit.Assert;
 
 import java.io.File;
 
+import static aldor.test_util.JUnits.JpsDebuggingState.OFF;
 import static java.util.Optional.ofNullable;
 
 public class AldorDocumentationProviderTest extends LightPlatformCodeInsightFixtureTestCase {
@@ -64,7 +65,7 @@ public class AldorDocumentationProviderTest extends LightPlatformCodeInsightFixt
                 this.addTmpFileToKeep(new File(module.getModuleFile().getCanonicalPath()));
             }
         }
-        JUnits.enableJpsDebugging(false);
+        JUnits.enableJpsDebugging(OFF);
     }
 
     public void testDocumentationLocal() throws Exception {

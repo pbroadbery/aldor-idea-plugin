@@ -49,6 +49,7 @@
         <compileServer.plugin classpath="aldor-jps-plugin.jar"/>
 
         <compiler.buildTargetScopeProvider implementation="aldor.build.builders.AldorBuildTargetScopeProvider" />
+        <compiler.buildTargetScopeProvider implementation="aldor.build.builders.AldorJarBuildTargetScopeProvider"/>
 
         <moduleType id="ALDOR-MODULE" classpathProvider="false"
                     implementationClass="aldor.build.module.AldorModuleType"/>

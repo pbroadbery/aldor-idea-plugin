@@ -172,6 +172,16 @@ public class AldorPsiUtilsTest extends LightPlatformCodeInsightFixtureTestCase {
         Assert.assertEquals(define, AldorPsiUtils.topLevelDefininingForm(elt).orElse(null));
     }
 
+    public void testChildBindingsFromTopLEvel() {
+        String text = "Foo: with blah == add { testOne(): () == return; testTwo(): () == never }";
+        PsiFile file = createLightFile(AldorFileType.INSTANCE, text);
+        AldorDefine define = PsiTreeUtil.findChildOfType(file, AldorDefine.class);
+        Assert.assertNotNull(define);
+        List<AldorPsiUtils.Binding> childBindings = AldorPsiUtils.childBindings(define.rhs());
+        Assert.assertEquals(2, childBindings.size());
+    }
+
+
     @Override
     protected LightProjectDescriptor getProjectDescriptor() {
         return ALDOR_MODULE_DESCRIPTOR;

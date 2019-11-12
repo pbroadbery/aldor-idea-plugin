@@ -5,8 +5,6 @@ import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
-import java.util.Objects;
-
 public class SkipOnCIBuildRule implements TestRule {
 
     @Override
@@ -15,17 +13,16 @@ public class SkipOnCIBuildRule implements TestRule {
             return statement;
         }
 
-        //noinspection AccessOfSystemProperties
-        if (!Objects.equals(System.getProperty("aldor.build.skip_ci"), "true")) {
-            return statement;
-        } else {
+        if (JUnits.isCIBuild()) {
             //noinspection ReturnOfInnerClass
             return new Statement() {
                 @Override
                 public void evaluate() throws Throwable {
-                    throw new AssumptionViolatedException("Not running some tests under CI");
+                    throw new AssumptionViolatedException("Not running " + description.getDisplayName() + " under CI");
                 }
             };
+        } else {
+            return statement;
         }
 
     }

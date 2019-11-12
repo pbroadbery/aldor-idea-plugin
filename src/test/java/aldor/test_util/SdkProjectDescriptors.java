@@ -94,7 +94,7 @@ public final class SdkProjectDescriptors {
 
     private static class WithAldorUnit implements SdkDescriptor {
         SdkDescriptor innerSdkDescriptor;
-
+        String aldorUnitHomePath = "/home/pab/IdeaProjects/type-library/out/artifacts/aldorunit";
         WithAldorUnit(SdkDescriptor descriptor) {
             this.innerSdkDescriptor = descriptor;
         }
@@ -134,7 +134,7 @@ public final class SdkProjectDescriptors {
             Sdk theSdk = new ProjectJdkImpl("AldorUnit SDK", AldorUnitSdkType.instance());
 
             SdkModificator mod = theSdk.getSdkModificator();
-            //mod.setHomePath(prefix);
+            mod.setHomePath(aldorUnitHomePath);
             mod.commitChanges();
             ProjectJdkTable.getInstance().addJdk(theSdk);
             return theSdk;

@@ -40,22 +40,29 @@ import org.junit.runners.model.Statement;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static org.apache.log4j.Level.DEBUG;
 import static org.apache.log4j.helpers.UtilLoggingLevel.INFO;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Fun things that unit tests can use.
  */
 public final class JUnits {
     public static final TestRule setLogToInfoTestRule = prePostTestRule(JUnits::setLogToInfo, LogManager::resetConfiguration);
+    private static final Logger LOG = Logger.getInstance(JUnits.class);
 
     public static void setLogToDebug() {
-        setLogLevel(DEBUG);
+        if (!isCIBuild()) {
+            setLogLevel(DEBUG);
+        }
     }
 
     public static void setLogToInfo() {
-        setLogLevel(INFO);
+        if (!isCIBuild()) {
+            setLogLevel(INFO);
+        }
     }
 
     private static void setLogLevel(Level level) {
@@ -67,19 +74,25 @@ public final class JUnits {
                 Thread.currentThread().setName(threadName.substring(0, threadName.indexOf(' ')));
             }
         });
-        Appender appender = new ConsoleAppender(new PatternLayout("%r [%t] %p %.40c %x - %m%n"));
+        Appender appender = new ConsoleAppender(new PatternLayout("%r [%40t] %p %.40c %x - %m%n"));
         appender.setName("Console");
         LogManager.getRootLogger().addAppender(appender);
         LogManager.getRootLogger().setLevel(level);
         Logger.setFactory(TestLoggerFactory.class);
     }
 
-    public static void enableJpsDebugging(boolean enabled) {
+    public enum JpsDebuggingState { ON, OFF }
+
+    public static void enableJpsDebugging(JpsDebuggingState debuggingState) {
+        //noinspection AccessOfSystemProperties
         System.setProperty("compiler.process.debug.port", "28771");
-        BuildManager.getInstance().setBuildProcessDebuggingEnabled(enabled);
+        BuildManager.getInstance().setBuildProcessDebuggingEnabled(debuggingState == JpsDebuggingState.ON);
     }
 
-
+    public static boolean isCIBuild() {
+        //noinspection AccessOfSystemProperties
+        return Objects.equals(System.getProperty("aldor.build.skip_ci"), "true");
+    }
 
     public static TestRule prePostTestRule(UnsafeRunnable pre, UnsafeRunnable post) {
         return (statement, description) -> prePostStatement(pre, post, statement);
@@ -146,10 +159,10 @@ public final class JUnits {
                 settings = new RunnerAndConfigurationSettingsImpl(RunManagerImpl.getInstanceImpl(project), configuration, false);
         ProgramRunner<?> runner = ProgramRunnerUtil.getRunner(DefaultRunExecutor.EXECUTOR_ID, settings);
         assert runner != null;
-        ExecutionEnvironment
-                environment = new ExecutionEnvironment(executor, runner, settings, project);
+        ExecutionEnvironment environment = new ExecutionEnvironment(executor, runner, settings, project);
         JavaCommandLine state = (JavaCommandLine) configuration.getState(executor, environment);
         assert state != null;
+        LOG.info("CommandLine: " + state.getJavaParameters().toCommandLine());
         JavaParameters parameters = state.getJavaParameters();
         parameters.setUseDynamicClasspath(project);
         GeneralCommandLine commandLine = parameters.toCommandLine();
@@ -158,6 +171,11 @@ public final class JUnits {
 
         ProcessOutput processOutput = new ProcessOutput();
         process.addProcessListener(new ProcessAdapter() {
+
+            @Override
+            public void processTerminated(@NotNull ProcessEvent event) {
+                processOutput.exitCode(event.getExitCode());
+            }
 
             @SuppressWarnings("ObjectEquality")
             @Override
@@ -190,9 +208,9 @@ public final class JUnits {
             }
         });
         process.startNotify();
-        process.waitFor();
+        boolean flg = process.waitFor();
         process.destroyProcess();
-
+        assertTrue(flg);
         return processOutput;
     }
 
@@ -201,7 +219,11 @@ public final class JUnits {
         public List<String> err = new ArrayList<>();
         public List<String> sys = new ArrayList<>();
         public List<ServiceMessage> messages = new ArrayList<>();
+        public int exitCode = Integer.MIN_VALUE;
 
+        public void exitCode(int exitCode) {
+            this.exitCode = exitCode;
+        }
     }
 
 }

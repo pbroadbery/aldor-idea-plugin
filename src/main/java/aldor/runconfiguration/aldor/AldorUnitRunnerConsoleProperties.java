@@ -4,6 +4,7 @@ import com.intellij.execution.Executor;
 import com.intellij.execution.testframework.TestConsoleProperties;
 import com.intellij.execution.testframework.actions.AbstractRerunFailedTestsAction;
 import com.intellij.execution.testframework.sm.runner.SMTRunnerConsoleProperties;
+import com.intellij.execution.testframework.sm.runner.SMTestLocator;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.openapi.ui.ComponentContainer;
 import org.jetbrains.annotations.NotNull;
@@ -27,5 +28,11 @@ public class AldorUnitRunnerConsoleProperties extends SMTRunnerConsoleProperties
             init(consoleProperties);
 
         }
+    }
+
+    @Nullable
+    @Override
+    public SMTestLocator getTestLocator() {
+        return AldorTestLocator.INSTANCE;
     }
 }

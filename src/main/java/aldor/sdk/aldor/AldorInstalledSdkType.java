@@ -2,6 +2,7 @@ package aldor.sdk.aldor;
 
 import aldor.util.AnnotatedOptional;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.projectRoots.ProjectJdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkAdditionalData;
 import com.intellij.openapi.projectRoots.SdkModel;
@@ -147,7 +148,12 @@ public class AldorInstalledSdkType extends SdkType implements AldorSdkType {
     @Nullable
     @Override
     public Sdk aldorUnitSdk(Sdk sdk) {
-        return additionalData(sdk).aldorUnitSdk.sdk();
+        Sdk aldorUnitSdk = additionalData(sdk).aldorUnitSdk.sdk();
+        String sdkName = additionalData(sdk).aldorUnitSdk.name();
+        if ((aldorUnitSdk == null) && (sdkName != null)) {
+            aldorUnitSdk = Arrays.stream(ProjectJdkTable.getInstance().getAllJdks()).filter(s -> s.getName().equals(sdkName)).findFirst().orElse(null);
+        }
+        return aldorUnitSdk;
     }
 
     @Override

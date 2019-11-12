@@ -1,14 +1,11 @@
 package aldor.build.builders;
 
-import aldor.build.module.AldorModuleType;
 import aldor.builder.AldorTargetIds;
 import aldor.file.AldorFileType;
 import com.google.common.collect.Lists;
 import com.intellij.compiler.impl.BuildTargetScopeProvider;
 import com.intellij.openapi.compiler.CompileScope;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
@@ -38,12 +35,6 @@ public class AldorBuildTargetScopeProvider extends BuildTargetScopeProvider {
 
         // Gather the target IDs (module names) of the target modules.
         final Collection<String> targetIds = new ArrayList<>();
-        for (final Module module : baseScope.getAffectedModules()) {
-            if (ModuleType.get(module).equals(AldorModuleType.instance())) {
-                targetIds.add(module.getName());
-            }
-        }
-
         VirtualFile[] files = baseScope.getFiles(AldorFileType.INSTANCE, false);
 
         for (VirtualFile file: files) {
@@ -54,7 +45,7 @@ public class AldorBuildTargetScopeProvider extends BuildTargetScopeProvider {
                 .setTypeId(ALDOR_FILE_TARGET)
                 .setForceBuild(forceBuild)
                 .addAllTargetId(targetIds).build();
-
+        LOG.info("get build targets: --> " + req.getTargetIdList());
         return Lists.newArrayList(req);
     }
 

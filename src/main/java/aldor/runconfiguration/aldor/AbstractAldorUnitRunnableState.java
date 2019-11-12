@@ -88,9 +88,12 @@ public abstract class AbstractAldorUnitRunnableState<T
 
         javaParameters.getClassPath().addFirst(JavaSdkUtil.getIdeaRtJarPath());
         configureClasspath(javaParameters);
+        configureVMParameters(javaParameters);
         configureParameters(javaParameters);
         return javaParameters;
     }
+
+    protected abstract void configureVMParameters(JavaParameters javaParameters);
 
     protected abstract void configureParameters(JavaParameters javaParameters);
 

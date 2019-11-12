@@ -3,6 +3,7 @@ package aldor.builder.jars;
 import aldor.builder.AldorBuilderService;
 import aldor.builder.AldorTargetIds;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.util.io.FileUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.jps.builders.BuildRootIndex;
@@ -20,6 +21,7 @@ import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AldorJarBuildTarget extends BuildTarget<AldorJarRootDescriptor> {
     private static final Logger LOG = Logger.getInstance(AldorJarBuildTarget.class);
@@ -33,17 +35,39 @@ public class AldorJarBuildTarget extends BuildTarget<AldorJarRootDescriptor> {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (this.getClass() != obj.getClass()) {
+            return false;
+        }
+        AldorJarBuildTarget other = (AldorJarBuildTarget) obj;
+        return this.sourceRoot.getFile().equals(other.sourceRoot.getFile());
+    }
+
+    @Override
+    public int hashCode() {
+        return sourceRoot.getFile().hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "{JarTarget: " + sourceRoot +"}";
+    }
+
+    @Override
     public String getId() {
         return AldorTargetIds.aldorJarTargetId(sourceRoot);
     }
 
     @Override
     public Collection<BuildTarget<?>> computeDependencies(BuildTargetRegistry targetRegistry, TargetOutputIndex outputIndex) {
-        /*return targetRegistry.getAllTargets(builderService.targetTypes().fileBuildTargetType).stream()
+        List<BuildTarget<?>> dependencies = targetRegistry.getAllTargets(builderService.targetTypes().fileBuildTargetType).stream()
                 .filter(tgt -> FileUtil.filesEqual(tgt.sourceRoot(), sourceRoot.getFile()))
                 .collect(Collectors.toList());
-        */
-        return Collections.emptyList();
+        LOG.info("Dependencies: " + this + " --> " + dependencies);
+        return dependencies;
     }
 
     @NotNull
@@ -55,7 +79,7 @@ public class AldorJarBuildTarget extends BuildTarget<AldorJarRootDescriptor> {
     @Nullable
     @Override
     public AldorJarRootDescriptor findRootDescriptor(String rootId, BuildRootIndex rootIndex) {
-        LOG.info("Find root descriptor: " + rootId);
+        LOG.info("Find root descriptor: " + this + " " + rootId);
         return null;
     }
 

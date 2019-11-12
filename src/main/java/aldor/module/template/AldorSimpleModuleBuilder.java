@@ -68,10 +68,10 @@ public class AldorSimpleModuleBuilder extends AldorModuleBuilder {
             return;
         }
 
-        File contentRootDir = new File(contentEntryPath);
+        ContentEntry entry = modifiableRootModel.getContentEntries()[0];
+        VirtualFile contentRootDir = entry.getFile();
         createFileLayout(contentRootDir, modifiableRootModel);
 
-        ContentEntry entry = modifiableRootModel.getContentEntries()[0];
         if (entry.getFile() != null) {
             VirtualFile file = entry.getFile();
 
@@ -83,7 +83,7 @@ public class AldorSimpleModuleBuilder extends AldorModuleBuilder {
     }
 
 
-    private void createFileLayout(File contentRootDir, ModifiableRootModel model) throws ConfigurationException {
+    private void createFileLayout(VirtualFile contentRootDir, ModifiableRootModel model) throws ConfigurationException {
         VirtualFile file = getOrCreateExternalProjectConfigFile(contentRootDir.getPath() + "/src", "Makefile");
         if (file == null) {
             return;

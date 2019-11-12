@@ -3,6 +3,7 @@ package aldor.builder;
 import aldor.builder.files.AldorFileBuildTargetType;
 import aldor.builder.files.AldorFileTargetBuilder;
 import aldor.builder.jars.AldorJarBuildTargetType;
+import aldor.builder.jars.AldorJarTargetBuilder;
 import com.intellij.openapi.diagnostic.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -45,7 +46,7 @@ public class AldorBuildTargetTypes {
             @Nullable
             @Override
             public Target createTarget(@NotNull String targetId) {
-                LOG.info("Creating loader for: " + targetId);
+                LOG.info("Creating loader for: " + type + ": " + targetId);
                 Target target = targetMap.get(targetId);
                 if (target == null) {
                     LOG.info("Target id: "+ targetId + " " + targetMap.keySet().stream().findFirst());
@@ -57,13 +58,13 @@ public class AldorBuildTargetTypes {
 
 
     public List<BuildTargetType<? extends BuildTarget<?>>> targetTypes() {
-        return Arrays.asList(/*jarBuildTargetType, */fileBuildTargetType);
+        return Arrays.asList(jarBuildTargetType, fileBuildTargetType);
     }
 
     public List<? extends TargetBuilder<?, ?>> createBuilders() {
         List<TargetBuilder<?, ?>> list = new ArrayList<>();
         list.add(new AldorFileTargetBuilder(fileBuildTargetType));
-        //list.add(new AldorJarTargetBuilder(jarBuildTargetType));
+        list.add(new AldorJarTargetBuilder(jarBuildTargetType));
         return list;
     }
 

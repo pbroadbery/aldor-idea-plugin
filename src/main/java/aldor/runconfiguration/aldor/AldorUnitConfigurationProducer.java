@@ -15,7 +15,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
@@ -44,8 +43,8 @@ public class AldorUnitConfigurationProducer extends RunConfigurationProducer<Ald
                 if (!root.isPresent()) {
                     return false;
                 }
-                String path = FileUtil.getRelativePath(new File(root.get().getPath()), new File(vfile.getPath()));
-                configuration.inputFile(path);
+                //String path = FileUtil.getRelativePath(new File(root.get().getPath()), new File(vfile.getPath()));
+                configuration.inputFile(vfile.getPath());
 
                 PsiElement elt = sourceElement.get();
                 Optional<AldorDefine> define = AldorPsiUtils.topLevelDefininingForm(elt);

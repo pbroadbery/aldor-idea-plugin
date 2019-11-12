@@ -50,7 +50,6 @@ public class AnnotationRoundTripTest extends LightPlatformCodeInsightFixtureTest
         }
     }
 
-
     @Override
     protected boolean shouldRunTest() {
         return super.shouldRunTest() && aldorExecutableRule.shouldRunTest();

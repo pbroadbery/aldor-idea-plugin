@@ -105,4 +105,16 @@ public class JpsAldorModuleTypeTest {
             assertEquals("foo.ao", tgt);
         }
     }
+
+    @Test
+    public void testSourceCase_missingOutDir() {
+        JpsAldorModuleProperties properties = new JpsAldorModuleProperties(null, JpsAldorMakeDirectoryOption.Source);
+        File contentRoot = new File("/tmp/myproject");
+        File sourceRoot = new File("/tmp/myproject");
+        File sourceFile = new File("/tmp/myproject/foo.as");
+        File dir = JpsAldorModuleType.INSTANCE.buildDirectory(properties, contentRoot, sourceRoot, sourceFile);
+        String tgt = JpsAldorModuleType.INSTANCE.targetName(properties, sourceRoot, sourceFile);
+        assertEquals("/tmp/myproject", dir.toString());
+        assertEquals("out/ao/foo.ao", tgt);
+    }
 }
