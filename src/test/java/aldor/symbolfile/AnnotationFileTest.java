@@ -48,7 +48,8 @@ public class AnnotationFileTest {
     public final TestRule platformTestRule =
             RuleChain.emptyRuleChain()
                     .around(aldorExecutableRule)
-                    .around(new LightPlatformJUnit4TestRule(insightTestFixture, ""));
+                    .around(new LightPlatformJUnit4TestRule(insightTestFixture, ""))
+                    .around(annotationTestFixture.rule(insightTestFixture::getProject));
     @Test
     public void testLocalReferences() throws Exception {
         String program = "#include \"aldor\"\n"

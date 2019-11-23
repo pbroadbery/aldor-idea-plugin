@@ -6,11 +6,12 @@ import com.intellij.lang.Language;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
+import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import com.intellij.ui.breadcrumbs.BreadcrumbsProvider;
 import org.junit.Assert;
 
-public class AldorBreadcrumbsProviderTest extends LightPlatformCodeInsightFixtureTestCase {
+public class AldorBreadcrumbsProviderTest extends BasePlatformTestCase {
 
     public void testReference() {
         PsiElement whole = createAldorFile("Foo: with == add { a == 1 }");

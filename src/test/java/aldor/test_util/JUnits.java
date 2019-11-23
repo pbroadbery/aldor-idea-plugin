@@ -51,6 +51,7 @@ import static org.junit.Assert.assertTrue;
  */
 public final class JUnits {
     public static final TestRule setLogToInfoTestRule = prePostTestRule(JUnits::setLogToInfo, LogManager::resetConfiguration);
+    public static final TestRule setLogToDebugTestRule = prePostTestRule(JUnits::setLogToDebug, LogManager::resetConfiguration);
     private static final Logger LOG = Logger.getInstance(JUnits.class);
 
     public static void setLogToDebug() {
@@ -104,6 +105,7 @@ public final class JUnits {
             @Override
             public void evaluate() throws Throwable {
                 pre.run();
+                Throwable fail = null;
                 try {
                     statement.evaluate();
                 } finally {
@@ -111,9 +113,11 @@ public final class JUnits {
                         post.run();
                     } catch (RuntimeException e) {
                         System.out.println("Exception at end of rule " + e.getMessage());
-                        e.printStackTrace();
-                        throw e;
+                        fail = e;
                     }
+                }
+                if (fail != null) {
+                    throw fail;
                 }
             }
         };

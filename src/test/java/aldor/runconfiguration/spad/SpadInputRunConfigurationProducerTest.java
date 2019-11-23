@@ -9,7 +9,6 @@ import com.intellij.execution.ExecutionTargetManager;
 import com.intellij.execution.Executor;
 import com.intellij.execution.PsiLocation;
 import com.intellij.execution.RunnerAndConfigurationSettings;
-import com.intellij.execution.RunnerRegistry;
 import com.intellij.execution.actions.ConfigurationContext;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.executors.DefaultRunExecutor;
@@ -20,14 +19,14 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.testFramework.LightProjectDescriptor;
-import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
+import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import org.junit.Assert;
 import org.junit.Assume;
 
 import static aldor.util.VirtualFileTests.createFile;
 import static com.intellij.testFramework.LightPlatformTestCase.getSourceRoot;
 
-public class SpadInputRunConfigurationProducerTest extends LightPlatformCodeInsightFixtureTestCase {
+public class SpadInputRunConfigurationProducerTest extends BasePlatformTestCase {
     private final DirectoryPresentRule directory = new DirectoryPresentRule("/home/pab/Work/fricas/opt/lib/fricas/target/x86_64-unknown-linux");
 
     @Override
@@ -36,14 +35,14 @@ public class SpadInputRunConfigurationProducerTest extends LightPlatformCodeInsi
         Assume.assumeTrue(directory.isPresent());
     }
 
-    public void testCreateInputFile() throws ExecutionException, InterruptedException {
+    public void testCreateInputFile() throws ExecutionException {
         JUnits.setLogToInfo();
         VirtualFile file = createFile(getSourceRoot(), "foo.input", "23\n)quit\n");
 
         PsiFile whole = PsiManager.getInstance(getProject()).findFile(file);
         Assert.assertNotNull(whole);
         MyMapDataContext dataContext = new MyMapDataContext();
-        dataContext.put("module", myModule);
+        dataContext.put("module", getModule());
         dataContext.put("Location", new PsiLocation<>(whole));
         dataContext.put("project", getProject());
 
@@ -52,14 +51,14 @@ public class SpadInputRunConfigurationProducerTest extends LightPlatformCodeInsi
         Assert.assertNotNull(runContext.getConfiguration());
         RunnerAndConfigurationSettings runnerAndConfigurationSettings = runContext.getConfiguration();
 
-        ExecutionTargetManager.canRun(runnerAndConfigurationSettings, ExecutionTargetManager.getActiveTarget(getProject()));
+        ExecutionTargetManager.canRun(runnerAndConfigurationSettings.getConfiguration(), ExecutionTargetManager.getActiveTarget(getProject()));
         Assert.assertTrue(runnerAndConfigurationSettings.getName().contains("foo"));
 
         RunConfiguration runConfiguration = runnerAndConfigurationSettings.getConfiguration();
         Assert.assertNotNull(runConfiguration.getConfigurationEditor());
 
         Executor executor = DefaultRunExecutor.getRunExecutorInstance();
-        ProgramRunner<?> runner = RunnerRegistry.getInstance().getRunner(DefaultRunExecutor.EXECUTOR_ID, runConfiguration);
+        ProgramRunner<?> runner = ProgramRunner.getRunner(DefaultRunExecutor.EXECUTOR_ID, runConfiguration);
         Assert.assertNotNull(runner);
         ExecutionEnvironment executionEnvironment = new ExecutionEnvironment(executor, runner, runnerAndConfigurationSettings, getProject());
 

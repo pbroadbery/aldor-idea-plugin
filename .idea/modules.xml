@@ -2,9 +2,16 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/aldor-common/aldor-common.iml" filepath="$PROJECT_DIR$/aldor-common/aldor-common.iml" />
-      <module fileurl="file://$PROJECT_DIR$/jps-plugin/aldor-jps-plugin.iml" filepath="$PROJECT_DIR$/jps-plugin/aldor-jps-plugin.iml" />
-      <module fileurl="file://$PROJECT_DIR$/aldorparse.iml" filepath="$PROJECT_DIR$/aldorparse.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/aldor-idea.iml" filepath="$PROJECT_DIR$/.idea/modules/aldor-idea.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jps-plugin/aldor-idea.jps-plugin.iml" filepath="$PROJECT_DIR$/.idea/modules/jps-plugin/aldor-idea.jps-plugin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jps-plugin/aldor-idea.jps-plugin.main.iml" filepath="$PROJECT_DIR$/.idea/modules/jps-plugin/aldor-idea.jps-plugin.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jps-plugin/aldor-idea.jps-plugin.test.iml" filepath="$PROJECT_DIR$/.idea/modules/jps-plugin/aldor-idea.jps-plugin.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/aldor-idea.main.iml" filepath="$PROJECT_DIR$/.idea/modules/aldor-idea.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/aldor-idea.test.iml" filepath="$PROJECT_DIR$/.idea/modules/aldor-idea.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/gradle-intellij-plugin.iml" filepath="$PROJECT_DIR$/.idea/modules/gradle-intellij-plugin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/gradle-intellij-plugin.main.iml" filepath="$PROJECT_DIR$/.idea/modules/gradle-intellij-plugin.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/gradle-intellij-plugin.test.iml" filepath="$PROJECT_DIR$/.idea/modules/gradle-intellij-plugin.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/intellij-erlang.iml" filepath="$PROJECT_DIR$/.idea/modules/intellij-erlang.iml" />
     </modules>
   </component>
 </project>

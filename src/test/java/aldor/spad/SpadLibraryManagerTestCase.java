@@ -16,7 +16,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-import static com.intellij.testFramework.LightPlatformTestCase.getProject;
 import static org.junit.Assert.assertNotNull;
 
 public abstract class SpadLibraryManagerTestCase {
@@ -27,7 +26,7 @@ public abstract class SpadLibraryManagerTestCase {
 
     @Test
     public void xtestListInteger() {
-        Collection<AldorDefine> ll = AldorDefineTopLevelIndex.instance.get("List", getProject(), GlobalSearchScope.allScope(getProject()));
+        Collection<AldorDefine> ll = AldorDefineTopLevelIndex.instance.get("List", testFixture().getProject(), GlobalSearchScope.allScope(testFixture().getProject()));
 
         PsiFile file = ll.iterator().next().getContainingFile();
 
@@ -60,7 +59,7 @@ public abstract class SpadLibraryManagerTestCase {
 
     @Test
     public void xtestRing() {
-        Collection<AldorDefine> ll = AldorDefineTopLevelIndex.instance.get("Ring", getProject(), GlobalSearchScope.allScope(getProject()));
+        Collection<AldorDefine> ll = AldorDefineTopLevelIndex.instance.get("Ring", testFixture().getProject(), GlobalSearchScope.allScope(testFixture().getProject()));
 
         PsiFile file = ll.iterator().next().getContainingFile();
 

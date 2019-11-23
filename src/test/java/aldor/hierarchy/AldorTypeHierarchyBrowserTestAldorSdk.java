@@ -41,6 +41,7 @@ public class AldorTypeHierarchyBrowserTestAldorSdk {
                     .around(JUnits.setLogToInfoTestRule)
                     .around(aldorExecutableRule)
                     .around(new LightPlatformJUnit4TestRule(codeTestFixture, ""))
+                    .around(JUnits.prePostTestRule(() -> codeTestFixture.getProject().save(), () -> {}))
                     .around(JUnits.swingThreadTestRule());
 
     @Test
@@ -85,6 +86,7 @@ public class AldorTypeHierarchyBrowserTestAldorSdk {
 
         System.out.println("Root: " + browser.rootDescriptor());
 
+        //noinspection Convert2MethodRef
         System.out.println("Children: " + browser.childElements().stream().map(e -> e.getClass()).collect(Collectors.toSet()));
 
         Optional<NodeDescriptor<?>> groupedElement = browser.childElements().stream().filter(e -> e instanceof GroupingHierarchyDescriptor).findFirst();

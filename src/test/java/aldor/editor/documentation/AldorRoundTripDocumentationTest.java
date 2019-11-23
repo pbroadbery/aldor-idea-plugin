@@ -36,7 +36,7 @@ public class AldorRoundTripDocumentationTest {
 
     private final ExecutablePresentRule aldorExecutableRule = new ExecutablePresentRule.Aldor();
     private final CodeInsightTestFixture codeTestFixture = LightPlatformJUnit4TestRule.createFixture(SdkProjectDescriptors.aldorSdkProjectDescriptor(aldorExecutableRule.prefix()));
-    private final AnnotationFileTestFixture annotationTestFixture= new AnnotationFileTestFixture();
+    private final AnnotationFileTestFixture annotationTestFixture = new AnnotationFileTestFixture();
 
     @Rule
     public final TestRule platformTestRule =
@@ -48,7 +48,6 @@ public class AldorRoundTripDocumentationTest {
     @After
     public void doAfter() {
         EdtTestUtil.runInEdtAndWait(JavaAwareProjectJdkTableImpl::removeInternalJdkInTests);
-
     }
 
 

@@ -3,17 +3,18 @@ package aldor.editor;
 import aldor.file.AldorFileType;
 import aldor.parser.ParserFunctions;
 import aldor.psi.AldorDefine;
-import aldor.test_util.LightProjectDescriptors;
+import aldor.test_util.ExecutablePresentRule;
+import aldor.test_util.SdkProjectDescriptors;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
-import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
+import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import org.junit.Assert;
 
-public class AldorLookupElementFactoryTest extends LightPlatformCodeInsightFixtureTestCase {
+public class AldorLookupElementFactoryTest extends BasePlatformTestCase {
     private final PsiElementToLookupElementMapping factory = new AldorLookupElementFactory();
 
     public void testDefine() {
@@ -67,7 +68,7 @@ public class AldorLookupElementFactoryTest extends LightPlatformCodeInsightFixtu
 
     @Override
     protected LightProjectDescriptor getProjectDescriptor() {
-        return LightProjectDescriptors.ALDOR_MODULE_DESCRIPTOR;
+        return SdkProjectDescriptors.aldorSdkProjectDescriptor(ExecutablePresentRule.Aldor.INSTANCE);
     }
 
 }

@@ -91,18 +91,23 @@ public class ExecutablePresentRule implements TestRule {
 
 
     public static class AldorDev extends ExecutablePresentRule {
+        public static final ExecutablePresentRule INSTANCE = new AldorDev();
+
         public AldorDev() {
             super(Collections.singletonList("/home/pab/Work/aldorgit/utypes/opt/bin"), "aldor");
         }
     }
 
     public static class Aldor extends ExecutablePresentRule {
+        public static final ExecutablePresentRule INSTANCE = new Aldor();
         public Aldor() {
             super(Collections.singletonList("/home/pab/IdeaProjects/aldor-codebase/opt/bin"), "aldor");
         }
     }
 
     public static class Fricas extends ExecutablePresentRule {
+        public static final ExecutablePresentRule INSTANCE = new Fricas();
+
         public Fricas() {
             super(Collections.singletonList("/home/pab/IdeaProjects/fricas-codebase/opt/lib/fricas/target/x86_64-unknown-linux/bin/"), "fricas");
         }

@@ -11,6 +11,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
+import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import org.junit.Assert;
 
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
 
 import static aldor.psi.AldorPsiUtils.logPsi;
 
-public class VariantScopeTest extends LightPlatformCodeInsightFixtureTestCase {
+public class VariantScopeTest extends BasePlatformTestCase {
 
     public void testFunctionReference() {
         PsiFile whole = createAldorFile("f(n: Integer, m: Integer): Integer == n+1");

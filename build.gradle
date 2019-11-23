@@ -1,80 +1,72 @@
 plugins {
-    id 'org.jetbrains.intellij' version "0.4.8"
+    id 'java'
+    id 'org.jetbrains.intellij' version '0.4.13' apply false
     id "de.undercouch.download" version "3.2.0"
+    id "org.jetbrains.grammarkit" version "2019.3"
 }
 
-configurations {
-    register("grammar-kit")
-}
+group 'pab.aldor'
+version '1.1-SNAPSHOT'
 
-allprojects {
-    apply plugin: 'java'
-    group = 'org.aldor.idea'
-    version = '1.1'
-
-    sourceSets {
-        main.java.srcDirs = ['src/main/java', 'src/gen/jflex', 'src/gen/grammar']
-        main.resources.srcDir 'resources'
-
-        test.java.srcDir 'test/src/java'
-        test.resources.srcDir 'test/src/resources'
-    }
-    intellij {
-        version 'IC-2018.3' //IntelliJ IDEA 2016.3 dependency; for releases: https://www.jetbrains.com/intellij-repository/releases
-        pluginName 'Aldor Plugin'
-
-        plugins = []
-
-        updateSinceUntilBuild = false// Was in haskell, but..
-
-        sandboxDirectory = project.rootDir.canonicalPath + "/.sandbox"
-    }
-
-    test {
-        testLogging {
-            exceptionFormat = 'full'
-        }
-    }
-}
-
-apply plugin: 'org.jetbrains.intellij'
-apply plugin: 'idea'
-apply plugin: 'de.undercouch.download'
-
-import de.undercouch.gradle.tasks.download.Download
 
 tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
 tasks.withType(Test) { systemProperties['aldor.build.skip_ci'] = System.getProperty('aldor.build.skip_ci') }
-def libSource = "/home/pab/IdeaProjects/aldor-modules/types/index/jars"
-def libLocation = new File(libSource).exists() ? libSource : "extjars"
 
 def libFiles = ["aldor", "algebra", "foam", "foamj", "SpadType"]
+def libSource = "/home/pab/IdeaProjects/type-library/aldor-types/types/index/jars"
+def libLocation = new File(libSource).exists() ? libSource : "extjars"
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    maven {
+        url "https://oss.sonatype.org/content/repositories/snapshots/"
+    }
+    maven {
+        url 'https://dl.bintray.com/jetbrains/intellij-plugin-service'
+    }
+}
+
+allprojects {
+  apply plugin: 'java'
+  tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
+
+  sourceSets {
+    main {
+      java.srcDirs 'src/main/java', 'gen'
+      resources.srcDirs 'resources'
+    }
+    test {
+      java.srcDir 'src/test/java'
+    }
+  }
+
+  apply plugin: 'org.jetbrains.intellij'
+  intellij {
+    version "IC-192.6817.14"
+    plugins = ['java']
+    downloadSources Boolean.valueOf(true)
+  }
+  
+}
+
+grammarKit {
+    // version of IntelliJ patched JFlex (see bintray link below), Default is 1.7.0-1 
+    jflexRelease = '1.7.0-1'
+
+}
+
 dependencies {
     compile project('jps-plugin')
+    testCompile group: 'junit', name: 'junit', version: '4.12'
     compile files(libFiles.collect({"lib/${it}.jar"}))
-
-     "grammar-kit"("org.jetbrains.idea:grammar-kit:2019.1")
 }
 
-task copyLibraryFiles(type: Copy) {
-    from libFiles.collect({"${libLocation}/${it}.jar"})
-    into 'lib'
-}
-
-task updateExternalJars(type: Copy) {
-    from libFiles.collect({"${libLocation}/${it}.jar"})
-    into 'extjars'
-    eachFile {
-        if (it.relativePath.getFile(destinationDir).exists()) {
-            it.exclude()
-        }
-    }
-}
-
-task list(dependsOn: configurations.compile) {
-    doLast {
-        println "classpath = ${configurations.compile.collect { File file -> file.toString()}}"
-    }
+patchPluginXml {
+    changeNotes """
+      Add change notes here.<br>
+      <em>most HTML tags may be used</em>"""
 }
 
 task downloadGrammarKit(type: Download) {
@@ -139,7 +131,29 @@ task generateLexer (type: JavaExec) {
         args = ['--skel', 'lib/jflex/idea-flex.skeleton', '-d', "${dstRoot}/${pkg}" , file(src)]
 
         inputs.files files(['lib/jflex/jflex-1.7.0-SNAPSHOT.jar', 'lib/jflex/idea-flex.skeleton', src])
-        outputs.dirs fileTree("${dst}").include('**/*.java')
+        outputs.files fileTree("${dst}").include('**/*.java')
+}
+
+task copyLibraryFiles(type: Copy) {
+    println("Location is " + libLocation)
+    from libFiles.collect({"${libLocation}/${it}.jar"})
+    into 'lib'
+}
+
+task updateExternalJars(type: Copy) {
+    from libFiles.collect({"${libLocation}/${it}.jar"})
+    into 'extjars'
+    eachFile {
+        if (it.relativePath.getFile(destinationDir).exists()) {
+            it.exclude()
+        }
+    }
+}
+
+task list(dependsOn: configurations.compile) {
+    doLast {
+        println "classpath = ${configurations.compile.collect { File file -> file.toString()}}"
+    }
 }
 
 tasks.generateLexer.dependsOn tasks.downloadJFlex
@@ -148,8 +162,8 @@ tasks.generateLexer.dependsOn tasks.downloadJFlexSkel
 parserTask(project, "Aldor", "aldor/psi")
 parserTask(project, "Expression", "aldor/expression")
 
-tasks.compileJava.dependsOn tasks.generateAldorParser
-tasks.compileJava.dependsOn tasks.generateExpressionParser
+//tasks.compileJava.dependsOn tasks.generateAldorParser
+//tasks.compileJava.dependsOn tasks.generateExpressionParser
 tasks.compileJava.dependsOn tasks.generateLexer
 tasks.compileJava.dependsOn tasks.copyLibraryFiles
 tasks.compileJava.dependsOn tasks.updateExternalJars
@@ -159,8 +173,8 @@ def parserTask(project, parserName, pkg) {
         def dstRoot = "$project.projectDir/src/gen/grammar"
         def src = "$project.projectDir/src/main/grammar/${parserName}.bnf"
 	    def dst = "$dstRoot/$pkg"
-        //classpath(configurations.compile + files('lib/grammar-kit/lib/grammar-kit-2019.1.jar'))
-	classpath = configurations["grammar-kit"]
+        classpath(configurations.compile + files('lib/grammar-kit/lib/grammar-kit-2019.1.jar'))
+	//classpath = configurations["grammar-kit"]
         args = [dstRoot, file(src)]
         main = 'org.intellij.grammar.Main'
         inputs.file src

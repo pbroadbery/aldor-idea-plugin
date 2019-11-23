@@ -20,7 +20,7 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.EdtTestUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
-import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
+import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import junit.framework.AssertionFailedError;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
@@ -30,7 +30,7 @@ import java.io.File;
 import static aldor.test_util.JUnits.JpsDebuggingState.OFF;
 import static java.util.Optional.ofNullable;
 
-public class AldorDocumentationProviderTest extends LightPlatformCodeInsightFixtureTestCase {
+public class AldorDocumentationProviderTest extends BasePlatformTestCase {
 
     private static final Logger LOG = Logger.getInstance(AldorDocumentationProviderTest.class);
     private final AnnotationFileTestFixture annotationTextFixture = new AnnotationFileTestFixture();
@@ -61,15 +61,12 @@ public class AldorDocumentationProviderTest extends LightPlatformCodeInsightFixt
         }
         Module[] modules = ModuleManager.getInstance(getProject()).getModules();
         for (Module module: modules) {
-            if ((module.getModuleFile() != null) && (module.getModuleFile().getCanonicalPath() != null)) {
-                this.addTmpFileToKeep(new File(module.getModuleFile().getCanonicalPath()));
-            }
+            this.addTmpFileToKeep(new File(module.getModuleFilePath()));
         }
         JUnits.enableJpsDebugging(OFF);
     }
 
-    public void testDocumentationLocal() throws Exception {
-        showProject("LOCAL");
+    public void xtestDocumentationLocal() throws Exception {
         String program = "#include \"aldor\"\n"
                 + "+++ This is a domain\n"
                 + "Dom: with == add;\n"
@@ -79,6 +76,8 @@ public class AldorDocumentationProviderTest extends LightPlatformCodeInsightFixt
                 "out/ao/foo.ao: foo.as\n" +
                 "\tmkdir -p out/ao\n" +
                 "\t" + aldorExecutableRule.executable() + " -Fabn=out/ao/foo.abn -Fabn=out/ao/foo.abn foo.as\n");
+
+        showProject("LOCAL");
 
         annotationTextFixture.compileFile(sourceFile, getProject());
 
@@ -93,7 +92,6 @@ public class AldorDocumentationProviderTest extends LightPlatformCodeInsightFixt
     }
 
     public void testExportDocco() throws Exception {
-        showProject("EXPORT");
         String program = "#include \"aldor\"\n"
                 + "Dom: with { foo: () -> % } == add { foo(): % == never }\n"
                 + "f(): Dom == foo();\n";
@@ -102,7 +100,7 @@ public class AldorDocumentationProviderTest extends LightPlatformCodeInsightFixt
                 "out/ao/foo.ao: foo.as\n" +
                     "\tmkdir -p out/ao\n" +
                 "\t" + aldorExecutableRule.executable() + " -Fao=out/ao/foo.ao -Fabn=out/ao/foo.abn foo.as");
-
+        showProject("EXPORT");
         annotationTextFixture.compileFile(sourceFile, getProject());
 
         annotationTextFixture.runInEdtAndWait(() -> {
@@ -119,6 +117,7 @@ public class AldorDocumentationProviderTest extends LightPlatformCodeInsightFixt
 
         Project project = this.getProject();
         VirtualFile[] roots = ProjectRootManager.getInstance(project).getContentRoots();
+        LOG.info("TEST: Project " + project.getName() + " " + project.getBasePath());
         for (VirtualFile r: roots) {
             LOG.info("TEST: " + test + " Content Root: " + r);
         }
@@ -137,7 +136,6 @@ public class AldorDocumentationProviderTest extends LightPlatformCodeInsightFixt
 
 
     public void testImportDocco() throws Exception {
-        showProject("IMPORT");
         String program = "#include \"aldor\"\n"
                 + "import from Integer;\n"
                 + "myabs := abs;\n";
@@ -148,6 +146,7 @@ public class AldorDocumentationProviderTest extends LightPlatformCodeInsightFixt
                     "\t" + aldorExecutableRule.executable() + " -Fabn=out/ao/bar.abn -Fao=out/ao/bar.ao bar.as\n" +
                 "out/jar/" + sourceBaseName + ".jar:\n" +
                 "\tmkdir -p $(dir $@); touch $@\n");
+        showProject("IMPORT");
 
         annotationTextFixture.compileFile(sourceFile, getProject());
         annotationTextFixture.runInEdtAndWait(() -> {
@@ -165,7 +164,7 @@ public class AldorDocumentationProviderTest extends LightPlatformCodeInsightFixt
     }
 
     @Override
-    protected void invokeTestRunnable(@NotNull Runnable runnable) throws Exception {
+    protected void invokeTestRunnable(@NotNull Runnable runnable) {
         runnable.run();
     }
 

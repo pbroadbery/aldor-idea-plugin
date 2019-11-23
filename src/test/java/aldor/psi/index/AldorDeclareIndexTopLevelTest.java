@@ -21,7 +21,6 @@ import java.util.Collection;
 import java.util.Optional;
 
 import static aldor.util.VirtualFileTests.createFile;
-import static com.intellij.testFramework.LightPlatformTestCase.getProject;
 import static com.intellij.testFramework.LightPlatformTestCase.getSourceRoot;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -38,14 +37,13 @@ public class AldorDeclareIndexTopLevelTest {
 
 
     @Test
-    public void testSimpleTopLevel() throws IOException {
+    public void testSimpleTopLevel() {
         assertNotNull(testFixture.getProject());
-        Project project = getProject();
+        Project project = testFixture.getProject();
 
         VirtualFile file = createFile(getSourceRoot(), "simpleTopLevel.as", "Foo: with { x: String } == add { x: String == 2}");
 
         FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
-        FileBasedIndex.getInstance().ensureUpToDate(StubUpdatingIndex.INDEX_ID, project, null);
 
         Collection<String> ll = AldorDeclareTopIndex.instance.getAllKeys(project);
 
@@ -57,16 +55,15 @@ public class AldorDeclareIndexTopLevelTest {
     }
 
     @Test
-    public void testInfixDefinitions() throws IOException {
+    public void testInfixDefinitions() {
         assertNotNull(testFixture.getProject());
-        Project project = getProject();
+        Project project = testFixture.getProject();
 
         VirtualFile file = createFile(getSourceRoot(), "infix.spad", "QQ: SetCategory with\n" +
                 "    \"*\" : (%, %) -> %\n" +
                 "== add");
 
         FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
-        FileBasedIndex.getInstance().ensureUpToDate(StubUpdatingIndex.INDEX_ID, project, null);
 
         Collection<String> ll = AldorDeclareTopIndex.instance.getAllKeys(project);
 

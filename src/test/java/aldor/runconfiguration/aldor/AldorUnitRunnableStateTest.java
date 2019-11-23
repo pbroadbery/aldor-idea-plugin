@@ -7,7 +7,6 @@ import aldor.symbolfile.AnnotationFileTestFixture;
 import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.JUnits;
 import aldor.test_util.SdkProjectDescriptors;
-import com.intellij.execution.ExecutionException;
 import com.intellij.execution.PsiLocation;
 import com.intellij.execution.RunnerAndConfigurationSettings;
 import com.intellij.execution.actions.ConfigurationContext;
@@ -22,7 +21,7 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.EdtTestUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
-import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
+import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 
@@ -33,7 +32,7 @@ import static aldor.test_util.JUnits.JpsDebuggingState.OFF;
 import static aldor.util.VirtualFileTests.createFile;
 import static com.intellij.testFramework.LightPlatformTestCase.getSourceRoot;
 
-public class AldorUnitRunnableStateTest extends LightPlatformCodeInsightFixtureTestCase
+public class AldorUnitRunnableStateTest extends BasePlatformTestCase
 {
     private final AnnotationFileTestFixture annotationFileTestFixture = new AnnotationFileTestFixture();
     private final ExecutablePresentRule aldorExecutableRule = new ExecutablePresentRule.AldorDev();
@@ -70,7 +69,7 @@ public class AldorUnitRunnableStateTest extends LightPlatformCodeInsightFixtureT
         return super.shouldRunTest() && aldorExecutableRule.shouldRunTest();
     }
 
-    public void testRunSimpleConfiguration() throws ExecutionException, InterruptedException {
+    public void testRunSimpleConfiguration() throws InterruptedException {
         Ref<PsiElement> eltRef = new Ref<>();
         EdtTestUtil.runInEdtAndWait(() -> {
             VirtualFile file = createFile(getSourceRoot(), "foo.as",
@@ -89,7 +88,7 @@ public class AldorUnitRunnableStateTest extends LightPlatformCodeInsightFixtureT
             String makefileText = annotationFileTestFixture.makefileBuilder(aldorExecutableRule.executable(), Collections.singleton("foo.as"))
                     .withSourceDirectory(getSourceRoot())
                     .withProject(getProject())
-                    .withAldorUnit(ModuleRootManager.getInstance(myModule).getSdk())
+                    .withAldorUnit(ModuleRootManager.getInstance(getModule()).getSdk())
                     .withJarRule()
                     .build();
             LOG.info("Makefile: \n" + makefileText);
@@ -104,18 +103,16 @@ public class AldorUnitRunnableStateTest extends LightPlatformCodeInsightFixtureT
         CompilerManager compilerManager = CompilerManager.getInstance(getProject());
         CountDownLatch latch = new CountDownLatch(1);
         Ref<Boolean> okCompile = new Ref<>(false);
-        EdtTestUtil.runInEdtAndWait(() -> {
-            compilerManager.compile(new AldorJarOnlyScope(this.myModule, null), (aborted, errors, warnings, compileContext) -> {
-                LOG.info("Finished: " + (aborted ? "failed" : "ok") + " errors " + errors + " warnings: " + warnings);
-                okCompile.set(!aborted && (errors == 0));
-                latch.countDown();
-            });
-        });
+        EdtTestUtil.runInEdtAndWait(() -> compilerManager.compile(new AldorJarOnlyScope(this.getModule(), null), (aborted, errors, warnings, compileContext) -> {
+            LOG.info("Finished: " + (aborted ? "failed" : "ok") + " errors " + errors + " warnings: " + warnings);
+            okCompile.set(!aborted && (errors == 0));
+            latch.countDown();
+        }));
         latch.await();
         Assert.assertTrue(okCompile.get());
         EdtTestUtil.runInEdtAndWait(() -> {
             MyMapDataContext dataContext = new MyMapDataContext();
-            dataContext.put("module", myModule);
+            dataContext.put("module", getModule());
             dataContext.put("Location", new PsiLocation<>(eltRef.get()));
             dataContext.put("project", getProject());
 

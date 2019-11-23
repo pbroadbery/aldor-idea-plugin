@@ -24,6 +24,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
+import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import org.junit.Assert;
 import org.junit.Assume;
@@ -31,7 +32,7 @@ import org.junit.Assume;
 import static aldor.util.VirtualFileTests.createFile;
 import static com.intellij.testFramework.LightPlatformTestCase.getSourceRoot;
 
-public class AldorUnitConfigurationProducerTest extends LightPlatformCodeInsightFixtureTestCase {
+public class AldorUnitConfigurationProducerTest extends BasePlatformTestCase {
 
     private final DirectoryPresentRule directory = new DirectoryPresentRule("/home/pab/Work/aldorgit/opt");
 
@@ -42,7 +43,7 @@ public class AldorUnitConfigurationProducerTest extends LightPlatformCodeInsight
         Assume.assumeTrue(directory.isPresent());
     }
 
-    public void testRunSimpleConfiguration() throws ExecutionException {
+    public void testRunSimpleConfiguration() {
         VirtualFile file = createFile(getSourceRoot(), "foo.as",
                 "#include \"aldor.as\"\n" +
                         "#pile\n" +
@@ -58,7 +59,7 @@ public class AldorUnitConfigurationProducerTest extends LightPlatformCodeInsight
         AldorWith elt = PsiTreeUtil.findChildOfType(whole, AldorWith.class);
         Assert.assertNotNull(elt);
         MyMapDataContext dataContext = new MyMapDataContext();
-        dataContext.put("module", myModule);
+        dataContext.put("module", getModule());
         dataContext.put("Location", new PsiLocation<>(elt));
         dataContext.put("project", getProject());
 
@@ -94,7 +95,7 @@ public class AldorUnitConfigurationProducerTest extends LightPlatformCodeInsight
         PsiElement elt = PsiTreeUtil.findChildOfType(whole, AldorExportDecl.class);
         Assert.assertNotNull(elt);
         MyMapDataContext dataContext = new MyMapDataContext();
-        dataContext.put("module", myModule);
+        dataContext.put("module", getModule());
         dataContext.put("Location", new PsiLocation<>(elt));
         dataContext.put("project", getProject());
         ConfigurationContext context = ConfigurationContext.getFromContext(dataContext);
@@ -102,7 +103,7 @@ public class AldorUnitConfigurationProducerTest extends LightPlatformCodeInsight
     }
 
     private void executeRunner(RunnerAndConfigurationSettings settings) throws ExecutionException {
-        Assert.assertTrue(ExecutionTargetManager.canRun(settings, ExecutionTargetManager.getActiveTarget(getProject())));
+        Assert.assertTrue(ExecutionTargetManager.canRun(settings.getConfiguration(), ExecutionTargetManager.getActiveTarget(getProject())));
         RunConfiguration runConfiguration = settings.getConfiguration();
 
         JUnits.ProcessOutput output = JUnits.doStartTestsProcess(runConfiguration);
@@ -121,7 +122,7 @@ public class AldorUnitConfigurationProducerTest extends LightPlatformCodeInsight
         Assert.assertNotNull(elt);
 
         MyMapDataContext dataContext = new MyMapDataContext();
-        dataContext.put("module", myModule);
+        dataContext.put("module", getModule());
         dataContext.put("Location", new PsiLocation<>(elt));
         dataContext.put("project", getProject());
 
@@ -130,7 +131,7 @@ public class AldorUnitConfigurationProducerTest extends LightPlatformCodeInsight
         Assert.assertNotNull(runContext.getConfiguration());
         RunnerAndConfigurationSettings runnerAndConfigurationSettings = runContext.getConfiguration();
 
-        ExecutionTargetManager.canRun(runnerAndConfigurationSettings, ExecutionTargetManager.getActiveTarget(getProject()));
+        ExecutionTargetManager.canRun(runnerAndConfigurationSettings.getConfiguration(), ExecutionTargetManager.getActiveTarget(getProject()));
         Assert.assertTrue(runnerAndConfigurationSettings.getName().contains("foo"));
 
         RunConfiguration runConfiguration = runnerAndConfigurationSettings.getConfiguration();

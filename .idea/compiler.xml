@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel>
+      <module name="aldor-idea.jps-plugin.main" target="1.8" />
+      <module name="aldor-idea.jps-plugin.test" target="1.8" />
+      <module name="aldor-idea.main" target="1.8" />
+      <module name="aldor-idea.test" target="1.8" />
+      <module name="gradle-intellij-plugin.main" target="1.7" />
+      <module name="gradle-intellij-plugin.test" target="1.7" />
+    </bytecodeTargetLevel>
+  </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_STRING" value="-Xlint:unchecked" />
   </component>

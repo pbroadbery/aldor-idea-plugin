@@ -19,7 +19,6 @@ import java.nio.file.Files;
 
 import static aldor.test_util.TestFiles.existingFile;
 import static aldor.util.VirtualFileTests.createFile;
-import static com.intellij.testFramework.LightPlatformTestCase.getProject;
 import static com.intellij.testFramework.LightPlatformTestCase.getSourceRoot;
 
 public class AldorDeclareIndexTest  {
@@ -36,7 +35,7 @@ public class AldorDeclareIndexTest  {
     public void testIndexAnyDotSpad() throws IOException {
         Assert.assertNotNull(testFixture.getProject());
 
-        Project project = getProject();
+        Project project = testFixture.getProject();
         File sourceFile = existingFile("/home/pab/Work/fricas/fricas/src/algebra/any.spad");
 
         byte[] content = Files.readAllBytes(sourceFile.toPath());
@@ -44,15 +43,13 @@ public class AldorDeclareIndexTest  {
         VirtualFile file = createFile(getSourceRoot(), "any.spad", content);
 
         FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
-        FileBasedIndex.getInstance().ensureUpToDate(StubUpdatingIndex.INDEX_ID, project, null);
-
     }
 
     @Test
     public void testIndexCliquesDotAS() throws IOException {
         Assert.assertNotNull(testFixture.getProject());
 
-        Project project = getProject();
+        Project project = testFixture.getProject();
         File sourceFile = existingFile("/home/pab/Work/fricas/fricas/src/aldor/cliques.as");
 
         byte[] content = Files.readAllBytes(sourceFile.toPath());
@@ -60,8 +57,6 @@ public class AldorDeclareIndexTest  {
         VirtualFile file = createFile(getSourceRoot(), "cliques.as", content);
 
         FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
-        FileBasedIndex.getInstance().ensureUpToDate(StubUpdatingIndex.INDEX_ID, project, null);
-
     }
 
 
@@ -69,11 +64,10 @@ public class AldorDeclareIndexTest  {
     public void testDeclareIndex() {
         Assert.assertNotNull(testFixture.getProject());
 
-        Project project = getProject();
+        Project project = testFixture.getProject();
 
         VirtualFile file = createFile(getSourceRoot(), "any.spad", "Foo: Category == with { a: % }");
         FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
-        FileBasedIndex.getInstance().ensureUpToDate(StubUpdatingIndex.INDEX_ID, project, null);
 
         // Want to test
         //  - that we index only declarations within "with" statements at top level.

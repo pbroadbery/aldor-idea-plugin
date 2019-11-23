@@ -1,5 +1,7 @@
 package aldor.editor.finder;
 
+import aldor.test_util.ExecutablePresentRule;
+import aldor.test_util.SdkProjectDescriptors;
 import aldor.util.VirtualFileTests;
 import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.navigation.NavigationItem;
@@ -7,30 +9,23 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.stubs.StubUpdatingIndex;
 import com.intellij.testFramework.LightProjectDescriptor;
-import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
+import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import com.intellij.util.indexing.FileBasedIndex;
 import org.junit.Assert;
 
-import java.io.IOException;
-
-import static aldor.test_util.LightProjectDescriptors.ALDOR_MODULE_DESCRIPTOR;
 import static aldor.util.VirtualFileTests.createFile;
 import static com.intellij.testFramework.LightPlatformTestCase.getSourceRoot;
 
-public class AldorGotoClassContributorTest extends LightPlatformCodeInsightFixtureTestCase {
+public class AldorGotoClassContributorTest extends BasePlatformTestCase {
 
 
-    public void testGotoClass() throws IOException {
+    public void testGotoClass() {
         Project project = getProject();
         VirtualFile file = createFile(getSourceRoot(), "foo.as", "Something(x: Wibble): with == stuff; aNumber == " + System.currentTimeMillis());
 
         FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
-        FileBasedIndex.getInstance().ensureUpToDate(StubUpdatingIndex.INDEX_ID, project, null);
 
         ChooseByNameContributor gotoClassContributor = new AldorGotoClassContributor();
-
-        String[] names = gotoClassContributor.getNames(project, false);
-        Assert.assertEquals(2, names.length);
 
         NavigationItem[] items = gotoClassContributor.getItemsByName("Something", "Something", project, false);
         Assert.assertEquals(1, items.length);
@@ -43,17 +38,16 @@ public class AldorGotoClassContributorTest extends LightPlatformCodeInsightFixtu
 
     }
 
-    public void testGotoClass2() throws IOException {
+    public void testGotoClass2() {
         Project project = getProject();
         VirtualFile file = createFile(getSourceRoot(), "foo.as", "Something(x: Wibble): with == add { foo == bar }; aNumber == " + System.currentTimeMillis());
 
         FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
-        FileBasedIndex.getInstance().ensureUpToDate(StubUpdatingIndex.INDEX_ID, project, null);
 
         ChooseByNameContributor gotoClassContributor = new AldorGotoClassContributor();
 
         String[] names = gotoClassContributor.getNames(project, false);
-        Assert.assertEquals(2, names.length);
+        Assert.assertTrue(names.length > 2);
 
         NavigationItem[] items = gotoClassContributor.getItemsByName("Something", "Something", project, false);
         Assert.assertEquals(1, items.length);
@@ -66,6 +60,6 @@ public class AldorGotoClassContributorTest extends LightPlatformCodeInsightFixtu
 
     @Override
     protected LightProjectDescriptor getProjectDescriptor() {
-        return ALDOR_MODULE_DESCRIPTOR;
+        return SdkProjectDescriptors.aldorSdkProjectDescriptor(ExecutablePresentRule.Aldor.INSTANCE);
     }
 }

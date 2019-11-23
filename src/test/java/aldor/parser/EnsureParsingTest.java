@@ -18,6 +18,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.testFramework.LightProjectDescriptor;
+import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
@@ -31,7 +32,7 @@ import static aldor.psi.AldorPsiUtils.logPsi;
  * Lexer Test. Created by pab on 30/08/16.
  */
 @SuppressWarnings({"HardCodedStringLiteral", "ClassWithTooManyMethods"})
-public class EnsureParsingTest extends LightPlatformCodeInsightFixtureTestCase {
+public class EnsureParsingTest extends BasePlatformTestCase {
 
     @Override
     protected LightProjectDescriptor getProjectDescriptor() {

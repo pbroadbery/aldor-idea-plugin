@@ -12,6 +12,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
+import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import org.junit.Assert;
 
@@ -22,7 +23,7 @@ import java.util.Set;
 
 import static aldor.psi.AldorPsiUtils.logPsi;
 
-public class AldorRefLookupTest extends LightPlatformCodeInsightFixtureTestCase {
+public class AldorRefLookupTest extends BasePlatformTestCase {
 
     public void testReference() {
         PsiElement whole = createAldorFile("f(n: Integer): Integer == n+1");

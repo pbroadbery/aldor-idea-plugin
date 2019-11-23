@@ -4,10 +4,11 @@ import aldor.psi.AldorPsiUtils;
 import aldor.psi.AldorType;
 import aldor.psi.AldorTypeE12;
 import aldor.psi.elements.AldorTypes;
-import com.intellij.ide.highlighter.JavaHighlightingColors;
 import com.intellij.lang.annotation.Annotation;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
+import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
+import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
@@ -39,7 +40,11 @@ public class AldorAnnotator implements Annotator {
         }
         TextRange range = element.getTextRange();
         Annotation typeAnnotation = holder.createInfoAnnotation(range, "");
-        typeAnnotation.setTextAttributes(JavaHighlightingColors.ANNOTATION_NAME_ATTRIBUTES); //FIXME: Not Java
+        typeAnnotation.setTextAttributes(AldorHighlightingColors.TYPE);
+    }
+
+    private static final class AldorHighlightingColors {
+        public static final TextAttributesKey TYPE = DefaultLanguageHighlighterColors.METADATA;
     }
 
 }

@@ -36,6 +36,7 @@ public class  AldorJarBuildTargetType extends BuildTargetType<AldorJarBuildTarge
     @NotNull
     @Override
     public List<AldorJarBuildTarget> computeAllTargets(@NotNull final JpsModel model) {
+        LOG.info("Modules: "+ model.getProject().getModules());
         List<AldorJarBuildTarget> targets = model.getProject().getModules().stream()
                 .map(this::moduleBuildTargets).flatMap(Collection::stream).collect(Collectors.toList());
         LOG.info("Created " + targets.size() + " targets " + targets.stream().map(AldorJarBuildTarget::getId).collect(Collectors.joining(",")));
@@ -44,6 +45,7 @@ public class  AldorJarBuildTargetType extends BuildTargetType<AldorJarBuildTarge
 
     @NotNull
     private List<AldorJarBuildTarget> moduleBuildTargets(JpsModule module) {
+        LOG.info("Module: "+ module.getSdk(JpsAldorExtension.JpsAldorSdkType.INSTALLED));
         if (module.getSdk(JpsAldorExtension.JpsAldorSdkType.LOCAL) != null) {
             return Collections.emptyList();
         }

@@ -10,7 +10,7 @@ public final class AldorIcons {
     public static final Icon FILE = AllIcons.FileTypes.Custom;
     public static final Icon MODULE = AllIcons.FileTypes.Custom;
 
-    public static final Icon IDENTIFIER = IconUtil.getMoveUpIcon();
+    public static final Icon IDENTIFIER = IconUtil.addText(IconUtil.getEmptyIcon(true), "Id");
 
     public static final Icon DECLARE_ICON = IconUtil.addText(IconUtil.getAddLinkIcon(), ":");
 

@@ -1,13 +1,8 @@
-jar.archiveName = "aldor-jps-plugin.jar"
-apply plugin: 'org.jetbrains.intellij'
 
-allprojects {
-    intellij {
-        version 'IC-2018.3' //IntelliJ IDEA 2016.3 dependency; for releases: https://www.jetbrains.com/intellij-repository/releases
-        sandboxDirectory = project.rootDir.canonicalPath + "/.sandbox"
-	plugins = []
-	pluginName 'None'
+jar.archiveFileName = "aldor-jps-plugin.jar"
+
+task list(dependsOn: configurations.compile) {
+    doLast {
+        println "classpath = ${configurations.compile.collect { File file -> file.toString()}}"
     }
 }
-
-prepareTestingSandbox { onlyIf { Task task -> false } }

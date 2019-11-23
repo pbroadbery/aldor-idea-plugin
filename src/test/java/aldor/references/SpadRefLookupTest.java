@@ -7,10 +7,11 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
+import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import org.junit.Assert;
 
-public class SpadRefLookupTest extends LightPlatformCodeInsightFixtureTestCase {
+public class SpadRefLookupTest extends BasePlatformTestCase {
 
 
     public void testReference() {

@@ -3,6 +3,7 @@ package aldor.syntax;
 import aldor.parser.ParserFunctions;
 import com.intellij.psi.PsiElement;
 import com.intellij.testFramework.LightProjectDescriptor;
+import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import org.junit.Assert;
 
@@ -11,7 +12,7 @@ import java.io.StringWriter;
 
 import static aldor.syntax.SyntaxPsiParser.parse;
 
-public class SyntaxPrintTest extends LightPlatformCodeInsightFixtureTestCase {
+public class SyntaxPrintTest extends BasePlatformTestCase {
 
     public void testApplyId() {
         Assert.assertEquals("f", parseAndPrint("f"));

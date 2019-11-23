@@ -37,6 +37,7 @@ import com.intellij.testFramework.LightProjectDescriptor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.Assert;
+import org.junit.Assume;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -93,8 +94,9 @@ public final class SdkProjectDescriptors {
     }
 
     private static class WithAldorUnit implements SdkDescriptor {
-        SdkDescriptor innerSdkDescriptor;
-        String aldorUnitHomePath = "/home/pab/IdeaProjects/type-library/out/artifacts/aldorunit";
+        private SdkDescriptor innerSdkDescriptor;
+        private String aldorUnitHomePath = "/home/pab/IdeaProjects/type-library/out/artifacts/aldorunit";
+
         WithAldorUnit(SdkDescriptor descriptor) {
             this.innerSdkDescriptor = descriptor;
         }
@@ -149,6 +151,11 @@ public final class SdkProjectDescriptors {
         return instance.getProjectDescriptor(SdkOption.Aldor, prefix);
     }
 
+    public static LightProjectDescriptor aldorSdkProjectDescriptor(ExecutablePresentRule rule) {
+        Assume.assumeTrue(rule.shouldRunTest());
+        return instance.getProjectDescriptor(SdkOption.Aldor, rule.prefix());
+    }
+
     public static LightProjectDescriptor aldorSdkProjectDescriptorWithAldorUnit(String prefix) {
         return instance.getProjectDescriptor(new WithAldorUnit(SdkOption.Aldor), prefix);
     }
@@ -178,7 +185,7 @@ public final class SdkProjectDescriptors {
         @Override
         @NotNull
         public ModuleType<?> getModuleType() {
-            return AldorModuleType.instance();
+            return new AldorModuleType();
         }
 
         @Override
@@ -194,21 +201,21 @@ public final class SdkProjectDescriptors {
             super.configureModule(module, model, contentEntry);
             System.out.println("Configuring module " + module + " " + model);
             switch (this.sdkDescriptor.sdkOption()) {
-                case FricasLocal: {
+                case FricasLocal:
                     configureLocalFricas(model);
                     break;
-                }
-                case AldorLocal: {
+                case Fricas:
+                    break;
+                case AldorLocal:
                     configureLocalAldor(model);
                     break;
-                }
-                case Aldor: {
+                case Aldor:
                     configureInstalledAldor(model);
                     AldorModulePathService pathService = AldorModulePathService.getInstance(module);
+                    Assert.assertNotNull(pathService.getState());
                     pathService.getState().setOutputDirectory("out/ao");
                     pathService.getState().setMakeDirectory(AldorMakeDirectoryOption.Source);
                     break;
-                }
                 default:
             }
         }

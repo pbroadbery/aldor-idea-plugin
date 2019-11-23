@@ -86,7 +86,9 @@ public class AnnotationFileTestFixture extends BaseFixture {
     }
 
     public void compileFile(VirtualFile file, Project project) throws ExecutionException, InterruptedException {
+        LOG.info("START PRE REFRESH");
         file.getFileSystem().refresh(false);
+        LOG.info("END PRE REFRESH");
 
         Assert.assertNotNull(project);
         List<Future<Void>> result = Lists.newArrayList();
@@ -100,9 +102,9 @@ public class AnnotationFileTestFixture extends BaseFixture {
 
        // file.getFileSystem().refresh(false);
         result.get(0).get();
-        LOG.info("START REFRESH");
+        LOG.info("START POST REFRESH");
         file.getFileSystem().refresh(false);
-        LOG.info("END REFRESH");
+        LOG.info("END POST REFRESH");
     }
 
     public String createMakefile(String aldorLocation, Collection<String> files) {
@@ -134,12 +136,13 @@ public class AnnotationFileTestFixture extends BaseFixture {
 
         @Override
         public Statement apply(Statement statement, Description description) {
-            //noinspection InnerClassTooDeeplyNested
+            //noinspection InnerClassTooDeeplyNested,ReturnOfInnerClass
             return new Statement() {
 
                 @Override
                 public void evaluate() throws Throwable {
                     try {
+                        projectSupplier.get().save();
                         statement.evaluate();
                     } finally {
                         System.out.println("Done...");
@@ -150,8 +153,9 @@ public class AnnotationFileTestFixture extends BaseFixture {
     }
 
     public static class MakefileBuilder {
-        private final List<String> definitions = new ArrayList<>();
-        private final List<String> rules = new ArrayList<>();
+        private final Collection<String> definitions = new ArrayList<>();
+        private final Collection<String> rules = new ArrayList<>();
+        @SuppressWarnings("FieldCanBeLocal")
         private final List<String> names;
         private Project project = null;
         private VirtualFile sourceDirectory = null;

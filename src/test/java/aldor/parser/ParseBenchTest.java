@@ -24,7 +24,6 @@ import java.io.File;
 import java.util.List;
 
 import static aldor.test_util.TestFiles.existingFile;
-import static com.intellij.testFramework.LightPlatformTestCase.getProject;
 
 public class ParseBenchTest {
     public static final int ITERATIONS = 500;
@@ -40,9 +39,9 @@ public class ParseBenchTest {
 
     @Test
     public void testParseFF2GE() throws Exception {
-        Assert.assertNotNull(getProject());
+        Assert.assertNotNull(testFixture.getProject());
 
-        Project project = getProject();
+        Project project = testFixture.getProject();
         Timer timer = new Timer("Parser");
         try (Timer.TimerRun run = timer.run()) {
             for (int i = 0; i< ITERATIONS; i++) {

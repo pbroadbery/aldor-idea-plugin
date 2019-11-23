@@ -10,19 +10,19 @@ import com.intellij.psi.PsiReference;
 import com.intellij.psi.stubs.StubUpdatingIndex;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
+import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import com.intellij.util.indexing.FileBasedIndex;
 import org.junit.Assert;
 
 import static com.intellij.testFramework.LightPlatformTestCase.getSourceRoot;
 
-public class SpadAbbrevRefTest extends LightPlatformCodeInsightFixtureTestCase {
+public class SpadAbbrevRefTest extends BasePlatformTestCase {
 
     public void testReference() {
         String text = ")abbrev domain FOO Foo\nFoo: with == add\n";
         VirtualFile file = createSpadFile(text);
         FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
-        FileBasedIndex.getInstance().ensureUpToDate(StubUpdatingIndex.INDEX_ID, getProject(), null);
 
         PsiFile whole = PsiManager.getInstance(getProject()).findFile(file);
 

@@ -5,13 +5,14 @@ import aldor.psi.AldorId;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
+import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import org.junit.Assert;
 
 import static aldor.syntax.SyntaxPsiParser.SurroundType.Any;
 import static aldor.syntax.SyntaxPsiParser.SurroundType.Leading;
 
-public class SyntaxSurroundingApplyTest extends LightPlatformCodeInsightFixtureTestCase {
+public class SyntaxSurroundingApplyTest extends BasePlatformTestCase {
 
     public void testFirstPosn() {
         PsiElement psi = parseText("List X");

@@ -2,11 +2,14 @@ package aldor.psi;
 
 import aldor.file.AldorFileType;
 import aldor.file.SpadFileType;
+import aldor.test_util.ExecutablePresentRule;
+import aldor.test_util.SdkProjectDescriptors;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
+import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import org.junit.Assert;
 
@@ -14,11 +17,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static aldor.test_util.LightProjectDescriptors.ALDOR_MODULE_DESCRIPTOR;
+public class AldorPsiUtilsTest extends BasePlatformTestCase {
 
-public class AldorPsiUtilsTest extends LightPlatformCodeInsightFixtureTestCase {
-
-    public void testIsTopLevel() throws Exception {
+    public void testIsTopLevel() {
         PsiFile file = createLightFile(AldorFileType.INSTANCE, "A: B == C");
 
         AldorDefine definition = PsiTreeUtil.findChildOfType(file, AldorDefine.class);
@@ -26,7 +27,7 @@ public class AldorPsiUtilsTest extends LightPlatformCodeInsightFixtureTestCase {
         Assert.assertTrue(AldorPsiUtils.isTopLevel(definition.getParent()));
     }
 
-    public void testIsTopLevelWithWhere() throws Exception {
+    public void testIsTopLevelWithWhere() {
         String text = "Outer: B == C where { B ==> with { inner == b }}";
         PsiFile file = createLightFile(AldorFileType.INSTANCE, text);
         AldorDefine definition = PsiTreeUtil.findChildOfType(file, AldorDefine.class);
@@ -184,6 +185,6 @@ public class AldorPsiUtilsTest extends LightPlatformCodeInsightFixtureTestCase {
 
     @Override
     protected LightProjectDescriptor getProjectDescriptor() {
-        return ALDOR_MODULE_DESCRIPTOR;
+        return SdkProjectDescriptors.aldorSdkProjectDescriptor(ExecutablePresentRule.Aldor.INSTANCE);
     }
 }

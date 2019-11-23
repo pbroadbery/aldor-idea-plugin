@@ -3,17 +3,19 @@ package aldor.references;
 import aldor.language.SpadLanguage;
 import aldor.psi.AldorId;
 import aldor.test_util.DirectoryPresentRule;
+import aldor.test_util.JUnits;
 import aldor.test_util.SdkProjectDescriptors;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
+import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import org.junit.Assert;
 import org.junit.Assume;
 
-public class SpadNameReferenceTest extends LightPlatformCodeInsightFixtureTestCase {
+public class SpadNameReferenceTest extends BasePlatformTestCase {
     private final DirectoryPresentRule directory = new DirectoryPresentRule("/home/pab/Work/fricas/opt/lib/fricas/target/x86_64-unknown-linux");
 
     @Override

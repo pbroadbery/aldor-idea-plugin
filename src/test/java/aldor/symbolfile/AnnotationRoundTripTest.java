@@ -19,6 +19,7 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.EdtTestUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
+import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
@@ -28,7 +29,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class AnnotationRoundTripTest extends LightPlatformCodeInsightFixtureTestCase {
+public class AnnotationRoundTripTest extends BasePlatformTestCase {
     private static final Logger LOG = Logger.getInstance(AnnotationRoundTripTest.class);
     private final AnnotationFileTestFixture annotationTextFixture = new AnnotationFileTestFixture();
     @Rule
@@ -38,6 +39,7 @@ public class AnnotationRoundTripTest extends LightPlatformCodeInsightFixtureTest
     protected void setUp() throws Exception {
         super.setUp();
         JUnits.setLogToDebug();
+        getProject().save();
     }
 
     @Override
@@ -57,7 +59,6 @@ public class AnnotationRoundTripTest extends LightPlatformCodeInsightFixtureTest
 
     public void testFullRoundTrip() throws Exception {
         Project project = getProject();
-
         annotationTextFixture.createFile(getProject(), "Makefile", "out/ao/foo.ao: foo.as\n" +
                 "\tmkdir -p out/ao\n" +
                 "\t" + aldorExecutableRule.executable() + " -Fabn=out/ao/foo.abn -Fao=out/ao/foo.ao foo.as");
@@ -97,7 +98,7 @@ public class AnnotationRoundTripTest extends LightPlatformCodeInsightFixtureTest
     }
 
     @Override
-    protected void invokeTestRunnable(@NotNull Runnable runnable) throws Exception {
+    protected void invokeTestRunnable(@NotNull Runnable runnable) {
         runnable.run();
     }
 

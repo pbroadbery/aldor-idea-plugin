@@ -11,6 +11,7 @@ import aldor.typelib.TForm;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.testFramework.LightProjectDescriptor;
+import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import foamj.Clos;
 import foamj.FoamContext;
@@ -24,7 +25,7 @@ import static aldor.syntax.AnnotatedSyntax.fromSyntax;
 import static aldor.syntax.AnnotatedSyntax.toSyntax;
 import static aldor.syntax.SyntaxPsiParser.parse;
 
-public class AnnotatedSyntaxTest extends LightPlatformCodeInsightFixtureTestCase {
+public class AnnotatedSyntaxTest extends BasePlatformTestCase {
     private final DirectoryPresentRule rule = new DirectoryPresentRule("/home/pab/Work/fricas/opt/lib/fricas/target/x86_64-unknown-linux/algebra");
     private AxiomInterface iface = null;
 
@@ -64,7 +65,7 @@ public class AnnotatedSyntaxTest extends LightPlatformCodeInsightFixtureTestCase
     }
 
 
-    public void testToFromConversions() throws Exception {
+    public void testToFromConversions() {
         PsiElement psi = parseText("List String");
         Env env = iface.env();
         Syntax syntax = parse(psi);

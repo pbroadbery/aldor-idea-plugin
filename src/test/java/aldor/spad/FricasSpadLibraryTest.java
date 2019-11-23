@@ -31,7 +31,6 @@ import java.util.stream.Collectors;
 
 import static aldor.test_util.LightPlatformJUnit4TestRule.createFixture;
 import static aldor.test_util.SdkProjectDescriptors.fricasSdkProjectDescriptor;
-import static com.intellij.testFramework.LightPlatformTestCase.getProject;
 import static com.intellij.testFramework.PlatformTestUtil.notNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -76,7 +75,7 @@ public class FricasSpadLibraryTest {
                 .daaseDirectory(projectSdkAlgebraDirectory())
                 .createFricasSpadLibrary();
 
-        Collection<AldorDefine> ll = AldorDefineTopLevelIndex.instance.get("Group", getProject(), GlobalSearchScope.allScope(getProject()));
+        Collection<AldorDefine> ll = AldorDefineTopLevelIndex.instance.get("Group", testFixture.getProject(), GlobalSearchScope.allScope(testFixture.getProject()));
 
         Syntax syntax = notNull(SyntaxPsiParser.parse(ll.iterator().next().lhs())).as(DeclareNode.class).lhs();
         System.out.println("Syntax is " + syntax);

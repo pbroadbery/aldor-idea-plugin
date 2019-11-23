@@ -3,12 +3,13 @@ package aldor.syntax;
 import aldor.parser.ParserFunctions;
 import com.intellij.psi.PsiElement;
 import com.intellij.testFramework.LightProjectDescriptor;
+import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import org.junit.Assert;
 
 import static aldor.syntax.SyntaxPsiParser.parse;
 
-public class SyntaxTest extends LightPlatformCodeInsightFixtureTestCase {
+public class SyntaxTest extends BasePlatformTestCase {
 
     @SuppressWarnings("UnnecessaryCodeBlock")
     public void testParser1() {
