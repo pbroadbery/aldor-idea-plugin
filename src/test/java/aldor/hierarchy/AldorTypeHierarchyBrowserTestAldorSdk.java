@@ -3,10 +3,12 @@ package aldor.hierarchy;
 import aldor.psi.AldorDefine;
 import aldor.psi.AldorIdentifier;
 import aldor.psi.index.AldorDefineTopLevelIndex;
+import aldor.test_util.EnsureClosedRule;
 import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.JUnits;
 import aldor.test_util.LightPlatformJUnit4TestRule;
 import aldor.test_util.SdkProjectDescriptors;
+import aldor.util.Streams;
 import com.intellij.codeInsight.documentation.DocumentationManager;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.Disposable;
@@ -14,9 +16,10 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.stubs.StubUpdatingIndex;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.CodeInsightTestFixture;
-import junit.framework.AssertionFailedError;
+import com.intellij.util.indexing.FileBasedIndex;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -34,44 +37,53 @@ import static org.junit.Assert.assertTrue;
 public class AldorTypeHierarchyBrowserTestAldorSdk {
     private final ExecutablePresentRule aldorExecutableRule = new ExecutablePresentRule.AldorDev();
     private final CodeInsightTestFixture codeTestFixture = LightPlatformJUnit4TestRule.createFixture(getProjectDescriptor(aldorExecutableRule));
+    private final EnsureClosedRule ensureClosedRule = new EnsureClosedRule();
 
     @Rule
     public final TestRule platformTestRule =
             RuleChain.emptyRuleChain()
-                    .around(JUnits.setLogToInfoTestRule)
+                    .around(JUnits.setLogToDebugTestRule)
                     .around(aldorExecutableRule)
                     .around(new LightPlatformJUnit4TestRule(codeTestFixture, ""))
+                    .around(ensureClosedRule)
                     .around(JUnits.prePostTestRule(() -> codeTestFixture.getProject().save(), () -> {}))
                     .around(JUnits.swingThreadTestRule());
 
     @Test
     public void testReference() {
+        FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
+        FileBasedIndex.getInstance().ensureUpToDate(StubUpdatingIndex.INDEX_ID, codeTestFixture.getProject(), null);
+
         String text = "x: List X == empty()";
         PsiFile whole = codeTestFixture.addFileToProject("test.as", text);
 
         PsiElement elt = whole.findElementAt(text.indexOf("List"));
 
-        TestBrowser browser = new TestBrowser(new AldorTypeHierarchyProvider(), elt, SUPERTYPES_HIERARCHY_TYPE);
-        browser.update();
+        try (TestBrowser browser = new TestBrowser(ensureClosedRule, new AldorTypeHierarchyProvider(), elt, SUPERTYPES_HIERARCHY_TYPE)) {
+            browser.update();
 
-        System.out.println("Root: " + browser.rootDescriptor());
+            System.out.println("Root: " + browser.rootDescriptor());
 
-        System.out.println("Children: " + browser.childElements());
+            System.out.println("Children: " + browser.childElements());
+            System.out.println("Children: " + browser.childElements().stream().map(Object::getClass).collect(Collectors.toList()));
 
-        AldorHierarchyOperationDescriptor findAll = browser.childElements().stream()
-                .filter(x -> x instanceof AldorHierarchyOperationDescriptor)
-                .map(x -> (AldorHierarchyOperationDescriptor) x)
-                .filter(x -> "findAll".equals(x.operation().name()))
-                .findFirst().orElseThrow(AssertionFailedError::new);
+            AldorHierarchyOperationDescriptor findAll = browser.childElements().stream()
+                    .flatMap(Streams.filterAndCast(AldorHierarchyOperationDescriptor.class))
+                    .peek(x -> System.out.println("Found Child " + x))
+                    .filter(x -> "findAll".equals(x.operation().name()))
+                    .findFirst()
+                    //.orElseThrow(AssertionFailedError::new);
+                    .orElse(null);
 
-        assertNotNull(findAll.operation().containingForm());
-        assertNull(findAll.operation().declaration());
-        PsiElement findAllElt = findAll.getPsiElement();
-        assertNotNull(findAllElt);
-        System.out.println("FindAll: " + findAllElt);
-        assertTrue(findAllElt.getContainingFile().getVirtualFile().getPath().contains("sal_list.as"));
-        browser.dispose();
-        ((Disposable) ProgressManager.getInstance()).dispose();
+            assertNotNull(findAll.operation().containingForm());
+            assertNull(findAll.operation().declaration());
+            PsiElement findAllElt = findAll.getPsiElement();
+            assertNotNull(findAllElt);
+            System.out.println("FindAll: " + findAllElt);
+            assertTrue(findAllElt.getContainingFile().getVirtualFile().getPath().contains("sal_list.as"));
+        } finally {
+            ((Disposable) ProgressManager.getInstance()).dispose();
+        }
     }
 
     @Test
@@ -81,7 +93,7 @@ public class AldorTypeHierarchyBrowserTestAldorSdk {
 
         PsiElement elt = whole.findElementAt(text.indexOf("Ring"));
 
-        TestBrowser browser = new TestBrowser(new AldorTypeHierarchyProvider(), elt, AldorTypeHierarchyConstants.GROUPED_HIERARCHY_TYPE);
+        TestBrowser browser = new TestBrowser(ensureClosedRule, new AldorTypeHierarchyProvider(), elt, AldorTypeHierarchyConstants.GROUPED_HIERARCHY_TYPE);
         browser.update();
 
         System.out.println("Root: " + browser.rootDescriptor());
@@ -102,7 +114,7 @@ public class AldorTypeHierarchyBrowserTestAldorSdk {
 
         PsiElement elt = whole.findElementAt(text.indexOf("Ring"));
 
-        TestBrowser browser = new TestBrowser(new AldorTypeHierarchyProvider(), elt, SUPERTYPES_HIERARCHY_TYPE);
+        TestBrowser browser = new TestBrowser(ensureClosedRule, new AldorTypeHierarchyProvider(), elt, SUPERTYPES_HIERARCHY_TYPE);
         browser.update();
 
         System.out.println("Root: " + browser.rootDescriptor());
@@ -119,7 +131,7 @@ public class AldorTypeHierarchyBrowserTestAldorSdk {
 
         AldorIdentifier theId = items.stream().findFirst().flatMap(AldorDefine::defineIdentifier).orElse(null);
 
-        TestBrowser browser = new TestBrowser(new AldorTypeHierarchyProvider(), theId, SUPERTYPES_HIERARCHY_TYPE);
+        TestBrowser browser = new TestBrowser(ensureClosedRule, new AldorTypeHierarchyProvider(), theId, SUPERTYPES_HIERARCHY_TYPE);
 
         browser.update();
 

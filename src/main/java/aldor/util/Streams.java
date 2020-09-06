@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Optional;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.stream.BaseStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -41,4 +42,7 @@ public final class Streams {
         return StreamSupport.stream(iterable.spliterator(), false);
     }
 
+    public static <T, E extends T> Function<T, Stream<E>> filterAndCast(Class<E> clss) {
+        return elt -> clss.isAssignableFrom(elt.getClass()) ? Stream.of(clss.cast(elt)): Stream.empty();
+    }
 }

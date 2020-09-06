@@ -20,6 +20,10 @@ public class AldorLocalSdkType extends SdkType implements AldorSdkType {
     public static List<String> ALDOR_TEST_DIRS = Lists.newArrayList("aldor/aldor/test");
     private final AldorSdkAdditionalDataHelper additionalDataHelper = AldorSdkAdditionalDataHelper.instance();
 
+    public static AldorLocalSdkType instance() {
+        return findInstance(AldorLocalSdkType.class);
+    }
+
     public AldorLocalSdkType() {
         super("Aldor Local SDK");
     }
@@ -50,12 +54,6 @@ public class AldorLocalSdkType extends SdkType implements AldorSdkType {
     @Nullable
     @Override
     public String aldorPath(Sdk sdk) {
-        return null;
-    }
-
-    @Nullable
-    @Override
-    public Sdk aldorUnitSdk(Sdk sdk) {
         return null;
     }
 

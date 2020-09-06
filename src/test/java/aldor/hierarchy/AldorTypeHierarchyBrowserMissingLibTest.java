@@ -6,6 +6,7 @@ import aldor.spad.SpadLibrary;
 import aldor.spad.SpadLibraryManager;
 import aldor.syntax.Syntax;
 import aldor.syntax.components.Id;
+import aldor.test_util.EnsureClosedRule;
 import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.JUnits;
 import aldor.test_util.LightPlatformJUnit4TestRule;
@@ -22,6 +23,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -47,13 +49,16 @@ import static org.junit.Assert.assertTrue;
 public class AldorTypeHierarchyBrowserMissingLibTest {
     private final ExecutablePresentRule fricasExecutableRule = new ExecutablePresentRule.Fricas();
     private final CodeInsightTestFixture codeTestFixture = LightPlatformJUnit4TestRule.createFixture(getProjectDescriptor(fricasExecutableRule));
+    private final EnsureClosedRule ensureClosedRule = new EnsureClosedRule();
 
     @Rule
     public final TestRule platformTestRule =
             RuleChain.emptyRuleChain()
                     .around(fricasExecutableRule)
+                    .around(JUnits.setLogToDebugTestRule)
                     .around(new LightPlatformJUnit4TestRule(codeTestFixture, ""))
                     .around(new MockSpadLibraryTestRule(codeTestFixture))
+                    .around(ensureClosedRule)
                     .around(JUnits.swingThreadTestRule());
 
     private final class MockSpadLibraryTestRule implements TestRule {
@@ -66,23 +71,19 @@ public class AldorTypeHierarchyBrowserMissingLibTest {
         @Override
         public Statement apply(Statement statement, Description description) {
             return JUnits.prePostStatement(
-                    () -> SpadLibraryManager.instance().spadLibraryForSdk(sdk(), new MockSpadLibrary()),
-                    () -> SpadLibraryManager.instance().spadLibraryForSdk(sdk(), null),
+                    () -> SpadLibraryManager.getInstance(fixture.getProject()).spadLibraryForSdk(sdk(), new MockSpadLibrary()),
+                    () -> {},
                     statement);
         }
 
         Sdk sdk() {
-            return Assertions.isNotNull(ProjectRootManager.getInstance(fixture.getProject()).getProjectSdk());
+            return Assertions.isNotNull(ModuleRootManager.getInstance(fixture.getModule()).getSdk());
         }
     }
 
     @Test
     //@Ignore("Test causes trouble due to the sdk setup step")
     public void xtestReference() {
-        Sdk projectSdk = Assertions.isNotNull(ProjectRootManager.getInstance(codeTestFixture.getProject()).getProjectSdk());
-
-        //SpadLibraryManager.instance().spadLibraryForSdk(projectSdk, new MockSpadLibrary());
-
         String text = "x: List X == empty()";
         PsiFile whole = codeTestFixture.addFileToProject("test.spad", text);
 
@@ -94,18 +95,19 @@ public class AldorTypeHierarchyBrowserMissingLibTest {
 
         PsiElement target = provider.getTarget(context);
         assertNotNull(target);
-        TestBrowser browser = new TestBrowser(new AldorTypeHierarchyProvider(), elt, SUPERTYPES_HIERARCHY_TYPE);
-        browser.update();
+        try (TestBrowser browser = new TestBrowser(ensureClosedRule, new AldorTypeHierarchyProvider(), elt, SUPERTYPES_HIERARCHY_TYPE)) {
+            browser.update();
 
-        assertEquals("List X", browser.rootDescriptor().toString());
-        assertTrue(browser.childElements().isEmpty());
+            assertEquals("List X", browser.rootDescriptor().toString());
+            assertTrue(browser.childElements().isEmpty());
 
-        /*
-         * This test needs a bit of fixing to ensure that the MockSpadLibrary is used,and
-         * then confirm that the result looks ok.
-         */
-        browser.dispose();
-        ((Disposable) ProgressManager.getInstance()).dispose();
+            /*
+             * This test needs a bit of fixing to ensure that the MockSpadLibrary is used,and
+             * then confirm that the result looks ok.
+             */
+
+            ((Disposable) ProgressManager.getInstance()).dispose();
+        }
     }
 
     private static LightProjectDescriptor getProjectDescriptor(ExecutablePresentRule fricasExecutableRule) {
@@ -117,7 +119,7 @@ public class AldorTypeHierarchyBrowserMissingLibTest {
 
         private final AldorExecutor aldorExecutor;
 
-        public MockSpadLibrary() {
+        private MockSpadLibrary() {
             this.aldorExecutor = ApplicationManager.getApplication().getComponent(AldorExecutor.class);
 
         }

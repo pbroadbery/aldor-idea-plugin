@@ -1,6 +1,7 @@
 package aldor.spad;
 
 import aldor.build.AldorCompilationService;
+import aldor.file.AldorFileType;
 import aldor.symbolfile.AnnotationFileTestFixture;
 import aldor.syntax.Syntax;
 import aldor.test_util.ExecutablePresentRule;
@@ -60,7 +61,7 @@ public class SpadLibraryManagerAldorModuleTest {
 
         annotationTestFixture.compileFile(testFile, getProject());
 
-        SpadLibrary mgr = SpadLibraryManager.instance().forModule(codeTestFixture.getModule());
+        SpadLibrary mgr = SpadLibraryManager.getInstance(getProject()).forModule(codeTestFixture.getModule(), AldorFileType.INSTANCE);
         assertNotNull(mgr);
         List<Syntax> tt = mgr.allTypes();
         System.out.println("All types: "+ tt);
@@ -71,7 +72,7 @@ public class SpadLibraryManagerAldorModuleTest {
         annotationTestFixture.writeFile(getProject(), "foo.as", program + "Bar: with == add\n");
         annotationTestFixture.compileFile(testFile, getProject());
 
-        mgr = SpadLibraryManager.instance().forModule(codeTestFixture.getModule());
+        mgr = SpadLibraryManager.getInstance(getProject()).forModule(codeTestFixture.getModule(), AldorFileType.INSTANCE);
         assertNotNull(mgr);
         List<Syntax> tt2 = mgr.allTypes();
         System.out.println("All types: "+ tt2);

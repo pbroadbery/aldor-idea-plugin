@@ -1,5 +1,7 @@
 package aldor.runconfiguration.spad;
 
+import aldor.build.facet.fricas.FricasFacet;
+import aldor.build.facet.fricas.FricasFacetType;
 import aldor.sdk.SdkTypes;
 import aldor.sdk.fricas.FricasSdkType;
 import aldor.ui.AldorIcons;
@@ -7,19 +9,19 @@ import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.CommandLineState;
 import com.intellij.execution.configurations.ConfigurationFactory;
-import com.intellij.execution.configurations.ConfigurationType;
-import com.intellij.execution.configurations.ConfigurationTypeBase;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.configurations.ModuleBasedConfiguration;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.configurations.RunConfigurationModule;
 import com.intellij.execution.configurations.RunConfigurationWithSuppressedDefaultDebugAction;
 import com.intellij.execution.configurations.RunProfileState;
+import com.intellij.execution.configurations.SimpleConfigurationType;
 import com.intellij.execution.process.OSProcessHandler;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.process.ProcessHandlerFactory;
 import com.intellij.execution.process.ProcessTerminatedListener;
 import com.intellij.execution.runners.ExecutionEnvironment;
+import com.intellij.facet.FacetManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -28,8 +30,8 @@ import com.intellij.openapi.options.SettingsEditorGroup;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.ProjectJdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.InvalidDataException;
+import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.WriteExternalException;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
@@ -39,25 +41,20 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
 
-public class SpadInputRunConfigurationType extends ConfigurationTypeBase {
-
-    protected SpadInputRunConfigurationType() {
-        super("SpadInputRunConfigurationType", "Spad Input File", "Execute a Spad .input file", AldorIcons.FILE);
-        //noinspection ThisEscapedInObjectConstruction
-        addFactory(new SpadInputConfigurationFactory(this));
+public class SpadInputRunConfigurationType extends SimpleConfigurationType {
+    @NotNull
+    public static SpadInputRunConfigurationType instance() {
+        return CONFIGURATION_TYPE_EP.findExtensionOrFail(SpadInputRunConfigurationType.class);
     }
 
-    private static class SpadInputConfigurationFactory extends ConfigurationFactory {
+    protected SpadInputRunConfigurationType() {
+        super("SpadInputRunConfigurationType", "Spad Input File", "Execute a Spad .input file", NotNullLazyValue.createValue(() -> AldorIcons.FILE));
+    }
 
-        protected SpadInputConfigurationFactory(@NotNull ConfigurationType type) {
-            super(type);
-        }
-
-        @NotNull
-        @Override
-        public RunConfiguration createTemplateConfiguration(@NotNull Project project) {
-            return new SpadInputConfiguration(new RunConfigurationModule(project), this);
-        }
+    @NotNull
+    @Override
+    public RunConfiguration createTemplateConfiguration(@NotNull Project project) {
+        return new SpadInputConfiguration(new RunConfigurationModule(project), this);
     }
 
     /**
@@ -96,7 +93,7 @@ public class SpadInputRunConfigurationType extends ConfigurationTypeBase {
 
         @Nullable
         @Override
-        public RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment environment) throws ExecutionException {
+        public RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment environment) {
             return new SpadInputProfileState(this, environment);
         }
 
@@ -114,14 +111,24 @@ public class SpadInputRunConfigurationType extends ConfigurationTypeBase {
         }
 
         @Override
-        public Sdk configuredSdk() {
+        public @Nullable Sdk configuredSdk() {
             // Ideally, we'd check with the form...
-            return ProjectRootManager.getInstance(getProject()).getProjectSdk();
+            if (getConfigurationModule().getModule() == null) {
+                return null;
+            }
+            @Nullable FricasFacet facet = FacetManager.getInstance(getConfigurationModule().getModule()).getFacetByType(FricasFacetType.TYPE_ID);
+            if (facet == null) {
+                return null;
+            }
+            return facet.getConfiguration().sdk();
         }
 
         @Nullable
         public Sdk effectiveSdk() {
             Sdk mySdk = configuredSdk();
+            if (mySdk == null) {
+                return null;
+            }
             if (mySdk.getSdkType() instanceof FricasSdkType) {
                 return mySdk;
             }
@@ -200,10 +207,10 @@ public class SpadInputRunConfigurationType extends ConfigurationTypeBase {
         protected GeneralCommandLine createCommandLine() {
             Sdk sdk = configuration.effectiveSdk();
             if (sdk == null) {
-                return new GeneralCommandLine().withExePath("missing-sdk");
+                return new GeneralCommandLine().withExePath("missing-fricas-library");
             }
             if (sdk.getHomePath() == null) {
-                return new GeneralCommandLine().withExePath("missing-sdk-home-path");
+                return new GeneralCommandLine().withExePath("missing-fricas-home-path");
             }
             String execPath = SdkTypes.axiomSysPath(sdk);
             if (execPath == null) {

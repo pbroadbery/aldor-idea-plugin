@@ -22,6 +22,7 @@ public class NullHierarchyTreeStructureTest {
     @Rule
     public final TestRule platformTestRule =
             RuleChain.emptyRuleChain()
+                    .around(JUnits.setLogToDebugTestRule)
                     .around(new LightPlatformJUnit4TestRule(codeTestFixture, ""))
                     .around(JUnits.swingThreadTestRule());
 

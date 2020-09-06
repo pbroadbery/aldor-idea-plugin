@@ -1,47 +1,58 @@
 package aldor.builder.jps;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.FileUtilRt;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.jps.model.JpsElementChildRole;
 import org.jetbrains.jps.model.JpsElementFactory;
 import org.jetbrains.jps.model.JpsElementTypeWithDefaultProperties;
 import org.jetbrains.jps.model.JpsSimpleElement;
 import org.jetbrains.jps.model.module.JpsModule;
 import org.jetbrains.jps.model.module.JpsModuleType;
-import org.jetbrains.jps.model.module.JpsTypedModule;
 import org.jetbrains.jps.util.JpsPathUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Objects;
 
 import static aldor.util.StringUtilsAldorRt.trimExtension;
 
-public class JpsAldorModuleType implements JpsModuleType<JpsSimpleElement<JpsAldorModuleProperties>>, JpsElementTypeWithDefaultProperties<JpsSimpleElement<JpsAldorModuleProperties>> {
+public class JpsAldorModuleType implements JpsModuleType<JpsSimpleElement<AldorModuleExtensionProperties>>, JpsElementTypeWithDefaultProperties<JpsSimpleElement<AldorModuleExtensionProperties>> {
+    private static final Logger LOG = Logger.getInstance(JpsAldorModuleType.class);
     public static final JpsAldorModuleType INSTANCE = new JpsAldorModuleType();
 
     @NotNull
     @Override
-    public JpsElementChildRole<JpsSimpleElement<JpsAldorModuleProperties>> getPropertiesRole() {
+    public JpsElementChildRole<JpsSimpleElement<AldorModuleExtensionProperties>> getPropertiesRole() {
         return AldorModuleExtensionRole.INSTANCE;
     }
 
     @NotNull
     @Override
-    public JpsSimpleElement<JpsAldorModuleProperties> createDefaultProperties() {
-        return JpsElementFactory.getInstance().createSimpleElement(new JpsAldorModuleProperties("", JpsAldorMakeDirectoryOption.Invalid));
+    public JpsSimpleElement<AldorModuleExtensionProperties> createDefaultProperties() {
+        return JpsElementFactory.getInstance().createSimpleElement(AldorModuleExtensionProperties.builder()
+                .setSdkName(null)
+                .setOutputDirectory("")
+                .setOption(JpsAldorMakeDirectoryOption.Invalid)
+                .setBuildJavaComponents(true)
+                .setJavaSdkName(null)
+                .build());
     }
 
-    public JpsAldorModuleProperties moduleProperties(JpsModule module) {
-        JpsTypedModule<JpsSimpleElement<JpsAldorModuleProperties>> aldorModule = Objects.requireNonNull(module.asTyped(this));
-        return aldorModule.getProperties().getData();
-
+    @Nullable
+    public AldorModuleExtensionProperties moduleProperties(JpsModule module) {
+        if (module == null) {
+            return null;
+        }
+        LOG.info("Reading module properties " + module.getName() + " --> " + module.getModuleType());
+        module.getContainer().getChild(JpsAldorModuleExtension.ROLE);
+        return JpsAldorModuleExtension.getExtension(module).getProperties();
     }
 
 
-    public File buildDirectory(JpsAldorModuleProperties properties, File contentRoot, File sourceRoot, File sourceFile) {
+    public File buildDirectory(AldorModuleExtensionProperties properties, File contentRoot, File sourceRoot, File sourceFile) {
         switch (properties.makeDirectoryOption()) {
             case Source:
                 return sourceRoot;
@@ -63,7 +74,7 @@ public class JpsAldorModuleType implements JpsModuleType<JpsSimpleElement<JpsAld
 
     @NotNull
     @Contract(pure = true)
-    public String targetName(JpsAldorModuleProperties properties, @NotNull File sourceRoot, @NotNull File file) {
+    public String targetName(AldorModuleExtensionProperties properties, @NotNull File sourceRoot, @NotNull File file) {
         switch (properties.makeDirectoryOption()) {
             case Source:
                 String url = properties.outputDirectory();

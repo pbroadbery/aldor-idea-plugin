@@ -1,8 +1,42 @@
+import org.jetbrains.intellij.IntelliJPlugin
+import org.jetbrains.intellij.IntelliJPluginExtension
 
-jar.archiveFileName = "aldor-jps-plugin.jar"
+jar {
+   archiveFileName = "aldor-jps-plugin.jar"
+}
+
+apply plugin: 'org.jetbrains.intellij'
+intellij {
+    version "IC-201.7223.91"
+    plugins = ['java'] // Probably shouldn't be needed, but is
+    configureDefaultDependencies = false
+}
+
+dependencies {
+    compile group: 'org.jetbrains', name: 'annotations', version: '19.0.0'
+    compile 'com.google.guava:guava:28.2-jre'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+afterEvaluate {
+    dependencies {
+        compile intellij { include('platform-api.jar') }
+        compile intellij { include('util.jar') }
+        compile intellij { include('jps-model.jar') }
+        compile intellij { include('jdom.jar') }
+        compile intellijPlugin('java') { include('jps-builders.jar') }
+    }
+
+    project.tasks.remove(project.tasks.runIde)
+}
 
 task list(dependsOn: configurations.compile) {
     doLast {
-        println "classpath = ${configurations.compile.collect { File file -> file.toString()}}"
+        configurations.compile.forEach({println "Classpath " + it})
+        //println "classpath = ${configurations.compile.collect { File file -> file.toString()}}"
+        println "plugins " + plugins.findAll() {it.getClass()}
+        println "plugin  " + plugins.findPlugin(IntelliJPlugin.class)
+        println "extensions " + extensions.findAll() {it.getClass()}
+        println "extensions " + project.extensions.findByName('intellij')
+        println "plugindependencies " + intellij.pluginDependencies.findAll() {it.jarFiles }
     }
 }

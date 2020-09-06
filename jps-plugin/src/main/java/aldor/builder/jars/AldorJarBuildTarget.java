@@ -32,6 +32,7 @@ public class AldorJarBuildTarget extends BuildTarget<AldorJarRootDescriptor> {
         super(jarBuildTargetType);
         this.sourceRoot = sourceRoot;
         this.builderService = jarBuildTargetType.buildService();
+        LOG.info("Created jar build target " + getId());
     }
 
     @Override

@@ -1,7 +1,5 @@
 package aldor.sdk.aldor;
 
-import aldor.sdk.NamedSdk;
-import com.intellij.openapi.projectRoots.ProjectJdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkAdditionalData;
 import com.intellij.openapi.projectRoots.SdkModel;
@@ -9,7 +7,6 @@ import com.intellij.openapi.projectRoots.SdkModificator;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 public final class AldorSdkAdditionalDataHelper {
@@ -31,18 +28,12 @@ public final class AldorSdkAdditionalDataHelper {
 
     public void saveAdditionalData(@NotNull SdkAdditionalData data, @NotNull Element additional) {
         AldorSdkAdditionalData aldorSdkAdditionalData = (AldorSdkAdditionalData) data;
-        if (aldorSdkAdditionalData.aldorUnitSdk.name() != null) {
-            additional.setAttribute("AldorUnitSdkName", aldorSdkAdditionalData.aldorUnitSdk.name());
-        }
         additional.setAttribute("AldorUnitEnabled", Boolean.toString(aldorSdkAdditionalData.aldorUnitEnabled));
         additional.setAttribute("JavaClassDirectory", Optional.ofNullable(aldorSdkAdditionalData.javaClassDirectory).orElse(""));
     }
 
     public AldorSdkAdditionalData loadAdditionalData(Element additional) {
         AldorSdkAdditionalData data = new AldorSdkAdditionalData();
-        String sdkName = additional.getAttributeValue("AldorUnitSdkName");
-        Optional<Sdk> sdk = Arrays.stream(ProjectJdkTable.getInstance().getAllJdks()).filter(s -> s.getName().equals(sdkName)).findFirst();
-        data.aldorUnitSdk= sdk.map(NamedSdk::new).orElse(new NamedSdk(sdkName));
         data.aldorUnitEnabled = Boolean.valueOf(additional.getAttributeValue("AldorUnitEnabled"));
         data.javaClassDirectory = additional.getAttributeValue("JavaClassDirectory");
         return data;

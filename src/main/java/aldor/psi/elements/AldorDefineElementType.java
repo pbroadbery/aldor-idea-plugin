@@ -39,6 +39,7 @@ public class AldorDefineElementType extends StubCodecElementType<AldorDefineStub
 
     @Override
     public void indexStub(@NotNull AldorDefineStub stub, @NotNull IndexSink sink) {
+        LOG.trace("Indexing stub " + stub.defineId() + " " + stub.defineInfo().level() +" " + stub.defineInfo().classification());
         if (stub.defineId() != null) {
             sink.occurrence(DEFINE_NAME_INDEX, stub.defineId());
             if (stub.defineInfo().level() == AldorDefineInfo.Level.TOP) {

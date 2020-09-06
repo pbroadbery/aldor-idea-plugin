@@ -5,7 +5,8 @@ import aldor.psi.AldorDefine;
 import aldor.psi.AldorIdentifier;
 import aldor.psi.AldorPsiUtils;
 import com.intellij.execution.actions.ConfigurationContext;
-import com.intellij.execution.actions.RunConfigurationProducer;
+import com.intellij.execution.actions.LazyRunConfigurationProducer;
+import com.intellij.execution.configurations.ConfigurationFactory;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.FileIndexFacade;
 import com.intellij.openapi.roots.ModuleRootManager;
@@ -14,17 +15,17 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 
-public class AldorUnitConfigurationProducer extends RunConfigurationProducer<AldorUnitConfiguration> {
+public class AldorUnitConfigurationProducer extends LazyRunConfigurationProducer<AldorUnitConfiguration> {
 
     protected AldorUnitConfigurationProducer() {
-        super(new AldorUnitRunConfigurationType());
-    }
 
+    }
 
     @Override
     protected boolean setupConfigurationFromContext(AldorUnitConfiguration configuration, ConfigurationContext context, Ref<PsiElement> sourceElement) {
@@ -73,4 +74,9 @@ public class AldorUnitConfigurationProducer extends RunConfigurationProducer<Ald
         return FileUtil.pathsEqual(file.getVirtualFile().getPath(), configuration.inputFile());
     }
 
+    @NotNull
+    @Override
+    public ConfigurationFactory getConfigurationFactory() {
+        return AldorUnitRunConfigurationType.instance().factory();
+    }
 }

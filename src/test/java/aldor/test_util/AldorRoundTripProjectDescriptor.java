@@ -3,7 +3,6 @@ package aldor.test_util;
 import aldor.build.module.AldorModuleType;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.JavaSdk;
 import com.intellij.openapi.projectRoots.ProjectJdkTable;
@@ -21,6 +20,12 @@ import java.io.IOException;
 @Deprecated
 public class AldorRoundTripProjectDescriptor extends LightProjectDescriptor {
     private Sdk sdk = null;
+
+    @NotNull
+    @Override
+    public String getModuleTypeId() {
+        return AldorModuleType.ID;
+    }
 
     @Override
     public void setUpProject(@NotNull Project project, @NotNull SetupHandler handler) throws Exception {
@@ -57,12 +62,6 @@ public class AldorRoundTripProjectDescriptor extends LightProjectDescriptor {
     public Module createMainModule(@NotNull Project project) {
         Module m = super.createMainModule(project);
         return m;
-    }
-
-    @Override
-    @NotNull
-    public ModuleType<?> getModuleType() {
-        return AldorModuleType.instance();
     }
 
     @Override

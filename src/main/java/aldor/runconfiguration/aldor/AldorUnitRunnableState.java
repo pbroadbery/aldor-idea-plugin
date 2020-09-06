@@ -1,6 +1,9 @@
 package aldor.runconfiguration.aldor;
 
-import aldor.sdk.aldor.AldorSdkType;
+import aldor.build.facet.aldor.AldorFacet;
+import aldor.build.facet.aldor.AldorFacetConfiguration;
+import aldor.build.facet.aldor.AldorFacetType;
+import aldor.builder.jps.AldorModuleExtensionProperties;
 import aldor.util.Mavens;
 import aldor.util.StringUtilsAldorRt;
 import com.intellij.execution.CantRunException;
@@ -12,12 +15,15 @@ import com.intellij.execution.process.KillableColoredProcessHandler;
 import com.intellij.execution.process.OSProcessHandler;
 import com.intellij.execution.process.ProcessTerminatedListener;
 import com.intellij.execution.runners.ExecutionEnvironment;
+import com.intellij.facet.Facet;
+import com.intellij.facet.FacetManager;
+import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.projectRoots.ProjectJdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.ex.JavaSdkUtil;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.roots.libraries.ui.OrderRoot;
@@ -31,7 +37,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.idea.maven.utils.library.RepositoryLibraryProperties;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class AldorUnitRunnableState extends AbstractAldorUnitRunnableState<AldorUnitConfiguration> {
     private static final Logger LOG = Logger.getInstance(AldorUnitRunnableState.class);
@@ -46,15 +55,19 @@ public class AldorUnitRunnableState extends AbstractAldorUnitRunnableState<Aldor
     @Override
     protected void configureVMParameters(JavaParameters javaParameters) {
         ParametersList vmParams = javaParameters.getVMParametersList();
-        vmParams.defineProperty("aldorunit.implementation", StringUtilsAldorRt.trimExtension(configuration.myInputFile.getPsiElement().getName()));
+        vmParams.defineProperty("aldor.aldorunit.implementation", StringUtilsAldorRt.trimExtension(configuration.myInputFile.getPsiElement().getName()));
+        vmParams.defineProperty("aldor.aldorunit.testClass", configuration.javaClass());
+        vmParams.defineProperty("aldor.aldorunit.source", configuration.myInputFile.getPsiElement().getName());
     }
 
     @Override
     protected void configureParameters(JavaParameters javaParameters) {
-        javaParameters.setMainClass("com.intellij.rt.execution.junit.JUnitStarter");
+        //javaParameters.setMainClass("com.intellij.rt.execution.junit.JUnitStarter");
+        javaParameters.setMainClass("com.intellij.rt.junit.JUnitStarter");
+
         javaParameters.getProgramParametersList().add("-ideVersion5");
         javaParameters.getProgramParametersList().add("-junit4");
-        javaParameters.getProgramParametersList().add(configuration.javaClass());
+        javaParameters.getProgramParametersList().add("aldor.aldorunit.AldorUnitTestWrapper");
     }
 
     @Override
@@ -67,27 +80,16 @@ public class AldorUnitRunnableState extends AbstractAldorUnitRunnableState<Aldor
         configureLocalClassPath(classPath);
     }
 
+    // TODO: Throw CantRunException if needed
+    @SuppressWarnings("RedundantThrows")
     private void configureAldorUnitClassPath(PathsList classPath) throws CantRunException {
         // Hardcode.
-        // TODO: Use SDK
-        Module module = configuration.getConfigurationModule().getModule();
-        if (module == null) {
-            throw new CantRunException("Missing module for configuration");
+        // TODO: Use library - or builtin
+        File aldorUnitJar = new File(PathManager.getPluginsPath(), "aldor-idea/aldorunit/aldorunit.jar");
+        if (!aldorUnitJar.exists()) {
+            LOG.error("Missing aldor unit jar - " + aldorUnitJar.getAbsolutePath());
         }
-        Sdk sdk = ModuleRootManager.getInstance(module).getSdk();
-        if (sdk == null) {
-            throw new CantRunException("Missing SDK for configuration");
-        }
-        AldorSdkType sdkType = (AldorSdkType) sdk.getSdkType();
-        Sdk aldorUnitSdk = sdkType.aldorUnitSdk(sdk);
-        if (aldorUnitSdk == null) {
-            throw new CantRunException("Missing AldorUnitSdk for configuration");
-        }
-        VirtualFile directory = aldorUnitSdk.getHomeDirectory();
-        if (directory == null) {
-            throw new CantRunException("Missing aldorunit.jar");
-        }
-        classPath.add(directory.findFileByRelativePath("aldorunit.jar"));
+        classPath.add(aldorUnitJar);
     }
 
     private void configureLocalClassPath(PathsList classPath) {
@@ -111,25 +113,36 @@ public class AldorUnitRunnableState extends AbstractAldorUnitRunnableState<Aldor
             LOG.error("Missing module for " + this.configuration.getName());
             return;
         }
-        Sdk sdk = ModuleRootManager.getInstance(module).getSdk();
-        if (sdk == null) {
-            LOG.error("MIssing sdk for " + configuration.getName());
+        AldorFacet facet = FacetManager.getInstance(module).getFacetByType(AldorFacetType.TYPE_ID);
+        if (facet == null) {
+            LOG.warn("Missing facet information");
         }
-        File library = new File(sdk.getHomePath(), "share/lib");
-        File[] jarPaths = library.listFiles(FileFilters.withExtension("jar"));
-        for (File jarPath : jarPaths) {
-            classPath.addFirst(jarPath.getAbsolutePath());
+        Optional<String> sdkName = Optional.ofNullable(facet)
+                .map(Facet::getConfiguration)
+                .map(AldorFacetConfiguration::getState)
+                .map(AldorModuleExtensionProperties::sdkName);
+        Optional<Sdk> sdk = sdkName.map(name -> ProjectJdkTable.getInstance().findJdk(name));
+        if (!sdk.isPresent()) {
+            LOG.error("Missing aldor implementation for " + configuration.getName() + " implementation: " + sdkName.orElse("<missing>")
+                    + ". Available SDKS " + Arrays.stream(ProjectJdkTable.getInstance().getAllJdks()).map(Sdk::getName).collect(Collectors.toList()));
+        }
+        else {
+            File library = new File(sdk.get().getHomePath(), "share/lib");
+            File[] jarPaths = library.listFiles(FileFilters.withExtension("jar"));
+            for (File jarPath : jarPaths) {
+                classPath.addFirst(jarPath.getAbsolutePath());
+            }
         }
     }
 
     private void configureJUnitClassPath(PathsList classPath) throws CantRunException {
         Project project = this.configuration.getProject();
-        Collection<OrderRoot> roots = null;
+        Collection<OrderRoot> roots;
         try {
             roots = Mavens.downloadDependenciesWhenRequired(project,
                     new RepositoryLibraryProperties("junit", "junit", Mavens.JUNIT_VERSION));
         } catch (Mavens.MavenDownloadException e) {
-            throw new CantRunException(e.getMessage() + " when running " + this.configuration.getName());
+            throw new CantRunException(e.getMessage() + " when running " + this.configuration.getName(), e);
         }
 
         for (OrderRoot root : roots) {
@@ -140,9 +153,10 @@ public class AldorUnitRunnableState extends AbstractAldorUnitRunnableState<Aldor
         }}
 
     private void configureSdkClassPath(PathsList classPath) {
+        classPath.addFirst(JavaSdkUtil.getIdeaRtJarPath());
+
         File platformJar = new File(PathUtil.getJarPathForClass(Project.class));
         File parentFile = platformJar.getParentFile().getAbsoluteFile();
-        classPath.addFirst(JavaSdkUtil.getIdeaRtJarPath());
         classPath.addFirst(new File(parentFile, "../plugins/junit/lib/junit-rt.jar").getAbsolutePath());
     }
 

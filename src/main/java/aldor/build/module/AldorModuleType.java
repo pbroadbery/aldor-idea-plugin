@@ -1,11 +1,17 @@
 package aldor.build.module;
 
+import aldor.build.facet.SpadFacet;
+import aldor.build.facet.aldor.AldorFacet;
+import aldor.build.facet.fricas.FricasFacet;
+import aldor.builder.jps.SpadFacetProperties;
+import aldor.file.AldorFileType;
+import aldor.file.SpadFileType;
 import aldor.ui.AldorIcons;
+import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.module.ModuleTypeManager;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.jps.model.java.JavaSourceRootType;
 import org.jetbrains.jps.model.module.JpsModuleSourceRootType;
 
 import javax.swing.Icon;
@@ -16,6 +22,10 @@ import javax.swing.Icon;
 public class AldorModuleType extends ModuleType<AldorModuleBuilder> {
     public static final String NAME = "Aldor Module";
     public static final String ID = "ALDOR-MODULE";
+
+    public static AldorModuleType instance() {
+        return (AldorModuleType) ModuleTypeManager.getInstance().findByID(ID);
+    }
 
     public AldorModuleType() {
         super(ID);
@@ -44,17 +54,22 @@ public class AldorModuleType extends ModuleType<AldorModuleBuilder> {
         return AldorIcons.MODULE;
     }
 
-    public static AldorModuleType instance() {
-        return (AldorModuleType) ModuleTypeManager.getInstance().findByID(ID);
-    }
-
     @Override
-    public boolean isSupportedRootType(@SuppressWarnings("rawtypes") JpsModuleSourceRootType type) {
-        return type == JavaSourceRootType.SOURCE;
+    public boolean isSupportedRootType(JpsModuleSourceRootType type) {
+        return true;
     }
 
     public boolean is(Module module) {
         return ModuleType.is(module, this);
     }
 
+    public SpadFacet<? extends SpadFacetProperties> facetModuleType(Module module, FileType fileType) {
+        if (fileType.equals(AldorFileType.INSTANCE)) {
+            return AldorFacet.forModule(module);
+        }
+        else if (fileType.equals(SpadFileType.INSTANCE)) {
+            return FricasFacet.forModule(module);
+        }
+        return null;
+    }
 }

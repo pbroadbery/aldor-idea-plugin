@@ -3,7 +3,7 @@ jdk:
   - openjdk8
 
 before_install:
-  - echo "wrapper {gradleVersion='4.4.1'}" > nada.gradle
+  - echo "wrapper {gradleVersion='5.2.1'}" > nada.gradle
   - cat nada.gradle
   - gradle -b nada.gradle wrapper
   - ./gradlew --version

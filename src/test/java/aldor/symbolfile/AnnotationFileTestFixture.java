@@ -10,7 +10,6 @@ import com.google.common.collect.Maps;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.roots.libraries.ui.OrderRoot;
 import com.intellij.openapi.util.text.StringUtil;
@@ -210,11 +209,12 @@ public class AnnotationFileTestFixture extends BaseFixture {
             return this;
         }
 
-        public MakefileBuilder withAldorUnit(Sdk sdk) {
-            AldorSdkType type = (AldorSdkType) sdk.getSdkType();
+        public MakefileBuilder withAldorUnit() {
+            /* // TODO: Use library or builtin aldorunit
             Sdk aldorUnitSdk = type.aldorUnitSdk(sdk);
             assert(aldorUnitSdk != null);
             definitions.add("CLASSPATH += " + aldorUnitSdk.getHomePath() + "/aldorunit.jar");
+             */
 
             try {
                 Collection<OrderRoot> roots = Mavens.downloadDependenciesWhenRequired(project,

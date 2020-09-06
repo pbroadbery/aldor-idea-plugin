@@ -32,9 +32,9 @@ public class AldorTemplateFactory extends ProjectTemplatesFactory {
                 )));
 
 
-        templateRegisties.add(new TemplateRegistry("Spad", Lists.newArrayList(
-                new BuilderBasedTemplate(new  AldorGitModuleBuilder(GitModuleType.Fricas)),
-                new BuilderBasedTemplate(new SpadSimpleModuleBuilder())
+        templateRegisties.add(new TemplateRegistry("Fricas", Lists.newArrayList(
+                new BuilderBasedTemplate(new AldorGitModuleBuilder(GitModuleType.Fricas)),
+                new BuilderBasedTemplate(new FricasSimpleModuleBuilder())
                 )));
     }
 

@@ -22,6 +22,7 @@ public class SpadLibraryManagerLocalSdkTest extends SpadLibraryManagerTestCase {
     @Rule
     public final TestRule platformTestRule =
             RuleChain.emptyRuleChain()
+                    //.around(JUnits.setLogToDebugTestRule)
                     .around(directoryPresentRule)
                     .around(new LightPlatformJUnit4TestRule(testFixture, ""))
                     .around(JUnits.swingThreadTestRule());

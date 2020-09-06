@@ -16,7 +16,7 @@ import static org.junit.Assert.assertTrue;
 public class SpadLibraryManagerDistSdkTest extends SpadLibraryManagerTestCase {
 
     @Rule
-    public final DirectoryPresentRule directory = new DirectoryPresentRule("/home/pab/Work/fricas/opt/lib/fricas/target/x86_64-unknown-linux");
+    public final DirectoryPresentRule directory = new DirectoryPresentRule("/home/pab/Work/fricas/opt/lib/fricas/target/x86_64-linux-gnu");
 
     private final CodeInsightTestFixture testFixture = createFixture(fricasSdkProjectDescriptor(directory.path()));
 

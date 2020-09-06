@@ -3,7 +3,6 @@ package aldor.test_util;
 import com.intellij.compiler.server.BuildManager;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
-import com.intellij.execution.ProgramRunnerUtil;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.configurations.JavaCommandLine;
 import com.intellij.execution.configurations.JavaParameters;
@@ -54,19 +53,15 @@ public final class JUnits {
     public static final TestRule setLogToDebugTestRule = prePostTestRule(JUnits::setLogToDebug, LogManager::resetConfiguration);
     private static final Logger LOG = Logger.getInstance(JUnits.class);
 
-    public static void setLogToDebug() {
-        if (!isCIBuild()) {
-            setLogLevel(DEBUG);
-        }
+    public static Runnable setLogToDebug() {
+        return isCIBuild() ? () -> {} : setLogLevel(DEBUG);
     }
 
-    public static void setLogToInfo() {
-        if (!isCIBuild()) {
-            setLogLevel(INFO);
-        }
+    public static Runnable setLogToInfo() {
+        return isCIBuild() ? () -> {} : setLogLevel(INFO);
     }
 
-    private static void setLogLevel(Level level) {
+    private static Runnable setLogLevel(Level level) {
         LogManager.resetConfiguration();
         EdtTestUtil.runInEdtAndWait(() -> {
             String threadName = Thread.currentThread().getName();
@@ -80,6 +75,8 @@ public final class JUnits {
         LogManager.getRootLogger().addAppender(appender);
         LogManager.getRootLogger().setLevel(level);
         Logger.setFactory(TestLoggerFactory.class);
+
+        return () -> LogManager.getRootLogger().removeAppender(appender);
     }
 
     public enum JpsDebuggingState { ON, OFF }
@@ -161,7 +158,7 @@ public final class JUnits {
         Project project = configuration.getProject();
         RunnerAndConfigurationSettingsImpl
                 settings = new RunnerAndConfigurationSettingsImpl(RunManagerImpl.getInstanceImpl(project), configuration, false);
-        ProgramRunner<?> runner = ProgramRunnerUtil.getRunner(DefaultRunExecutor.EXECUTOR_ID, settings);
+        ProgramRunner<?> runner = ProgramRunner.getRunner(DefaultRunExecutor.EXECUTOR_ID, settings.getConfiguration());
         assert runner != null;
         ExecutionEnvironment environment = new ExecutionEnvironment(executor, runner, settings, project);
         JavaCommandLine state = (JavaCommandLine) configuration.getState(executor, environment);
@@ -183,8 +180,9 @@ public final class JUnits {
 
             @SuppressWarnings("ObjectEquality")
             @Override
-            public void onTextAvailable(@NotNull ProcessEvent event, @SuppressWarnings("rawtypes") @NotNull Key outputType) {
+            public void onTextAvailable(@NotNull ProcessEvent event, @NotNull Key outputType) {
                 String text = event.getText();
+                LOG.info("Text available: " + outputType + " " + event.getText());
                 if (StringUtil.isEmptyOrSpaces(text)) {
                     return;
                 }
@@ -227,6 +225,36 @@ public final class JUnits {
 
         public void exitCode(int exitCode) {
             this.exitCode = exitCode;
+        }
+    }
+
+    public static class TearDownItem {
+        private final Runnable runnable;
+        private final Throwable alloc = new Throwable();
+
+        public TearDownItem() {
+            this.runnable = () -> {};
+        }
+
+        public TearDownItem(Runnable r) {
+            this.runnable = () -> {
+                try {
+                    r.run();
+                }
+                catch (Throwable t) {
+                    LOG.warn("Creation point: ", alloc);
+                    LOG.warn("Error ", t);
+                    throw t;
+                }
+            };
+        }
+
+        public TearDownItem with(Runnable r) {
+            return new TearDownItem(() -> { runnable.run(); r.run(); });
+        }
+
+        public void tearDown() {
+            this.runnable.run();
         }
     }
 

@@ -33,6 +33,9 @@ public class AldorNameReference extends PsiReferenceBase<AldorIdentifier> {
         if (result == null) {
             result = FileScopeWalker.lookupBySymbolFile(getElement());
         }
+        if (result == null) {
+            result = FileScopeWalker.lookupByIndex(getElement());
+        }
         return result;
     }
 

@@ -37,7 +37,7 @@ public class CompileOutputParserTest {
 
     @SuppressWarnings("MagicNumber")
     @Test
-    public void testErrorMessasges() {
+    public void testErrorMessages() {
         List<CompilerMessage> messages = new ArrayList<>();
         CompileOutputParser.Listener listener = messages::add;
         CompileOutputParser parser = new CompileOutputParser("someCompiler", new File("."), listener);

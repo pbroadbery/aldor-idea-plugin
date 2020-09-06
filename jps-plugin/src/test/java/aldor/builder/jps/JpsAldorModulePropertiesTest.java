@@ -9,25 +9,32 @@ public class JpsAldorModulePropertiesTest {
 
     @Test
     public void testIsValid_whenInvalid() {
-        JpsAldorModuleProperties properties = new JpsAldorModuleProperties("/", JpsAldorMakeDirectoryOption.Invalid);
+        AldorModuleExtensionProperties properties = new AldorModuleExtensionProperties("aldor-sdk", "/", JpsAldorMakeDirectoryOption.Invalid, false, "java-sdk");
         assertFalse(properties.isValid());
     }
 
     @Test
     public void testIsValid_whenValid() {
-        JpsAldorModuleProperties properties = new JpsAldorModuleProperties("/", JpsAldorMakeDirectoryOption.Source);
+        AldorModuleExtensionProperties properties = new AldorModuleExtensionProperties("aldor-sdk", "/", JpsAldorMakeDirectoryOption.Source, false, "java-sdk");
         assertTrue(properties.isValid());
     }
 
     @Test
     public void testIsValid_whenMissingDir() {
-        JpsAldorModuleProperties properties = new JpsAldorModuleProperties("", JpsAldorMakeDirectoryOption.Source);
+        AldorModuleExtensionProperties properties = new AldorModuleExtensionProperties("aldor-sdk", "", JpsAldorMakeDirectoryOption.Source, false, "java-sdk");
         assertFalse(properties.isValid());
     }
 
     @Test
     public void testIsValid_whenNullDir() {
-        JpsAldorModuleProperties properties = new JpsAldorModuleProperties(null, JpsAldorMakeDirectoryOption.Source);
+        AldorModuleExtensionProperties properties = new AldorModuleExtensionProperties("aldor-sdk", null, JpsAldorMakeDirectoryOption.Source, false, "java-sdk");
         assertFalse(properties.isValid());
     }
+
+    @Test
+    public void testJavaComponents() {
+        AldorModuleExtensionProperties properties = new AldorModuleExtensionProperties("aldor-sdk", null, JpsAldorMakeDirectoryOption.Source, true, "java-sdk");
+        assertTrue(properties.buildJavaComponents());
+    }
+
 }

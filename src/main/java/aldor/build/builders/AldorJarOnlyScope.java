@@ -49,7 +49,7 @@ public class AldorJarOnlyScope extends ExportableUserDataHolderBase implements C
     @NotNull
     @Override
     public Module[] getAffectedModules() {
-        return Module.EMPTY_ARRAY;
+        return new Module[] {module};
     }
 
     public boolean isAllRoots() {

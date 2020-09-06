@@ -25,11 +25,12 @@ public class AldorSimpleModuleBuilderTest {
     public TestRule testRule = RuleChain.emptyRuleChain()
             .around(JUnits.swingThreadTestRule())
             .around(JUnits.fixtureRule(fixture))
+            .around(JUnits.setLogToDebugTestRule)
             ;
 
     @Test
     public void testBuilder() throws Exception {
-        ModifiableModuleModel model = getModuleManager().getModifiableModel();
+        ModifiableModuleModel model = ModuleManager.getInstance(fixture.getProject()).getModifiableModel();
         //model.newModule("/tmp", "Aldor");
         File tmp = Files.createTempDir();
         tmp.deleteOnExit();
@@ -38,10 +39,6 @@ public class AldorSimpleModuleBuilderTest {
         builder.setModuleFilePath(tmp.getPath());
         Module module = ApplicationManager.getApplication().runWriteAction((ThrowableComputable<Module, Exception>) () -> builder.createModule(model));
         assertNotNull(module);
-    }
-
-    private ModuleManager getModuleManager() {
-        return ModuleManager.getInstance(fixture.getProject());
     }
 
 }

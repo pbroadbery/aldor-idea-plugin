@@ -20,8 +20,10 @@ class LineNumberMap {
     private final NavigableMap<Integer, Integer> lineNumberForOffset;
     private final Map<Integer, Integer> offsetForLineNumber;
     private final IndentWidthCalculator widthCalculator; // Should really be per-project or something.
+    private final String fileName;
 
-    LineNumberMap(@SuppressWarnings("TypeMayBeWeakened") PsiFile file) {
+    LineNumberMap(PsiFile file) {
+        this.fileName = file.getName();
         this.lineNumberForOffset = scanLines(file);
         widthCalculator = new IndentWidthCalculator();
         offsetForLineNumber = lineNumberForOffset.entrySet().stream()
@@ -29,6 +31,9 @@ class LineNumberMap {
     }
 
     public int offsetForLine(int lineNumber) {
+        if (!offsetForLineNumber.containsKey(lineNumber)) {
+            throw new RuntimeException("Missing information for line: " + lineNumber + " of " + fileName);
+        }
         return offsetForLineNumber.get(lineNumber);
     }
 

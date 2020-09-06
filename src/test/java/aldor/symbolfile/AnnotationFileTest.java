@@ -10,6 +10,7 @@ import aldor.test_util.JUnits;
 import aldor.test_util.LightPlatformJUnit4TestRule;
 import aldor.test_util.SdkProjectDescriptors;
 import aldor.util.AnnotatedOptional;
+import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
@@ -49,6 +50,10 @@ public class AnnotationFileTest {
             RuleChain.emptyRuleChain()
                     .around(aldorExecutableRule)
                     .around(new LightPlatformJUnit4TestRule(insightTestFixture, ""))
+                    .around(JUnits.prePostTestRule(() -> {
+                        ApplicationManagerEx.getApplicationEx().setSaveAllowed(true);
+                        insightTestFixture.getProject().save();
+                    }, () -> {}))
                     .around(annotationTestFixture.rule(insightTestFixture::getProject));
     @Test
     public void testLocalReferences() throws Exception {

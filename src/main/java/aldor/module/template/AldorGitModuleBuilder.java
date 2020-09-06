@@ -2,6 +2,7 @@ package aldor.module.template;
 
 import aldor.build.module.AldorModuleBuilder;
 import aldor.build.module.AldorModuleType;
+import aldor.builder.jps.AldorSourceRootType;
 import aldor.sdk.aldor.AldorLocalSdkType;
 import aldor.sdk.fricas.FricasLocalSdkType;
 import com.intellij.ide.util.projectWizard.WizardInputField;
@@ -14,34 +15,26 @@ import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 final class AldorGitModuleBuilder extends AldorModuleBuilder {
     private static final String FLD_SOURCEDIR = "aldor";
     private static final String FLD_USEEXISTING = "useExisting";
     private static final String FLD_BUILDDIR = "build";
-    private final Map<String, WizardInputField<?>> additionalFieldsByName;
-    private final List<WizardInputField<?>> additionalFields;
+    private final WizardFieldContainer fields = new WizardFieldContainer();
     private final GitModuleDetail detail;
 
     @SuppressWarnings("ThisEscapedInObjectConstruction")
     AldorGitModuleBuilder(GitModuleType type) {
         super(AldorModuleType.instance());
         this.detail = type.fn().apply(this);
-        additionalFields = createAdditionalFields();
-        this.additionalFieldsByName = additionalFields.stream().collect(Collectors.toMap(WizardInputField::getId, f -> f));
+        createAdditionalFields();
     }
 
-    private List<WizardInputField<?>> createAdditionalFields() {
-        List<WizardInputField<?>> fields = new ArrayList<>();
+    private void createAdditionalFields() {
         fields.add(new WizardCheckBox(FLD_USEEXISTING, "Use existing configuration", true));
         fields.add(new WizardTextField(FLD_SOURCEDIR, "Source directory", "aldor", this::validateSourceDirectory));
         fields.add(new WizardTextField(FLD_BUILDDIR, "Build directory", "build", this::validateBuildDirectory));
-
-        return fields;
     }
 
     @Nullable
@@ -64,8 +57,8 @@ final class AldorGitModuleBuilder extends AldorModuleBuilder {
 
     @SuppressWarnings("rawtypes")
     @Override
-    public List<WizardInputField> getAdditionalFields() {
-        return new ArrayList<>(additionalFieldsByName.values());
+    public List<WizardInputField<?>> getAdditionalFields() {
+        return fields.fields();
     }
 
     @Override
@@ -101,7 +94,7 @@ final class AldorGitModuleBuilder extends AldorModuleBuilder {
         @Override
         public void setupRootModel(final ModifiableRootModel modifiableRootModel) throws ConfigurationException {
             String contentEntryPath = getContentEntryPath();
-            String sourceDirectory = additionalFieldsByName.get(FLD_SOURCEDIR).getValue();
+            String sourceDirectory = fields.field(FLD_SOURCEDIR).getValue();
 
             if (StringUtil.isEmpty(contentEntryPath)) {
                 return;
@@ -122,7 +115,7 @@ final class AldorGitModuleBuilder extends AldorModuleBuilder {
             for (String path: paths) {
                 VirtualFile file = entry.getFile().findFileByRelativePath(sourceDirectory + "/" + path);
                 if (file != null) {
-                    entry.addSourceFolder(file, false);
+                    entry.addSourceFolder(file, AldorSourceRootType.INSTANCE);
                 }
             }
         }
@@ -144,7 +137,7 @@ final class AldorGitModuleBuilder extends AldorModuleBuilder {
         @Override
         public void setupRootModel(final ModifiableRootModel modifiableRootModel) throws ConfigurationException {
             String contentEntryPath = getContentEntryPath();
-            String sourceDirectory = additionalFieldsByName.get(FLD_SOURCEDIR).getValue();
+            String sourceDirectory = fields.field(FLD_SOURCEDIR).getValue();
 
             if (StringUtil.isEmpty(contentEntryPath)) {
                 return;
@@ -165,7 +158,7 @@ final class AldorGitModuleBuilder extends AldorModuleBuilder {
             for (String path: paths) {
                 VirtualFile file = entry.getFile().findFileByRelativePath(sourceDirectory + "/" + path);
                 if (file != null) {
-                    entry.addSourceFolder(file, false);
+                    entry.addSourceFolder(file, AldorSourceRootType.INSTANCE);
                 }
             }
         }

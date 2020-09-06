@@ -1,5 +1,6 @@
 package aldor.spad;
 
+import aldor.build.facet.fricas.FricasFacet;
 import aldor.lexer.AldorTokenTypes;
 import aldor.parser.ParserFunctions;
 import aldor.psi.AldorDefine;
@@ -27,6 +28,7 @@ import org.junit.rules.TestRule;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static aldor.test_util.LightPlatformJUnit4TestRule.createFixture;
@@ -37,7 +39,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 public class FricasSpadLibraryTest {
-    private final DirectoryPresentRule directoryPresentRule = new DirectoryPresentRule("/home/pab/Work/fricas/opt/lib/fricas/target/x86_64-unknown-linux");
+    private final DirectoryPresentRule directoryPresentRule = new DirectoryPresentRule("/home/pab/Work/fricas/opt/lib/fricas/target/x86_64-linux-gnu");
     private final CodeInsightTestFixture testFixture = createFixture(fricasSdkProjectDescriptor(directoryPresentRule.path()));
 
     @Rule
@@ -77,7 +79,7 @@ public class FricasSpadLibraryTest {
 
         Collection<AldorDefine> ll = AldorDefineTopLevelIndex.instance.get("Group", testFixture.getProject(), GlobalSearchScope.allScope(testFixture.getProject()));
 
-        Syntax syntax = notNull(SyntaxPsiParser.parse(ll.iterator().next().lhs())).as(DeclareNode.class).lhs();
+        Syntax syntax = Objects.requireNonNull(SyntaxPsiParser.parse(ll.iterator().next().lhs())).as(DeclareNode.class).lhs();
         System.out.println("Syntax is " + syntax);
         List<SpadLibrary.Operation> pp = lib.operations(syntax);
         for (SpadLibrary.Operation p: pp) {
@@ -140,7 +142,7 @@ public class FricasSpadLibraryTest {
 
     @NotNull
     private VirtualFile projectSdkAlgebraDirectory() {
-        Sdk projectSdk = ProjectRootManager.getInstance(testFixture.getProject()).getProjectSdk();
+        Sdk projectSdk = FricasFacet.forModule(testFixture.getModule()).getConfiguration().sdk();
         assertNotNull(projectSdk);
         VirtualFile dir = SdkTypes.algebraPath(projectSdk);
         assertNotNull(dir);

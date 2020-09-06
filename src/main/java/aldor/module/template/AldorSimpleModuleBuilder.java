@@ -1,20 +1,25 @@
 package aldor.module.template;
 
-import aldor.build.module.AldorMakeDirectoryOption;
+import aldor.build.facet.aldor.AldorFacet;
 import aldor.build.module.AldorModuleBuilder;
-import aldor.build.module.AldorModulePathService;
 import aldor.build.module.AldorModuleType;
-import aldor.sdk.aldor.AldorInstalledSdkType;
+import aldor.builder.jps.AldorModuleExtensionProperties;
+import aldor.builder.jps.AldorSourceRootType;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
-import com.intellij.ide.util.projectWizard.SdkSettingsStep;
-import com.intellij.ide.util.projectWizard.SettingsStep;
+import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.ide.util.projectWizard.WizardInputField;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.roots.ui.configuration.JdkComboBox;
+import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
+import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectSdksModel;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
@@ -24,28 +29,28 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static aldor.module.template.TemplateFiles.saveFile;
 
 public class AldorSimpleModuleBuilder extends AldorModuleBuilder {
     private static final Logger LOG = Logger.getInstance(AldorSimpleModuleBuilder.class);
-    private final Map<String, WizardInputField<?>> additionalFieldsByName = new HashMap<>();
-
-    protected AldorSimpleModuleBuilder() {
+    private String aldorJdkName = null;
+    private boolean createInitialStructure = true;
+    private final AtomicReference<AldorModuleExtensionProperties> properties = new AtomicReference<>(new AldorModuleExtensionProperties());
+    public AldorSimpleModuleBuilder() {
         super(AldorModuleType.instance());
     }
 
-    @Override
-    public ModuleWizardStep modifySettingsStep(@NotNull SettingsStep settingsStep) {
-        return new SdkSettingsStep(settingsStep, this, id -> id instanceof AldorInstalledSdkType);
+    public void setCreateInitialStructure(boolean flg) {
+        this.createInitialStructure = flg;
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
-    public List<WizardInputField> getAdditionalFields() {
+    public @NotNull List<WizardInputField<?>> getAdditionalFields() {
         return Collections.emptyList();
     }
 
@@ -59,6 +64,15 @@ public class AldorSimpleModuleBuilder extends AldorModuleBuilder {
         return "Aldor module with Makefile created";
     }
 
+    @Override
+    public ModuleWizardStep[] createWizardSteps(@NotNull WizardContext wizardContext, @NotNull ModulesProvider modulesProvider) {
+        return new ModuleWizardStep[] { new AldorNewModuleFacetStep(wizardContext.getProject(), this.properties)};
+    }
+
+    @VisibleForTesting
+    public void setSdk(Sdk sdk) {
+        this.properties.set(properties.get().asBuilder().setSdkName(sdk.getName()).build());
+    }
 
     @Override
     public void setupRootModel(final ModifiableRootModel modifiableRootModel) throws ConfigurationException {
@@ -70,14 +84,16 @@ public class AldorSimpleModuleBuilder extends AldorModuleBuilder {
 
         ContentEntry entry = modifiableRootModel.getContentEntries()[0];
         VirtualFile contentRootDir = entry.getFile();
-        createFileLayout(contentRootDir, modifiableRootModel);
+        if (this.createInitialStructure) {
+            createFileLayout(contentRootDir, modifiableRootModel);
 
-        if (entry.getFile() != null) {
-            VirtualFile file = entry.getFile();
+            if (entry.getFile() != null) {
+                VirtualFile file = entry.getFile();
 
-            if (file != null) {
-                entry.addSourceFolder(file + "/src", false);
-                entry.addExcludeFolder(file + "/src/out");
+                if (file != null) {
+                    entry.addSourceFolder(file + "/src", AldorSourceRootType.INSTANCE);
+                    entry.addExcludeFolder(file + "/src/out");
+                }
             }
         }
     }
@@ -113,7 +129,6 @@ public class AldorSimpleModuleBuilder extends AldorModuleBuilder {
         return LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file);
     }
 
-
     private VirtualFile getContentRoot() {
         if (getContentEntryPath() == null) {
             throw new IllegalStateException("Missing content root");
@@ -125,9 +140,15 @@ public class AldorSimpleModuleBuilder extends AldorModuleBuilder {
 
     @Override
     protected void setupModule(Module module) throws ConfigurationException {
+        LOG.debug("setup module.. facet");
+        AldorFacet.createFacetIfMissing(module, properties.get());
+        LOG.debug("setup module.. module");
         super.setupModule(module);
-        AldorModulePathService pathService = AldorModulePathService.getInstance(module);
-        pathService.getState().setOutputDirectory("out/ao");
-        pathService.getState().setMakeDirectory(AldorMakeDirectoryOption.Source);
+        LOG.debug("setup module.. done");
     }
+
+    public AldorModuleExtensionProperties properties() {
+        return properties.get();
+    }
+
 }

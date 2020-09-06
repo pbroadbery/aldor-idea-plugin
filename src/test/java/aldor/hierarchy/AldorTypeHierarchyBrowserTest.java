@@ -3,6 +3,7 @@ package aldor.hierarchy;
 import aldor.psi.AldorDefine;
 import aldor.psi.AldorIdentifier;
 import aldor.psi.index.AldorDefineTopLevelIndex;
+import aldor.test_util.EnsureClosedRule;
 import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.JUnits;
 import aldor.test_util.LightPlatformJUnit4TestRule;
@@ -30,12 +31,14 @@ import static com.intellij.ide.hierarchy.TypeHierarchyBrowserBase.SUPERTYPES_HIE
 public class AldorTypeHierarchyBrowserTest {
     private final ExecutablePresentRule fricasExecutableRule = new ExecutablePresentRule.Fricas();
     private final CodeInsightTestFixture codeTestFixture = LightPlatformJUnit4TestRule.createFixture(getProjectDescriptor(fricasExecutableRule));
+    private final EnsureClosedRule ensureClosedRule = new EnsureClosedRule();
 
     @Rule
     public final TestRule platformTestRule =
             RuleChain.emptyRuleChain()
-                    .around(JUnits.setLogToInfoTestRule)
+                    .around(JUnits.setLogToDebugTestRule)
                     .around(fricasExecutableRule)
+                    .around(ensureClosedRule)
                     .around(new LightPlatformJUnit4TestRule(codeTestFixture, ""))
                     .around(JUnits.swingThreadTestRule());
 
@@ -46,16 +49,16 @@ public class AldorTypeHierarchyBrowserTest {
 
         PsiElement elt = whole.findElementAt(text.indexOf("List"));
 
-        TestBrowser browser = new TestBrowser(new AldorTypeHierarchyProvider(), elt, SUPERTYPES_HIERARCHY_TYPE);
+        try (TestBrowser browser = new TestBrowser(ensureClosedRule, new AldorTypeHierarchyProvider(), elt, SUPERTYPES_HIERARCHY_TYPE)) {
 
-        browser.update();
+            browser.update();
 
-        System.out.println("Root: " + browser.rootDescriptor());
+            System.out.println("Root: " + browser.rootDescriptor());
 
-        System.out.println("Children: " + browser.childElements());
+            System.out.println("Children: " + browser.childElements());
 
-        browser.dispose();
-        ((Disposable) ProgressManager.getInstance()).dispose();
+            ((Disposable) ProgressManager.getInstance()).dispose();
+        }
     }
 
     @Test
@@ -66,16 +69,15 @@ public class AldorTypeHierarchyBrowserTest {
         HierarchyProvider provider = new AldorTypeHierarchyProvider();
         PsiElement elt = whole.findElementAt(text.indexOf("Ring"));
 
+        try (TestBrowser browser = new TestBrowser(ensureClosedRule, new AldorTypeHierarchyProvider(), elt, SUPERTYPES_HIERARCHY_TYPE)) {
+            browser.update();
 
-        TestBrowser browser = new TestBrowser(new AldorTypeHierarchyProvider(), elt, SUPERTYPES_HIERARCHY_TYPE);
-        browser.update();
+            System.out.println("Root: " + browser.rootDescriptor());
 
-        System.out.println("Root: " + browser.rootDescriptor());
+            System.out.println("Children: " + browser.childElements());
 
-        System.out.println("Children: " + browser.childElements());
-
-        browser.dispose();
-        ((Disposable) ProgressManager.getInstance()).dispose();
+            ((Disposable) ProgressManager.getInstance()).dispose();
+        }
     }
 
     @Test
@@ -84,16 +86,17 @@ public class AldorTypeHierarchyBrowserTest {
 
         AldorIdentifier theId = items.stream().findFirst().flatMap(AldorDefine::defineIdentifier).orElse(null);
 
-        TestBrowser browser = new TestBrowser(new AldorTypeHierarchyProvider(), theId, SUPERTYPES_HIERARCHY_TYPE);
+        try (TestBrowser browser = new TestBrowser(ensureClosedRule, new AldorTypeHierarchyProvider(), theId, SUPERTYPES_HIERARCHY_TYPE)) {
 
-        browser.update();
+            browser.update();
 
-        System.out.println("Root: " + browser.rootDescriptor());
+            System.out.println("Root: " + browser.rootDescriptor());
 
-        System.out.println("Children: " + browser.childElements());
+            System.out.println("Children: " + browser.childElements());
 
-        browser.dispose();
-        ((Disposable) ProgressManager.getInstance()).dispose();
+            browser.dispose();
+            ((Disposable) ProgressManager.getInstance()).dispose();
+        }
     }
 
 
@@ -103,19 +106,19 @@ public class AldorTypeHierarchyBrowserTest {
         Collection<AldorDefine> items = AldorDefineTopLevelIndex.instance.get("EltableAggregate", codeTestFixture.getProject(), GlobalSearchScope.allScope(codeTestFixture.getProject()));
 
         AldorIdentifier theId = items.stream().findFirst().flatMap(AldorDefine::defineIdentifier).orElse(null);
-        TestBrowser browser = new TestBrowser(new AldorTypeHierarchyProvider(), theId, SUPERTYPES_HIERARCHY_TYPE);
+        try (TestBrowser browser = new TestBrowser(ensureClosedRule, new AldorTypeHierarchyProvider(), theId, SUPERTYPES_HIERARCHY_TYPE)) {
 
-        browser.update();
+            browser.update();
 
-        System.out.println("Root: " + browser.rootDescriptor());
+            System.out.println("Root: " + browser.rootDescriptor());
 
-        List<NodeDescriptor<?>> childElements = browser.childElements();
-        System.out.println("Children: " + childElements);
+            List<NodeDescriptor<?>> childElements = browser.childElements();
+            System.out.println("Children: " + childElements);
 
-        Assert.assertEquals(5, childElements.size());
+            Assert.assertEquals(5, childElements.size());
 
-        browser.dispose();
-        ((Disposable) ProgressManager.getInstance()).dispose();
+            ((Disposable) ProgressManager.getInstance()).dispose();
+        }
     }
 
     private static LightProjectDescriptor getProjectDescriptor(ExecutablePresentRule fricasExecutableRule) {

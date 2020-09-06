@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="junit:junit:4.12" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../type-library/aldor-types/types/index/out/jar/aldor-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../type-library/aldor-types/types/index/out/jar/aldor.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../type-library/aldor-types/types/index/out/jar/algebra-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../type-library/aldor-types/types/index/out/jar/algebra.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../type-library/aldor-types/types/index/out/jar/foam.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../type-library/aldor-types/types/index/out/jar/foamj.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../type-library/aldor-types/types/index/out/jar/SpadType.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../type-library/aldor-types/types/index/out/jar/foam-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../type-library/aldor-types/types/index/out/jar/foamj-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../type-library/aldor-types/types/index/out/jar/SpadType.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+  </component>
+</module>

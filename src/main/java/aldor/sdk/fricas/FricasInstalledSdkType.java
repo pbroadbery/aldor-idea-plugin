@@ -1,6 +1,8 @@
 package aldor.sdk.fricas;
 
+import aldor.sdk.AxiomInstalledSdk;
 import aldor.sdk.aldor.AldorVersionQuery;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkAdditionalData;
 import com.intellij.openapi.projectRoots.SdkModel;
@@ -14,6 +16,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
@@ -22,11 +25,18 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public class FricasInstalledSdkType extends SdkType implements FricasSdkType {
+public class FricasInstalledSdkType extends SdkType implements FricasSdkType, AxiomInstalledSdk {
+    private static final String[] homeBasePaths = new String[] {
+            "/home/pab/Work/fricas/opt/lib/fricas/target/",
+            "/usr/local/lib/fricas/target/"
+    };
+    private static final Logger LOG = Logger.getInstance(FricasInstalledSdkType.class);
     private final AldorVersionQuery versionQuery = new AldorVersionQuery();
-    @SuppressWarnings("PublicStaticCollectionField")
-    public static final Set<OrderRootType> applicableRootTypes = Collections.singleton(OrderRootType.SOURCES);
+    private static final Set<OrderRootType> applicableRootTypes = Collections.singleton(OrderRootType.SOURCES);
 
     private static final FricasInstalledSdkType instance = new FricasInstalledSdkType();
     @Contract(pure = true)
@@ -47,7 +57,30 @@ public class FricasInstalledSdkType extends SdkType implements FricasSdkType {
     @Nullable
     @Override
     public String suggestHomePath() {
-        return "/home/pab/Work/fricas/opt/lib/fricas/target/x86_64-unknown-linux";
+        return suggestHomePathsStream().findFirst().orElse(null);
+    }
+
+    @Override
+    public @NotNull Collection<String> suggestHomePaths() {
+        return suggestHomePathsStream().collect(Collectors.toList());
+    }
+
+    private @NotNull Stream<String> suggestHomePathsStream() {
+        Predicate<File> isValidSdkHome = subpath -> isValidSdkHome(subpath.getPath());
+        return Arrays.stream(homeBasePaths).map(File::new).filter(File::exists).map(File::listFiles).flatMap(Arrays::stream)
+                .filter(isValidSdkHome)
+                .map(File::getAbsolutePath);
+    }
+
+    @Override
+    public String getInvalidHomeMessage(String path) {
+        return super.getInvalidHomeMessage(path);
+    }
+
+    @Nonnull
+    @Override
+    public String axiomSysName(Sdk sdk) {
+        return "FRICASsys";
     }
 
     @Override
@@ -97,6 +130,7 @@ public class FricasInstalledSdkType extends SdkType implements FricasSdkType {
     }
 
     private void setupRootType(File fricasHome, SdkModificator sdkModificator, OrderRootType rootType) {
+        LOG.info("Setting up root type for " + sdkModificator.getName() + " " + fricasHome + " " + rootType);
         List<VirtualFile> sources = findSources(fricasHome);
         Collection<VirtualFile> previousRoots = new LinkedHashSet<>(Arrays.asList(sdkModificator.getRoots(rootType)));
         sdkModificator.removeRoots(rootType);
@@ -107,6 +141,7 @@ public class FricasInstalledSdkType extends SdkType implements FricasSdkType {
         for (VirtualFile root : previousRoots) {
             sdkModificator.addRoot(root, rootType);
         }
+        LOG.info("finished root type " + sdkModificator.getName() + " " + rootType);
     }
 
     @NotNull
@@ -127,4 +162,10 @@ public class FricasInstalledSdkType extends SdkType implements FricasSdkType {
     public boolean isLocalInstall() {
         return false;
     }
+
+    @Override
+    public @NotNull String librarySuffix() {
+        return " (interpreter)";
+    }
+
 }

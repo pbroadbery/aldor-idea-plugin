@@ -6,7 +6,7 @@ import org.jetbrains.jps.model.ex.JpsElementChildRoleBase;
 /**
  * @author nik
  */
-public class AldorModuleExtensionRole extends JpsElementChildRoleBase<JpsSimpleElement<JpsAldorModuleProperties>>  {
+public class AldorModuleExtensionRole extends JpsElementChildRoleBase<JpsSimpleElement<AldorModuleExtensionProperties>>  {
   public static final AldorModuleExtensionRole INSTANCE = new AldorModuleExtensionRole();
 
   protected AldorModuleExtensionRole() {

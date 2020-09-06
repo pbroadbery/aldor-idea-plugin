@@ -55,6 +55,7 @@ public class FricasSpadLibrary implements SpadLibrary, Disposable {
     private final AldorExecutor aldorExecutor;
 
     public FricasSpadLibrary(Project project, SpadEnvironment fricasEnvironment) {
+        assert !project.isDisposed();
         this.name = fricasEnvironment.name();
         this.scope = fricasEnvironment.scope(project);
         this.environment = fricasEnvironment;
@@ -119,6 +120,7 @@ public class FricasSpadLibrary implements SpadLibrary, Disposable {
     }
 
     private List<Syntax> doParentCategories(@NotNull Syntax syntax) {
+        assert !project.isDisposed();
         AxiomInterface iface = axiomInterfaceContainer.value();
         AnnotatedAbSyn absyn = fromSyntax(iface.env(), syntax);
         TForm tf = iface.asTForm(absyn);

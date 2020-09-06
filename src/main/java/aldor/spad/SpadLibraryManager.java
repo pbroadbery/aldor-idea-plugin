@@ -1,11 +1,20 @@
 package aldor.spad;
 
+import aldor.build.facet.SpadFacet;
+import aldor.build.facet.aldor.AldorFacet;
+import aldor.build.facet.aldor.AldorFacetConfiguration;
 import aldor.build.module.AldorModuleType;
+import aldor.builder.jps.AldorModuleExtensionProperties;
+import aldor.builder.jps.SpadFacetProperties;
 import aldor.language.AldorLanguage;
 import aldor.sdk.AxiomSdk;
 import aldor.sdk.SdkTypes;
 import aldor.sdk.aldor.AldorSdkType;
 import aldor.sdk.fricas.FricasSdkType;
+import com.intellij.facet.Facet;
+import com.intellij.openapi.Disposable;
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
@@ -15,9 +24,9 @@ import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.CompilerModuleExtension;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.roots.impl.DirectoryIndex;
 import com.intellij.openapi.roots.impl.DirectoryInfo;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
@@ -25,33 +34,55 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
-public class SpadLibraryManager {
-    private static final SpadLibraryManager instance = new SpadLibraryManager();
-    private static final Key<SpadLibrary> key = new Key<>(SpadLibrary.class.getName());
+public class SpadLibraryManager implements Disposable {
+    private static final Logger LOG = Logger.getInstance(SpadLibraryManager.class);
 
-    @Nullable
-    public SpadLibrary forModule(Module module) {
-        if (module.getUserData(key) != null) {
-            return module.getUserData(key);
+    private static final Key<SpadLibraryManager> managerKey = new Key<>(SpadLibraryManager.class.getName());
+    private final SdkLibraryContainer container = new SdkLibraryContainer();
+    private final Project project;
+
+    private SpadLibraryManager(Project project) {
+        this.project = project;
+    }
+
+    public static SpadLibraryManager getInstance(Project project) {
+        SpadLibraryManager manager = project.getUserData(managerKey);
+        if (manager == null) {
+            manager = new SpadLibraryManager(project);
+            Disposer.register(project, manager);
+            project.putUserData(managerKey, manager);
         }
-
-        SpadLibrary lib = forModule0(module);
-        module.putUserData(key, lib);
-        return lib;
+        return manager;
     }
 
     @Nullable
-    private SpadLibrary forModule0(Module module) {
+    public SpadLibrary forModule(Module module, @NotNull FileType fileType) {
+        assert !module.getProject().isDisposed();
         ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
-        Sdk moduleSdk = rootManager.getSdk();
+        Sdk moduleSdk = Optional.ofNullable(AldorModuleType.instance().facetModuleType(module, fileType))
+                .flatMap(SpadFacet::getProperties)
+                .map(SpadFacetProperties::sdkName)
+                .map(name -> ProjectJdkTable.getInstance().findJdk(name))
+                .orElse(null);
+
+        if (moduleSdk == null) {
+            moduleSdk = rootManager.getSdk();
+            if (!SdkTypes.isFricasSdk(moduleSdk)) {
+                moduleSdk = null;
+            }
+        }
+
         if (moduleSdk == null) {
             return forProject(module.getProject());
         }
+
         if (SdkTypes.isLocalSdk(moduleSdk)) {
-            VirtualFile path = rootManager.getModuleExtension(CompilerModuleExtension.class).getCompilerOutputPath();
+            VirtualFile path = rootManager.getModuleExtension(CompilerModuleExtension.class).getCompilerOutputPath(); // FIXME - use facet
             VirtualFile algebraPath = (path == null) ? null : path.findFileByRelativePath("src/algebra");
             if (algebraPath == null) {
                 return null;
@@ -63,25 +94,17 @@ public class SpadLibraryManager {
             return forNRLibDirectory(module.getProject(), algebraPath, likelySourceDirectory);
         }
         else if (AldorModuleType.instance().is(module)) {
-            return forAldorModule(module);
+            return forAldorModule(module, moduleSdk);
         }
         else {
-            return forSdk(module.getProject(), moduleSdk);
+            return forSdk(moduleSdk);
         }
-    }
-
-    public static SpadLibraryManager instance() {
-        return instance;
-    }
-
-    public void spadLibraryForSdk(@SuppressWarnings("TypeMayBeWeakened") @NotNull Sdk sdk, SpadLibrary spadLibrary) {
-        sdk.putUserData(key, spadLibrary);
     }
 
     @Nullable
-    private SpadLibrary forAldorModule(Module module) {
+    private SpadLibrary forAldorModule(Module module, Sdk moduleSdk) {
         ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
-        SpadLibrary sdkLibrary = Optional.ofNullable(rootManager.getSdk()).map(sdk -> forSdk(module.getProject(), sdk)).orElse(forProject(module.getProject()));
+        SpadLibrary sdkLibrary = forSdk(moduleSdk);
         VirtualFile[] roots = rootManager.getSourceRoots();
         if (roots.length == 0) {
             return sdkLibrary;
@@ -93,25 +116,21 @@ public class SpadLibraryManager {
 
     @Nullable
     public SpadLibrary forProject(Project project) {
-        Sdk projectSdk = ProjectRootManager.getInstance(project).getProjectSdk();
-
-        if (projectSdk == null) {
-            return null;
-        }
-
-        return forSdk(project, projectSdk);
+        LOG.warn("No default library for project as a whole");
+        return null;
     }
 
     @Nullable
-    public SpadLibrary forSdk(Project project, @NotNull Sdk sdk) {
-        if (sdk.getUserData(key) != null) {
-            return sdk.getUserData(key);
+    public SpadLibrary forSdk(@NotNull Sdk sdk) {
+        Optional<SpadLibrary> libraryMaybe = container.find(sdk);
+        if (libraryMaybe.isPresent()) {
+            return libraryMaybe.get();
         }
         SpadLibrary lib = doForSdk(project, sdk);
         if (lib == null) {
             return null;
         }
-        sdk.putUserData(key, lib);
+        lib = container.putIfAbsent(sdk, lib);
         return lib;
     }
 
@@ -150,7 +169,7 @@ public class SpadLibraryManager {
             return null;
         }
         if (module != null) {
-            SpadLibrary library = forModule(module);
+            SpadLibrary library = forModule(module, psiElement.getContainingFile().getFileType());
             if (library != null) {
                 return library;
             }
@@ -169,11 +188,40 @@ public class SpadLibraryManager {
                 Optional<VirtualFile> any = Arrays.stream(sdk.getRootProvider().getFiles(OrderRootType.SOURCES))
                                                     .filter(r -> Objects.equals(r, info.getSourceRoot())).findAny();
                 if (any.isPresent()) {
-                    return forSdk(psiElement.getProject(), sdk);
+                    return forSdk(sdk);
                 }
             }
         }
         return forProject(psiElement.getProject());
+    }
+
+    @Override
+    public void dispose() {
+        container.dispose();
+    }
+
+    public void spadLibraryForSdk(Sdk sdk, SpadLibrary mockSpadLibrary) {
+        container.putIfAbsent(sdk, mockSpadLibrary);
+    }
+
+    private static class SdkLibraryContainer {
+        private final Map<Sdk, SpadLibrary> libaryForSdk = new ConcurrentHashMap<>();
+
+        Optional<SpadLibrary> find(Sdk sdk) {
+            return Optional.ofNullable(libaryForSdk.get(sdk));
+        }
+
+        SpadLibrary putIfAbsent(Sdk sdk, SpadLibrary spadLibrary) {
+            SpadLibrary oldValue = libaryForSdk.putIfAbsent(sdk, spadLibrary);
+            if (oldValue != null) {
+                return oldValue;
+            }
+            return spadLibrary;
+        }
+
+        public void dispose() {
+            libaryForSdk.clear();
+        }
     }
 
 }

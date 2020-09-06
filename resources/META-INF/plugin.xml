@@ -18,7 +18,7 @@
     </change-notes>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-    <idea-version since-build="173"/>
+    <idea-version since-build="201"/>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
@@ -47,7 +47,7 @@
                         serviceImplementation="aldor.build.AldorCompilationServiceImpl"/>
 
         <compileServer.plugin classpath="aldor-jps-plugin.jar"/>
-
+        <postStartupActivity implementation="aldor.build.AldorCompilationStartupActivity"/>
         <compiler.buildTargetScopeProvider implementation="aldor.build.builders.AldorBuildTargetScopeProvider" />
         <compiler.buildTargetScopeProvider implementation="aldor.build.builders.AldorJarBuildTargetScopeProvider"/>
 
@@ -81,7 +81,6 @@
 
         <typeHierarchyProvider implementationClass="aldor.hierarchy.AldorTypeHierarchyProvider" language="Aldor"/>
         <methodHierarchyProvider implementationClass="aldor.hierarchy.util.MissingHierarchyProvider" language="Aldor"/>
-        <moduleService serviceImplementation="aldor.build.module.AldorModulePathService"/>
 
         <!-- Aldor extras -->
         <lang.refactoringSupport language="Aldor" implementationClass="aldor.references.AldorRefactoringSupportProvider"/>
@@ -89,11 +88,10 @@
         <fileTypeFactory implementation="aldor.file.AldorFileTypeFactory"/>
         <lang.parserDefinition language="Aldor" implementationClass="aldor.parser.AldorParserDefinition"/>
 
+        <facetType implementation="aldor.build.facet.aldor.AldorFacetType"/>
         <library.type implementation="aldor.library.AldorLibraryType"/>
         <sdkType implementation="aldor.sdk.aldor.AldorInstalledSdkType"/>
         <sdkType implementation="aldor.sdk.aldor.AldorLocalSdkType"/>
-
-        <sdkType implementation="aldor.sdk.aldorunit.AldorUnitSdkType"/>
 
         <lang.findUsagesProvider language="Aldor" implementationClass="aldor.editor.AldorFindUsagesProvider"/>
         <usageTypeProvider implementation="aldor.editor.AldorUsageTypeProvider"/>
@@ -105,6 +103,7 @@
         <!--<elementDescriptionProvider implementation="aldor.editor.AldorElementDescriptionProvider"/> -->
 
         <!-- Spad extras -->
+        <facetType implementation="aldor.build.facet.fricas.FricasFacetType"/>
         <fileTypeFactory implementation="aldor.file.SpadFileTypeFactory"/>
         <lang.parserDefinition language="Spad" implementationClass="aldor.parser.SpadParserDefinition"/>
         <stubIndex implementation="aldor.psi.index.AbbrevNameIndex"/>
@@ -158,6 +157,10 @@
 
     </actions>
 
+    <applicationListeners>
+        <listener class="aldor.build.facet.aldor.AldorSdkTableListener" topic="com.intellij.openapi.projectRoots.ProjectJdkTable$Listener"/>
+    </applicationListeners>
+
     <application-components>
         <component>
             <implementation-class>aldor.build.module.AldorApplicationComponent</implementation-class>
@@ -168,5 +171,4 @@
        ElementSignatureProvider: Used to load/save usage&fold state (in case of off-line updates to a file)
 
      -->
-
 </idea-plugin>

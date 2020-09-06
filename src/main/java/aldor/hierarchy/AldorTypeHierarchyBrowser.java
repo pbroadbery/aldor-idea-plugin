@@ -140,14 +140,14 @@ public class AldorTypeHierarchyBrowser extends TypeHierarchyBrowserBaseEx {
     @SuppressWarnings("rawtypes")
     @Nullable
     @Override
-    protected Comparator<NodeDescriptor> getComparator() {
+    protected Comparator<NodeDescriptor<?>> getComparator() {
         return Comparator
                 .comparing(this::descriptorPriority)
                 .reversed().thenComparing(NodeDescriptor::toString);
     }
 
     @SuppressWarnings("rawtypes")
-    private Integer descriptorPriority(NodeDescriptor descriptor) {
+    private Integer descriptorPriority(NodeDescriptor<?> descriptor) {
         if (descriptor instanceof ComparatorPriority) {
             return ((ComparatorPriority) descriptor).priority();
         }

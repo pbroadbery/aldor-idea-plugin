@@ -16,6 +16,7 @@ import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.executors.DefaultRunExecutor;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.runners.ProgramRunner;
+import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -25,15 +26,18 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
-import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import org.junit.Assert;
 import org.junit.Assume;
+import org.junit.Rule;
+
+import java.util.Objects;
 
 import static aldor.util.VirtualFileTests.createFile;
 import static com.intellij.testFramework.LightPlatformTestCase.getSourceRoot;
 
 public class AldorUnitConfigurationProducerTest extends BasePlatformTestCase {
 
+    @Rule
     private final DirectoryPresentRule directory = new DirectoryPresentRule("/home/pab/Work/aldorgit/opt");
 
     @Override
@@ -127,7 +131,6 @@ public class AldorUnitConfigurationProducerTest extends BasePlatformTestCase {
         dataContext.put("project", getProject());
 
         ConfigurationContext runContext = ConfigurationContext.getFromContext(dataContext);
-        System.out.println("Context: " + runContext.getLocation() + " " + runContext.getConfiguration());
         Assert.assertNotNull(runContext.getConfiguration());
         RunnerAndConfigurationSettings runnerAndConfigurationSettings = runContext.getConfiguration();
 
@@ -142,15 +145,23 @@ public class AldorUnitConfigurationProducerTest extends BasePlatformTestCase {
         Assert.assertNotNull(runner);
         ExecutionEnvironment executionEnvironment = new ExecutionEnvironment(executor, runner, runnerAndConfigurationSettings, getProject());
 
+        RunContentDescriptor[] descriptorBox = new RunContentDescriptor[1];
         try {
-            runner.execute(executionEnvironment, descriptor -> LOG.info("Started process - " + descriptor.getDisplayName()));
+            runner.execute(executionEnvironment, descriptor -> {
+                descriptorBox[0] = descriptor;
+                LOG.info("Started process - " + descriptor.getDisplayName());
+            });
         }
         finally {
             Editor[] editors = EditorFactory.getInstance().getAllEditors();
             for (Editor editor : editors) {
                 EditorFactory.getInstance().releaseEditor(editor);
             }
-         }
+        }
+        Objects.requireNonNull(descriptorBox[0].getProcessHandler()).waitFor();
+        descriptorBox[0].getExecutionConsole().dispose();
+        executionEnvironment.dispose();
+        descriptorBox[0].dispose();
     }
 
     @Override

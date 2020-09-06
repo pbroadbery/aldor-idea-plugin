@@ -1,6 +1,5 @@
 package aldor.sdk.aldor;
 
-import aldor.sdk.NamedSdk;
 import aldor.test_util.JUnits;
 import aldor.test_util.LightPlatformJUnit4TestRule;
 import com.intellij.testFramework.fixtures.CodeInsightTestFixture;
@@ -27,7 +26,6 @@ public class AldorSdkAdditionalDataHelperTest {
     public void test() {
         AldorSdkAdditionalData additionalData = new AldorSdkAdditionalData();
         additionalData.javaClassDirectory = "java/directory";
-        additionalData.aldorUnitSdk = new NamedSdk("AldorUnit");
         additionalData.aldorUnitEnabled = true;
         Document document = new Document();
         document.setRootElement(new Element("root"));

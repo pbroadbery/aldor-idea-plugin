@@ -1,6 +1,7 @@
 package aldor.annotations;
 
 import aldor.build.module.AldorModuleType;
+import aldor.file.AldorFileType;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManagerListener;
@@ -34,6 +35,10 @@ public class SaveActionProcessor implements FileDocumentManagerListener {
             Project project = psiFile.getProject();
             Module module = ProjectFileIndex.getInstance(project).getModuleForFile(psiFile.getVirtualFile());
             if ((module == null) || !ModuleType.get(module).equals(AldorModuleType.instance())) {
+                continue;
+            }
+            // TODO: "Is this a file that could impact the annotations on other files?"
+            if (!psiFile.getFileType().equals(AldorFileType.INSTANCE)) {
                 continue;
             }
             AnnotationFileManager manager = AnnotationFileManager.getAnnotationFileManager(project);

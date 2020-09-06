@@ -3,7 +3,8 @@ package aldor.runconfiguration.spad;
 import aldor.file.SpadInputFileType;
 import aldor.runconfiguration.spad.SpadInputRunConfigurationType.SpadInputConfiguration;
 import com.intellij.execution.actions.ConfigurationContext;
-import com.intellij.execution.actions.RunConfigurationProducer;
+import com.intellij.execution.actions.LazyRunConfigurationProducer;
+import com.intellij.execution.configurations.ConfigurationFactory;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.FileIndexFacade;
 import com.intellij.openapi.util.Ref;
@@ -11,13 +12,13 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-public class SpadInputRunConfigurationProducer extends RunConfigurationProducer<SpadInputConfiguration> {
+public class SpadInputRunConfigurationProducer extends LazyRunConfigurationProducer<SpadInputConfiguration> {
 
     protected SpadInputRunConfigurationProducer() {
-        super(new SpadInputRunConfigurationType());
     }
 
 
@@ -52,5 +53,11 @@ public class SpadInputRunConfigurationProducer extends RunConfigurationProducer<
             return false;
         }
         return FileUtil.pathsEqual(file.getVirtualFile().getPath(), configuration.inputFile());
+    }
+
+    @NotNull
+    @Override
+    public ConfigurationFactory getConfigurationFactory() {
+        return SpadInputRunConfigurationType.instance();
     }
 }

@@ -6,6 +6,7 @@ import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.JUnits;
 import aldor.test_util.SdkProjectDescriptors;
 import com.intellij.codeInsight.documentation.DocumentationManager;
+import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -63,6 +64,8 @@ public class AldorDocumentationProviderTest extends BasePlatformTestCase {
         for (Module module: modules) {
             this.addTmpFileToKeep(new File(module.getModuleFilePath()));
         }
+        ApplicationManagerEx.getApplicationEx().setSaveAllowed(true);
+
         JUnits.enableJpsDebugging(OFF);
     }
 

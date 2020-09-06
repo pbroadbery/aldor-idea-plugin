@@ -69,8 +69,11 @@ public final class AldorParentCategoryHierarchyTreeStructure extends HierarchyTr
         if (!(descriptor instanceof AldorHierarchyNodeDescriptor)) {
             return new Object[] {"Incorrect node type " + descriptor.getClass()};
         }
+        if (descriptor.getProject() == null) {
+            return EMPTY_ARRAY;
+        }
         AldorHierarchyNodeDescriptor aldorDescriptor = (AldorHierarchyNodeDescriptor) descriptor;
-        SpadLibrary library = SpadLibraryManager.instance().spadLibraryForElement(descriptor.getPsiElement());
+        SpadLibrary library = SpadLibraryManager.getInstance(descriptor.getProject()).spadLibraryForElement(descriptor.getPsiElement());
         if (library == null) {
             return new Object[] { "Missing library"};
         }

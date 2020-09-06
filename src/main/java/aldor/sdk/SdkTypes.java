@@ -12,7 +12,7 @@ public final class SdkTypes {
 
     @Nullable
     public static String axiomSysPath(@NotNull Sdk sdk) {
-        return Optional.ofNullable(sdk.getHomePath()).map(p -> p +"/bin/AXIOMsys").orElse(null);
+        return Optional.ofNullable(sdk.getHomePath()).map(p -> p +"/bin/FRICASsys").orElse(null);
     }
 
     @Nullable
@@ -24,5 +24,12 @@ public final class SdkTypes {
     public static boolean isLocalSdk(@NotNull Sdk sdk) {
         SdkTypeId type = sdk.getSdkType();
         return ((type instanceof AxiomSdk) && ((AxiomSdk) type).isLocalInstall());
+    }
+
+    public static boolean isFricasSdk(@Nullable Sdk sdk) {
+        if (sdk == null) {
+            return false;
+        }
+        return sdk.getSdkType() instanceof AxiomSdk;
     }
 }

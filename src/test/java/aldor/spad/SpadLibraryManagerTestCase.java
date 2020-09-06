@@ -30,7 +30,7 @@ public abstract class SpadLibraryManagerTestCase {
 
         PsiFile file = ll.iterator().next().getContainingFile();
 
-        SpadLibrary lib = SpadLibraryManager.instance().spadLibraryForElement(file);
+        SpadLibrary lib = SpadLibraryManager.getInstance(testFixture().getProject()).spadLibraryForElement(file);
         assertNotNull(lib);
         Syntax syntax = ParserFunctions.parseToSyntax(testFixture().getProject(), "List Integer");
         assertNotNull(syntax);
@@ -63,7 +63,7 @@ public abstract class SpadLibraryManagerTestCase {
 
         PsiFile file = ll.iterator().next().getContainingFile();
 
-        SpadLibrary lib = SpadLibraryManager.instance().spadLibraryForElement(file);
+        SpadLibrary lib = SpadLibraryManager.getInstance(testFixture().getProject()).spadLibraryForElement(file);
         assertNotNull(lib);
         Syntax syntax = ParserFunctions.parseToSyntax(testFixture().getProject(), "Ring");
         assertNotNull(syntax);

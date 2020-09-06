@@ -5,8 +5,11 @@ import aldor.util.VirtualFileTests;
 import com.intellij.ide.structureView.StructureViewModel;
 import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.fixtures.CodeInsightFixtureTestCase;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 
 import java.util.Arrays;
@@ -17,7 +20,8 @@ public class AldorStructureViewModelTest extends CodeInsightFixtureTestCase {
 
     public void testViewModel() {
         JUnits.setLogToInfo();
-        VirtualFile file = VirtualFileTests.createFile(getProject().getBaseDir(), "foo.as", "Foo: with == add");
+        @NotNull VirtualFile contentRoot = ModuleRootManager.getInstance(myModule).getContentRoots()[0];
+        VirtualFile file = VirtualFileTests.createFile(contentRoot, "foo.as", "Foo: with == add");
 
         myFixture.configureFromExistingVirtualFile(file);
         StructureViewModel model = new AldorStructureViewModel(getEditor(), getFile());

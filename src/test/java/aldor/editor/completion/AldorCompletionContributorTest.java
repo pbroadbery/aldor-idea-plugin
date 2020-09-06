@@ -1,5 +1,6 @@
 package aldor.editor.completion;
 
+import aldor.build.facet.fricas.FricasFacet;
 import aldor.sdk.SdkTypes;
 import aldor.spad.FricasSpadLibraryBuilder;
 import aldor.spad.SpadLibrary;
@@ -12,7 +13,6 @@ import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
-import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Assume;
@@ -21,7 +21,7 @@ import java.util.List;
 
 public class AldorCompletionContributorTest extends BasePlatformTestCase {
 
-    private final DirectoryPresentRule directory = new DirectoryPresentRule("/home/pab/Work/fricas/opt/lib/fricas/target/x86_64-unknown-linux");
+    private final DirectoryPresentRule directory = new DirectoryPresentRule("/home/pab/Work/fricas/opt/lib/fricas/target/x86_64-linux-gnu");
 
     @Override
     public void setUp() throws Exception {
@@ -57,7 +57,7 @@ public class AldorCompletionContributorTest extends BasePlatformTestCase {
 
     @NotNull
     private VirtualFile projectSdkAlgebraDirectory() {
-        Sdk projectSdk = ProjectRootManager.getInstance(getProject()).getProjectSdk();
+        Sdk projectSdk = FricasFacet.forModule(getModule()).getConfiguration().sdk();
         Assert.assertNotNull(projectSdk);
         VirtualFile algebraDirectory = SdkTypes.algebraPath(projectSdk);
         Assert.assertNotNull(algebraDirectory);

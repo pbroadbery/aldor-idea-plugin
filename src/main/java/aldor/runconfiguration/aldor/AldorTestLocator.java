@@ -43,7 +43,6 @@ public class AldorTestLocator implements SMTestLocator {
 
         Collection<AldorDefine> domains = AldorDefineTopLevelIndex.instance.get(domainName, project, scope);
 
-
         List<Location> locations = new ArrayList<>();
         for (AldorDefine domain : domains) {
             Collection<AldorDefine> methods = AldorDefineNameIndex.instance.get(methodName, project, GlobalSearchScope.fileScope(domain.getContainingFile()));

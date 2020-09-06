@@ -12,6 +12,7 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
 import javax.swing.JComponent;
 
 public class FricasLocalSdkType extends SdkType implements FricasSdkType {
@@ -24,6 +25,12 @@ public class FricasLocalSdkType extends SdkType implements FricasSdkType {
     @Override
     public String fricasPath(Sdk sdk) {
         return null;
+    }
+
+    @Nonnull
+    @Override
+    public String axiomSysName(Sdk sdk) {
+        return "FRICASsys";
     }
 
     @Override
@@ -51,7 +58,7 @@ public class FricasLocalSdkType extends SdkType implements FricasSdkType {
     @Nullable
     @Override
     public AdditionalDataConfigurable createAdditionalDataConfigurable(@NotNull SdkModel sdkModel, @NotNull SdkModificator sdkModificator) {
-        return null;
+        return new FricasSdkDataConfigurable();
     }
 
     @NotNull
@@ -62,7 +69,11 @@ public class FricasLocalSdkType extends SdkType implements FricasSdkType {
 
     @Override
     public void saveAdditionalData(@NotNull SdkAdditionalData additionalData, @NotNull Element additional) {
+    }
 
+    @Override
+    public boolean isLocalSdk(@NotNull Sdk sdk) {
+        return false;
     }
 
 
@@ -77,4 +88,5 @@ public class FricasLocalSdkType extends SdkType implements FricasSdkType {
         sdk.setVersionString("git repository");
         sdkCreatedCallback.consume(sdk);
     }
+
 }

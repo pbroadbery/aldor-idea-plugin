@@ -1,8 +1,8 @@
 package aldor.sdk.aldor;
 
+import aldor.sdk.AxiomInstalledSdk;
 import aldor.util.AnnotatedOptional;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.projectRoots.ProjectJdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkAdditionalData;
 import com.intellij.openapi.projectRoots.SdkModel;
@@ -32,7 +32,7 @@ import java.util.stream.Stream;
 
 import static java.util.Optional.ofNullable;
 
-public class AldorInstalledSdkType extends SdkType implements AldorSdkType {
+public class AldorInstalledSdkType extends SdkType implements AldorSdkType, AxiomInstalledSdk {
     private static final Logger LOG = Logger.getInstance(AldorInstalledSdkType.class);
 
     private static final Set<OrderRootType> applicableRootTypes = Collections.singleton(OrderRootType.SOURCES);
@@ -145,17 +145,6 @@ public class AldorInstalledSdkType extends SdkType implements AldorSdkType {
         return sdk.getHomePath() + "/bin/aldor";
     }
 
-    @Nullable
-    @Override
-    public Sdk aldorUnitSdk(Sdk sdk) {
-        Sdk aldorUnitSdk = additionalData(sdk).aldorUnitSdk.sdk();
-        String sdkName = additionalData(sdk).aldorUnitSdk.name();
-        if ((aldorUnitSdk == null) && (sdkName != null)) {
-            aldorUnitSdk = Arrays.stream(ProjectJdkTable.getInstance().getAllJdks()).filter(s -> s.getName().equals(sdkName)).findFirst().orElse(null);
-        }
-        return aldorUnitSdk;
-    }
-
     @Override
     public boolean isLocalInstall() {
         return false;
@@ -178,7 +167,13 @@ public class AldorInstalledSdkType extends SdkType implements AldorSdkType {
 
     @Override
     @Nullable
-    public SdkAdditionalData loadAdditionalData(Element additional) {
+    public SdkAdditionalData loadAdditionalData(@NotNull Element additional) {
         return additionalDataHelper.loadAdditionalData(additional);
+    }
+
+    @Override
+    @NotNull
+    public String librarySuffix() {
+        return " (compiler library)";
     }
 }

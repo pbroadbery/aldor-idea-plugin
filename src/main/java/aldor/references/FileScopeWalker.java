@@ -5,15 +5,24 @@ import aldor.annotations.AnnotationFileNavigatorManager;
 import aldor.psi.AldorDeclare;
 import aldor.psi.AldorDefine;
 import aldor.psi.AldorIdentifier;
+import aldor.psi.AldorTopLevel;
 import aldor.psi.ScopeFormingElement;
+import aldor.psi.index.AldorDefineTopLevelIndex;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.roots.FileIndexFacade;
+import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.Key;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiManager;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
+import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
@@ -70,6 +79,14 @@ public final class FileScopeWalker {
         return ident;
      }
 
-
+    @Nullable
+    public static PsiElement lookupByIndex(@SuppressWarnings("TypeMayBeWeakened") AldorIdentifier element) {
+        Collection<AldorDefine> elements = AldorDefineTopLevelIndex.instance.get(element.getText(), element.getProject(), GlobalSearchScope.allScope(element.getProject()));
+        LOG.info("Found elements " + elements.size());
+        if (elements.size() != 1) {
+            return null;
+        }
+        return elements.iterator().next().defineIdentifier().orElse(null);
+    }
 }
 

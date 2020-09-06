@@ -33,8 +33,11 @@ public class AnnotationFileBuilderImpl implements AnnotationFileBuilder {
                     @Override
                     public void finished(boolean aborted, int errors, int warnings, CompileContext compileContext) {
                         LOG.info("Rebuilt " + psiFile.getContainingFile().getName() + ": " + errors + " errors, " + warnings + " warnings. aborted: " + aborted);
+                        for (CompilerMessage message : compileContext.getMessages(CompilerMessageCategory.INFORMATION)) {
+                            LOG.info("INFORMATION: " + message);
+                        }
                         for (CompilerMessage message : compileContext.getMessages(CompilerMessageCategory.ERROR)) {
-                            LOG.info("Message: " + message);
+                            LOG.info("ERROR: " + message);
                         }
                         AnnotationFileManager annotationManager = AnnotationFileManager.getAnnotationFileManager(project);
                         annotationManager.invalidate(psiFile);

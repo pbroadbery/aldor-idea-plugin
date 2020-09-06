@@ -9,6 +9,7 @@ import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.JUnits;
 import aldor.test_util.SdkProjectDescriptors;
 import com.intellij.codeInsight.documentation.DocumentationManager;
+import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl;
@@ -20,7 +21,6 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.EdtTestUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
-import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Rule;
@@ -39,7 +39,7 @@ public class AnnotationRoundTripTest extends BasePlatformTestCase {
     protected void setUp() throws Exception {
         super.setUp();
         JUnits.setLogToDebug();
-        getProject().save();
+        ApplicationManagerEx.getApplicationEx().setSaveAllowed(true);
     }
 
     @Override
@@ -48,7 +48,9 @@ public class AnnotationRoundTripTest extends BasePlatformTestCase {
             EdtTestUtil.runInEdtAndWait(JavaAwareProjectJdkTableImpl::removeInternalJdkInTests);
         }
         finally {
+            ApplicationManagerEx.getApplicationEx().setSaveAllowed(false);
             super.tearDown();
+            JUnits.setLogToInfo();
         }
     }
 
@@ -59,6 +61,7 @@ public class AnnotationRoundTripTest extends BasePlatformTestCase {
 
     public void testFullRoundTrip() throws Exception {
         Project project = getProject();
+        project.save();
         annotationTextFixture.createFile(getProject(), "Makefile", "out/ao/foo.ao: foo.as\n" +
                 "\tmkdir -p out/ao\n" +
                 "\t" + aldorExecutableRule.executable() + " -Fabn=out/ao/foo.abn -Fao=out/ao/foo.ao foo.as");

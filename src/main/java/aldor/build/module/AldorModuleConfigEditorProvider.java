@@ -1,5 +1,6 @@
 package aldor.build.module;
 
+import aldor.builder.jps.AldorSourceRootType;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleConfigurationEditor;
@@ -35,10 +36,7 @@ public class AldorModuleConfigEditorProvider implements ModuleConfigurationEdito
             return ModuleConfigurationEditor.EMPTY;
         }
         return new ModuleConfigurationEditor[]{
-                new CommonContentEntriesEditor(rootModule.getName(), state, JavaSourceRootType.SOURCE),
-                //new OutputDirectoryEditor(state),
-                new AldorOutputDirectoryEditor(state),
-                new ModuleJdkEditor(state)
+                new CommonContentEntriesEditor(rootModule.getName(), state, JavaSourceRootType.SOURCE, JavaSourceRootType.TEST_SOURCE, AldorSourceRootType.INSTANCE),
         };
     }
 

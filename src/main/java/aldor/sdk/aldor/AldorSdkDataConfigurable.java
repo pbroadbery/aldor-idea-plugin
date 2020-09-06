@@ -10,12 +10,10 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.JComponent;
 
 public class AldorSdkDataConfigurable implements AdditionalDataConfigurable {
-    private final AldorSdkAldorUnitForm form;
     private final AldorSdkAdditionalData bean = new AldorSdkAdditionalData();
     private Sdk currentSdk = null;
 
     AldorSdkDataConfigurable(SdkModel sdkModel, SdkModificator sdkModificator) {
-        this.form = new AldorSdkAldorUnitForm();
     }
 
     @Override
@@ -25,33 +23,25 @@ public class AldorSdkDataConfigurable implements AdditionalDataConfigurable {
         if (!(additional instanceof AldorSdkAdditionalData)) {
             return;
         }
-        AldorSdkAdditionalData aldorSdkAdditional = (AldorSdkAdditionalData) additional;
-        this.bean.aldorUnitSdk = aldorSdkAdditional.aldorUnitSdk;
     }
 
     @Nullable
     @Override
     public JComponent createComponent() {
-        return form.wholePanel();
+        return null;
     }
 
     @Override
     public boolean isModified() {
-        AldorSdkAdditionalData current = new AldorSdkAdditionalData();
-        form.saveSettings(current);
-        return !current.matches(bean);
+        return false;
     }
 
     @Override
     public void apply() {
-        form.saveSettings(this.bean);
-        SdkAdditionalData data = currentSdk.getSdkAdditionalData();
-        this.bean.copyInfo(data);
     }
 
     @Override
     public void reset() {
-        form.reset(this.bean);
     }
 
 }

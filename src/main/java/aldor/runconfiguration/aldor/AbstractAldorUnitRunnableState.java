@@ -1,7 +1,7 @@
 package aldor.runconfiguration.aldor;
 
-import aldor.sdk.aldor.AldorSdkType;
-import aldor.sdk.aldorunit.AldorUnitSdkType;
+import aldor.build.facet.aldor.AldorFacet;
+import aldor.build.facet.aldor.AldorFacetType;
 import com.intellij.diagnostic.logging.OutputFileUtil;
 import com.intellij.execution.CantRunException;
 import com.intellij.execution.DefaultExecutionResult;
@@ -36,14 +36,18 @@ import com.intellij.execution.testframework.sm.runner.SMTRunnerConsoleProperties
 import com.intellij.execution.testframework.sm.runner.ui.SMTRunnerConsoleView;
 import com.intellij.execution.testframework.sm.runner.ui.SMTestRunnerResultsForm;
 import com.intellij.execution.testframework.ui.BaseTestsOutputConsoleView;
+import com.intellij.facet.FacetManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.projectRoots.ProjectJdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.ex.JavaSdkUtil;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.openapi.wm.ToolWindowManager;
+import com.intellij.ui.content.Content;
 import com.intellij.util.ui.UIUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
@@ -61,9 +65,10 @@ public abstract class AbstractAldorUnitRunnableState<T
                 & LocatableConfiguration
                 & SMRunnerConsolePropertiesProvider> extends JavaCommandLineState implements RemoteConnectionCreator {
     private static final Logger LOG = Logger.getInstance(AbstractAldorUnitRunnableState.class);
-    private final List<ArgumentFileFilter> myArgumentFileFilters = new ArrayList<>();
+    private final List<ArgumentFileFilter> myArgumentFileFilters = new ArrayList<>(); // TODO: Where is this used?
     protected File myTempFile = null;
     protected File myWorkingDirsFile = null;
+    @SuppressWarnings("FieldHasSetterButNoGetter")
     private RemoteConnectionCreator remoteConnectionCreator = null;
     protected ServerSocket myServerSocket = null;
 
@@ -100,18 +105,16 @@ public abstract class AbstractAldorUnitRunnableState<T
     @Nullable
     private Sdk selectJdk() {
         final Module module = getConfiguration().getConfigurationModule().getModule();
-        Sdk sdk = null;
-        assert module != null;
-        Sdk mySdk = ModuleRootManager.getInstance(module).getSdk();
-        assert mySdk != null;
-        if (mySdk.getSdkType() instanceof AldorSdkType) {
-            AldorSdkType sdkType = (AldorSdkType) mySdk.getSdkType();
-            Sdk aldorUnitSdk = sdkType.aldorUnitSdk(mySdk);
-            assert aldorUnitSdk != null;
-            sdk = ((AldorUnitSdkType) aldorUnitSdk.getSdkType()).jdk(aldorUnitSdk);
+        if (module == null) {
+            return null;
         }
-
-        return sdk;
+        AldorFacet facet = FacetManager.getInstance(module).getFacetByType(AldorFacetType.instance().getId());
+        if (facet == null) {
+            return null;
+        }
+        String jdkName = facet.getConfiguration().getState().javaSdkName();
+        LOG.info("Jdk " + jdkName + " " + ProjectJdkTable.getInstance().findJdk(jdkName));
+        return ProjectJdkTable.getInstance().findJdk(jdkName);
     }
 
     protected final void configureClasspath(final JavaParameters javaParameters) throws CantRunException {
@@ -140,7 +143,6 @@ public abstract class AbstractAldorUnitRunnableState<T
 
     @NotNull protected abstract OSProcessHandler createHandler(Executor executor) throws ExecutionException;
 
-
     protected void deleteTempFiles() {
         if (myTempFile != null) {
             FileUtil.delete(myTempFile);
@@ -160,9 +162,14 @@ public abstract class AbstractAldorUnitRunnableState<T
         final SMTRunnerConsoleProperties testConsoleProperties = getConfiguration().createTestConsoleProperties(executor);
         testConsoleProperties.setIdBasedTestTree(isIdBasedTestTree());
         testConsoleProperties.setIfUndefined(TestConsoleProperties.HIDE_PASSED_TESTS, false);
+
         final BaseTestsOutputConsoleView consoleView = SMTestRunnerConnectionUtil.createConsole(getFrameworkName(), testConsoleProperties);
         final SMTestRunnerResultsForm viewer = ((SMTRunnerConsoleView)consoleView).getResultsViewer();
         Disposer.register(getConfiguration().getProject(), consoleView);
+
+        //ToolWindow runTool = ToolWindowManager.getInstance(getConfiguration().getProject()).getToolWindow("Run");
+
+
 
         final OSProcessHandler handler = createHandler(executor);
 
@@ -219,7 +226,8 @@ public abstract class AbstractAldorUnitRunnableState<T
 
     protected void createServerSocket(JavaParameters javaParameters) {
         try {
-            myServerSocket = new ServerSocket(0, 0, InetAddress.getByName("127.0.0.1"));
+            //noinspection MagicNumber
+            myServerSocket = new ServerSocket(0, 0, InetAddress.getByAddress(new byte[] {127,0,0,1}));
             javaParameters.getProgramParametersList().add("-socket" + myServerSocket.getLocalPort());
         }
         catch (IOException e) {

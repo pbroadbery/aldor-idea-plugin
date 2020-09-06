@@ -10,10 +10,12 @@ import aldor.test_util.SdkProjectDescriptors;
 import com.intellij.execution.PsiLocation;
 import com.intellij.execution.RunnerAndConfigurationSettings;
 import com.intellij.execution.actions.ConfigurationContext;
+import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.compiler.CompilerManager;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -22,7 +24,6 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.EdtTestUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 
 import java.util.Collections;
@@ -32,16 +33,17 @@ import static aldor.test_util.JUnits.JpsDebuggingState.OFF;
 import static aldor.util.VirtualFileTests.createFile;
 import static com.intellij.testFramework.LightPlatformTestCase.getSourceRoot;
 
-public class AldorUnitRunnableStateTest extends BasePlatformTestCase
-{
+public class AldorUnitRunnableStateTest extends BasePlatformTestCase {
+    private static final Logger LOG = Logger.getInstance(AldorUnitRunnableStateTest.class);
+
     private final AnnotationFileTestFixture annotationFileTestFixture = new AnnotationFileTestFixture();
     private final ExecutablePresentRule aldorExecutableRule = new ExecutablePresentRule.AldorDev();
 
     @Override
     public void setUp() throws Exception {
-        JUnits.setLogToInfo();
         super.setUp();
         JUnits.enableJpsDebugging(OFF);
+        //ApplicationManagerEx.getApplicationEx().setSaveAllowed(true);
     }
 
     @Override
@@ -60,7 +62,7 @@ public class AldorUnitRunnableStateTest extends BasePlatformTestCase
     }
 
     @Override
-    protected void invokeTestRunnable(@NotNull Runnable runnable) {
+    protected void invokeTestRunnable(Runnable runnable) {
         runnable.run();
     }
 
@@ -71,6 +73,7 @@ public class AldorUnitRunnableStateTest extends BasePlatformTestCase
 
     public void testRunSimpleConfiguration() throws InterruptedException {
         Ref<PsiElement> eltRef = new Ref<>();
+        getProject().getProjectFile().refresh(false, false);
         EdtTestUtil.runInEdtAndWait(() -> {
             VirtualFile file = createFile(getSourceRoot(), "foo.as",
                     "#include \"aldor.as\"\n" +
@@ -78,7 +81,7 @@ public class AldorUnitRunnableStateTest extends BasePlatformTestCase
                             "ALDORUNIT__RUNNER ==> annotation==org_.junit_.runner_.RunWith(aldor_.aldorunit_.runner_.AldorUnitRunner.class)\n" +
                             "ALDORUNIT__SOURCEFILE ==> annotation==aldor_.aldorunit_.SourceFile()\n" +
                             "\n" +
-                            "export FooTest to Foreign Java(\"aldor.test\", ALDORUNIT__RUNNER, ALDORUNIT__SOURCEFILE)\n" +
+                            "export FooTest to Foreign Java(\"aldor.test\")\n" +
                             "FooTest: with\n" +
                             "    test: () -> ()\n" +
                             "== add \n" +
@@ -88,7 +91,7 @@ public class AldorUnitRunnableStateTest extends BasePlatformTestCase
             String makefileText = annotationFileTestFixture.makefileBuilder(aldorExecutableRule.executable(), Collections.singleton("foo.as"))
                     .withSourceDirectory(getSourceRoot())
                     .withProject(getProject())
-                    .withAldorUnit(ModuleRootManager.getInstance(getModule()).getSdk())
+                    .withAldorUnit()
                     .withJarRule()
                     .build();
             LOG.info("Makefile: \n" + makefileText);
@@ -117,7 +120,7 @@ public class AldorUnitRunnableStateTest extends BasePlatformTestCase
             dataContext.put("project", getProject());
 
             ConfigurationContext runContext = ConfigurationContext.getFromContext(dataContext);
-            System.out.println("Context: " + runContext.getLocation() + " " + runContext.getConfiguration());
+            LOG.info("Context: " + runContext.getLocation() + " " + runContext.getConfiguration());
             Assert.assertNotNull(runContext.getConfiguration());
             RunnerAndConfigurationSettings runnerAndConfigurationSettings = runContext.getConfiguration();
 

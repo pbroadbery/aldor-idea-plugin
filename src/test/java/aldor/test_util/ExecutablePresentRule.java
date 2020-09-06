@@ -7,6 +7,7 @@ import org.junit.runners.model.Statement;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -101,16 +102,18 @@ public class ExecutablePresentRule implements TestRule {
     public static class Aldor extends ExecutablePresentRule {
         public static final ExecutablePresentRule INSTANCE = new Aldor();
         public Aldor() {
-            super(Collections.singletonList("/home/pab/IdeaProjects/aldor-codebase/opt/bin"), "aldor");
+            super(Collections.singletonList("/home/pab/Work/IdeaProjects/aldor-codebase/opt/bin"), "aldor");
         }
     }
 
     public static class Fricas extends ExecutablePresentRule {
         public static final ExecutablePresentRule INSTANCE = new Fricas();
+        private static final String basePath = "/home/pab/IdeaProjects/fricas-codebase/opt/lib/fricas/target";
 
         public Fricas() {
-            super(Collections.singletonList("/home/pab/IdeaProjects/fricas-codebase/opt/lib/fricas/target/x86_64-unknown-linux/bin/"), "fricas");
+            super(Arrays.asList(basePath + "/x86_64-unknown-linux/bin", basePath + "/x86_64-linux-gnu/bin"), "fricas");
         }
+
     }
 
     /**

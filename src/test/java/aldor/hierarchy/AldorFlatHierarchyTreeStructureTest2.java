@@ -33,7 +33,7 @@ public class AldorFlatHierarchyTreeStructureTest2 {
     @Rule
     public final TestRule platformTestRule =
             RuleChain.emptyRuleChain()
-                    .around(JUnits.setLogToInfoTestRule)
+                    .around(JUnits.setLogToDebugTestRule)
                     .around(fricasExecutableRule)
                     .around(new LightPlatformJUnit4TestRule(codeTestFixture, ""))
                     .around(JUnits.prePostTestRule(() -> codeTestFixture.getProject().save(), () -> {}))

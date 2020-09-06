@@ -1,6 +1,7 @@
 package aldor.expression;
 
 import aldor.test_util.ExecutablePresentRule;
+import aldor.test_util.JUnits;
 import aldor.test_util.SdkProjectDescriptors;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.FileIndexFacade;
@@ -18,6 +19,12 @@ import static aldor.util.VirtualFileTests.createFile;
 import static com.intellij.testFramework.LightPlatformTestCase.getSourceRoot;
 
 public class ExpressionFileTest extends BasePlatformTestCase {
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        JUnits.setLogToInfo();
+    }
 
     public void testIndexing() {
         Project project = getProject();

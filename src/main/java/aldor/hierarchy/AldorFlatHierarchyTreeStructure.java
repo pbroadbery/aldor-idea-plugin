@@ -78,8 +78,11 @@ public class AldorFlatHierarchyTreeStructure extends HierarchyTreeStructure {
             return EMPTY_ARRAY;
         }
 
+        if (descriptor.getProject() == null) {
+            return EMPTY_ARRAY;
+        }
         AldorHierarchyNodeDescriptor nodeDescriptor = (AldorHierarchyNodeDescriptor) descriptor;
-        SpadLibrary library = SpadLibraryManager.instance().spadLibraryForElement(descriptor.getPsiElement());
+        SpadLibrary library = SpadLibraryManager.getInstance(descriptor.getProject()).spadLibraryForElement(descriptor.getPsiElement());
         if (library == null) {
             return new Object[] { "Missing library"};
         }

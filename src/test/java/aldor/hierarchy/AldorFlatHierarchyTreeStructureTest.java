@@ -30,7 +30,7 @@ public class AldorFlatHierarchyTreeStructureTest {
     @Rule
     public final TestRule platformTestRule =
             RuleChain.emptyRuleChain()
-                    .around(JUnits.setLogToInfoTestRule)
+                    .around(JUnits.setLogToDebugTestRule)
                     .around(fricasExecutableRule)
                     .around(new LightPlatformJUnit4TestRule(codeTestFixture, ""))
                     .around(JUnits.swingThreadTestRule())
@@ -54,7 +54,6 @@ public class AldorFlatHierarchyTreeStructureTest {
 
     private static LightProjectDescriptor getProjectDescriptor(ExecutablePresentRule fricasExecutableRule) {
         return SdkProjectDescriptors.fricasSdkProjectDescriptor(fricasExecutableRule.prefix());
-
     }
 
 }

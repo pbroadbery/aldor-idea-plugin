@@ -22,12 +22,14 @@ import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import org.junit.Assert;
 import org.junit.Assume;
+import org.junit.Rule;
 
 import static aldor.util.VirtualFileTests.createFile;
 import static com.intellij.testFramework.LightPlatformTestCase.getSourceRoot;
 
 public class SpadInputRunConfigurationProducerTest extends BasePlatformTestCase {
-    private final DirectoryPresentRule directory = new DirectoryPresentRule("/home/pab/Work/fricas/opt/lib/fricas/target/x86_64-unknown-linux");
+    @Rule
+    public final DirectoryPresentRule directory = new DirectoryPresentRule("/home/pab/Work/fricas/opt/lib/fricas/target/x86_64-linux-gnu");
 
     @Override
     public void setUp() throws Exception {
@@ -63,6 +65,7 @@ public class SpadInputRunConfigurationProducerTest extends BasePlatformTestCase 
         ExecutionEnvironment executionEnvironment = new ExecutionEnvironment(executor, runner, runnerAndConfigurationSettings, getProject());
 
         RunContentDescriptor[] descriptorBox = new RunContentDescriptor[1];
+
         runner.execute(executionEnvironment, new ProgramRunner.Callback() {
             @Override
             public void processStarted(RunContentDescriptor descriptor) {

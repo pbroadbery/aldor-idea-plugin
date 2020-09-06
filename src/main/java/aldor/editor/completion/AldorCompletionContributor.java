@@ -63,7 +63,7 @@ public class AldorCompletionContributor extends CompletionContributor {
 
     public List<LookupElement> allTypes(CompletionParameters parameters) {
         PsiElement elt = parameters.getPosition();
-        SpadLibrary spadLibrary = SpadLibraryManager.instance().spadLibraryForElement(elt);
+        SpadLibrary spadLibrary = SpadLibraryManager.getInstance(parameters.getOriginalFile().getProject()).spadLibraryForElement(elt);
         return (spadLibrary == null) ? Collections.emptyList() : allTypes(spadLibrary);
     }
 

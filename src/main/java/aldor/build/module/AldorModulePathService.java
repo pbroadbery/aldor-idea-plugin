@@ -9,6 +9,10 @@ import com.intellij.openapi.module.ModuleServiceManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * This is the wrong way to do module properties - can be embedded in the module xml // FIXME
+ */
+@Deprecated
 @State(
         name = "AldorModuleBuildPath",
         reportStatistic = true/*,
@@ -21,7 +25,7 @@ public class AldorModulePathService implements PersistentStateComponentWithModif
 
     public AldorModulePathService() {
         LOG.info("Creating module path service");
-        this.state = new AldorModuleState("out/ao", AldorMakeDirectoryOption.Source);
+        this.state = new AldorModuleState("out/ao", AldorMakeDirectoryOption.Source, true);
     }
 
     public static AldorModulePathService getInstance(final Module module) {

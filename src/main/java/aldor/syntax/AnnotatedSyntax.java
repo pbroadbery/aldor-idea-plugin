@@ -41,6 +41,7 @@ public final class AnnotatedSyntax {
     private static final Logger LOG = Logger.getInstance(AnnotatedSyntax.class);
 
     public static Syntax toSyntax(Project project, GlobalSearchScope scope, AnnotatedAbSyn ab) {
+        assert !project.isDisposed();
         try {
             return ReadAction.compute(() -> (new ToSyntaxConverter(scope, project).doToSyntax(ab)));
         }
@@ -131,6 +132,7 @@ public final class AnnotatedSyntax {
                     }
                 });
             }
+            assert !project.isDisposed();
             Collection<AldorDefine> elts = AldorDefineTopLevelIndex.instance.get(name, project, scope);
             return new Id(new SyntaxRepresentation<AldorIdentifier>() {
                 @Nullable

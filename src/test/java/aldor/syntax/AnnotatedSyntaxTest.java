@@ -12,7 +12,6 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
-import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import foamj.Clos;
 import foamj.FoamContext;
 import foamj.FoamHelper;
@@ -26,7 +25,7 @@ import static aldor.syntax.AnnotatedSyntax.toSyntax;
 import static aldor.syntax.SyntaxPsiParser.parse;
 
 public class AnnotatedSyntaxTest extends BasePlatformTestCase {
-    private final DirectoryPresentRule rule = new DirectoryPresentRule("/home/pab/Work/fricas/opt/lib/fricas/target/x86_64-unknown-linux/algebra");
+    private final DirectoryPresentRule rule = new DirectoryPresentRule("/home/pab/Work/fricas/opt/lib/fricas/target/x86_64-linux-gnu/algebra");
     private AxiomInterface iface = null;
 
     @Override
