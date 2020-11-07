@@ -8,15 +8,19 @@ buildscript {
             url "https://oss.sonatype.org/content/repositories/snapshots/"
         }
         maven {
-            url 'https://dl.bintray.com/jetbrains/intellij-plugin-service'
+            url 'https://jetbrains.bintray.com/intellij-plugin-service'
         }
+        maven {
+            url 'https://jetbrains.bintray.com/intellij-third-party-dependencies'
+        }
+
     }
 }
 
 
 plugins {
     id 'java'
-    id 'org.jetbrains.intellij' version '0.4.21' apply false
+    id 'org.jetbrains.intellij' version '0.4.22' apply false
     id "de.undercouch.download" version "3.2.0" apply false
     id "org.jetbrains.grammarkit" version "2020.2.1" apply false
 }
@@ -253,5 +257,5 @@ test {
         events "failed"
         exceptionFormat "short"
     }
-    maxHeapSize=6g
+    maxHeapSize = "6g"
 }

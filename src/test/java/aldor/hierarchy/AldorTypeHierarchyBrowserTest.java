@@ -121,6 +121,35 @@ public class AldorTypeHierarchyBrowserTest {
         }
     }
 
+    @Test
+    public void testRightModule() {
+        Collection<AldorDefine> items = AldorDefineTopLevelIndex.instance.get("RightModule", codeTestFixture.getProject(), GlobalSearchScope.allScope(codeTestFixture.getProject()));
+
+        AldorIdentifier theId = items.stream().findFirst().flatMap(AldorDefine::defineIdentifier).orElse(null);
+        try (TestBrowser browser = new TestBrowser(ensureClosedRule, new AldorTypeHierarchyProvider(), theId, SUPERTYPES_HIERARCHY_TYPE)) {
+
+            browser.update();
+
+            /*
+            RightModule R
+            AbelianSemiGroup
+            *: (%, R) -> %
+            Unknown element - if  then AbelianGroup else ()
+            Unknown element - if  then AbelianMonoid else ()
+             */
+
+            System.out.println("Root: " + browser.rootDescriptor());
+
+            List<NodeDescriptor<?>> childElements = browser.childElements();
+            System.out.println("Children: " + childElements);
+
+            Assert.assertEquals(5, childElements.size());
+
+            ((Disposable) ProgressManager.getInstance()).dispose();
+        }
+    }
+
+
     private static LightProjectDescriptor getProjectDescriptor(ExecutablePresentRule fricasExecutableRule) {
         return SdkProjectDescriptors.fricasSdkProjectDescriptor(fricasExecutableRule.prefix());
 

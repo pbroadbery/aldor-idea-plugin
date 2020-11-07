@@ -103,7 +103,7 @@ public class AldorGroupedHierarchyTreeStructure extends HierarchyTreeStructure {
     private Object createNodeDescriptorMaybe(AldorHierarchyNodeDescriptor parent, Syntax syntax) {
         PsiElement psiElement = psiElementFromSyntax(syntax);
         if (psiElement == null) {
-            return new ErrorNodeDescriptor(parent, "Unknown element - " + SyntaxPrinter.instance().toString(syntax));
+            return new ErrorNodeDescriptor(parent, "Unknown element - " + syntax.getClass().getSimpleName() + " "+ SyntaxPrinter.instance().toString(syntax));
         }
         else {
             //noinspection unchecked

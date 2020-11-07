@@ -1,5 +1,6 @@
 package aldor.build.facet.aldor;
 
+import aldor.build.facet.ModuleModifyingFacetUtil;
 import aldor.build.facet.SpadFacet;
 import aldor.builder.jps.AldorModuleExtensionProperties;
 import aldor.sdk.aldor.AldorInstalledSdkType;
@@ -14,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class AldorFacet extends ModuleModifyingFacet<AldorFacetConfiguration> implements SpadFacet {
+public class AldorFacet extends ModuleModifyingFacet<AldorFacetConfiguration> implements SpadFacet<AldorModuleExtensionProperties> {
     private static final Logger LOG = Logger.getInstance(AldorFacet.class);
 
     public AldorFacet(@NotNull FacetType facetType, @NotNull Module module, @NotNull String name, @NotNull AldorFacetConfiguration configuration,
@@ -28,12 +29,12 @@ public class AldorFacet extends ModuleModifyingFacet<AldorFacetConfiguration> im
 
     @Override
     public void updateModule() {
-        AldorFacetUtil.updateLibrary(getModule(), getConfiguration(), AldorInstalledSdkType.instance());
+        ModuleModifyingFacetUtil.updateLibrary(getModule(), getConfiguration().sdk(), AldorInstalledSdkType.instance());
     }
 
     @Override
     public void facetRemoved() {
-        AldorFacetUtil.removeLibrary(AldorInstalledSdkType.instance(), getModule());
+        ModuleModifyingFacetUtil.removeLibrary(AldorInstalledSdkType.instance(), getModule());
     }
 
     //should only be called from write action

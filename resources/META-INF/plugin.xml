@@ -114,6 +114,10 @@
 
         <configurationType implementation="aldor.runconfiguration.spad.SpadInputRunConfigurationType" />
         <runConfigurationProducer implementation = "aldor.runconfiguration.spad.SpadInputRunConfigurationProducer"/>
+
+        <annotator language="Spad" implementationClass="aldor.editor.SpadAnnotator"/>
+
+
         <!-- Test language -->
         <fileTypeFactory implementation="aldor.expression.ExpressionFileTypeFactory"/>
         <lang.parserDefinition language="Expression" implementationClass="aldor.expression.ExpressionParserDefinition"/>
@@ -135,7 +139,7 @@
             <add-to-group group-id="NewGroup" anchor="after" relative-to-action="NewFile"/>
         </action>
 
-        <action id="AldorTypeHierarchy.BaseOnThisType" text="Base on this Type"
+        <action id="AldorTypeHierarchy.BaseOnThisType" text="Base On This Type"
                 class="aldor.hierarchy.AldorTypeHierarchyBrowser$AldorBaseOnThisTypeAction"
                 use-shortcut-of="TypeHierarchy"/>
         <group id="AldorTypeHierarchyPopupMenu">
@@ -157,8 +161,9 @@
 
     </actions>
 
+    <!--suppress PluginXmlValidity -->
     <applicationListeners>
-        <listener class="aldor.build.facet.aldor.AldorSdkTableListener" topic="com.intellij.openapi.projectRoots.ProjectJdkTable$Listener"/>
+        <listener class="aldor.build.facet.AldorSdkTableListener" topic="com.intellij.openapi.projectRoots.ProjectJdkTable$Listener"/>
     </applicationListeners>
 
     <application-components>

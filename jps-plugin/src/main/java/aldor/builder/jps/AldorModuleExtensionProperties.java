@@ -77,13 +77,17 @@ public class AldorModuleExtensionProperties implements SpadFacetProperties {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if ((o == null) || (getClass() != o.getClass())) return false;
-        AldorModuleExtensionProperties that = (AldorModuleExtensionProperties) o;
-        return (Objects.equal(sdkName, that.sdkName())) &&
-                (buildJavaComponents == that.buildJavaComponents()) &&
-                Objects.equal(outputDirectory, that.outputDirectory()) &&
-                (makeDirectoryOption == that.makeDirectoryOption());
+        if (this == o) {
+            return true;
+        }
+        if ((o == null) || (getClass() != o.getClass())) {
+            return false;
+        }
+        AldorModuleExtensionProperties other = (AldorModuleExtensionProperties) o;
+        return (Objects.equal(sdkName, other.sdkName())) &&
+                (buildJavaComponents == other.buildJavaComponents()) &&
+                Objects.equal(outputDirectory, other.outputDirectory()) &&
+                (makeDirectoryOption == other.makeDirectoryOption());
     }
 
     @Override

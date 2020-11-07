@@ -26,7 +26,6 @@ public class AldorModulePropertiesSerializer extends JpsModulePropertiesSerializ
     @Override
     public void saveProperties(@NotNull JpsSimpleElement<AldorModuleExtensionProperties> properties, @NotNull Element componentElement) {
         LOG.info("Saving properties "+ properties.getData().outputDirectory());
-        (new Throwable()).printStackTrace();
         XmlSerializer.serializeInto(properties.getData(), componentElement);
     }
 }

@@ -60,13 +60,13 @@ public class JpsAldorModelSerializerExtension extends JpsModelSerializerExtensio
     }
 
     private static class AldorLocalSdkRootTypeSerializer extends JpsLibraryRootTypeSerializer {
-        public AldorLocalSdkRootTypeSerializer() {
+        private AldorLocalSdkRootTypeSerializer() {
             super("Aldor Local SDK", JpsOrderRootType.COMPILED, true);
         }
     }
 
     private static class AldorInstalledSdkRootTypeSerializer extends JpsLibraryRootTypeSerializer {
-        public AldorInstalledSdkRootTypeSerializer() {
+        private AldorInstalledSdkRootTypeSerializer() {
             super("Aldor SDK", JpsOrderRootType.COMPILED, true);
         }
     }
@@ -100,7 +100,7 @@ public class JpsAldorModelSerializerExtension extends JpsModelSerializerExtensio
 
     }
 
-    enum AldorSdkSubType { local, installed }
+    private enum AldorSdkSubType { local, installed }
     public static class JpsAldorSdkType extends JpsSdkType<JpsDummyElement> implements JpsElementTypeWithDefaultProperties<JpsDummyElement> {
         public static final JpsAldorSdkType LOCAL = new JpsAldorSdkType(AldorSdkSubType.local);
         public static final JpsAldorSdkType INSTALLED = new JpsAldorSdkType(AldorSdkSubType.installed);
@@ -117,15 +117,15 @@ public class JpsAldorModelSerializerExtension extends JpsModelSerializerExtensio
         }
     }
 
-    private static class JpsAldorFacetConfigurationSerializer extends JpsFacetConfigurationSerializer<JpsAldorModuleExtension> {
-        public JpsAldorFacetConfigurationSerializer() {
+    private static final class JpsAldorFacetConfigurationSerializer extends JpsFacetConfigurationSerializer<JpsAldorModuleExtension> {
+        private JpsAldorFacetConfigurationSerializer() {
             super(JpsAldorModuleExtension.ROLE, AldorFacetConstants.ID, AldorFacetConstants.NAME);
         }
 
         @Override
         protected JpsAldorModuleExtension loadExtension(@NotNull Element facetConfigElement, String name, JpsElement parent, JpsModule module) {
             AldorModuleExtensionProperties props = XmlSerializer.deserialize(facetConfigElement, AldorModuleExtensionProperties.class);
-            LOG.info("Loaded facet extension " + props + " " + Optional.ofNullable(props).map(AldorModuleExtensionProperties::buildJavaComponents));
+            LOG.info("Loaded facet extension " + props + " " + props.buildJavaComponents());
             return new JpsAldorModuleExtension(props);
         }
 

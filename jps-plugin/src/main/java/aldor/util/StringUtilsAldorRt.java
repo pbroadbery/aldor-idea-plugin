@@ -3,7 +3,9 @@ package aldor.util;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-public class StringUtilsAldorRt {
+public final class StringUtilsAldorRt {
+
+    private StringUtilsAldorRt() {}
 
     @NotNull
     @Contract(pure = true)

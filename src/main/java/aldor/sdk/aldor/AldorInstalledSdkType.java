@@ -1,6 +1,6 @@
 package aldor.sdk.aldor;
 
-import aldor.sdk.AxiomInstalledSdk;
+import aldor.sdk.AxiomInstalledSdkType;
 import aldor.util.AnnotatedOptional;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.projectRoots.Sdk;
@@ -32,7 +32,7 @@ import java.util.stream.Stream;
 
 import static java.util.Optional.ofNullable;
 
-public class AldorInstalledSdkType extends SdkType implements AldorSdkType, AxiomInstalledSdk {
+public class AldorInstalledSdkType extends SdkType implements AldorSdkType, AxiomInstalledSdkType {
     private static final Logger LOG = Logger.getInstance(AldorInstalledSdkType.class);
 
     private static final Set<OrderRootType> applicableRootTypes = Collections.singleton(OrderRootType.SOURCES);

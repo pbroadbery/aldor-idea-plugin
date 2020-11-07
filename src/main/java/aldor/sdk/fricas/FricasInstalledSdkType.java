@@ -1,6 +1,6 @@
 package aldor.sdk.fricas;
 
-import aldor.sdk.AxiomInstalledSdk;
+import aldor.sdk.AxiomInstalledSdkType;
 import aldor.sdk.aldor.AldorVersionQuery;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.projectRoots.Sdk;
@@ -29,7 +29,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class FricasInstalledSdkType extends SdkType implements FricasSdkType, AxiomInstalledSdk {
+public class FricasInstalledSdkType extends SdkType implements FricasSdkType, AxiomInstalledSdkType {
     private static final String[] homeBasePaths = new String[] {
             "/home/pab/Work/fricas/opt/lib/fricas/target/",
             "/usr/local/lib/fricas/target/"
@@ -72,11 +72,6 @@ public class FricasInstalledSdkType extends SdkType implements FricasSdkType, Ax
                 .map(File::getAbsolutePath);
     }
 
-    @Override
-    public String getInvalidHomeMessage(String path) {
-        return super.getInvalidHomeMessage(path);
-    }
-
     @Nonnull
     @Override
     public String axiomSysName(Sdk sdk) {
@@ -89,7 +84,7 @@ public class FricasInstalledSdkType extends SdkType implements FricasSdkType, Ax
     }
 
     @Override
-    public String suggestSdkName(String currentSdkName, String sdkHome) {
+    public @NotNull String suggestSdkName(String currentSdkName, String sdkHome) {
         return "Fricas - " + sdkHome;
     }
 

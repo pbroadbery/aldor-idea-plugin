@@ -25,7 +25,6 @@ public class GroupedPsiElement extends FakePsiElement {
     @Override
     public ItemPresentation getPresentation() {
         return new ItemPresentation() {
-            @Nullable
             @Override
             public String getPresentableText() {
                 AldorGroupedHierarchyTreeStructure.GroupingKey key = grouping.key();
@@ -33,7 +32,6 @@ public class GroupedPsiElement extends FakePsiElement {
                 return key.name() + ": " + SyntaxPrinter.instance().toString(key.type());
             }
 
-            @Nullable
             @Override
             public String getLocationString() {
                 return grouping.operations().size() + " places";

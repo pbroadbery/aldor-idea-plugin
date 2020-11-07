@@ -1,6 +1,5 @@
 package aldor.aldorunit.runner;
 
-import aldor.aldorunit.SourceFile;
 import foamj.Clos;
 import foamj.FoamContext;
 import foamj.FoamHelper;
@@ -49,7 +48,7 @@ public class AldorUnitRunner extends Runner implements Filterable {
     /**
      * Constructs a new {@code ParentRunner} that will run {@code @TestClass}
      *
-     * @param testClass
+     * @param testClass The test class
      */
     public AldorUnitRunner(Class<?> testClass) throws InitializationError {
         String generatedTestClass = System.getProperty("aldor.aldorunit.testClass");
@@ -64,19 +63,6 @@ public class AldorUnitRunner extends Runner implements Filterable {
         }
         load();
     }
-
-    private String implementation(Class<?> clzz) {
-        SourceFile annotation = clzz.getAnnotation(SourceFile.class);
-        String implementation;
-        if (annotation == null || annotation.source().isEmpty()) {
-            implementation = System.getProperty("aldorunit.implementation");
-        }
-        else {
-            implementation = annotation.source();
-        }
-        return implementation;
-    }
-
 
     @Override
     public void filter(Filter filter) throws NoTestsRemainException {
@@ -237,8 +223,9 @@ public class AldorUnitRunner extends Runner implements Filterable {
         }
 
         private boolean isTest(Method m) {
-            if (!m.getName().startsWith("test"))
+            if (!m.getName().startsWith("test")) {
                 return false;
+            }
             if (m.getParameterCount() != 0) {
                 return false;
             }

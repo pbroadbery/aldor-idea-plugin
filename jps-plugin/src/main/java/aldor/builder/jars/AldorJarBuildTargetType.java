@@ -2,7 +2,6 @@ package aldor.builder.jars;
 
 import aldor.builder.AldorBuildTargetTypes;
 import aldor.builder.AldorBuilderService;
-import aldor.builder.jps.JpsAldorModelSerializerExtension;
 import aldor.builder.jps.AldorModuleExtensionProperties;
 import aldor.builder.jps.JpsAldorModuleType;
 import com.intellij.openapi.diagnostic.Logger;
@@ -53,8 +52,8 @@ public class  AldorJarBuildTargetType extends BuildTargetType<AldorJarBuildTarge
      * We only want to build the jar file
      * - if the project has 'buildJavaComponents'
      * - if the makefile supports it (we can't check this at the moment).
-     * @param module
-     * @return
+     * @param module The module
+     * @return build targets appropriate to the module
      */
     @NotNull
     private List<AldorJarBuildTarget> moduleBuildTargets(JpsModule module) {

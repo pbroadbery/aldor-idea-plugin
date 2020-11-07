@@ -7,6 +7,7 @@ import aldor.syntax.components.Comma;
 import aldor.syntax.components.DeclareNode;
 import aldor.syntax.components.Define;
 import aldor.syntax.components.Id;
+import aldor.syntax.components.If;
 import aldor.syntax.components.Literal;
 import aldor.syntax.components.Other;
 import aldor.util.Streams;

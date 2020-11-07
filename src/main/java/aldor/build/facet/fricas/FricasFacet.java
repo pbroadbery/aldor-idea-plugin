@@ -1,6 +1,9 @@
 package aldor.build.facet.fricas;
 
+import aldor.build.facet.ModuleModifyingFacetUtil;
 import aldor.build.facet.SpadFacet;
+import aldor.build.facet.aldor.ModuleModifyingFacet;
+import aldor.sdk.fricas.FricasInstalledSdkType;
 import com.intellij.facet.Facet;
 import com.intellij.facet.FacetManager;
 import com.intellij.facet.FacetType;
@@ -10,9 +13,25 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
-public class FricasFacet extends Facet<FricasFacetConfiguration> implements SpadFacet<FricasFacetProperties> {
+public class FricasFacet extends ModuleModifyingFacet<FricasFacetConfiguration> implements SpadFacet<FricasFacetProperties> {
     public FricasFacet(@NotNull FacetType facetType, @NotNull Module module, @NotNull String name, @NotNull FricasFacetConfiguration configuration, Facet underlyingFacet) {
         super(facetType, module, name, configuration, underlyingFacet);
+    }
+
+    @Override
+    public void initFacet() {
+        updateModule();
+    }
+
+    @Override
+    public void updateModule() {
+        ModuleModifyingFacetUtil.updateLibrary(getModule(), getConfiguration().sdk(), FricasInstalledSdkType.instance());
+    }
+
+    @Override
+    public void facetRemoved() {
+        ModuleModifyingFacetUtil.removeLibrary(FricasInstalledSdkType.instance(), getModule());
+
     }
 
     public static FricasFacet createFacetIfMissing(Module module, FricasFacetProperties properties) {

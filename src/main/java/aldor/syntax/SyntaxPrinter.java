@@ -7,6 +7,7 @@ import aldor.syntax.components.Comma;
 import aldor.syntax.components.DeclareNode;
 import aldor.syntax.components.EnumList;
 import aldor.syntax.components.Id;
+import aldor.syntax.components.If;
 import aldor.syntax.components.Other;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -83,6 +84,24 @@ public final class SyntaxPrinter {
         public Void visitOther(Other other) {
             pw.write(other.toString());
             return null;
+        }
+
+        @SuppressWarnings("MethodParameterNamingConvention")
+        @Override
+        public Void visitIf(If _if) {
+            write("if ");
+            write(_if.child(0));
+            write(" then ");
+            write(_if.child(1));
+            if (_if.child(2) != null) {
+                write(" else ");
+                write(_if.child(2));
+            }
+            return null;
+        }
+
+        private void write(Syntax syntax) {
+            syntax.accept(this);
         }
 
         public void write(String s) {

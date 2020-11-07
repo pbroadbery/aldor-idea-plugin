@@ -79,9 +79,9 @@ public final class AldorParentCategoryHierarchyTreeStructure extends HierarchyTr
         }
         Syntax syntax = aldorDescriptor.syntax();
         List<Syntax> parents = Try.of(() -> library.parentCategories(syntax)).orElse(e -> Collections.emptyList());
-
-        Stream<Object> parentNodes = parents.stream().map(psyntax -> createNodeDescriptorMaybe(aldorDescriptor, psyntax));
         List<SpadLibrary.Operation> operations = Try.of(() -> library.operations(syntax)).orElse(e -> Collections.emptyList());
+        
+        Stream<Object> parentNodes = parents.stream().map(psyntax -> createNodeDescriptorMaybe(aldorDescriptor, psyntax));
         Stream<Object> operationNodes = operations.stream().map(op -> createOperationNodeDescriptorMaybe(aldorDescriptor, op));
 
         return Stream.concat(parentNodes, operationNodes).toArray();

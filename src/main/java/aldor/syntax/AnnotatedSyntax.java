@@ -97,7 +97,7 @@ public final class AnnotatedSyntax {
                             return new Comma(abCommaArgs(scope, ab));
                     }
                 } else if (ab.isIf()) {
-                    return new If(new Literal(ab.toString(), null), doToSyntax(ab.ifTruePart()), doToSyntax(ab.ifFalsePart()));
+                    return new If(doToSyntax(ab.ifTest()), doToSyntax(ab.ifTruePart()), doToSyntax(ab.ifFalsePart()));
                 }
                 else if (ab.isLiteral()) {
                     return new Literal(ab.literal(), null);
@@ -174,7 +174,7 @@ public final class AnnotatedSyntax {
 
 
     @SuppressWarnings("NonSerializableFieldInSerializableClass")
-    enum AnnotatedNodeType {
+    private enum AnnotatedNodeType {
         Id(AldorTokenTypes.TK_Id), Declare(AldorTokenTypes.KW_Colon), Apply(null);
 
         @Nullable

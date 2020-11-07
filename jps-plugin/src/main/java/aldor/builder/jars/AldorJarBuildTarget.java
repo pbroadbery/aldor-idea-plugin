@@ -44,12 +44,12 @@ public class AldorJarBuildTarget extends BuildTarget<AldorJarRootDescriptor> {
             return false;
         }
         AldorJarBuildTarget other = (AldorJarBuildTarget) obj;
-        return this.sourceRoot.getFile().equals(other.sourceRoot.getFile());
+        return FileUtil.filesEqual(this.sourceRoot.getFile(), other.sourceRoot.getFile());
     }
 
     @Override
     public int hashCode() {
-        return sourceRoot.getFile().hashCode();
+        return FileUtil.fileHashCode(sourceRoot.getFile());
     }
 
     @Override

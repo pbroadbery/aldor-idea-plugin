@@ -170,7 +170,8 @@ public class FricasSpadLibrary implements SpadLibrary, Disposable {
 
     /** This is, well, guesswork. If we had the declaration line number it would be easier.  Might be more
      * possible via aldor .abn files */
-    private PsiNamedElement declarationFor(Syntax exporter, NamedExport namedExport) {
+    private @Nullable
+    PsiNamedElement declarationFor(Syntax exporter, NamedExport namedExport) {
         Syntax leadingExporter = SyntaxUtils.leadingId(exporter);
         // Find all definitions of "namedExport" in the file containing the exporter
         AldorDefine exportingDefinition = containingForm(leadingExporter);
