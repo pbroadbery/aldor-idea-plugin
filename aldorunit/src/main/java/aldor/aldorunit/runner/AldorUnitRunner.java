@@ -65,7 +65,7 @@ public class AldorUnitRunner extends Runner implements Filterable {
     }
 
     @Override
-    public void filter(Filter filter) throws NoTestsRemainException {
+    public void filter(Filter filter) {
 
     }
 
@@ -78,6 +78,7 @@ public class AldorUnitRunner extends Runner implements Filterable {
         return child.getDescription();
     }
 
+    @SuppressWarnings("UseOfSystemOutOrSystemErr")
     protected void runChild(AldorTestRunner child, RunNotifier runNotifier) {
         runNotifier.fireTestStarted(child.getDescription());
         System.out.println("Starting test " + child.getDescription().getMethodName());
@@ -205,6 +206,7 @@ public class AldorUnitRunner extends Runner implements Filterable {
             return Description.createTestDescription(clzz, method.getName());
         }
 
+        @SuppressWarnings("OverlyBroadThrowsClause")
         public void run(RunNotifier notifier) throws Throwable {
             try {
                 method.invoke(null);

@@ -50,7 +50,4 @@ public class AldorFileRootDescriptor extends BuildRootDescriptor {
         return Collections.singleton(new File(sourceRoot, "out"));
     }
 
-    public File buildDirectoryForFile(File file) {
-        return null;
-    }
 }

@@ -84,7 +84,7 @@ public class AldorFileBuildTargetType extends BuildTargetType<AldorFileBuildTarg
             File file = sourceRoot.getFile();
 
             Optional<File> maybeRoot = rootFiles.stream().filter(root -> FileUtil.isAncestor(root, file, false)).findFirst();
-            if (!maybeRoot.isPresent()) {
+            if (maybeRoot.isEmpty()) {
                 LOG.debug("No root for " + file);
                 continue;
             }

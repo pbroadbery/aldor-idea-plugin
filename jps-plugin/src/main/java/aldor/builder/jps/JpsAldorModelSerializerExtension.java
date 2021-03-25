@@ -59,13 +59,13 @@ public class JpsAldorModelSerializerExtension extends JpsModelSerializerExtensio
         return Arrays.asList(new AldorLocalSdkRootTypeSerializer(), new AldorInstalledSdkRootTypeSerializer());
     }
 
-    private static class AldorLocalSdkRootTypeSerializer extends JpsLibraryRootTypeSerializer {
+    private static final class AldorLocalSdkRootTypeSerializer extends JpsLibraryRootTypeSerializer {
         private AldorLocalSdkRootTypeSerializer() {
             super("Aldor Local SDK", JpsOrderRootType.COMPILED, true);
         }
     }
 
-    private static class AldorInstalledSdkRootTypeSerializer extends JpsLibraryRootTypeSerializer {
+    private static final class AldorInstalledSdkRootTypeSerializer extends JpsLibraryRootTypeSerializer {
         private AldorInstalledSdkRootTypeSerializer() {
             super("Aldor SDK", JpsOrderRootType.COMPILED, true);
         }

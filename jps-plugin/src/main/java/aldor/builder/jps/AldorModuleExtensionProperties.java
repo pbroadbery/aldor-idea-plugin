@@ -21,14 +21,18 @@ public class AldorModuleExtensionProperties implements SpadFacetProperties {
     private final String javaSdkName;
 
     public AldorModuleExtensionProperties() {
-        this(null, "out/ao", JpsAldorMakeDirectoryOption.Source, false, null);
+        this(null, "out/ao", JpsAldorMakeDirectoryOption.Source, WithJava.Disabled, null);
     }
 
-    public AldorModuleExtensionProperties(String sdkName, @Nonnull String outputDirectory, JpsAldorMakeDirectoryOption option, boolean buildJavaComponents, String javaSdkName) {
+    public AldorModuleExtensionProperties(String sdkName,
+                                          @Nonnull String outputDirectory,
+                                          JpsAldorMakeDirectoryOption option,
+                                          WithJava java,
+                                          String javaSdkName) {
         this.sdkName = sdkName;
         this.outputDirectory = outputDirectory;
         this.makeDirectoryOption = option;
-        this.buildJavaComponents = buildJavaComponents;
+        this.buildJavaComponents = java.enabled();
         this.javaSdkName = javaSdkName;
     }
 
@@ -108,4 +112,10 @@ public class AldorModuleExtensionProperties implements SpadFacetProperties {
                 '}';
     }
 
+    public enum WithJava {
+        Enabled, Disabled;
+        boolean enabled() {
+            return this == Enabled;
+        }
+    }
 }

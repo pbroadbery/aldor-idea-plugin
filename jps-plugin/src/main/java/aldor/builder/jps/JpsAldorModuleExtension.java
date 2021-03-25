@@ -52,7 +52,7 @@ import org.jetbrains.jps.model.module.JpsModule;
   }
 
   @Nullable
-  public static JpsAldorModuleExtension getExtension(@Nullable JpsModule module) {
+  public static JpsAldorModuleExtension getExtension(@SuppressWarnings("TypeMayBeWeakened") @Nullable JpsModule module) {
     return (module != null) ? module.getContainer().getChild(ROLE) : null;
   }
 }

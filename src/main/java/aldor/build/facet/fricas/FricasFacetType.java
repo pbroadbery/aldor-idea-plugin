@@ -17,6 +17,7 @@ public class FricasFacetType extends FacetType<FricasFacet, FricasFacetConfigura
         super(TYPE_ID, FRICAS_FACET_ID, FRICAS_FACET_NAME);
     }
 
+    @SuppressWarnings("StaticMethodOnlyUsedInOneClass")
     public static FacetType<FricasFacet, FricasFacetConfiguration> instance() {
         return findInstance(FricasFacetType.class);
     }

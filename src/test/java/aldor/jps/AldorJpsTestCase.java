@@ -21,7 +21,6 @@ import aldor.builder.jps.JpsAldorMakeDirectoryOption;
 import aldor.builder.jps.JpsAldorModelSerializerExtension;
 import aldor.builder.jps.JpsAldorModuleExtension;
 import aldor.builder.jps.JpsAldorModuleType;
-import com.intellij.facet.FacetManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileSystemUtil;
 import com.intellij.openapi.util.io.FileUtil;
@@ -152,7 +151,8 @@ public abstract class AldorJpsTestCase extends UsefulTestCase {
     }
 
     JpsModule addAldorModule(String moduleName) {
-        AldorModuleExtensionProperties properties = new AldorModuleExtensionProperties("aldor-sdk", "out/ao", JpsAldorMakeDirectoryOption.Source, true, "java-sdk");
+        AldorModuleExtensionProperties properties = new AldorModuleExtensionProperties("aldor-sdk", "out/ao",
+                JpsAldorMakeDirectoryOption.Source, AldorModuleExtensionProperties.WithJava.Enabled, "java-sdk");
         JpsSimpleElement<AldorModuleExtensionProperties> simpleElement = JpsElementFactory.getInstance().createSimpleElement(properties);
         JpsModule module = new JpsModuleImpl<>(JpsAldorModuleType.INSTANCE, moduleName, simpleElement);
         myProject.addModule(module);
@@ -161,7 +161,7 @@ public abstract class AldorJpsTestCase extends UsefulTestCase {
     }
 
     private JpsModule addLocalAldorModule(String moduleName, String outputDirectoryName) {
-        AldorModuleExtensionProperties data = new AldorModuleExtensionProperties("aldor-sdk", outputDirectoryName, JpsAldorMakeDirectoryOption.BuildRelative, true, "java-sdk");
+        AldorModuleExtensionProperties data = new AldorModuleExtensionProperties("aldor-sdk", outputDirectoryName, JpsAldorMakeDirectoryOption.BuildRelative, AldorModuleExtensionProperties.WithJava.Enabled, "java-sdk");
         JpsSimpleElement<AldorModuleExtensionProperties> simpleElement = JpsElementFactory.getInstance().createSimpleElement(data);
         JpsModule module = new JpsModuleImpl<>(JpsAldorModuleType.INSTANCE, moduleName, simpleElement);
         myProject.addModule(module);

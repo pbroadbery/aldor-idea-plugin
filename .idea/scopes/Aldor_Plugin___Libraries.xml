@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Aldor Plugin &amp; Libraries" pattern="file[aldor-idea.aldorunit.main]:*/||file[aldor-idea.aldorunit.test]:*/||file[aldor-idea.aldorunit]:*/||file[aldor-idea.jps-plugin.main]:*/||file[aldor-idea.jps-plugin.test]:*/" />
+</component>

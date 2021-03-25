@@ -2,13 +2,10 @@ package aldor.psi;
 
 import aldor.file.AldorFileType;
 import aldor.file.SpadFileType;
-import aldor.test_util.ExecutablePresentRule;
-import aldor.test_util.SdkProjectDescriptors;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import org.junit.Assert;
 

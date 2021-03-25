@@ -45,6 +45,6 @@ public class AldorModuleExtensionPropertiesBuilder {
     }
 
     public AldorModuleExtensionProperties build() {
-        return new AldorModuleExtensionProperties(sdkName, outputDirectory, option, buildJavaComponents, javaSdkName);
+        return new AldorModuleExtensionProperties(sdkName, outputDirectory, option,  buildJavaComponents ? AldorModuleExtensionProperties.WithJava.Enabled: AldorModuleExtensionProperties.WithJava.Disabled, javaSdkName);
     }
 }
