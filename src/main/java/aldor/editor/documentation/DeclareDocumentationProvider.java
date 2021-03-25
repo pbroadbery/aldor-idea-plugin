@@ -23,13 +23,13 @@ class DeclareDocumentationProvider extends TypedDocumentationProvider<AldorDecla
     @Override
     public String generateDoc(AldorDeclare o, PsiElement originalElement) {
         String type1 = declareTypeText(o);
-        AnnotatedOptional<Syntax, String> syme = AnnotatedOptional.ofNullable(originalElement, () -> (String) null)
+        AnnotatedOptional<Syntax, String> syme = AnnotatedOptional.ofNullable(originalElement, () -> "missing element for " + o.getText())
                                                                 .flatMap(docUtils::symeForElement)
                                                                 .map(Syme::type);
         String exportType = declareExporterType(o).map(e -> "<b>Exporter:</b> " + e).orElse("");
 
         String header = "<b>TYPE:</b> " + type1;
-        String importType = "<br/>" + syme.map(s -> "<b>Imported TYPE:</b> " + SyntaxPrinter.instance().toString(s)).orElse(msg -> "");
+        String importType = "<br/>" + syme.map(s -> "<b>Imported TYPE:</b> " + SyntaxPrinter.instance().toString(s)).orElse(msg -> msg);
         String docco = docUtils.aldorDocStringFromContainingElement(o);
         return header + "<br/>" + exportType + importType + "<hr/>" + docco;
     }

@@ -1,5 +1,6 @@
 package aldor.test_util;
 
+import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.testFramework.LightPlatformTestCase;
 import com.intellij.testFramework.LightProjectDescriptor;
@@ -15,6 +16,8 @@ import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
 import java.io.File;
+
+import static org.junit.Assert.assertFalse;
 
 @SuppressWarnings("ClassWithTooManyDependents")
 public class LightPlatformJUnit4TestRule implements TestRule {
@@ -61,5 +64,17 @@ public class LightPlatformJUnit4TestRule implements TestRule {
         System.out.println("createFixture - " + testFixture.getProject());
         return testFixture;
     }
+
+    public static CodeInsightTestFixture createHeavyweightFixture(LightProjectDescriptor descriptor) {
+        IdeaTestFixtureFactory factory = IdeaTestFixtureFactory.getFixtureFactory();
+        TestFixtureBuilder<IdeaProjectTestFixture> fixtureBuilder = factory.createFixtureBuilder("heavy");
+        //        System.out.println("create fixture; SDK is: " + descriptor.sdk());
+        final IdeaProjectTestFixture fixture = fixtureBuilder.getFixture();
+        CodeInsightTestFixture testFixture = IdeaTestFixtureFactory.getFixtureFactory().createCodeInsightFixture(fixture, new LightTempDirTestFixtureImpl(true));
+
+        System.out.println("createFixture - " + testFixture.getProject());
+        return testFixture;
+    }
+
 
 }

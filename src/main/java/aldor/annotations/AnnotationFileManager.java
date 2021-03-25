@@ -152,7 +152,6 @@ public class AnnotationFileManager implements Disposable {
              * here, but might deadlock from a non EDT thread, so bottle it.
              */
 
-            LOG.info("Looking for build file: " + buildFilePath + " " + Optional.ofNullable(buildFile).map(VirtualFile::exists));
             if (buildFile == null) {
                 return new MissingAnnotationFile(virtualFile, "Missing .abn file: "+ buildFilePath);
             }

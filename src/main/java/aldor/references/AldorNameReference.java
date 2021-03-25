@@ -8,6 +8,7 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReferenceBase;
 import com.intellij.util.IncorrectOperationException;
+import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,7 +16,7 @@ import java.util.List;
 
 import static aldor.references.FileScopeWalker.resolveAndWalk;
 
-public class AldorNameReference extends PsiReferenceBase<AldorIdentifier> {
+public class AldorNameReference extends PsiReferenceBase<AldorIdentifier> implements AldorReference {
     private static final Logger LOG = Logger.getInstance(AldorNameReference.class);
     public static final Object[] NO_VARIANTS = new Object[0];
 
@@ -39,6 +40,14 @@ public class AldorNameReference extends PsiReferenceBase<AldorIdentifier> {
         return result;
     }
 
+    @Override
+    @Nullable
+    public PsiElement resolveMacro() {
+        AldorScopeProcessor scopeProcessor = new AldorScopeProcessor(AldorScopeProcessor.Options.MACRO, getElement().getText());
+        resolveAndWalk(scopeProcessor, getElement());
+
+        return scopeProcessor.getResult();
+    }
 
     @SuppressWarnings("ThrowsRuntimeException")
     @Override
@@ -74,4 +83,8 @@ public class AldorNameReference extends PsiReferenceBase<AldorIdentifier> {
         return result.toArray();
     }
 
+    @Override
+    public @Nls(capitalization = Nls.Capitalization.Sentence) @NotNull String getUnresolvedMessagePattern() {
+        return "Aldor - unresolved - %s";
+    }
 }

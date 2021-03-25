@@ -1,23 +1,24 @@
 package aldor.runconfiguration.spad;
 
-import aldor.runconfiguration.spad.SpadInputRunConfigurationType.SpadInputConfiguration;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.JComponent;
 
 class SpadInputConfigurable extends SettingsEditor<SpadInputConfiguration> {
+    @NotNull
     private final SpadInputConfigurableForm form;
 
-    SpadInputConfigurable(Project project) {
-        this.form = new SpadInputConfigurableForm(project);
+    SpadInputConfigurable(Project project, @Nullable Module module) {
+        this.form = new SpadInputConfigurableForm(project, module);
     }
 
     @Override
     protected void resetEditorFrom(@NotNull SpadInputConfiguration configuration) {
         form.resetEditor(configuration.bean());
-
     }
 
     @Override
@@ -31,5 +32,10 @@ class SpadInputConfigurable extends SettingsEditor<SpadInputConfiguration> {
     @Override
     protected JComponent createEditor() {
         return form.wholePanel();
+    }
+
+    @NotNull
+    SpadInputConfigurableForm form() {
+        return form;
     }
 }

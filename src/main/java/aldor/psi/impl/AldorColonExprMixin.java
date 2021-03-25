@@ -2,6 +2,9 @@ package aldor.psi.impl;
 
 import aldor.psi.AldorColonExpr;
 import aldor.psi.AldorDeclare;
+import aldor.psi.AldorDefine;
+import aldor.psi.AldorId;
+import aldor.psi.AldorPsiUtils;
 import aldor.psi.stub.AldorDeclareStub;
 import aldor.references.FileScopeWalker;
 import aldor.references.ScopeContext;
@@ -17,6 +20,8 @@ import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Optional;
 
 @SuppressWarnings("AbstractClassExtendsConcreteClass")
 public abstract class AldorColonExprMixin extends StubBasedPsiElementBase<AldorDeclareStub> implements AldorColonExpr, AldorDeclare {
@@ -71,6 +76,17 @@ public abstract class AldorColonExprMixin extends StubBasedPsiElementBase<AldorD
         return this.getExprList().get(1);
     }
 
+    @Override
+    public PsiElement type() {
+        Optional<AldorId> typeId = AldorPsiUtils.findUniqueIdentifier(rhs());
+        if (typeId.isPresent() && (typeId.get().getReference() != null)) {
+            PsiElement macro = typeId.get().getReference().resolveMacro();
+            if (macro instanceof AldorDefine) {
+                return ((AldorDefine) macro).rhs();
+            }
+        }
+        return rhs(); // FIXME!
+    }
     @SuppressWarnings("ThrowsRuntimeException")
     @Override
     public PsiElement setName(@NotNull String name) throws IncorrectOperationException {

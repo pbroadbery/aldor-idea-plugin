@@ -5,6 +5,7 @@ import aldor.lexer.AldorTokenTypes;
 import aldor.psi.AldorElementFactory;
 import aldor.psi.AldorIdentifier;
 import aldor.references.AldorNameReference;
+import aldor.references.AldorReference;
 import aldor.references.SpadNameReference;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
@@ -47,9 +48,15 @@ public abstract class AldorIdentifierMixin extends ASTWrapperPsiElement implemen
 
     @Nullable
     @Override
-    public PsiReference getReference() {
-        PsiReference[] arr = getReferences();
-        return (arr.length == 0) ? null : arr[0];
+    public AldorReference getReference() {
+        return getCoreReference();
+    }
+
+    private AldorReference getCoreReference() {
+        if (SpadLanguage.INSTANCE.equals(getContainingFile().getLanguage())) {
+            return new SpadNameReference(this);
+        }
+        return new AldorNameReference(this);
     }
 
     @NotNull
@@ -57,7 +64,7 @@ public abstract class AldorIdentifierMixin extends ASTWrapperPsiElement implemen
     public PsiReference[] getReferences() {
         final PsiReference[] fromProviders = ReferenceProvidersRegistry.getReferencesFromProviders(this);
 
-        PsiReference ref = (SpadLanguage.INSTANCE.equals(getContainingFile().getLanguage())) ? new SpadNameReference(this) : new AldorNameReference(this);
+        PsiReference ref = getCoreReference();
         return ArrayUtil.prepend(ref, fromProviders);
     }
 

@@ -13,7 +13,6 @@ import com.intellij.psi.PsiReference;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
-import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import org.junit.Assert;
 
 import java.util.Collection;
@@ -345,6 +344,23 @@ public class AldorRefLookupTest extends BasePlatformTestCase {
         Collection<String> nulls = Collections.emptySet();
         assertReferences(text, nameRefToMap, nulls);
     }
+
+    public void testWhereMacro3() {
+        String text = "Foo(X: A): E == I where { E ==> with; I ==> add foo(a: X) == 1}";
+
+        Map<String, String> nameRefToMap = ImmutableMap.<String, String>builder()
+                //.put("X)", "X: A") -- sort of dubious reference, as LHS of where could define multiple 'X'
+                // route would be
+                // - find refs for X.. see that usage is in a macro
+                // - find usages of macro (likely 1), for each usage, find definition for X
+                .put("E == ", "E ==> ")
+                .put("I where ", "I ==> ")
+                .put("E ==>", "E ==>")
+                .build();
+        Collection<String> nulls = Collections.emptySet();
+        assertReferences(text, nameRefToMap, nulls);
+    }
+
 
     private void assertReferences(String text, Map<String, String> nameRefToMap, Iterable<String> nulls) {
         assertReferences(text, nameRefToMap, nulls, AldorLanguage.INSTANCE);

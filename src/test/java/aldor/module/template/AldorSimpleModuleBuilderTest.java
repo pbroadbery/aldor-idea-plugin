@@ -33,12 +33,16 @@ public class AldorSimpleModuleBuilderTest {
         ModifiableModuleModel model = ModuleManager.getInstance(fixture.getProject()).getModifiableModel();
         //model.newModule("/tmp", "Aldor");
         File tmp = Files.createTempDir();
-        tmp.deleteOnExit();
-        AldorSimpleModuleBuilder builder = new AldorSimpleModuleBuilder();
-        builder.setName("Simple");
-        builder.setModuleFilePath(tmp.getPath());
-        Module module = ApplicationManager.getApplication().runWriteAction((ThrowableComputable<Module, Exception>) () -> builder.createModule(model));
-        assertNotNull(module);
+        try {
+            AldorSimpleModuleBuilder builder = new AldorSimpleModuleBuilder();
+            builder.setName("Simple");
+            builder.setModuleFilePath(tmp.getPath());
+            Module module = ApplicationManager.getApplication().runWriteAction((ThrowableComputable<Module, Exception>) () -> builder.createModule(model));
+            assertNotNull(module);
+        }
+        finally {
+            tmp.delete();
+        }
     }
 
 }

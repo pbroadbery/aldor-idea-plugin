@@ -20,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.JTextPane;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
@@ -29,6 +30,7 @@ public class FricasFacetEditorForm extends FacetPropertiesEditorTab<FricasFacetP
     private static final Logger LOG = Logger.getInstance(FricasFacetEditorForm.class);
     private JdkComboBox fricasSdkComboBox;
     private JPanel panel;
+    private JTextPane thisIsTheLocationTextPane;
     @Nullable
     private ProjectSdksModel model;
 

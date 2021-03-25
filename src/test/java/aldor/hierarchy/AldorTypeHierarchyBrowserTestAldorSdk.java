@@ -70,7 +70,7 @@ public class AldorTypeHierarchyBrowserTestAldorSdk {
             AldorHierarchyOperationDescriptor findAll = browser.childElements().stream()
                     .flatMap(Streams.filterAndCast(AldorHierarchyOperationDescriptor.class))
                     .peek(x -> System.out.println("Found Child " + x))
-                    .filter(x -> "findAll".equals(x.operation().name()))
+                    .filter(x -> "first".equals(x.operation().name()))
                     .findFirst()
                     //.orElseThrow(AssertionFailedError::new);
                     .orElse(null);

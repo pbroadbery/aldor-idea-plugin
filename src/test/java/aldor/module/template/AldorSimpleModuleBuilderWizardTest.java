@@ -52,7 +52,7 @@ public class AldorSimpleModuleBuilderWizardTest extends NewProjectWizardTestCase
 
     private void adjust(Step step) {
         AldorSimpleModuleBuilder builder = (AldorSimpleModuleBuilder) myWizard.getProjectBuilder();
-        //builder.setSdk(aldorSdk);
+        builder.setSdk(aldorSdk);
         if (step instanceof AldorNewModuleFacetStep) {
             LOG.info("Setting SDK: " + aldorSdk.getName());
             AldorNewModuleFacetStep facetStep = (AldorNewModuleFacetStep) step;

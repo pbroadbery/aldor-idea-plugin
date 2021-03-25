@@ -2,7 +2,7 @@ package aldor.hierarchy;
 
 import aldor.hierarchy.util.ComparatorPriority;
 import aldor.syntax.SyntaxPrinter;
-import aldor.ui.AldorIcons;
+import icons.AldorIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.hierarchy.HierarchyNodeDescriptor;
 import com.intellij.openapi.editor.markup.TextAttributes;
@@ -10,6 +10,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ui.util.CompositeAppearance;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiElement;
+import com.intellij.ui.SimpleTextAttributes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,6 +18,7 @@ import javax.swing.Icon;
 import java.awt.Font;
 
 import static aldor.spad.SpadLibrary.Operation;
+import static aldor.ui.AldorTextAttributes.CONDITION_ATTRIBUTES;
 
 public class AldorHierarchyOperationDescriptor  extends HierarchyNodeDescriptor implements ComparatorPriority {
     private final Operation operation;
@@ -44,7 +46,6 @@ public class AldorHierarchyOperationDescriptor  extends HierarchyNodeDescriptor 
     @Override
     public final boolean update() {
         final CompositeAppearance oldText = myHighlightedText;
-
         final PsiElement enclosingElement = getPsiElement();
         if (enclosingElement == null) {
             final String invalidPrefix = IdeBundle.message("node.hierarchy.invalid");
@@ -61,6 +62,11 @@ public class AldorHierarchyOperationDescriptor  extends HierarchyNodeDescriptor 
         TextAttributes mainTextAttributes = new TextAttributes(myColor, null, null, null, fontStyle);
 
         myHighlightedText.getBeginning().addText(operation.name() + ": " + SyntaxPrinter.instance().toString(operation.type()), mainTextAttributes);
+        if (operation().condition() != null) {
+            myHighlightedText.getEnding().addSurrounded(SyntaxPrinter.instance().toString(operation().condition()), " (if ", ")",
+                    CONDITION_ATTRIBUTES);
+        }
+
         myName = myHighlightedText.getText();
 
         if (!Comparing.equal(myHighlightedText, oldText)) {

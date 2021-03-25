@@ -1,15 +1,17 @@
 package aldor.psi;
 
+import aldor.parser.AldorParserDefinition;
 import aldor.psi.elements.AldorTypes;
 import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
+import com.intellij.lang.ASTNode;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
@@ -396,10 +398,6 @@ public final class AldorPsiUtils {
         return (new BindingSearchVisitor().apply(elt));
     }
 
-    List<Binding> childBindings(StubElement<?> elt) {
-        return null;
-    }
-
     public static class Binding {
         private final PsiElement element;
 
@@ -442,6 +440,65 @@ public final class AldorPsiUtils {
         @Override
         public void visitWhereBlock(@NotNull AldorWhereBlock o) {
         }
+    }
+
+
+    public static Optional<AldorId> findUniqueIdentifier(PsiElement element) {
+        return new UniqueIdVisitor<>(AldorId.class).apply(element);
+    }
+
+    private static class UniqueIdVisitor<T> extends AldorVisitor {
+        private final Class<T> clzz;
+        private T value = null;
+
+        UniqueIdVisitor(Class<T> clzz) {
+            this.clzz = clzz;
+        }
+
+        public Optional<T> apply(PsiElement element) {
+            element.accept(this);
+            return Optional.ofNullable(value);
+        }
+
+        @Override
+        public void visitElement(@NotNull PsiElement o) {
+            if (clzz.isAssignableFrom(o.getClass())) {
+                //noinspection unchecked
+                value = (T) o;
+                return;
+            }
+
+            @Nullable PsiElement child = null;
+            boolean found = false;
+            ASTNode childNode = o.getNode().getFirstChildNode();
+            while (childNode != null) {
+                if (!isWhitespaceOrComment(childNode) && (childNode.getTextLength() != 0)) {
+                    if (found) {
+                        child = null;
+                        break;
+                    } else {
+                        PsiElement e = childNode.getPsi();
+                        found = true;
+                        child = e;
+                    }
+                }
+                childNode = childNode.getTreeNext();
+            }
+            if (child != null) {
+                child.accept(this);
+            }
+        }
+
+    }
+
+    public static boolean isWhitespaceOrComment(@NotNull PsiElement element) {
+        return isWhitespaceOrComment(element.getNode());
+    }
+
+    public static boolean isWhitespaceOrComment(@NotNull ASTNode node) {
+        IElementType elementType = node.getElementType();
+        return AldorParserDefinition.WHITE_SPACES.contains(elementType)
+                || AldorParserDefinition.DOC_TOKENS.contains(elementType);
     }
 
 }

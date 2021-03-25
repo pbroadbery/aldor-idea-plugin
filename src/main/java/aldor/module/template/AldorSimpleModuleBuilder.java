@@ -61,7 +61,8 @@ public class AldorSimpleModuleBuilder extends AldorModuleBuilder {
 
     @Override
     public String getDescription() {
-        return "Aldor module with Makefile created";
+        return "Aldor module with Makefile created<b>" +
+                "Please treat this as experimental - not all features work as yet";
     }
 
     @Override
@@ -109,13 +110,13 @@ public class AldorSimpleModuleBuilder extends AldorModuleBuilder {
         map.put("MODULE", model.getModule().getName());
         map.put("ALDOR_SDK", (model.getSdk() == null) ? "\"SDK path goes here\"" : model.getSdk().getHomePath());
         map.put("INITIAL_ALDOR_FILES", "example");
-        saveFile(model.getProject(), file, "Makefile.none", map);
+        saveFile(model.getProject(), file, "Aldor Initial Makefile.none", map);
 
         file = getOrCreateExternalProjectConfigFile(contentRootDir.getPath() + "/src", "example.as");
         if (file == null) {
             return;
         }
-        saveFile(model.getProject(), file, "example.as", map);
+        saveFile(model.getProject(), file, "Aldor Initial.as", map);
         boolean created = FileUtilRt.createDirectory(new File(contentRootDir + "/src/out"));
         if (!created) {
             throw new ConfigurationException("Unable to create directory " + contentRootDir+"/src/out");

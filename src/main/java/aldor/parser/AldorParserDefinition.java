@@ -25,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 public class AldorParserDefinition implements ParserDefinition {
     private static final TokenSet STRING_LITERALS = TokenSet.create(AldorTokenTypes.TK_String);
     private static final TokenSet COMMENT_TOKENS = TokenSet.create(AldorTokenTypes.TK_Comment);
+    public static final TokenSet DOC_TOKENS = TokenSet.create(AldorTokenTypes.TK_PreDoc, AldorTokenTypes.TK_PostDoc);
     public static final TokenSet WHITE_SPACES = TokenSet.create(TokenType.WHITE_SPACE, AldorTokenTypes.KW_NewLine,
                                                                 AldorTokenTypes.TK_Comment,
                                                                 AldorTokenTypes.TK_SysCmdIf, AldorTokenTypes.TK_SysCmdEndIf,

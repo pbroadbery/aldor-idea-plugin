@@ -96,15 +96,17 @@ public class AldorFacetEditorFormTest extends LightIdeaTestCase {
         ProjectFacetsConfigurator facetConfigurator = configurator.getFacetsConfigurator();
         AldorFacet facet = AldorFacet.forModule(getModule());
         AldorModuleExtensionProperties state = facet.getConfiguration().getState();
-        facet.getConfiguration().updateState(state.asBuilder().setSdkName("Not a current SDK").build());
-        @NotNull ModuleEditor moduleEditor = configurator.getOrCreateModuleEditor(getModule());
+//        facet.getConfiguration().updateState(state.asBuilder().setSdkName("Not a current SDK").build());
+        facet.getConfiguration().updateState(state.asBuilder().setSdkName("nope").build());
+
+        @NotNull ModuleEditor moduleEditor = configurator.getOrCreateModuleEditor(getModule()); // needed to keep next fn happy
         FacetEditorImpl editor = facetConfigurator.getOrCreateEditor(facet);
         AldorFacetEditorForm tab = editor.getEditorTab(AldorFacetEditorForm.class);
         JdkComboBox comboBox = FormHelper.component(tab, JdkComboBox.class, "aldorSdkComboBox");
         LOG.info("Name " + Optional.ofNullable(comboBox.getSelectedJdk()).map(Sdk::getName).orElse(null));
         LOG.info("Mod: " + tab.isModified());
-        Assert.assertEquals(facet.getConfiguration().getState().sdkName(), Optional.ofNullable(comboBox.getSelectedJdk()).map(Sdk::getName).orElse(null));
-        Assert.assertFalse(tab.isModified());
+        Assert.assertEquals(null, Optional.ofNullable(comboBox.getSelectedJdk()).map(Sdk::getName).orElse(null));
+        Assert.assertTrue(tab.isModified());
         LOG.info("Finished!");
     }
 

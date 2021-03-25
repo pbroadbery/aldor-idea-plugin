@@ -1,7 +1,9 @@
 package aldor.psi.impl;
 
 import aldor.psi.AldorDefine;
+import aldor.psi.AldorId;
 import aldor.psi.AldorIdentifier;
+import aldor.psi.AldorPsiUtils;
 import aldor.psi.stub.AldorDefineStub;
 import aldor.references.FileScopeWalker;
 import aldor.references.ScopeContext;
@@ -48,6 +50,18 @@ public class AldorDefineMixin extends StubBasedPsiElementBase<AldorDefineStub> i
     @Override
     public DefinitionType definitionType() {
         return DefinitionType.CONSTANT;
+    }
+
+    @Override
+    public PsiElement implementation() {
+        Optional<AldorId> implementationid = AldorPsiUtils.findUniqueIdentifier(rhs());
+        if (implementationid.isPresent() && (implementationid.get().getReference() != null)) {
+            PsiElement macro = implementationid.get().getReference().resolveMacro();
+            if (macro instanceof AldorDefine) {
+                return ((AldorDefine) macro).rhs();
+            }
+        }
+        return rhs(); // FIXME!
     }
 
     @NotNull

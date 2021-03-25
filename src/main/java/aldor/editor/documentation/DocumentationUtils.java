@@ -17,6 +17,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import one.util.streamex.Joining;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
@@ -89,7 +90,7 @@ public class DocumentationUtils {
         return Joiner.on("<br/>\n").join(documented.documentationNodes().stream().map((psiElement) -> NewLine.matcher(psiElement.getText()).replaceAll(Matcher.quoteReplacement("<br/>\n"))).collect(Collectors.toList()));
     }
 
-    public AnnotatedOptional<Syme, String> symeForElement(PsiElement element) {
+    public AnnotatedOptional<Syme, String> symeForElement(@NotNull PsiElement element) {
         VirtualFile virtualFile = element.getContainingFile().getVirtualFile();
         Project project = element.getProject();
         if (virtualFile == null) {

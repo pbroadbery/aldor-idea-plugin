@@ -2,28 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/aldor-idea.iml" filepath="$PROJECT_DIR$/.idea/modules/aldor-idea.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/aldorunit/aldor-idea.aldorunit.iml" filepath="$PROJECT_DIR$/.idea/modules/aldorunit/aldor-idea.aldorunit.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/aldorunit/aldor-idea.aldorunit.main.iml" filepath="$PROJECT_DIR$/.idea/modules/aldorunit/aldor-idea.aldorunit.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/aldorunit/aldor-idea.aldorunit.test.iml" filepath="$PROJECT_DIR$/.idea/modules/aldorunit/aldor-idea.aldorunit.test.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jps-plugin/aldor-idea.jps-plugin.iml" filepath="$PROJECT_DIR$/.idea/modules/jps-plugin/aldor-idea.jps-plugin.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jps-plugin/aldor-idea.jps-plugin.main.iml" filepath="$PROJECT_DIR$/.idea/modules/jps-plugin/aldor-idea.jps-plugin.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jps-plugin/aldor-idea.jps-plugin.test.iml" filepath="$PROJECT_DIR$/.idea/modules/jps-plugin/aldor-idea.jps-plugin.test.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/aldor-idea.main.iml" filepath="$PROJECT_DIR$/.idea/modules/aldor-idea.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/aldor-idea.test.iml" filepath="$PROJECT_DIR$/.idea/modules/aldor-idea.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../../type-library/aldor-types/aldor-types.iml" filepath="$PROJECT_DIR$/../../../type-library/aldor-types/aldor-types.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/gradle-intellij-plugin.iml" filepath="$PROJECT_DIR$/.idea/modules/gradle-intellij-plugin.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/gradle-intellij-plugin.main.iml" filepath="$PROJECT_DIR$/.idea/modules/gradle-intellij-plugin.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/gradle-intellij-plugin.test.iml" filepath="$PROJECT_DIR$/.idea/modules/gradle-intellij-plugin.test.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/intellij-erlang.iml" filepath="$PROJECT_DIR$/.idea/modules/intellij-erlang.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jps-plugin/intellij-erlang.jps-plugin.iml" filepath="$PROJECT_DIR$/.idea/modules/jps-plugin/intellij-erlang.jps-plugin.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jps-plugin/intellij-erlang.jps-plugin.main.iml" filepath="$PROJECT_DIR$/.idea/modules/jps-plugin/intellij-erlang.jps-plugin.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jps-plugin/intellij-erlang.jps-plugin.test.iml" filepath="$PROJECT_DIR$/.idea/modules/jps-plugin/intellij-erlang.jps-plugin.test.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/intellij-erlang.main.iml" filepath="$PROJECT_DIR$/.idea/modules/intellij-erlang.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/intellij-erlang.test.iml" filepath="$PROJECT_DIR$/.idea/modules/intellij-erlang.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../../type-library/aldor-types/javatypes/javatypes.iml" filepath="$PROJECT_DIR$/../../../type-library/aldor-types/javatypes/javatypes.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/org.jetbrains.intellij.plugins.gradle-intellij-plugin.main.iml" filepath="$PROJECT_DIR$/.idea/modules/org.jetbrains.intellij.plugins.gradle-intellij-plugin.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/org.jetbrains.intellij.plugins.gradle-intellij-plugin.test.iml" filepath="$PROJECT_DIR$/.idea/modules/org.jetbrains.intellij.plugins.gradle-intellij-plugin.test.iml" />
     </modules>
   </component>
 </project>

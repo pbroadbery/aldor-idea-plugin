@@ -6,12 +6,13 @@ import aldor.build.facet.fricas.FricasFacet;
 import aldor.builder.jps.SpadFacetProperties;
 import aldor.file.AldorFileType;
 import aldor.file.SpadFileType;
-import aldor.ui.AldorIcons;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.module.ModuleTypeManager;
+import icons.AldorIcons;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.jps.model.module.JpsModuleSourceRootType;
 
 import javax.swing.Icon;
@@ -63,7 +64,7 @@ public class AldorModuleType extends ModuleType<AldorModuleBuilder> {
         return ModuleType.is(module, this);
     }
 
-    public SpadFacet<? extends SpadFacetProperties> facetModuleType(Module module, FileType fileType) {
+    public @Nullable SpadFacet<? extends SpadFacetProperties> facetModuleType(Module module, FileType fileType) {
         if (fileType.equals(AldorFileType.INSTANCE)) {
             return AldorFacet.forModule(module);
         }

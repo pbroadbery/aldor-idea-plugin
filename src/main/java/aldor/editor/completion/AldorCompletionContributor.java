@@ -9,7 +9,6 @@ import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxUtils;
 import aldor.syntax.components.Apply;
 import aldor.syntax.components.Id;
-import aldor.ui.AldorIcons;
 import com.google.common.annotations.VisibleForTesting;
 import com.intellij.codeInsight.completion.AddSpaceInsertHandler;
 import com.intellij.codeInsight.completion.CompletionContributor;
@@ -25,6 +24,7 @@ import com.intellij.patterns.PatternCondition;
 import com.intellij.patterns.StandardPatterns;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.ProcessingContext;
+import icons.AldorIcons;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;

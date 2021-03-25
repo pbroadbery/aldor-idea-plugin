@@ -73,6 +73,11 @@ public class AldorMacroMixin extends StubBasedPsiElementBase<AldorDefineStub> im
         return DefinitionType.MACRO;
     }
 
+    @Override
+    public PsiElement implementation() {
+        return rhs();
+    }
+
     private Optional<Id> defineId() {
         Optional<Syntax> syntaxMaybe = syntax();
         if (!syntaxMaybe.isPresent()) {

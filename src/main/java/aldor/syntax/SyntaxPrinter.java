@@ -90,12 +90,12 @@ public final class SyntaxPrinter {
         @Override
         public Void visitIf(If _if) {
             write("if ");
-            write(_if.child(0));
+            write(_if.condition());
             write(" then ");
-            write(_if.child(1));
-            if (_if.child(2) != null) {
+            write(_if.thenPart());
+            if (_if.hasElsePart()) {
                 write(" else ");
-                write(_if.child(2));
+                write(_if.elsePart());
             }
             return null;
         }

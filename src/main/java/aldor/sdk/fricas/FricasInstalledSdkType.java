@@ -1,7 +1,9 @@
+
 package aldor.sdk.fricas;
 
 import aldor.sdk.AxiomInstalledSdkType;
 import aldor.sdk.aldor.AldorVersionQuery;
+import com.google.common.collect.Streams;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkAdditionalData;
@@ -30,10 +32,16 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class FricasInstalledSdkType extends SdkType implements FricasSdkType, AxiomInstalledSdkType {
-    private static final String[] homeBasePaths = new String[] {
+    private static final String[] homeBasePaths = {
             "/home/pab/Work/fricas/opt/lib/fricas/target/",
-            "/usr/local/lib/fricas/target/"
+            "/usr/local/lib/fricas/target/",
+            "/usr/lib/fricas/target/",
+            "/opt/lib/fricas/target/"
     };
+    private static final String[] directPaths = {
+            "C:/Fricas/"
+    };
+
     private static final Logger LOG = Logger.getInstance(FricasInstalledSdkType.class);
     private final AldorVersionQuery versionQuery = new AldorVersionQuery();
     private static final Set<OrderRootType> applicableRootTypes = Collections.singleton(OrderRootType.SOURCES);
@@ -62,7 +70,13 @@ public class FricasInstalledSdkType extends SdkType implements FricasSdkType, Ax
 
     @Override
     public @NotNull Collection<String> suggestHomePaths() {
-        return suggestHomePathsStream().collect(Collectors.toList());
+        return Streams.concat(suggestHomePathsStream(),
+                             suggestDirectPaths()).collect(Collectors.toList());
+    }
+
+    private Stream<String> suggestDirectPaths() {
+        Predicate<String> isValidSdkHome = subpath -> isValidSdkHome(new File(subpath).getPath());
+        return Arrays.stream(directPaths).filter(isValidSdkHome);
     }
 
     private @NotNull Stream<String> suggestHomePathsStream() {
@@ -72,10 +86,15 @@ public class FricasInstalledSdkType extends SdkType implements FricasSdkType, Ax
                 .map(File::getAbsolutePath);
     }
 
-    @Nonnull
     @Override
-    public String axiomSysName(Sdk sdk) {
+    @Nonnull
+    public String fricasSysName(Sdk sdk) {
         return "FRICASsys";
+    }
+
+    @Override
+    public String fricasEnvVar() {
+        return "FRICAS";
     }
 
     @Override
@@ -147,8 +166,8 @@ public class FricasInstalledSdkType extends SdkType implements FricasSdkType, Ax
         return Collections.singletonList(root);
     }
 
-    @Nullable
     @Override
+    @Nullable
     public String fricasPath(Sdk sdk) {
         return sdk.getHomePath() + "/bin/fricas";
     }

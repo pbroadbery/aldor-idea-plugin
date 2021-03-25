@@ -2,24 +2,6 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel>
-      <module name="aldor-idea" target="1.8" />
-      <module name="aldor-idea.aldorunit" target="1.8" />
-      <module name="aldor-idea.aldorunit.main" target="1.8" />
-      <module name="aldor-idea.aldorunit.test" target="1.8" />
-      <module name="aldor-idea.jps-plugin" target="1.8" />
-      <module name="aldor-idea.jps-plugin.main" target="1.8" />
-      <module name="aldor-idea.jps-plugin.test" target="1.8" />
-      <module name="aldor-idea.main" target="1.8" />
-      <module name="aldor-idea.test" target="1.8" />
-      <module name="gradle-intellij-plugin" target="1.8" />
-      <module name="gradle-intellij-plugin.main" target="1.7" />
-      <module name="gradle-intellij-plugin.test" target="1.7" />
-      <module name="intellij-erlang" target="1.8" />
-      <module name="intellij-erlang.jps-plugin" target="1.8" />
-      <module name="intellij-erlang.jps-plugin.main" target="1.8" />
-      <module name="intellij-erlang.jps-plugin.test" target="1.8" />
-      <module name="intellij-erlang.main" target="1.8" />
-      <module name="intellij-erlang.test" target="1.8" />
       <module name="org.jetbrains.intellij.plugins.gradle-intellij-plugin.main" target="1.8" />
       <module name="org.jetbrains.intellij.plugins.gradle-intellij-plugin.test" target="1.8" />
     </bytecodeTargetLevel>

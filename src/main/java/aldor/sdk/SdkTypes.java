@@ -1,5 +1,6 @@
 package aldor.sdk;
 
+import aldor.sdk.fricas.FricasSdkType;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkTypeId;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -12,7 +13,11 @@ public final class SdkTypes {
 
     @Nullable
     public static String axiomSysPath(@NotNull Sdk sdk) {
-        return Optional.ofNullable(sdk.getHomePath()).map(p -> p +"/bin/FRICASsys").orElse(null);
+        if (sdk.getSdkType() instanceof FricasSdkType) {
+            FricasSdkType sdkType = (FricasSdkType) sdk.getSdkType();
+            return Optional.ofNullable(sdk.getHomePath()).map(p -> p + "/bin/" + sdkType.fricasSysName(sdk)).orElse(null);
+        }
+        return null;
     }
 
     @Nullable
@@ -26,10 +31,18 @@ public final class SdkTypes {
         return ((type instanceof AxiomSdk) && ((AxiomSdk) type).isLocalInstall());
     }
 
-    public static boolean isFricasSdk(@Nullable Sdk sdk) {
+    public static boolean isAxiomSdk(@Nullable Sdk sdk) {
         if (sdk == null) {
             return false;
         }
         return sdk.getSdkType() instanceof AxiomSdk;
+    }
+
+    public static @Nullable String fricasEnvVar(Sdk sdk) {
+        if (sdk.getSdkType() instanceof FricasSdkType) {
+            FricasSdkType sdkType = (FricasSdkType) sdk.getSdkType();
+            return sdkType.fricasEnvVar();
+        }
+        return null;
     }
 }

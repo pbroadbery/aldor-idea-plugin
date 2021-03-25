@@ -16,6 +16,7 @@ import org.jetbrains.jps.util.JpsPathUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
 
 import static aldor.util.StringUtilsAldorRt.trimExtension;
 
@@ -47,8 +48,7 @@ public class JpsAldorModuleType implements JpsModuleType<JpsSimpleElement<AldorM
             return null;
         }
         LOG.info("Reading module properties " + module.getName() + " --> " + module.getModuleType());
-        module.getContainer().getChild(JpsAldorModuleExtension.ROLE);
-        return JpsAldorModuleExtension.getExtension(module).getProperties();
+        return Optional.ofNullable(JpsAldorModuleExtension.getExtension(module)).map(JpsAldorModuleExtension::getProperties).orElse(null);
     }
 
 

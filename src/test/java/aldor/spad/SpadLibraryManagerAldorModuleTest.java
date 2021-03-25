@@ -8,6 +8,7 @@ import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.JUnits;
 import aldor.test_util.LightPlatformJUnit4TestRule;
 import aldor.test_util.SdkProjectDescriptors;
+import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -39,7 +40,11 @@ public class SpadLibraryManagerAldorModuleTest {
             RuleChain.emptyRuleChain()
                     .around(aldorExecutableRule)
                     .around(new LightPlatformJUnit4TestRule(codeTestFixture, ""))
-                    .around(annotationTestFixture.rule(codeTestFixture::getProject));
+                    .around(annotationTestFixture.rule(codeTestFixture::getProject))
+                    .around(JUnits.prePostTestRule(() -> {
+                        ApplicationManagerEx.getApplicationEx().setSaveAllowed(true);
+                        getProject().save();
+                    }, () -> ApplicationManagerEx.getApplicationEx().setSaveAllowed(false)));
 
     @After
     public void doAfter() {
@@ -49,6 +54,7 @@ public class SpadLibraryManagerAldorModuleTest {
     @Test
     public void testModule() throws ExecutionException, InterruptedException {
         JUnits.setLogToInfo();
+
         AldorCompilationService.getAldorCompilationService(getProject());
 
         String makefileText = annotationTestFixture.createMakefile(aldorExecutableRule.executable().getAbsolutePath(),

@@ -1,18 +1,16 @@
 package aldor.spad;
 
 import aldor.build.facet.SpadFacet;
-import aldor.build.facet.aldor.AldorFacet;
-import aldor.build.facet.aldor.AldorFacetConfiguration;
 import aldor.build.module.AldorModuleType;
-import aldor.builder.jps.AldorModuleExtensionProperties;
 import aldor.builder.jps.SpadFacetProperties;
 import aldor.language.AldorLanguage;
 import aldor.sdk.AxiomSdk;
 import aldor.sdk.SdkTypes;
 import aldor.sdk.aldor.AldorSdkType;
 import aldor.sdk.fricas.FricasSdkType;
-import com.intellij.facet.Facet;
+import com.google.common.annotations.VisibleForTesting;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.components.Service;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
@@ -39,7 +37,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class SpadLibraryManager implements Disposable {
+@Service
+public final class SpadLibraryManager implements Disposable {
     private static final Logger LOG = Logger.getInstance(SpadLibraryManager.class);
 
     private static final Key<SpadLibraryManager> managerKey = new Key<>(SpadLibraryManager.class.getName());
@@ -51,13 +50,11 @@ public class SpadLibraryManager implements Disposable {
     }
 
     public static SpadLibraryManager getInstance(Project project) {
-        SpadLibraryManager manager = project.getUserData(managerKey);
-        if (manager == null) {
-            manager = new SpadLibraryManager(project);
-            Disposer.register(project, manager);
-            project.putUserData(managerKey, manager);
-        }
-        return manager;
+        return project.getService(SpadLibraryManager.class);
+    }
+
+    public static AldorModuleSpadLibraryManager getInstance(Module module) {
+        return module.getService(AldorModuleSpadLibraryManager.class);
     }
 
     @Nullable
@@ -72,7 +69,7 @@ public class SpadLibraryManager implements Disposable {
 
         if (moduleSdk == null) {
             moduleSdk = rootManager.getSdk();
-            if (!SdkTypes.isFricasSdk(moduleSdk)) {
+            if (!SdkTypes.isAxiomSdk(moduleSdk)) {
                 moduleSdk = null;
             }
         }
@@ -91,7 +88,12 @@ public class SpadLibraryManager implements Disposable {
                     .map(mgr -> mgr.getSourceRoots()[0])
                     .flatMap(root -> Optional.ofNullable(root.findFileByRelativePath("algebra")))
                     .orElse(null);
-            return forNRLibDirectory(module.getProject(), algebraPath, likelySourceDirectory);
+            @Nullable FricasSpadLibrary lib = createNRLibDirectory(module.getProject(), algebraPath, likelySourceDirectory);
+            if (lib != null) {
+                getInstance(module).register(lib);
+                return lib;
+            }
+            return null;
         }
         else if (AldorModuleType.instance().is(module)) {
             return forAldorModule(module, moduleSdk);
@@ -110,7 +112,9 @@ public class SpadLibraryManager implements Disposable {
             return sdkLibrary;
         }
         else {
-            return new AldorModuleSpadLibraryBuilder(module).rootDirectory(roots[0]).dependency(sdkLibrary).createFricasSpadLibrary();
+            FricasSpadLibrary lib = new AldorModuleSpadLibraryBuilder(module).rootDirectory(roots[0]).dependency(sdkLibrary).createFricasSpadLibrary();
+            Disposer.register(getInstance(module), lib);
+            return lib;
         }
     }
 
@@ -141,13 +145,16 @@ public class SpadLibraryManager implements Disposable {
         }
         SdkType sdkType = (SdkType) sdk.getSdkType();
         if (sdkType instanceof AldorSdkType) {
-            return new AldorSdkSpadLibraryBuilder(project, sdk.getHomeDirectory()).createFricasSpadLibrary();
+            FricasSpadLibrary lib = new AldorSdkSpadLibraryBuilder(project, sdk.getHomeDirectory()).createFricasSpadLibrary();
+            Disposer.register(this, lib);
+            return lib;
         }
         else if (sdkType instanceof FricasSdkType) {
             VirtualFile algebra = SdkTypes.algebraPath(sdk);
-            SpadLibrary lib = null;
+            FricasSpadLibrary lib = null;
             if (algebra != null) {
                 lib = new FricasSpadLibraryBuilder().project(project).daaseDirectory(algebra).createFricasSpadLibrary();
+                Disposer.register(this, lib);
             }
             return lib;
         }
@@ -157,7 +164,8 @@ public class SpadLibraryManager implements Disposable {
     }
 
     @Nullable
-    public SpadLibrary forNRLibDirectory(@NotNull Project project, @NotNull VirtualFile directory, @Nullable VirtualFile sourceDirectory) {
+    @VisibleForTesting
+    public FricasSpadLibrary createNRLibDirectory(@NotNull Project project, @NotNull VirtualFile directory, @Nullable VirtualFile sourceDirectory) {
         return new FricasSpadLibraryBuilder().project(project).nrlibDirectory(directory, sourceDirectory).createFricasSpadLibrary();
     }
 
@@ -200,10 +208,6 @@ public class SpadLibraryManager implements Disposable {
         container.dispose();
     }
 
-    public void spadLibraryForSdk(Sdk sdk, SpadLibrary mockSpadLibrary) {
-        container.putIfAbsent(sdk, mockSpadLibrary);
-    }
-
     private static class SdkLibraryContainer {
         private final Map<Sdk, SpadLibrary> libaryForSdk = new ConcurrentHashMap<>();
 
@@ -220,6 +224,10 @@ public class SpadLibraryManager implements Disposable {
         }
 
         public void dispose() {
+            LOG.info("Disposing SDK container.. " + libaryForSdk.size());
+            for (Sdk sdk: libaryForSdk.keySet()) {
+                LOG.info("SDK: " + sdk + " path: " + sdk.getHomePath());
+            }
             libaryForSdk.clear();
         }
     }

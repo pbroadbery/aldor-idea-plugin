@@ -1,3 +1,6 @@
+import org.jetbrains.grammarkit.tasks.GenerateParser
+import org.jetbrains.grammarkit.tasks.GenerateLexer
+
 buildscript {
     dependencies {
         classpath "org.jetbrains.intellij.plugins:gradle-intellij-plugin:0.5.0-SNAPSHOT"
@@ -22,7 +25,7 @@ plugins {
     id 'java'
     id 'org.jetbrains.intellij' version '0.4.22' apply false
     id "de.undercouch.download" version "3.2.0" apply false
-    id "org.jetbrains.grammarkit" version "2020.2.1" apply false
+    id "org.jetbrains.grammarkit" version "2020.3.2" apply false
 }
 
 wrapper {
@@ -48,8 +51,7 @@ apply plugin: 'org.jetbrains.grammarkit'
 apply plugin: 'de.undercouch.download'
 
 intellij {
-    version "IC-201.7223.91"
-    //version '2019.2'
+    version "IC-201.7223.91" //version '2019.2'
     plugins = ['java']
     downloadSources = true
 }
@@ -74,7 +76,7 @@ allprojects {
 
   sourceSets {
     main {
-      java.srcDirs 'src/main/java', 'gen'
+      java.srcDirs 'src/main/java', 'src/gen/java'
       resources.srcDirs 'resources'
     }
     test {
@@ -147,7 +149,15 @@ task unzipGrammar(type: Copy) {
     outputs.file file('lib/GrammarKit/lib/grammar-kit-2019.1.jar')
 }
 
-task generateLexer (type: JavaExec) {
+task generateLexer(type: GenerateLexer) {
+    source = "src/main/jflex/aldor/lexer/aldor.flex"
+    targetDir = "src/gen/java/aldor/lexer"
+    targetClass = "AldorLexer"
+    skeleton = 'lib/jflex/idea-flex.skeleton'
+    purgeOldFiles = true
+}
+
+task generateLexer1(type: JavaExec) {
     String dstRoot = "$project.projectDir/src/gen/jflex"
     String pkg = 'aldor/lexer'
     String src = "$project.projectDir/src/main/jflex/${pkg}/aldor.flex"
@@ -220,16 +230,16 @@ prepareSandbox {
 tasks.generateLexer.dependsOn tasks.downloadJFlex
 tasks.generateLexer.dependsOn tasks.downloadJFlexSkel
 
-parserTask(project, "Aldor", "aldor/psi")
+parserTask(project, "Aldor", "aldor/parser")
 parserTask(project, "Expression", "aldor/expression")
 
-//tasks.compileJava.dependsOn tasks.generateAldorParser
-//tasks.compileJava.dependsOn tasks.generateExpressionParser
+tasks.compileJava.dependsOn tasks.generateAldorParser
+tasks.compileJava.dependsOn tasks.generateExpressionParser
 tasks.compileJava.dependsOn tasks.generateLexer
 tasks.compileJava.dependsOn tasks.copyLibraryFiles
 tasks.compileJava.dependsOn tasks.updateExternalJars
 
-def parserTask(project, parserName, pkg) {
+def parserTask1(project, parserName, pkg) {
     def tt = tasks.create("generate${parserName}Parser", JavaExec) {
         String dstRoot = "$project.projectDir/src/gen/grammar"
         String src = "$project.projectDir/src/main/grammar/${parserName}.bnf"
@@ -245,9 +255,29 @@ def parserTask(project, parserName, pkg) {
         outputs.upToDateWhen { false }
         doLast {
             for (f in tt.outputs.getFiles()) { delete f }
-	}
+	    }
     }
     tt.dependsOn tasks.unzipGrammar
+    tasks.clean.dependsOn cleaner
+    return tt
+}
+
+def parserTask(project, parserName, pkg) {
+
+    def tt = tasks.create(name: "generate${parserName}Parser", type: GenerateParser) {
+        source = "${project.projectDir}/src/main/grammar/${parserName}.bnf"
+        targetRoot = "src/gen/java"
+        pathToParser = "${pkg}/${parserName}Parser.java"
+        pathToPsiRoot = "${pkg}/psi"
+        purgeOldFiles = true
+    }
+    def cleaner = tasks.create("clean${parserName}Parser") {
+        outputs.upToDateWhen { false }
+        doLast {
+            for (f in tt.outputs.getFiles()) { println 'clean ' + f + " " + f.class.canonicalName}
+            for (f in tt.outputs.getFiles()) { f.delete() }
+        }
+    }
     tasks.clean.dependsOn cleaner
     return tt
 }

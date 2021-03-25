@@ -728,7 +728,7 @@ PreDocument ::= TK_PreDoc*
 // ** SPAD
 //
 
-SpadTopLevel ::= <<parsePiledContent "SpadTopLevel">>
+SpadTopLevel ::= <<parseTopLevel "SpadTopLevel">>
 // NB: All spad comments are '++'.  Guess that top level is pre - anything else is post.
 SpadTopLevelExpression ::= SpadAbbrevCmd* PreDocument Expression //{pin=PreDocument} {recoverWhile="TopLevel_Recover"}
 SpadDocument ::= TK_PostDoc*

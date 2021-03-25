@@ -2,13 +2,13 @@ package aldor.editor.navigation;
 
 import aldor.psi.AldorDefine;
 import aldor.psi.AldorIdentifier;
-import aldor.ui.AldorIcons;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.navigation.PsiElementNavigationItem;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.psi.PsiElement;
+import icons.AldorIcons;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

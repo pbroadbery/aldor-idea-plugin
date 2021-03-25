@@ -33,6 +33,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.PatternLayout;
 import org.jetbrains.annotations.NotNull;
+import org.junit.Assert;
 import org.junit.rules.TestRule;
 import org.junit.runners.model.Statement;
 
@@ -59,6 +60,13 @@ public final class JUnits {
 
     public static Runnable setLogToInfo() {
         return isCIBuild() ? () -> {} : setLogLevel(INFO);
+    }
+
+    @NotNull
+    public static <T> T fail() {
+        Assert.fail();
+        //noinspection ReturnOfNull
+        return null;
     }
 
     private static Runnable setLogLevel(Level level) {

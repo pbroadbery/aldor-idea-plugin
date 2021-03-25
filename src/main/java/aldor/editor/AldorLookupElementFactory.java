@@ -7,9 +7,9 @@ import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxPrinter;
 import aldor.syntax.SyntaxPsiParser;
 import aldor.syntax.SyntaxUtils;
-import aldor.ui.AldorIcons;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import icons.AldorIcons;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;

@@ -1,7 +1,6 @@
 package aldor.runconfiguration.spad;
 
 import aldor.file.SpadInputFileType;
-import aldor.runconfiguration.spad.SpadInputRunConfigurationType.SpadInputConfiguration;
 import com.intellij.execution.actions.ConfigurationContext;
 import com.intellij.execution.actions.LazyRunConfigurationProducer;
 import com.intellij.execution.configurations.ConfigurationFactory;
@@ -23,7 +22,9 @@ public class SpadInputRunConfigurationProducer extends LazyRunConfigurationProdu
 
 
     @Override
-    protected boolean setupConfigurationFromContext(SpadInputConfiguration configuration, ConfigurationContext context, Ref<PsiElement> sourceElement) {
+    protected boolean setupConfigurationFromContext(@NotNull SpadInputConfiguration configuration,
+                                                    @NotNull ConfigurationContext context,
+                                                    Ref<PsiElement> sourceElement) {
         PsiFile file = sourceElement.get().getContainingFile();
         if ((file != null) && Objects.equals(file.getFileType(), SpadInputFileType.INSTANCE)) {
             VirtualFile vfile = file.getVirtualFile();
@@ -43,7 +44,7 @@ public class SpadInputRunConfigurationProducer extends LazyRunConfigurationProdu
     }
 
     @Override
-    public boolean isConfigurationFromContext(SpadInputConfiguration configuration, ConfigurationContext context) {
+    public boolean isConfigurationFromContext(@NotNull SpadInputConfiguration configuration, ConfigurationContext context) {
         final PsiElement location = context.getPsiLocation();
         if (location == null) {
             return false;

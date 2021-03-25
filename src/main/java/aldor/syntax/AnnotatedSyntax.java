@@ -3,7 +3,6 @@ package aldor.syntax;
 import aldor.lexer.AldorTokenType;
 import aldor.lexer.AldorTokenTypes;
 import aldor.psi.AldorDefine;
-import aldor.psi.AldorId;
 import aldor.psi.AldorIdentifier;
 import aldor.psi.index.AldorDefineTopLevelIndex;
 import aldor.syntax.components.AbstractId;
@@ -97,12 +96,25 @@ public final class AnnotatedSyntax {
                             return new Comma(abCommaArgs(scope, ab));
                     }
                 } else if (ab.isIf()) {
-                    return new If(doToSyntax(ab.ifTest()), doToSyntax(ab.ifTruePart()), doToSyntax(ab.ifFalsePart()));
+                    if (ab.ifFalsePart().isNone()) {
+                        return new If(doToSyntax(ab.ifTest()), doToSyntax(ab.ifTruePart()));
+                    }
+                    else {
+                        return new If(doToSyntax(ab.ifTest()), doToSyntax(ab.ifTruePart()), doToSyntax(ab.ifFalsePart()));
+                    }
                 }
                 else if (ab.isLiteral()) {
                     return new Literal(ab.literal(), null);
                 } else if (ab.isNone()) {
                     return new Comma(Collections.emptyList());
+                } else if (ab.isBinaryOperator()) {
+                    return new Apply(new Id(new TokenSyntax(ab.binaryOperatorOpName(), AldorTokenTypes.KW_Has)),
+                                        Arrays.asList(doToSyntax(ab.binaryOperatorArg(1)),
+                                                      doToSyntax(ab.binaryOperatorArg(2))));
+                } else if (ab.isQualify()) {
+                    return new Apply(new Id(new TokenSyntax("$", AldorTokenTypes.KW_Dollar)),
+                            Arrays.asList(doToSyntax(ab.qualifyExpr()),
+                                    doToSyntax(ab.qualifyType())));
                 } else {
                     throw new SyntaxConversionException("Unknown syntax type: " + ab);
                 }
@@ -113,24 +125,7 @@ public final class AnnotatedSyntax {
         public Syntax toSyntax(AnnotatedId id) {
             String name = id.id().name();
             if ("Map".equals(name)) {
-                return new Id(new SyntaxRepresentation<AldorIdentifier>() {
-                    @Nullable
-                    @Override
-                    public AldorId element() {
-                        return null;
-                    }
-
-                    @Nullable
-                    @Override
-                    public AldorTokenType tokenType() {
-                        return AldorTokenTypes.KW_RArrow;
-                    }
-
-                    @Override
-                    public String text() {
-                        return "->";
-                    }
-                });
+                return new Id(new TokenSyntax("->", AldorTokenTypes.KW_RArrow));
             }
             assert !project.isDisposed();
             Collection<AldorDefine> elts = AldorDefineTopLevelIndex.instance.get(name, project, scope);

@@ -2,7 +2,6 @@ package aldor.structure;
 
 import aldor.psi.AldorDefine;
 import aldor.psi.AldorPsiUtils;
-import aldor.ui.AldorIcons;
 import aldor.ui.AldorTextAttributes;
 import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.ide.structureView.impl.common.PsiTreeElementBase;
@@ -10,6 +9,7 @@ import com.intellij.navigation.ColoredItemPresentation;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
+import icons.AldorIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

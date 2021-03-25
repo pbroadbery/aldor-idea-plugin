@@ -5,6 +5,7 @@ import aldor.spad.SpadLibrary;
 import aldor.spad.SpadLibraryManager;
 import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxPrinter;
+import aldor.syntax.components.If;
 import aldor.util.Try;
 import com.google.common.collect.Sets;
 import com.intellij.ide.hierarchy.HierarchyNodeDescriptor;
@@ -14,6 +15,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiElementPointer;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -37,19 +39,31 @@ public final class AldorParentCategoryHierarchyTreeStructure extends HierarchyTr
 
 
     private static HierarchyNodeDescriptor createBaseNodeDescriptor(Project project, @NotNull Syntax syntax) {
-        return new AldorHierarchyNodeDescriptor(project,  null, Objects.requireNonNull(psiElementFromSyntax(syntax)), syntax, true);
+        return new AldorHierarchyNodeDescriptor(project,  null, Objects.requireNonNull(psiElementFromSyntax(syntax)), syntax, null,true);
     }
 
     private Object createNodeDescriptorMaybe(AldorHierarchyNodeDescriptor parent, Syntax syntax) {
-        PsiElement psiElement = psiElementFromSyntax(syntax);
+        Syntax theSyntax;
+        @Nullable Syntax condition;
+        if (syntax.is(If.class)) {
+            theSyntax = syntax.as(If.class).thenPart();
+            condition = syntax.as(If.class).condition();
+            if (syntax.as(If.class).hasElsePart()) {
+                return new ErrorNodeDescriptor(parent, "'Else' on conditions not yet supported");
+            }
+        } else {
+            theSyntax = syntax;
+            condition = null;
+        }
+        PsiElement psiElement = psiElementFromSyntax(theSyntax);
         if (psiElement == null) {
             return new ErrorNodeDescriptor(parent, "Unknown element - " + SyntaxPrinter.instance().toString(syntax));
-        }
-        else {
+        } else {
             //noinspection unchecked
-            return new AldorHierarchyNodeDescriptor(this.myProject, parent, psiElement, syntax, false);
+            return new AldorHierarchyNodeDescriptor(this.myProject, parent, psiElement, theSyntax, condition, false);
         }
     }
+
 
     private Object createOperationNodeDescriptorMaybe(@NotNull AldorHierarchyNodeDescriptor parent, SpadLibrary.Operation operation) {
         return new AldorHierarchyOperationDescriptor(this.myProject, parent, operation);

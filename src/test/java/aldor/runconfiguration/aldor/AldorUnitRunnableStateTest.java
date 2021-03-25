@@ -15,7 +15,6 @@ import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl;
 import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -38,12 +37,14 @@ public class AldorUnitRunnableStateTest extends BasePlatformTestCase {
 
     private final AnnotationFileTestFixture annotationFileTestFixture = new AnnotationFileTestFixture();
     private final ExecutablePresentRule aldorExecutableRule = new ExecutablePresentRule.AldorDev();
-
+    private boolean saveAllowed;
     @Override
     public void setUp() throws Exception {
         super.setUp();
+        JUnits.setLogToDebug();
         JUnits.enableJpsDebugging(OFF);
-        //ApplicationManagerEx.getApplicationEx().setSaveAllowed(true);
+        saveAllowed = ApplicationManagerEx.getApplicationEx().isSaveAllowed();
+        ApplicationManagerEx.getApplicationEx().setSaveAllowed(true);
     }
 
     @Override
@@ -52,6 +53,7 @@ public class AldorUnitRunnableStateTest extends BasePlatformTestCase {
             EdtTestUtil.runInEdtAndWait(JavaAwareProjectJdkTableImpl::removeInternalJdkInTests);
         }
         finally {
+            ApplicationManagerEx.getApplicationEx().setSaveAllowed(saveAllowed);
             super.tearDown();
         }
     }
@@ -73,7 +75,7 @@ public class AldorUnitRunnableStateTest extends BasePlatformTestCase {
 
     public void testRunSimpleConfiguration() throws InterruptedException {
         Ref<PsiElement> eltRef = new Ref<>();
-        getProject().getProjectFile().refresh(false, false);
+        //getProject().getProjectFile().refresh(false, false);
         EdtTestUtil.runInEdtAndWait(() -> {
             VirtualFile file = createFile(getSourceRoot(), "foo.as",
                     "#include \"aldor.as\"\n" +

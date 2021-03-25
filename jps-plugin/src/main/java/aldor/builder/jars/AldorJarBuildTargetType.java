@@ -58,7 +58,8 @@ public class  AldorJarBuildTargetType extends BuildTargetType<AldorJarBuildTarge
     @NotNull
     private List<AldorJarBuildTarget> moduleBuildTargets(JpsModule module) {
         LOG.info("Module: "+ module + " type: " + module.getModuleType());
-        LOG.info("Build Java: "+ Optional.ofNullable(JpsAldorModuleType.INSTANCE.moduleProperties(module)).map(p -> p.buildJavaComponents()));
+        LOG.info("Build Java: "+ Optional.ofNullable(JpsAldorModuleType.INSTANCE.moduleProperties(module))
+                                    .map(AldorModuleExtensionProperties::buildJavaComponents));
 
         JpsTypedModule<JpsSimpleElement<AldorModuleExtensionProperties>> aldorModule = module.asTyped(JpsAldorModuleType.INSTANCE);
         if (aldorModule == null) {

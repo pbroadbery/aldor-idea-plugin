@@ -1,10 +1,10 @@
 package aldor.hierarchy;
 
-import aldor.ui.AldorIcons;
+import icons.AldorIcons;
 
 public class ViewGroupedHierarchyAction extends AbstractChangeHierarchyViewAction {
     ViewGroupedHierarchyAction() {
-        super("Grouped View", "View grouped hierarchy", AldorIcons.OPERATION); // TODO: Wrong icon
+        super("Grouped View", "View grouped hierarchy", AldorIcons.GroupedHierarchyView); // TODO: Wrong icon
     }
 
     @Override

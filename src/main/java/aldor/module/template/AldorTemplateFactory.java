@@ -2,12 +2,12 @@ package aldor.module.template;
 
 import aldor.build.module.AldorModuleBuilder;
 import aldor.build.module.AldorModuleType;
-import aldor.ui.AldorIcons;
 import com.google.common.collect.Lists;
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.platform.ProjectTemplate;
 import com.intellij.platform.ProjectTemplatesFactory;
 import com.intellij.platform.templates.BuilderBasedTemplate;
+import icons.AldorIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,10 +32,9 @@ public class AldorTemplateFactory extends ProjectTemplatesFactory {
                 )));
 
 
-        templateRegisties.add(new TemplateRegistry("Fricas", Lists.newArrayList(
-                new BuilderBasedTemplate(new AldorGitModuleBuilder(GitModuleType.Fricas)),
-                new BuilderBasedTemplate(new FricasSimpleModuleBuilder())
-                )));
+        templateRegisties.add(new TemplateRegistry("FriCAS", Lists.newArrayList(
+                new BuilderBasedTemplate(new FricasSimpleModuleBuilder()),
+                new BuilderBasedTemplate(new AldorGitModuleBuilder(GitModuleType.Fricas)))));
     }
 
     @NotNull

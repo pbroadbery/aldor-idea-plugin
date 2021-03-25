@@ -14,6 +14,7 @@ import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public class AldorFlatHierarchyTreeStructure extends HierarchyTreeStructure {
     private static HierarchyNodeDescriptor createBaseNodeDescriptor(Project project, @NotNull Syntax syntax) {
         PsiElement element = psiElementFromSyntax(syntax);
         assert element != null; // Let's hope so anyway, otherwise go grab the index & start over.
-        return new AldorHierarchyNodeDescriptor(project,  null, element, syntax, true);
+        return new AldorHierarchyNodeDescriptor(project,  null, element, syntax, null,true);
     }
 
     @Override
@@ -94,7 +95,7 @@ public class AldorFlatHierarchyTreeStructure extends HierarchyTreeStructure {
         LOG.info("Looking for operations: " + syntax + " parents " + parents);
         LOG.info("Looking for operations: " + operations.stream().map(x -> x.map(op -> op.name()).orElse(e -> e.getMessage())).collect(Collectors.joining(", ")));
 
-        Stream<Object> parentNodes = parents.subList(1, parents.size()).stream().map(psyntax -> createNodeDescriptorMaybe(nodeDescriptor, psyntax));
+        Stream<Object> parentNodes = parents.subList(1, parents.size()).stream().map(psyntax -> createNodeDescriptorMaybe(nodeDescriptor, psyntax, null));
         Stream<Object> operationNodes = operations.stream().map(opMaybe -> opMaybe.map(op -> createOperationNodeDescriptorMaybe(nodeDescriptor, op))
                 .orElse(e -> new ErrorNodeDescriptor(nodeDescriptor, e.getMessage(), e)));
 
@@ -102,14 +103,14 @@ public class AldorFlatHierarchyTreeStructure extends HierarchyTreeStructure {
     }
 
 
-    private Object createNodeDescriptorMaybe(AldorHierarchyNodeDescriptor parent, Syntax syntax) {
+    private Object createNodeDescriptorMaybe(AldorHierarchyNodeDescriptor parent, @NotNull Syntax syntax, @Nullable Syntax condition) {
         PsiElement psiElement = psiElementFromSyntax(syntax);
         if (psiElement == null) {
             return new ErrorNodeDescriptor(parent, "Unknown element - " + SyntaxPrinter.instance().toString(syntax));
         }
         else {
             //noinspection unchecked
-            return new AldorHierarchyNodeDescriptor(this.myProject, parent, psiElement, syntax, false);
+            return new AldorHierarchyNodeDescriptor(this.myProject, parent, psiElement, syntax, condition,false);
         }
     }
 

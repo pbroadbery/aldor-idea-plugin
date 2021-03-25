@@ -3,7 +3,7 @@ package aldor.hierarchy;
 import aldor.hierarchy.util.ComparatorPriority;
 import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxPrinter;
-import aldor.ui.AldorIcons;
+import icons.AldorIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.hierarchy.HierarchyNodeDescriptor;
 import com.intellij.ide.util.treeView.NodeDescriptor;
@@ -19,13 +19,19 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.Icon;
 import java.awt.Font;
 
+import static aldor.ui.AldorTextAttributes.CONDITION_ATTRIBUTES;
+
 public class AldorHierarchyNodeDescriptor extends HierarchyNodeDescriptor implements ComparatorPriority {
     private static final Logger LOG = Logger.getInstance(AldorHierarchyNodeDescriptor.class);
+    @NotNull
     private final Syntax syntax;
+    @Nullable
+    private final Syntax condition;
 
-    protected AldorHierarchyNodeDescriptor(@NotNull Project project, NodeDescriptor<PsiElement> parentDescriptor, @NotNull PsiElement element, Syntax syntax, boolean isBase) {
+    protected AldorHierarchyNodeDescriptor(@NotNull Project project, NodeDescriptor<PsiElement> parentDescriptor, @NotNull PsiElement element, @NotNull Syntax syntax, @Nullable Syntax condition, boolean isBase) {
         super(project, parentDescriptor, element, isBase);
         this.syntax = syntax;
+        this.condition = condition;
     }
 
     public Syntax syntax() {
@@ -53,6 +59,12 @@ public class AldorHierarchyNodeDescriptor extends HierarchyNodeDescriptor implem
         }
 
         myHighlightedText.getBeginning().addText(SyntaxPrinter.instance().toString(syntax), mainTextAttributes);
+        if (condition != null) {
+            myHighlightedText.getEnding().addText(" ");
+            myHighlightedText.getEnding().addSurrounded(SyntaxPrinter.instance().toString(condition), "(if ", ")",
+                    CONDITION_ATTRIBUTES);
+        }
+
         myName = myHighlightedText.getText();
 
         if (!Comparing.equal(myHighlightedText, oldText)) {

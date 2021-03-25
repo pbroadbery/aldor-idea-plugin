@@ -10,7 +10,6 @@ import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
-import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import org.junit.Assert;
 
 import java.util.List;
@@ -173,7 +172,7 @@ public class AldorPsiUtilsTest extends BasePlatformTestCase {
         Assert.assertEquals(define, AldorPsiUtils.topLevelDefininingForm(elt).orElse(null));
     }
 
-    public void testChildBindingsFromTopLEvel() {
+    public void testChildBindingsFromTopLevel() {
         String text = "Foo: with blah == add { testOne(): () == return; testTwo(): () == never }";
         PsiFile file = createLightFile(AldorFileType.INSTANCE, text);
         AldorDefine define = PsiTreeUtil.findChildOfType(file, AldorDefine.class);
@@ -182,9 +181,22 @@ public class AldorPsiUtilsTest extends BasePlatformTestCase {
         Assert.assertEquals(2, childBindings.size());
     }
 
+    public void testUniqueIdentifier() {
+        String text = "Foo: A == B where { A ==> 1; B ==> 2 }";
+        PsiFile file = createLightFile(AldorFileType.INSTANCE, text);
+        AldorDefine define = PsiTreeUtil.findChildOfType(file, AldorDefine.class);
+        Assert.assertNotNull(define);
+        Optional<AldorId> id = AldorPsiUtils.findUniqueIdentifier(define.rhs());
+        Assert.assertTrue(id.isPresent());
+        Assert.assertEquals("B", id.get().getText());
+    }
 
-    @Override
-    protected LightProjectDescriptor getProjectDescriptor() {
-        return SdkProjectDescriptors.aldorSdkProjectDescriptor(ExecutablePresentRule.Aldor.INSTANCE);
+    public void testUniqueIdentifierAdd() {
+        String text = "Foo: A == X add";
+        PsiFile file = createLightFile(AldorFileType.INSTANCE, text);
+        AldorDefine define = PsiTreeUtil.findChildOfType(file, AldorDefine.class);
+        Assert.assertNotNull(define);
+        Optional<AldorId> id = AldorPsiUtils.findUniqueIdentifier(define.rhs());
+        Assert.assertFalse(id.isPresent());
     }
 }

@@ -3,6 +3,7 @@ package aldor.build.builders;
 import aldor.build.module.AldorModuleType;
 import aldor.builder.AldorTargetIds;
 import aldor.file.AldorFileType;
+import aldor.file.SpadFileType;
 import com.intellij.compiler.impl.BuildTargetScopeProvider;
 import com.intellij.openapi.compiler.CompileScope;
 import com.intellij.openapi.diagnostic.Logger;
@@ -37,7 +38,7 @@ public class AldorBuildTargetScopeProvider extends BuildTargetScopeProvider {
         LOG.info("get build targets - modules: " + Arrays.asList(baseScope.getAffectedModules()));
         LOG.info("get build targets - files: " + Arrays.asList(baseScope.getFiles(AldorFileType.INSTANCE, false)));
 
-        // Gather the target IDs (module names) of the target modules.
+        // produce a list of target ids
         final Collection<String> targetIds = new ArrayList<>();
         VirtualFile[] files = baseScope.getFiles(AldorFileType.INSTANCE, false);
 
@@ -53,8 +54,9 @@ public class AldorBuildTargetScopeProvider extends BuildTargetScopeProvider {
         List<TargetTypeBuildScope> targetTypeBuildScopes = new ArrayList<>();
         Arrays.stream(baseScope.getAffectedModules())
                 .filter(AldorModuleType.instance()::is)
+                .filter(module -> AldorModuleType.instance().facetModuleType(module, SpadFileType.INSTANCE) != null)
                 .map(module -> ModuleRootManager.getInstance(module).getSourceRoots())
-                .flatMap(roots -> Arrays.stream(roots))
+                .flatMap(Arrays::stream)
                 .peek(vf -> LOG.info("Found source root: " + vf.getCanonicalPath()))
                 .map(root -> TargetTypeBuildScope.newBuilder()
                         .setTypeId(ALDOR_JAR_TARGET)
@@ -62,9 +64,11 @@ public class AldorBuildTargetScopeProvider extends BuildTargetScopeProvider {
                         .addTargetId(AldorTargetIds.aldorJarTargetId(root.getPath()))
                         .build())
                 .forEach(targetTypeBuildScopes::add);
+
         targetTypeBuildScopes.add(req);
 
-        LOG.info("get build targets: --> " + targetTypeBuildScopes);
+        targetTypeBuildScopes.forEach(scope -> LOG.info("get build targets: --> " + scope.getTypeId() + " "+ scope.getTargetIdList()));
+
         return targetTypeBuildScopes;
     }
 

@@ -1,10 +1,10 @@
 package aldor.runconfiguration.aldor;
 
-import aldor.ui.AldorIcons;
 import com.intellij.execution.configurations.ConfigurationFactory;
 import com.intellij.execution.configurations.ConfigurationTypeBase;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.openapi.project.Project;
+import icons.AldorIcons;
 import org.jetbrains.annotations.NotNull;
 
 public class AldorUnitRunConfigurationType extends ConfigurationTypeBase {
@@ -15,7 +15,7 @@ public class AldorUnitRunConfigurationType extends ConfigurationTypeBase {
     }
 
     public AldorUnitRunConfigurationType() {
-        super("AldorUnitRunConfigurationType", "Aldor Unit Test", "Execute an Aldor Unit Test", AldorIcons.FILE);
+        super("AldorUnitRunConfigurationType", "Aldor Unit Test", "Execute an Aldor Unit Test", AldorIcons.ALDOR_FILE);
         addFactory(new AldorUnitRunConfigurationFactory());
     }
 

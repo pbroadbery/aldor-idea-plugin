@@ -11,5 +11,7 @@ public interface FricasSdkType extends AxiomSdk {
     String fricasPath(Sdk sdk);
 
     @Nonnull
-    String axiomSysName(Sdk sdk);
+    String fricasSysName(Sdk sdk);
+
+    String fricasEnvVar();
 }

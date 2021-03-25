@@ -1,0 +1,39 @@
+)abbrev package EXINTFN ExampleIntegerFunctions
+
+-- You can use intellij to write Fricas types.
+-- For compilation, use an input file which compiles the required files - see the file 'example.input' in this directory.
+
++++ Basic Fricas package exporting two functions.
++++ It is expected that your code will be more interesting.
+ExampleIntegerFunctions: with
+    exampleEven?: Integer -> Boolean
+        ++ True if the argument is even
+    exampleOdd?: Integer -> Boolean
+        ++ True if the argument is odd
+ == add
+    exampleEven?(n: Integer): Boolean == n rem 2 = 0
+    exampleOdd?(n: Integer): Boolean == n rem 2 = 1
+
+
+-- Help for using the intellij environment.
+-- There are a lot of features, so only a few are listed here.
+
+-- Use Ctrl-B (Navigate/Declaration) to find the definition of a symbol
+-- Use Ctrl-Q (View/Quick Documentation) for documentation of a symbol
+-- Use Ctrl-H to view the type hierarchy of the current element
+-- Use Crtl-N (Navigate/Class) to find the definition of a domain or category
+--      This will bring up a search menu that will also work for files and symbols
+-- Use Ctrl-Alt-Shift-N to search by symbol
+--       Eg 'euclidean' will find all functions with 'euclidian' in their name
+-- Use Ctrl-Shift-N to bring up a file chooser.
+--      This will show local files first, then look in the library
+
+-- Note Ctrl-B and Ctrl-Q will work on types, but are less effective on other symbols.
+
+-- The hierarchy viewer has two modes, one giving the immediate parents of a type
+-- and a second showing all parents.  Conditions are evaluated where possible,
+-- or alternatively shown in grey text
+-- Use the left two buttons on the hierarchy viewer to switch modes.
+
+-- A structure view is available - Alt-F7 (View/Tool Windows/Structure)
+--  - this isn't fully finished, but does allow easy navigation within a file.

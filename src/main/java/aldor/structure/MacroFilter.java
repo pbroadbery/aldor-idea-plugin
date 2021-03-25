@@ -1,11 +1,11 @@
 package aldor.structure;
 
 import aldor.psi.AldorDefine;
-import aldor.ui.AldorIcons;
 import com.intellij.ide.util.treeView.smartTree.ActionPresentation;
 import com.intellij.ide.util.treeView.smartTree.ActionPresentationData;
 import com.intellij.ide.util.treeView.smartTree.Filter;
 import com.intellij.ide.util.treeView.smartTree.TreeElement;
+import icons.AldorIcons;
 import org.jetbrains.annotations.NotNull;
 
 public class MacroFilter implements Filter {

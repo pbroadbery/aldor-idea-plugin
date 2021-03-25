@@ -25,6 +25,9 @@ public class If extends SyntaxNode<AldorIfStatementAnyStatement> {
         super(SyntaxRepresentation.createMissing(), Arrays.asList(cond, thenPart, elsePart));
     }
 
+    public If(Syntax cond, Syntax thenPart) {
+        super(SyntaxRepresentation.createMissing(), Arrays.asList(cond, thenPart));
+    }
     @Override
     public String name() {
         return "If";
@@ -33,5 +36,21 @@ public class If extends SyntaxNode<AldorIfStatementAnyStatement> {
     @Override
     public <T> T accept(SyntaxVisitor<T> syntaxVisitor) {
         return syntaxVisitor.visitIf(this);
+    }
+
+    public Syntax thenPart() {
+        return child(1);
+    }
+
+    public Syntax condition() {
+        return child(0);
+    }
+
+    public boolean hasElsePart() {
+        return this.children().size() > 2;
+    }
+
+    public Syntax elsePart() {
+        return child(2);
     }
 }

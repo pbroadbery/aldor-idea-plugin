@@ -1,13 +1,20 @@
 package aldor.runconfiguration.spad;
 
 import aldor.file.SpadInputFileType;
+import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
+import com.intellij.ui.DocumentAdapter;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.JTextPane;
+import javax.swing.event.DocumentEvent;
 
 import static aldor.runconfiguration.spad.SpadInputRunConfigurationType.SpadInputConfigurationBean;
 
@@ -18,8 +25,9 @@ public class SpadInputConfigurableForm extends JComponent {
     private TextFieldWithBrowseButton myInputFile;
     private JCheckBox loadSpad;
     private JCheckBox keepProcess;
+    private JTextPane fricasCommand;
 
-    public SpadInputConfigurableForm(Project project) {
+    public SpadInputConfigurableForm(Project project, @Nullable Module module) {
         this.project = project;
     }
 
@@ -29,15 +37,32 @@ public class SpadInputConfigurableForm extends JComponent {
 
     private void createUIComponents() {
         myInputFile = new TextFieldWithBrowseButton();
+        keepProcess = new JCheckBox("");
+        fricasCommand = new JTextPane();
         myInputFile.setToolTipText("file name");
         myInputFile.addBrowseFolderListener("Choose Input File", "File to run", project,
                 FileChooserDescriptorFactory.createSingleFileDescriptor(SpadInputFileType.INSTANCE));
+        myInputFile.getTextField().getDocument().addDocumentListener(new DocumentAdapter() {
+            @Override
+            protected void textChanged(@NotNull DocumentEvent e) {
+                updateText();
+            }
+        });
+        keepProcess.addChangeListener(e -> updateText());
+    }
+
+    private void updateText() {
+        SpadInputConfigurationBean bean = new SpadInputConfigurationBean();
+        updateConfiguration(bean);
+        GeneralCommandLine commandLine = SpadInputProcesses.executionCommandLine(bean, "$FRICAS");
+        fricasCommand.setText(commandLine.getCommandLineString());
     }
 
     public void resetEditor(SpadInputConfigurationBean bean) {
         myInputFile.setText(bean.inputFile);
         loadSpad.setSelected(bean.loadSpad);
         keepProcess.setSelected(bean.keepRunning);
+        updateText();
     }
 
     public void updateConfiguration(SpadInputConfigurationBean bean) {

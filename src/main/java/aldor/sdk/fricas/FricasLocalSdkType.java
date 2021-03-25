@@ -29,8 +29,13 @@ public class FricasLocalSdkType extends SdkType implements FricasSdkType {
 
     @Nonnull
     @Override
-    public String axiomSysName(Sdk sdk) {
+    public String fricasSysName(Sdk sdk) {
         return "FRICASsys";
+    }
+
+    @Override
+    public String fricasEnvVar() {
+        return "FRICAS";
     }
 
     @Override

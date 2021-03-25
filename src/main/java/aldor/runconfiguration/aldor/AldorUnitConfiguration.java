@@ -59,6 +59,7 @@ public class AldorUnitConfiguration extends ModuleBasedConfiguration<AldorRunCon
         return bean.isGeneratedName;
     }
 
+    // FIXME: This should return all modules that make sense for this configuration
     @Override
     public Collection<Module> getValidModules() {
         AldorModuleManager.getInstance(getProject()).aldorModules(getProject());

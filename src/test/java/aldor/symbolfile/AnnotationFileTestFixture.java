@@ -1,13 +1,13 @@
 package aldor.symbolfile;
 
 import aldor.annotations.AnnotationFileManager;
-import aldor.sdk.aldor.AldorSdkType;
 import aldor.util.Mavens;
 import aldor.util.VirtualFileTests;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
@@ -140,11 +140,15 @@ public class AnnotationFileTestFixture extends BaseFixture {
 
                 @Override
                 public void evaluate() throws Throwable {
+                    boolean save = ApplicationManagerEx.getApplicationEx().isSaveAllowed();
                     try {
+                        ApplicationManagerEx.getApplicationEx().setSaveAllowed(true);
+                        LOG.info("SAVE PROJECT " + save);
                         projectSupplier.get().save();
                         statement.evaluate();
                     } finally {
-                        System.out.println("Done...");
+                        ApplicationManagerEx.getApplicationEx().setSaveAllowed(save);
+                        LOG.info("Done...");
                     }
                 }
             };

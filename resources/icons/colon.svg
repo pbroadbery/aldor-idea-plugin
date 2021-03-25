@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 2048 2048">
+	<circle fill-opacity="0.6" r="896" cx="1024" cy="1024" fill="#fbe3bc" style="stroke: rgb(64, 182, 224); stroke-width: 128px; stroke-opacity: 1;"></circle>
+	<g transform="scale(0.56)"><path fill-opacity="0.7" transform="translate(1024, 2457.12) rotate(180) scale(-1, 1)" fill="#231f20" d="M449 1063h333v-365h-333v365zM449 367h333v-367h-333v367z"></path></g>
+</svg>

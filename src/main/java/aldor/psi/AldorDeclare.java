@@ -16,4 +16,6 @@ public interface AldorDeclare extends StubBasedPsiElement<AldorDeclareStub>, Nav
     //Optional<AldorIdentifier> declareIdentifier();
     PsiElement lhs();
     PsiElement rhs();
+
+    PsiElement type();
 }

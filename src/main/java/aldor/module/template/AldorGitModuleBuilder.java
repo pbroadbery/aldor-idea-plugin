@@ -68,7 +68,9 @@ final class AldorGitModuleBuilder extends AldorModuleBuilder {
 
     @Override
     public String getDescription() {
-        return detail.name() + " Module cloned from git repository";
+        return detail.name() + " Source Module cloned from git repository<br>\n" +
+                " - Use to work with the "+ detail.name() + " sources<br>\n" +
+                "<b>Not</b> fully implemented - may not work correctly";
     }
 
 

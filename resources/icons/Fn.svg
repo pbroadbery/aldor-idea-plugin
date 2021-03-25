@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 2048 2048">
+	<circle fill-opacity="0.6" r="896"
+			cx="1024" cy="1024"
+			fill="#fbe3bc"
+			style="stroke: rgb(64, 182, 224); stroke-width: 128px; stroke-opacity: 1;">
+	</circle>
+	<g transform="scale(0.56)">
+		<path fill-opacity="0.7"
+			 transform="translate(615.45, 2580) rotate(180) scale(-1, 1)"
+			  fill="#231f20"
+			  d="M1112 1233h-635v-322h578v-260h-578v-651h-295v1493h930v-260z">
+		</path>
+		<path fill-opacity="0.7"
+			  transform="translate(1848.45, 2580) rotate(180) scale(-1, 1)"
+			  fill="#231f20"
+			  d="M1071 727v-727h-291v682q0 122 -34.5 174.5t-112.5 52.5q-79 0 -124.5 -71t-45.5 -197v-641h-291v1120h291v-168q31 93 106 144t181 51q159 0 240 -105.5t81 -314.5z"></path></g>
+</svg>

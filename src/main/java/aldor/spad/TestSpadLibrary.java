@@ -13,6 +13,7 @@ import aldor.syntax.components.SyntaxRepresentation;
 import aldor.typelib.Env;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
 import org.jetbrains.annotations.NotNull;
@@ -57,6 +58,11 @@ public class TestSpadLibrary implements SpadLibrary {
     @Override
     public List<Operation> operations(Syntax syntax) {
         return parentInfo(syntax).operationsForType(syntax);
+    }
+
+    @Override
+    public Pair<List<ParentType>, List<Operation>> allParents(Syntax syntax) {
+        throw new UnsupportedOperationException();
     }
 
     @NotNull

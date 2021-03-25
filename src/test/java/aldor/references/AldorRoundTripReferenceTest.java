@@ -9,6 +9,7 @@ import aldor.test_util.JUnits;
 import aldor.test_util.LightPlatformJUnit4TestRule;
 import aldor.test_util.SdkProjectDescriptors;
 import com.google.common.collect.ImmutableMap;
+import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
@@ -42,13 +43,13 @@ public class AldorRoundTripReferenceTest {
     @Rule
     public final TestRule platformTestRule =
             RuleChain.emptyRuleChain()
+                    .around(JUnits.setLogToDebugTestRule)
                     .around(aldorExecutableRule)
                     .around(new LightPlatformJUnit4TestRule(codeTestFixture, ""))
                     .around(annotationTestFixture.rule(codeTestFixture::getProject));
 
     @Before
     public void doBefore() {
-        JUnits.setLogToDebug();
     }
 
     @After

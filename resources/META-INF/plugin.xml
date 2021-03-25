@@ -46,6 +46,9 @@
         <projectService serviceInterface="aldor.build.AldorCompilationService"
                         serviceImplementation="aldor.build.AldorCompilationServiceImpl"/>
 
+        <moduleService serviceInterface="aldor.spad.AldorModuleSpadLibraryManager"
+                        serviceImplementation="aldor.spad.AldorModuleSpadLibraryManagerImpl"/>
+
         <compileServer.plugin classpath="aldor-jps-plugin.jar"/>
         <postStartupActivity implementation="aldor.build.AldorCompilationStartupActivity"/>
         <compiler.buildTargetScopeProvider implementation="aldor.build.builders.AldorBuildTargetScopeProvider" />

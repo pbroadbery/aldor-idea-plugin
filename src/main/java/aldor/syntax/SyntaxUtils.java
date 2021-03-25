@@ -7,7 +7,6 @@ import aldor.syntax.components.Comma;
 import aldor.syntax.components.DeclareNode;
 import aldor.syntax.components.Define;
 import aldor.syntax.components.Id;
-import aldor.syntax.components.If;
 import aldor.syntax.components.Literal;
 import aldor.syntax.components.Other;
 import aldor.util.Streams;
@@ -31,6 +30,9 @@ public final class SyntaxUtils {
      */
     public static Iterable<Syntax> childScopesForDefineLhs(@NotNull Syntax syntax) {
         Syntax maybeLhs = syntax;
+        if (maybeLhs.is(Id.class)) {
+            return Collections.emptySet();
+        }
         if (maybeLhs.is(DeclareNode.class)) {
             maybeLhs = maybeLhs.as(DeclareNode.class).lhs();
         }
@@ -101,7 +103,7 @@ public final class SyntaxUtils {
     }
 
     /**
-     * Foo(X: A) -> Foo(X)
+     * Foo(X: A) ==> Foo(X)
      * @param syntax a type form
      * @return the name of the type
      */
@@ -114,6 +116,10 @@ public final class SyntaxUtils {
             return syntax1;
         }
         if (syntax1.is(Apply.class)) {
+            Apply apply = syntax1.as(Apply.class);
+            if (apply.arguments().isEmpty()) {
+                return typeName(syntax1.as(Apply.class).operator());
+            }
             return new Apply(syntax1.psiElement(),
                     Stream.concat(Stream.of(typeName(syntax1.as(Apply.class).operator())),
                             syntax1.as(Apply.class).arguments().stream().map(SyntaxUtils::definingId)).collect(Collectors.toList()));
@@ -174,10 +180,14 @@ public final class SyntaxUtils {
     }
 
     public static boolean match(Syntax sourceSyntax, Syntax librarySyntax) {
+        //System.out.println("match " + sourceSyntax + " " + librarySyntax);
         return match1(sourceSyntax, librarySyntax);
     }
 
     private static boolean match1(Syntax sourceSyntax, Syntax librarySyntax) {
+        if (sourceSyntax.is(DeclareNode.class)) {
+            return match(sourceSyntax.as(DeclareNode.class).rhs(), librarySyntax);
+        }
         if (sourceSyntax.is(Id.class) && librarySyntax.is(Id.class)) {
             return sourceSyntax.as(Id.class).symbol().equals(librarySyntax.as(Id.class).symbol());
         }
@@ -201,4 +211,21 @@ public final class SyntaxUtils {
         }
         return false;
     }
+
+    public static Syntax and(@NotNull Syntax condition, List<Syntax> stream) {
+        Syntax s = condition;
+        for (Syntax c: stream) {
+            s = and(s, c);
+        }
+        return s;
+    }
+
+    public static Syntax and(List<Syntax> conditions) {
+        return and(conditions.get(0), conditions.subList(1, conditions.size()));
+    }
+
+    public static Syntax and(@NotNull Syntax s1, @NotNull Syntax s2) {
+        return new Apply(new Id(new TokenSyntax("and", AldorTokenTypes.KW_And)), Arrays.asList(s1, s2));
+    }
+
 }

@@ -87,6 +87,7 @@ public class AldorDeclareStubCodec implements PsiStubCodec<AldorDeclareStub, Ald
         AldorPsiUtils.ContainingBlockType<?> blockType = containingBlock(aldorDeclare).type();
         Optional<AldorDefine> definingForm = AldorPsiUtils.definingForm(aldorDeclare);
         Optional<Syntax> exporter = definingForm.map(form -> SyntaxUtils.typeName(SyntaxPsiParser.parse(form.lhs())));
+
         return new AldorDeclareConcreteStub.Builder()
                 .setParent(parentStub)
                 .setElementType(eltType)

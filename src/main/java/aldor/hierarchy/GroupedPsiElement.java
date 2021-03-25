@@ -1,6 +1,7 @@
 package aldor.hierarchy;
 
-import aldor.hierarchy.AldorGroupedHierarchyTreeStructure.Grouping;
+import aldor.hierarchy.GroupingHierarchyDescriptor.Grouping;
+import aldor.hierarchy.GroupingHierarchyDescriptor.GroupingKey;
 import aldor.syntax.SyntaxPrinter;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.psi.PsiElement;
@@ -27,7 +28,7 @@ public class GroupedPsiElement extends FakePsiElement {
         return new ItemPresentation() {
             @Override
             public String getPresentableText() {
-                AldorGroupedHierarchyTreeStructure.GroupingKey key = grouping.key();
+                GroupingKey key = grouping.key();
                 // Maybe should wrap a declare aroung the type, then convert
                 return key.name() + ": " + SyntaxPrinter.instance().toString(key.type());
             }

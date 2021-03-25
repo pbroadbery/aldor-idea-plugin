@@ -13,6 +13,7 @@ import org.junit.rules.RuleChain;
 import org.junit.rules.TestRule;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class SyntaxUtilsTest {
     private final CodeInsightTestFixture testFixture = LightPlatformJUnit4TestRule.createFixture(null);
@@ -69,6 +70,13 @@ public class SyntaxUtilsTest {
         Syntax syntax = parseToSyntax("Foo(n: Integer): (String, Y)");
         Syntax name = SyntaxUtils.definitionToSignature(syntax).orElse(null);
         assertEquals("Integer -> (String, Y)", SyntaxPrinter.instance().toString(name));
+    }
+
+    @Test
+    public void testMatchDeclared() {
+        Syntax libSyntax = parseToSyntax("% -> NonNegativeInteger");
+        Syntax sourceSyntax = parseToSyntax("(orf: %) -> NonNegativeInteger");
+        assertTrue(SyntaxUtils.match(sourceSyntax, libSyntax));
     }
 
     private Syntax parseToSyntax(CharSequence text) {

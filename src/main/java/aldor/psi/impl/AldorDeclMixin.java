@@ -2,6 +2,9 @@ package aldor.psi.impl;
 
 import aldor.psi.AldorDeclPart;
 import aldor.psi.AldorDeclare;
+import aldor.psi.AldorDefine;
+import aldor.psi.AldorId;
+import aldor.psi.AldorPsiUtils;
 import aldor.psi.stub.AldorDeclareStub;
 import aldor.references.FileScopeWalker;
 import aldor.references.ScopeContext;
@@ -16,6 +19,8 @@ import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Optional;
 
 @SuppressWarnings({"AbstractClassWithOnlyOneDirectInheritor"})
 public abstract class AldorDeclMixin extends AldorDeclareImpl implements AldorDeclPart {
@@ -72,5 +77,17 @@ public abstract class AldorDeclMixin extends AldorDeclareImpl implements AldorDe
     @Override
     public PsiElement setName(@NotNull String name) throws IncorrectOperationException {
         throw new IncorrectOperationException("No rename on declarations");
+    }
+
+    @Override
+    public PsiElement type() {
+        Optional<AldorId> typeId = AldorPsiUtils.findUniqueIdentifier(rhs());
+        if (typeId.isPresent() && (typeId.get().getReference() != null)) {
+            PsiElement macro = typeId.get().getReference().resolveMacro();
+            if (macro instanceof AldorDefine) {
+                return ((AldorDefine) macro).rhs();
+            }
+        }
+        return rhs(); // FIXME!
     }
 }

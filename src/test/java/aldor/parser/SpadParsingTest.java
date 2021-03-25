@@ -56,6 +56,24 @@ public class SpadParsingTest {
     }
 
     @Test
+    public void testTopLevelEmpty() {
+        PsiElement psi = parseText("");
+        final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
+        System.out.println(errors);
+        Assert.assertEquals(0, errors.size());
+    }
+
+    @Test
+    public void testTopCommentOnly() {
+        PsiElement psi = parseText("-- these are some words\n");
+        final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
+        System.out.println(errors);
+        Assert.assertEquals(0, errors.size());
+    }
+
+
+
+    @Test
     public void testTopLevelSysCmd() {
         PsiElement psi = parseText(")a\nX\n");
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
@@ -483,6 +501,7 @@ public class SpadParsingTest {
 
     @Test
     @SkipCI
+    @Ignore("20210324 - Not yet")
     public void testParseFortran() throws IOException {
         Assert.assertNotNull(getProject());
 
@@ -505,6 +524,7 @@ public class SpadParsingTest {
 
     @Test
     @SkipCI
+    @Ignore("20210324 - Not yet")
     public void testAlgebraLibrary() {
         Assert.assertNotNull(getProject());
 

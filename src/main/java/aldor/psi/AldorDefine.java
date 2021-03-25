@@ -15,6 +15,7 @@ public interface AldorDefine extends StubBasedPsiElement<AldorDefineStub>, PsiNa
     @NotNull
     Optional<AldorIdentifier> defineIdentifier();
     DefinitionType definitionType();
+    PsiElement implementation();
 
     default PsiElement lhs() {
         return getFirstChild();

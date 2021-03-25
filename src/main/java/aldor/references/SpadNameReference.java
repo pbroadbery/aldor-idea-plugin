@@ -15,6 +15,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReferenceBase;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.IncorrectOperationException;
+import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,7 +25,7 @@ import java.util.Optional;
 
 import static aldor.references.FileScopeWalker.resolveAndWalk;
 
-public class SpadNameReference extends PsiReferenceBase<AldorIdentifier> {
+public class SpadNameReference extends PsiReferenceBase<AldorIdentifier> implements AldorReference {
     private static final Logger LOG = Logger.getInstance(SpadNameReference.class);
     public static final Object[] NO_VARIANTS = new Object[0];
 
@@ -44,6 +45,16 @@ public class SpadNameReference extends PsiReferenceBase<AldorIdentifier> {
         }
 
         return result;
+    }
+
+    @Nullable
+    @Override
+    public PsiElement resolveMacro() {
+        AldorScopeProcessor scopeProcessor = new AldorScopeProcessor(AldorScopeProcessor.Options.MACRO, getElement().getText());
+        resolveAndWalk(scopeProcessor, getElement());
+
+        return scopeProcessor.getResult();
+
     }
 
     private PsiElement resolveByTopLevelName() {
@@ -94,5 +105,12 @@ public class SpadNameReference extends PsiReferenceBase<AldorIdentifier> {
         //result.addAll(topLevelReferences());
 
         return result.toArray();
+    }
+
+    @Override
+    @NotNull
+    @Nls(capitalization = Nls.Capitalization.Sentence)
+    public String getUnresolvedMessagePattern() {
+        return "Spad - unresolved %s";
     }
 }

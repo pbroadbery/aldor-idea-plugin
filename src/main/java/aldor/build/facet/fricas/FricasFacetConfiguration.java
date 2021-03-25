@@ -51,6 +51,13 @@ public class FricasFacetConfiguration implements FacetConfiguration, PersistentS
 
     @Nullable
     public Sdk sdk() {
-        return (state == null) ? null : ProjectJdkTable.getInstance().findJdk(state.sdkName());
+        if (state == null) {
+            return null;
+        } else {
+            if (state.sdkName() == null) {
+                return null;
+            }
+            return ProjectJdkTable.getInstance().findJdk(state.sdkName());
+        }
     }
 }

@@ -60,7 +60,7 @@ public class AnnotatedSyntaxTest extends BasePlatformTestCase {
         double timePerIteration = ((double) timer.duration())/ iterations;
         System.out.println("infer: " + timePerIteration);
         //noinspection MagicNumber
-        Assert.assertTrue(timePerIteration < 10.0);
+        Assert.assertTrue(timePerIteration < 20.0);
     }
 
 

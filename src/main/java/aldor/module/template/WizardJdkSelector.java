@@ -1,7 +1,9 @@
 package aldor.module.template;
 
+import aldor.build.facet.aldor.AldorFacetEditorForm;
 import com.intellij.ide.util.projectWizard.WizardInputField;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.ProjectJdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
@@ -23,26 +25,32 @@ class WizardJdkSelector extends WizardInputField<JdkComboBox> {
     @NotNull
     private final JdkComboBox sdkComboSelector;
     private final Set<SdkTypeId> allowedTypes;
+    private final ProjectSdksModel model;
 
     WizardJdkSelector(String id, String label, String defaultValue, Set<SdkTypeId> allowedTypes) {
         super(id, defaultValue);
         this.label = label;
         this.allowedTypes = allowedTypes;
-        ProjectSdksModel model = new ProjectSdksModel();
+        model = new ProjectSdksModel();
         model.syncSdks();
         this.sdkComboSelector = new JdkComboBox(null, model,
-                this::typeFilter, this::sdkFilter, this::creationFilter, WizardJdkSelector::sdkAdded);
+                this::typeFilter, this::sdkFilter, this::creationFilter, this::sdkAdded);
     }
 
-    private static void sdkAdded(Sdk sdk) {
-        LOG.info("Created sdk " + sdk.getName());
-        ProjectJdkTable jdkTable = ProjectJdkTable.getInstance();
-        if (jdkTable.findJdk(sdk.getName()) == null) {
-            jdkTable.addJdk(sdk);
-            LOG.info("Added new sdk " + sdk.getName());
+    private void sdkAdded(Sdk sdk) {
+        if ((sdk == null) || (model == null)) {
+            return;
         }
-        else {
-            LOG.info("Already known " + sdk.getName());
+        LOG.info("Adding SDK: " + sdk.getName());
+        if (model.findSdk(sdk.getName()) != null) {
+            LOG.info("SDK " + sdk.getName() + " already exists");
+        }
+        model.addSdk(sdk);
+        try {
+            model.apply(null, true);
+        }
+        catch (ConfigurationException e) {
+            LOG.error("while creating SDK " + sdk.getName(), e);
         }
     }
 

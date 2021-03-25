@@ -123,7 +123,8 @@ public class AldorTypeHierarchyBrowserTest {
 
     @Test
     public void testRightModule() {
-        Collection<AldorDefine> items = AldorDefineTopLevelIndex.instance.get("RightModule", codeTestFixture.getProject(), GlobalSearchScope.allScope(codeTestFixture.getProject()));
+        Collection<AldorDefine> items = AldorDefineTopLevelIndex.instance.get("RightModule",
+                codeTestFixture.getProject(), GlobalSearchScope.allScope(codeTestFixture.getProject()));
 
         AldorIdentifier theId = items.stream().findFirst().flatMap(AldorDefine::defineIdentifier).orElse(null);
         try (TestBrowser browser = new TestBrowser(ensureClosedRule, new AldorTypeHierarchyProvider(), theId, SUPERTYPES_HIERARCHY_TYPE)) {
@@ -131,7 +132,6 @@ public class AldorTypeHierarchyBrowserTest {
             browser.update();
 
             /*
-            RightModule R
             AbelianSemiGroup
             *: (%, R) -> %
             Unknown element - if  then AbelianGroup else ()
@@ -143,7 +143,7 @@ public class AldorTypeHierarchyBrowserTest {
             List<NodeDescriptor<?>> childElements = browser.childElements();
             System.out.println("Children: " + childElements);
 
-            Assert.assertEquals(5, childElements.size());
+            Assert.assertEquals(4, childElements.size());
 
             ((Disposable) ProgressManager.getInstance()).dispose();
         }

@@ -9,7 +9,6 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Fixme: Explore ways of adding some documentation.
  * Note that doc strings can be any html
- * <b>this is bold</b>
  */
 public class AldorDocumentationProvider extends DocumentationProviderEx {
     private static final Logger LOG = Logger.getInstance(AldorDocumentationProvider.class);
@@ -38,6 +37,4 @@ public class AldorDocumentationProvider extends DocumentationProviderEx {
             throw e;
         }
     }
-
-
 }

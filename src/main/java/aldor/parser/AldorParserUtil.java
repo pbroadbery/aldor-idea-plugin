@@ -121,7 +121,14 @@ public class AldorParserUtil extends GeneratedParserUtilBase {
         return r;
     }
 
-    public static boolean parsePiledContent(@NotNull PsiBuilder b, int l, String type) {
+    public static boolean parseTopLevel(@NotNull PsiBuilder b, int l, String type) {
+        if (b.eof()) {
+            return true;
+        }
+        return parsePiledContent(b, l, type);
+    }
+
+        public static boolean parsePiledContent(@NotNull PsiBuilder b, int l, String type) {
         int indentLevel = currentIndentLevel(b);
         //System.out.println("Curr: " + b.getCurrentOffset() + " " + b.getTokenType() + " " + b.getTokenText());
         boolean r = parseOneExpression(b, l + 1, type);

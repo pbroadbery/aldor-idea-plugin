@@ -21,7 +21,9 @@ public class IdentifierDocumentationProvider extends TypedDocumentationProvider<
 
     @Override
     public String generateDoc(AldorIdentifier element, @Nullable PsiElement originalElement) {
-        AnnotatedOptional<Syme, String> symeMaybe = docUtils.symeForElement(originalElement);
+        AnnotatedOptional<Syme, String> symeMaybe = AnnotatedOptional
+                .ofNullable(originalElement, () -> "")
+                .flatMap(docUtils::symeForElement);
 
         if (symeMaybe.isPresent()) {
             SyntaxPrinter printer = SyntaxPrinter.instance();
@@ -51,7 +53,8 @@ public class IdentifierDocumentationProvider extends TypedDocumentationProvider<
     @Nullable
     @Override
     public String getQuickNavigateInfo(AldorIdentifier element, AldorIdentifier originalElement) {
-        AnnotatedOptional<Syme, String> symeMaybe = docUtils.symeForElement(originalElement);
+        AnnotatedOptional<Syme, String> symeMaybe = AnnotatedOptional.ofNullable(originalElement, () -> "")
+            .flatMap(e -> docUtils.symeForElement(e));
 
         if (!symeMaybe.isPresent()) {
             return null;

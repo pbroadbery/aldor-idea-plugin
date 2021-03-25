@@ -23,10 +23,11 @@ afterEvaluate {
         compile intellij { include('util.jar') }
         compile intellij { include('jps-model.jar') }
         compile intellij { include('jdom.jar') }
+        compile intellij { include{'trove.jar'} }
         compile intellijPlugin('java') { include('jps-builders.jar') }
     }
 
-    project.tasks.remove(project.tasks.runIde)
+    project.tasks.runIde.setEnabled(false)
 }
 
 task list(dependsOn: configurations.compile) {

@@ -1,8 +1,10 @@
 package aldor.runconfiguration.spad;
 
+import aldor.psi.AldorLiteral;
 import aldor.runconfiguration.MyMapDataContext;
 import aldor.test_util.DirectoryPresentRule;
 import aldor.test_util.JUnits;
+import aldor.test_util.LightPlatformJUnit4TestRule;
 import aldor.test_util.SdkProjectDescriptors;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionTargetManager;
@@ -18,42 +20,54 @@ import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
+import com.intellij.testFramework.fixtures.CodeInsightTestFixture;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.RuleChain;
+import org.junit.rules.TestRule;
+
+import java.util.Objects;
 
 import static aldor.util.VirtualFileTests.createFile;
 import static com.intellij.testFramework.LightPlatformTestCase.getSourceRoot;
 
-public class SpadInputRunConfigurationProducerTest extends BasePlatformTestCase {
-    @Rule
+public class SpadInputRunConfigurationProducerTest {
     public final DirectoryPresentRule directory = new DirectoryPresentRule("/home/pab/Work/fricas/opt/lib/fricas/target/x86_64-linux-gnu");
+    private final CodeInsightTestFixture codeTestFixture = LightPlatformJUnit4TestRule.createFixture(getProjectDescriptor());
 
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
-        Assume.assumeTrue(directory.isPresent());
-    }
+    @Rule
+    public final TestRule rule =
+            RuleChain.emptyRuleChain()
+                    .around(directory)
+                    .around(new LightPlatformJUnit4TestRule(codeTestFixture, ""))
+                    .around(JUnits.swingThreadTestRule());
 
+    @Test
     public void testCreateInputFile() throws ExecutionException {
         JUnits.setLogToInfo();
         VirtualFile file = createFile(getSourceRoot(), "foo.input", "23\n)quit\n");
 
-        PsiFile whole = PsiManager.getInstance(getProject()).findFile(file);
+        PsiFile whole = PsiManager.getInstance(codeTestFixture.getProject()).findFile(file);
         Assert.assertNotNull(whole);
+        AldorLiteral theNumber = Objects.requireNonNull(PsiTreeUtil.findChildOfType(whole, AldorLiteral.class));
         MyMapDataContext dataContext = new MyMapDataContext();
-        dataContext.put("module", getModule());
-        dataContext.put("Location", new PsiLocation<>(whole));
-        dataContext.put("project", getProject());
+        dataContext.put("module", codeTestFixture.getModule());
+        dataContext.put("Location", new PsiLocation<>(theNumber));
+        dataContext.put("project", codeTestFixture.getProject());
 
         ConfigurationContext runContext = ConfigurationContext.getFromContext(dataContext);
         System.out.println("Context: " + runContext.getLocation() + " " + runContext.getConfiguration());
         Assert.assertNotNull(runContext.getConfiguration());
         RunnerAndConfigurationSettings runnerAndConfigurationSettings = runContext.getConfiguration();
 
-        ExecutionTargetManager.canRun(runnerAndConfigurationSettings.getConfiguration(), ExecutionTargetManager.getActiveTarget(getProject()));
+        ExecutionTargetManager.canRun(runnerAndConfigurationSettings.getConfiguration(), ExecutionTargetManager.getActiveTarget(codeTestFixture.getProject()));
         Assert.assertTrue(runnerAndConfigurationSettings.getName().contains("foo"));
 
         RunConfiguration runConfiguration = runnerAndConfigurationSettings.getConfiguration();
@@ -62,17 +76,19 @@ public class SpadInputRunConfigurationProducerTest extends BasePlatformTestCase 
         Executor executor = DefaultRunExecutor.getRunExecutorInstance();
         ProgramRunner<?> runner = ProgramRunner.getRunner(DefaultRunExecutor.EXECUTOR_ID, runConfiguration);
         Assert.assertNotNull(runner);
-        ExecutionEnvironment executionEnvironment = new ExecutionEnvironment(executor, runner, runnerAndConfigurationSettings, getProject());
+        ExecutionEnvironment executionEnvironment = new ExecutionEnvironment(executor, runner, runnerAndConfigurationSettings, codeTestFixture.getProject());
 
         RunContentDescriptor[] descriptorBox = new RunContentDescriptor[1];
 
-        runner.execute(executionEnvironment, new ProgramRunner.Callback() {
-            @Override
-            public void processStarted(RunContentDescriptor descriptor) {
-                System.out.println("Runing: " + descriptor);
-                descriptorBox[0] = descriptor;
-            }
-        });
+        //noinspection UnstableApiUsage
+        executionEnvironment.setCallback(new ProgramRunner.Callback() {
+                                        @Override
+                                        public void processStarted(RunContentDescriptor descriptor) {
+                                            System.out.println("Runing: " + descriptor);
+                                            descriptorBox[0] = descriptor;
+                                        }});
+
+        runner.execute(executionEnvironment);
         Assert.assertNotNull(descriptorBox[0]);
         RunContentDescriptor descriptor = descriptorBox[0];
         Assert.assertNotNull(descriptor.getProcessHandler());
@@ -83,7 +99,6 @@ public class SpadInputRunConfigurationProducerTest extends BasePlatformTestCase 
         descriptorBox[0].dispose();
     }
 
-    @Override
     protected LightProjectDescriptor getProjectDescriptor() {
         return SdkProjectDescriptors.fricasSdkProjectDescriptor(directory.path());
     }

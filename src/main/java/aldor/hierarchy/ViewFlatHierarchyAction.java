@@ -1,10 +1,10 @@
 package aldor.hierarchy;
 
-import aldor.ui.AldorIcons;
+import icons.AldorIcons;
 
 public class ViewFlatHierarchyAction extends AbstractChangeHierarchyViewAction {
     ViewFlatHierarchyAction() {
-        super("Flat View", "View flattened hierarchy", AldorIcons.OPERATION); // TODO: Wrong icon
+        super("Flat View", "View flattened hierarchy", AldorIcons.ParentHierarchyView); // TODO: Wrong icon
     }
 
     @Override
