@@ -1,5 +1,6 @@
 package aldor.build.module;
 
+import aldor.test_util.AssumptionAware;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectRootManager;
@@ -17,7 +18,7 @@ import org.junit.Assert;
 
 import java.io.IOException;
 
-public class AldorModuleTest extends UsefulTestCase {
+public class AldorModuleTest extends AssumptionAware.UsefulTestCase {
 
     private final TempDirTestFixture tempDirTestFixture = new TempDirTestFixtureImpl();
     private IdeaProjectTestFixture fixture;

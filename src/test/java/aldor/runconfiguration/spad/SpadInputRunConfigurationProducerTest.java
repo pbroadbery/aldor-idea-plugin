@@ -100,7 +100,7 @@ public class SpadInputRunConfigurationProducerTest {
     }
 
     protected LightProjectDescriptor getProjectDescriptor() {
-        return SdkProjectDescriptors.fricasSdkProjectDescriptor(directory.path());
+        return SdkProjectDescriptors.fricasSdkProjectDescriptor(directory);
     }
 
 }

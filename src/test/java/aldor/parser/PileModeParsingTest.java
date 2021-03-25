@@ -4,6 +4,7 @@ import aldor.lexer.AldorIndentLexer;
 import aldor.lexer.AldorLexerAdapter;
 import aldor.lexer.LexerFunctions;
 import aldor.psi.elements.AldorTypes;
+import aldor.test_util.AssumptionAware;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.tree.IElementType;
@@ -14,7 +15,7 @@ import java.util.List;
 
 import static aldor.psi.AldorPsiUtils.logPsi;
 
-public class PileModeParsingTest extends LightPlatformCodeInsightTestCase {
+public class PileModeParsingTest extends AssumptionAware.LightPlatformCodeInsightTestCase {
 
 
     public void testPileMode() {

@@ -5,6 +5,7 @@ import aldor.annotations.AnnotationFileNavigator;
 import aldor.annotations.DefaultAnnotationFileNavigator;
 import aldor.psi.AldorIdentifier;
 import aldor.syntax.SyntaxPrinter;
+import aldor.test_util.AssumptionAware;
 import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.JUnits;
 import aldor.test_util.SdkProjectDescriptors;
@@ -29,7 +30,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class AnnotationRoundTripTest extends BasePlatformTestCase {
+public class AnnotationRoundTripTest extends AssumptionAware.BasePlatformTestCase {
     private static final Logger LOG = Logger.getInstance(AnnotationRoundTripTest.class);
     private final AnnotationFileTestFixture annotationTextFixture = new AnnotationFileTestFixture();
     @Rule

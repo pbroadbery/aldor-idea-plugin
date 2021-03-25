@@ -3,6 +3,7 @@ package aldor.references;
 import aldor.language.SpadLanguage;
 import aldor.psi.AldorId;
 import aldor.psi.AldorIdentifier;
+import aldor.test_util.AssumptionAware;
 import aldor.test_util.DirectoryPresentRule;
 import aldor.test_util.SdkProjectDescriptors;
 import com.intellij.psi.PsiElement;
@@ -14,7 +15,7 @@ import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import org.junit.Assert;
 import org.junit.Assume;
 
-public class SpadNameReferenceTest extends BasePlatformTestCase {
+public class SpadNameReferenceTest extends AssumptionAware.BasePlatformTestCase {
     private final DirectoryPresentRule directory = new DirectoryPresentRule("/home/pab/Work/fricas/opt/lib/fricas/target/x86_64-linux-gnu");
 
     @Override
@@ -95,7 +96,7 @@ public class SpadNameReferenceTest extends BasePlatformTestCase {
 
     @Override
     protected LightProjectDescriptor getProjectDescriptor() {
-        return SdkProjectDescriptors.fricasSdkProjectDescriptor(directory.path());
+        return SdkProjectDescriptors.fricasSdkProjectDescriptor(directory);
     }
 
 }

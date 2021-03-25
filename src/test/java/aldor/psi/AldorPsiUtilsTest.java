@@ -2,6 +2,7 @@ package aldor.psi;
 
 import aldor.file.AldorFileType;
 import aldor.file.SpadFileType;
+import aldor.test_util.AssumptionAware;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiNamedElement;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class AldorPsiUtilsTest extends BasePlatformTestCase {
+public class AldorPsiUtilsTest extends AssumptionAware.BasePlatformTestCase {
 
     public void testIsTopLevel() {
         PsiFile file = createLightFile(AldorFileType.INSTANCE, "A: B == C");

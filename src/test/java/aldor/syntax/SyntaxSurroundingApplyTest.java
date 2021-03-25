@@ -2,6 +2,7 @@ package aldor.syntax;
 
 import aldor.parser.ParserFunctions;
 import aldor.psi.AldorId;
+import aldor.test_util.AssumptionAware;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
@@ -12,7 +13,7 @@ import org.junit.Assert;
 import static aldor.syntax.SyntaxPsiParser.SurroundType.Any;
 import static aldor.syntax.SyntaxPsiParser.SurroundType.Leading;
 
-public class SyntaxSurroundingApplyTest extends BasePlatformTestCase {
+public class SyntaxSurroundingApplyTest extends AssumptionAware.BasePlatformTestCase {
 
     public void testFirstPosn() {
         PsiElement psi = parseText("List X");

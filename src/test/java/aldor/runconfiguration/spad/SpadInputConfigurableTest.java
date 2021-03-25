@@ -1,6 +1,7 @@
 package aldor.runconfiguration.spad;
 
 import aldor.runconfiguration.spad.SpadInputRunConfigurationType.SpadInputConfigurationBean;
+import aldor.test_util.AssumptionAware;
 import aldor.test_util.DirectoryPresentRule;
 import aldor.test_util.JUnits;
 import aldor.test_util.Swings;
@@ -16,7 +17,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JTextPane;
 
-public class SpadInputConfigurableTest extends BasePlatformTestCase {
+public class SpadInputConfigurableTest extends AssumptionAware.BasePlatformTestCase {
     @Rule
     public final DirectoryPresentRule directory = new DirectoryPresentRule("/home/pab/Work/fricas/opt/lib/fricas/target/x86_64-linux-gnu");
 

@@ -1,6 +1,7 @@
 package aldor.references;
 
 import aldor.psi.AldorId;
+import aldor.test_util.AssumptionAware;
 import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.JUnits;
 import aldor.test_util.SdkProjectDescriptors;
@@ -27,7 +28,7 @@ import org.junit.Assume;
 
 import static com.intellij.testFramework.LightPlatformTestCase.getSourceRoot;
 
-public class AldorLibraryRefTest extends BasePlatformTestCase {
+public class AldorLibraryRefTest extends AssumptionAware.BasePlatformTestCase {
     private final ExecutablePresentRule aldorExecutableRule = new ExecutablePresentRule.Aldor();
 
     @Override

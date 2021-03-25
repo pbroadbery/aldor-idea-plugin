@@ -1,13 +1,14 @@
 package aldor.language;
 
 import aldor.parser.ParserFunctions;
+import aldor.test_util.AssumptionAware;
 import com.intellij.psi.PsiFile;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import org.junit.Assert;
 
-public class SpadLanguageTest extends BasePlatformTestCase {
+public class SpadLanguageTest extends AssumptionAware.BasePlatformTestCase {
 
     public void testFoo() {
         PsiFile file = createSpadFile(")abbrev category A Aa\n++ Aa is great\n" +

@@ -1,5 +1,6 @@
 package aldor.expression;
 
+import aldor.test_util.AssumptionAware;
 import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.JUnits;
 import aldor.test_util.SdkProjectDescriptors;
@@ -18,7 +19,7 @@ import java.util.Collection;
 import static aldor.util.VirtualFileTests.createFile;
 import static com.intellij.testFramework.LightPlatformTestCase.getSourceRoot;
 
-public class ExpressionFileTest extends BasePlatformTestCase {
+public class ExpressionFileTest extends AssumptionAware.BasePlatformTestCase {
 
     @Override
     protected void setUp() throws Exception {

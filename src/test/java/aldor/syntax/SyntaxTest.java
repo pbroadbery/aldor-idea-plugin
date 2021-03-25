@@ -1,6 +1,7 @@
 package aldor.syntax;
 
 import aldor.parser.ParserFunctions;
+import aldor.test_util.AssumptionAware;
 import com.intellij.psi.PsiElement;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
@@ -9,7 +10,7 @@ import org.junit.Assert;
 
 import static aldor.syntax.SyntaxPsiParser.parse;
 
-public class SyntaxTest extends BasePlatformTestCase {
+public class SyntaxTest extends AssumptionAware.BasePlatformTestCase {
 
     @SuppressWarnings("UnnecessaryCodeBlock")
     public void testParser1() {

@@ -4,6 +4,7 @@ import aldor.build.facet.aldor.AldorFacet;
 import aldor.build.facet.aldor.AldorFacetConstants;
 import aldor.build.facet.aldor.AldorFacetType;
 import aldor.sdk.aldor.AldorInstalledSdkType;
+import aldor.test_util.AssumptionAware;
 import aldor.test_util.JUnits;
 import com.intellij.facet.FacetManager;
 import com.intellij.ide.projectWizard.NewProjectWizardTestCase;
@@ -19,7 +20,7 @@ import org.junit.Assert;
 import java.io.IOException;
 import java.util.Objects;
 
-public class AldorSimpleModuleBuilderWizardTest extends NewProjectWizardTestCase {
+public class AldorSimpleModuleBuilderWizardTest extends AssumptionAware.NewProjectWizardTestCase {
     private static final Logger LOG = Logger.getInstance(AldorSimpleModuleBuilderWizardTest.class);
     private Sdk aldorSdk;
 

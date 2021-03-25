@@ -23,7 +23,6 @@ public abstract class SpadLibraryManagerTestCase {
     public abstract String basePath();
     public abstract CodeInsightTestFixture testFixture();
 
-
     @Test
     public void xtestListInteger() {
         Collection<AldorDefine> ll = AldorDefineTopLevelIndex.instance.get("List", testFixture().getProject(), GlobalSearchScope.allScope(testFixture().getProject()));

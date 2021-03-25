@@ -1,6 +1,7 @@
 package aldor.references;
 
 import aldor.psi.SpadAbbrev;
+import aldor.test_util.AssumptionAware;
 import aldor.util.VirtualFileTests;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
@@ -17,7 +18,7 @@ import org.junit.Assert;
 
 import static com.intellij.testFramework.LightPlatformTestCase.getSourceRoot;
 
-public class SpadAbbrevRefTest extends BasePlatformTestCase {
+public class SpadAbbrevRefTest extends AssumptionAware.BasePlatformTestCase {
 
     public void testReference() {
         String text = ")abbrev domain FOO Foo\nFoo: with == add\n";

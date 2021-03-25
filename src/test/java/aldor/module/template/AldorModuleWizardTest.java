@@ -1,6 +1,7 @@
 package aldor.module.template;
 
 import aldor.sdk.aldor.AldorInstalledSdkType;
+import aldor.test_util.AssumptionAware;
 import aldor.test_util.SkipCI;
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.CompositeDisposable;
@@ -20,7 +21,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-public class AldorModuleWizardTest extends HeavyPlatformTestCase {
+public class AldorModuleWizardTest extends AssumptionAware.HeavyPlatformTestCase {
 
     @SkipCI
     public void testCreateProject() throws IOException {

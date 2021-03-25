@@ -2,6 +2,7 @@ package aldor.module.template;
 
 import aldor.build.facet.fricas.FricasFacet;
 import aldor.sdk.fricas.FricasInstalledSdkType;
+import aldor.test_util.AssumptionAware;
 import aldor.test_util.JUnits;
 import aldor.test_util.Swings;
 import com.intellij.ide.projectWizard.NewProjectWizardTestCase;
@@ -23,7 +24,7 @@ import java.util.Optional;
 import static java.util.Objects.requireNonNull;
 
 @Ignore("Causes trouble?")
-public class FricasSimpleModuleBuilderTest extends NewProjectWizardTestCase {
+public class FricasSimpleModuleBuilderTest extends AssumptionAware.NewProjectWizardTestCase {
     private static final Logger LOG = Logger.getInstance(FricasSimpleModuleBuilderTest.class);
     private JUnits.TearDownItem tearDown = new JUnits.TearDownItem();
     private Sdk fricasSdk;

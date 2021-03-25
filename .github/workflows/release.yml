@@ -1,0 +1,13 @@
+on:
+  push:
+    tags:
+      - 'release-*'
+
+env:
+  VERSION: ${{ github.ref }}
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "none"

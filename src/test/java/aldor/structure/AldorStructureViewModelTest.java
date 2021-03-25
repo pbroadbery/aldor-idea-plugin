@@ -1,5 +1,6 @@
 package aldor.structure;
 
+import aldor.test_util.AssumptionAware;
 import aldor.test_util.JUnits;
 import aldor.util.VirtualFileTests;
 import com.intellij.ide.structureView.StructureViewModel;
@@ -15,7 +16,7 @@ import org.junit.Assert;
 import java.util.Arrays;
 
 @SuppressWarnings("rawtypes")
-public class AldorStructureViewModelTest extends CodeInsightFixtureTestCase {
+public class AldorStructureViewModelTest extends AssumptionAware.CodeInsightFixtureTestCase {
     private static final Logger LOG = Logger.getInstance(AldorStructureViewModelTest.class);
 
     public void testViewModel() {

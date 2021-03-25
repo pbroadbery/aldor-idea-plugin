@@ -48,7 +48,7 @@ import static org.junit.Assert.assertNotNull;
 
 public class FricasSpadLibraryTest {
     private final DirectoryPresentRule directoryPresentRule = new DirectoryPresentRule("/home/pab/Work/fricas/opt/lib/fricas/target/x86_64-linux-gnu");
-    private final CodeInsightTestFixture testFixture = createFixture(fricasSdkProjectDescriptor(directoryPresentRule.path()));
+    private final CodeInsightTestFixture testFixture = createFixture(fricasSdkProjectDescriptor(directoryPresentRule));
 
     @Rule
     public final TestRule platformTestRule =

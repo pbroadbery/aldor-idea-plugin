@@ -1,6 +1,7 @@
 package aldor.expression;
 
 import aldor.parser.ParserFunctions;
+import aldor.test_util.AssumptionAware;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.ParserDefinition;
 import com.intellij.lang.PsiBuilder;
@@ -16,8 +17,9 @@ import org.junit.Assert;
 import java.util.List;
 
 import static aldor.psi.AldorPsiUtils.logPsi;
+import static com.intellij.ide.lightEdit.LightEditUtil.getProject;
 
-public class ExpressionTest extends LightPlatformCodeInsightTestCase {
+public class ExpressionTest extends AssumptionAware.LightPlatformCodeInsightTestCase {
 
     //{setLogToDebug();}
 

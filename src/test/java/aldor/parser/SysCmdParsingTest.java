@@ -3,6 +3,7 @@ package aldor.parser;
 import aldor.lexer.AldorTokenTypes;
 import aldor.lexer.LexerFunctions;
 import aldor.psi.elements.AldorTypes;
+import aldor.test_util.AssumptionAware;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.PsiFile;
@@ -16,7 +17,7 @@ import java.util.stream.Collectors;
 import static aldor.lexer.LexMode.Spad;
 import static aldor.psi.AldorPsiUtils.logPsi;
 
-public class SysCmdParsingTest extends LightPlatformCodeInsightTestCase {
+public class SysCmdParsingTest extends AssumptionAware.LightPlatformCodeInsightTestCase {
 
     public void testAbbrev() {
         //PsiFile file = createFile("foo.spad", ")abbrev Foo Foo Foo Foo\nFoo==2");

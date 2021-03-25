@@ -156,8 +156,9 @@ public final class SdkProjectDescriptors {
         }
     }
 
-    public static LightProjectDescriptor fricasSdkProjectDescriptor(String prefix) {
-        return instance.getProjectDescriptor(SdkOption.Fricas, prefix);
+    public static LightProjectDescriptor fricasSdkProjectDescriptor(DirectoryPresentRule prefix) {
+        Assume.assumeTrue(prefix.isPresent());
+        return instance.getProjectDescriptor(SdkOption.Fricas, prefix.path());
     }
 
     public static LightProjectDescriptor fricasSdkProjectDescriptor(ExecutablePresentRule rule) {
@@ -171,6 +172,7 @@ public final class SdkProjectDescriptors {
 
     public static LightProjectDescriptor aldorSdkProjectDescriptor(ExecutablePresentRule rule) {
         Assume.assumeTrue(rule.shouldRunTest());
+        Assume.assumeTrue(false);
         return instance.getProjectDescriptor(SdkOption.Aldor, rule.prefix());
     }
 

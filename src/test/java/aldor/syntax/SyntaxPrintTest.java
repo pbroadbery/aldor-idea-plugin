@@ -1,6 +1,7 @@
 package aldor.syntax;
 
 import aldor.parser.ParserFunctions;
+import aldor.test_util.AssumptionAware;
 import com.intellij.psi.PsiElement;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
@@ -12,7 +13,7 @@ import java.io.StringWriter;
 
 import static aldor.syntax.SyntaxPsiParser.parse;
 
-public class SyntaxPrintTest extends BasePlatformTestCase {
+public class SyntaxPrintTest extends AssumptionAware.BasePlatformTestCase {
 
     public void testApplyId() {
         Assert.assertEquals("f", parseAndPrint("f"));

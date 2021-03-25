@@ -3,6 +3,7 @@ package aldor.runconfiguration.aldor;
 import aldor.psi.AldorExportDecl;
 import aldor.psi.AldorWith;
 import aldor.runconfiguration.MyMapDataContext;
+import aldor.test_util.AssumptionAware;
 import aldor.test_util.DirectoryPresentRule;
 import aldor.test_util.JUnits;
 import aldor.test_util.SdkProjectDescriptors;
@@ -35,7 +36,7 @@ import java.util.Objects;
 import static aldor.util.VirtualFileTests.createFile;
 import static com.intellij.testFramework.LightPlatformTestCase.getSourceRoot;
 
-public class AldorUnitConfigurationProducerTest extends BasePlatformTestCase {
+public class AldorUnitConfigurationProducerTest extends AssumptionAware.BasePlatformTestCase {
 
     @Rule
     private final DirectoryPresentRule directory = new DirectoryPresentRule("/home/pab/Work/aldorgit/opt");

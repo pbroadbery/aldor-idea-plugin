@@ -3,6 +3,7 @@ package aldor.editor;
 import aldor.language.SpadLanguage;
 import aldor.psi.AldorDefine;
 import aldor.psi.AldorPsiUtils;
+import aldor.test_util.AssumptionAware;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -12,7 +13,7 @@ import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCa
 import com.intellij.ui.breadcrumbs.BreadcrumbsProvider;
 import org.junit.Assert;
 
-public class SpadBreadcrumbsProviderTest extends BasePlatformTestCase {
+public class SpadBreadcrumbsProviderTest extends AssumptionAware.BasePlatformTestCase {
 
     public void testReference() {
         String text =

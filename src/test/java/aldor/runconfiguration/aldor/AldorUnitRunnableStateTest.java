@@ -4,6 +4,7 @@ import aldor.build.builders.AldorJarOnlyScope;
 import aldor.psi.AldorWith;
 import aldor.runconfiguration.MyMapDataContext;
 import aldor.symbolfile.AnnotationFileTestFixture;
+import aldor.test_util.AssumptionAware;
 import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.JUnits;
 import aldor.test_util.SdkProjectDescriptors;
@@ -32,7 +33,7 @@ import static aldor.test_util.JUnits.JpsDebuggingState.OFF;
 import static aldor.util.VirtualFileTests.createFile;
 import static com.intellij.testFramework.LightPlatformTestCase.getSourceRoot;
 
-public class AldorUnitRunnableStateTest extends BasePlatformTestCase {
+public class AldorUnitRunnableStateTest extends AssumptionAware.BasePlatformTestCase {
     private static final Logger LOG = Logger.getInstance(AldorUnitRunnableStateTest.class);
 
     private final AnnotationFileTestFixture annotationFileTestFixture = new AnnotationFileTestFixture();
