@@ -46,7 +46,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: plugin
-        path: build/distribution/*.zip
+        path: build/distributions/*.zip
         retention-days: 1
 
   upload_release:
