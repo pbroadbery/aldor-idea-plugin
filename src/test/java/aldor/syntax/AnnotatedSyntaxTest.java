@@ -1,6 +1,7 @@
 package aldor.syntax;
 
 import aldor.parser.ParserFunctions;
+import aldor.test_util.AssumptionAware;
 import aldor.test_util.DirectoryPresentRule;
 import aldor.test_util.Timer;
 import aldor.typelib.AnnotatedAbSyn;
@@ -24,7 +25,7 @@ import static aldor.syntax.AnnotatedSyntax.fromSyntax;
 import static aldor.syntax.AnnotatedSyntax.toSyntax;
 import static aldor.syntax.SyntaxPsiParser.parse;
 
-public class AnnotatedSyntaxTest extends BasePlatformTestCase {
+public class AnnotatedSyntaxTest extends AssumptionAware.BasePlatformTestCase {
     private final DirectoryPresentRule rule = new DirectoryPresentRule("/home/pab/Work/fricas/opt/lib/fricas/target/x86_64-linux-gnu/algebra");
     private AxiomInterface iface = null;
 

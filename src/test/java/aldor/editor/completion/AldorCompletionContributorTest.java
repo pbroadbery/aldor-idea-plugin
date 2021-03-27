@@ -4,6 +4,7 @@ import aldor.build.facet.fricas.FricasFacet;
 import aldor.sdk.SdkTypes;
 import aldor.spad.FricasSpadLibraryBuilder;
 import aldor.spad.SpadLibrary;
+import aldor.test_util.AssumptionAware;
 import aldor.test_util.DirectoryPresentRule;
 import aldor.test_util.SdkProjectDescriptors;
 import aldor.test_util.Timer;
@@ -19,7 +20,7 @@ import org.junit.Assume;
 
 import java.util.List;
 
-public class AldorCompletionContributorTest extends BasePlatformTestCase {
+public class AldorCompletionContributorTest extends AssumptionAware.BasePlatformTestCase {
 
     private final DirectoryPresentRule directory = new DirectoryPresentRule("/home/pab/Work/fricas/opt/lib/fricas/target/x86_64-linux-gnu");
 
@@ -66,7 +67,7 @@ public class AldorCompletionContributorTest extends BasePlatformTestCase {
 
     @Override
     protected LightProjectDescriptor getProjectDescriptor() {
-        return SdkProjectDescriptors.fricasSdkProjectDescriptor(directory.path());
+        return SdkProjectDescriptors.fricasSdkProjectDescriptor(directory);
     }
 
 }

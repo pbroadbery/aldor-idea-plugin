@@ -1,5 +1,6 @@
 package aldor.editor.finder;
 
+import aldor.test_util.AssumptionAware;
 import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.SdkProjectDescriptors;
 import aldor.util.VirtualFileTests;
@@ -16,7 +17,7 @@ import org.junit.Assert;
 import static aldor.util.VirtualFileTests.createFile;
 import static com.intellij.testFramework.LightPlatformTestCase.getSourceRoot;
 
-public class AldorGotoClassContributorTest extends BasePlatformTestCase {
+public class AldorGotoClassContributorTest extends AssumptionAware.BasePlatformTestCase {
 
 
     public void testGotoClass() {

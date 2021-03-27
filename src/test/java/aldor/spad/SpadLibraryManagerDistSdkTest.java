@@ -1,5 +1,6 @@
 package aldor.spad;
 
+import aldor.test_util.AssumptionAware;
 import aldor.test_util.DirectoryPresentRule;
 import aldor.test_util.JUnits;
 import aldor.test_util.LightPlatformJUnit4TestRule;
@@ -18,7 +19,7 @@ public class SpadLibraryManagerDistSdkTest extends SpadLibraryManagerTestCase {
     @Rule
     public final DirectoryPresentRule directory = new DirectoryPresentRule("/home/pab/Work/fricas/opt/lib/fricas/target/x86_64-linux-gnu");
 
-    private final CodeInsightTestFixture testFixture = createFixture(fricasSdkProjectDescriptor(directory.path()));
+    private final CodeInsightTestFixture testFixture = createFixture(fricasSdkProjectDescriptor(directory));
 
     @Rule
     public final TestRule platformTestRule =

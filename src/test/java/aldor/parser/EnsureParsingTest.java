@@ -4,6 +4,7 @@ import aldor.psi.AldorDefine;
 import aldor.psi.AldorPsiUtils;
 import aldor.psi.AldorRecursiveVisitor;
 import aldor.psi.elements.AldorTypes;
+import aldor.test_util.AssumptionAware;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.ParserDefinition;
 import com.intellij.lang.PsiBuilder;
@@ -32,7 +33,7 @@ import static aldor.psi.AldorPsiUtils.logPsi;
  * Lexer Test. Created by pab on 30/08/16.
  */
 @SuppressWarnings({"HardCodedStringLiteral", "ClassWithTooManyMethods"})
-public class EnsureParsingTest extends BasePlatformTestCase {
+public class EnsureParsingTest extends AssumptionAware.BasePlatformTestCase {
 
     @Override
     protected LightProjectDescriptor getProjectDescriptor() {

@@ -3,6 +3,7 @@ package aldor.editor;
 import aldor.file.AldorFileType;
 import aldor.parser.ParserFunctions;
 import aldor.psi.AldorDefine;
+import aldor.test_util.AssumptionAware;
 import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.SdkProjectDescriptors;
 import com.intellij.codeInsight.lookup.LookupElement;
@@ -14,9 +15,8 @@ import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import org.junit.Assert;
 
-public class AldorLookupElementFactoryTest extends BasePlatformTestCase {
+public class AldorLookupElementFactoryTest extends AssumptionAware.BasePlatformTestCase {
     private final PsiElementToLookupElementMapping factory = new AldorLookupElementFactory();
-
     public void testDefine() {
         String text = "foo(x: A): B == 2";
         PsiFile file = createLightFile(AldorFileType.INSTANCE, text);

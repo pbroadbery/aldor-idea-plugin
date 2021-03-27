@@ -3,6 +3,7 @@ package aldor.build.facet.fricas;
 import aldor.build.facet.aldor.AldorFacetConfiguration;
 import aldor.build.facet.aldor.AldorFacetEditorForm;
 import aldor.build.facet.aldor.AldorFacetType;
+import aldor.test_util.AssumptionAware;
 import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.JUnits;
 import aldor.test_util.SdkProjectDescriptors;
@@ -19,7 +20,7 @@ import org.junit.Assert;
 
 import static org.junit.Assert.*;
 
-public class FricasFacetEditorFormTest extends LightIdeaTestCase {
+public class FricasFacetEditorFormTest extends AssumptionAware.LightIdeaTestCase {
     Runnable cleanup = () -> {};
 
     @Override

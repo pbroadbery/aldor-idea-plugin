@@ -1,6 +1,7 @@
 package aldor.parser;
 
 import aldor.psi.AldorId;
+import aldor.test_util.AssumptionAware;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.testFramework.LightProjectDescriptor;
@@ -12,7 +13,7 @@ import static aldor.psi.AldorPsiUtils.logPsi;
 /**
  * Statements have lots of special cases.. Let's try to catch some of them.
  */
-public class ParseStatementsTest extends LightPlatformCodeInsightFixtureTestCase {
+public class ParseStatementsTest extends AssumptionAware.LightPlatformCodeInsightFixtureTestCase {
 
     public void testNormalStatementSequence() {
         PsiElement psi = parseText("a;b;c");

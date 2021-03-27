@@ -115,6 +115,6 @@ public class JpsAldorModuleTypeTest {
         File dir = JpsAldorModuleType.INSTANCE.buildDirectory(properties, contentRoot, sourceRoot, sourceFile);
         String tgt = JpsAldorModuleType.INSTANCE.targetName(properties, sourceRoot, sourceFile);
         assertEquals("/tmp/myproject", dir.toString());
-        assertEquals("out/ao/foo.ao", tgt);
+        assertEquals("foo.ao", tgt);
     }
 }

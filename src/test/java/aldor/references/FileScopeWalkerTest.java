@@ -1,6 +1,7 @@
 package aldor.references;
 
 import aldor.psi.AldorId;
+import aldor.test_util.AssumptionAware;
 import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.SdkProjectDescriptors;
 import aldor.util.VirtualFileTests;
@@ -34,7 +35,7 @@ import static aldor.util.sexpr.SExpressions.list;
 
 @SuppressWarnings("MagicNumber")
 @Ignore("Too much hardcoding.. maybe the round trip tests are better")
-public class FileScopeWalkerTest extends BasePlatformTestCase {
+public class FileScopeWalkerTest extends AssumptionAware.BasePlatformTestCase {
 
     @Override
     public void setUp() throws Exception {

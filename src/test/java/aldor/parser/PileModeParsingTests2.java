@@ -2,6 +2,7 @@ package aldor.parser;
 
 import aldor.lexer.LexerFunctions;
 import aldor.psi.elements.AldorTypes;
+import aldor.test_util.AssumptionAware;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.tree.IElementType;
@@ -13,7 +14,7 @@ import java.util.List;
 
 import static aldor.psi.AldorPsiUtils.logPsi;
 
-public class PileModeParsingTests2 extends LightPlatformTestCase {
+public class PileModeParsingTests2 extends AssumptionAware.LightPlatformTestCase {
 
     public void testPiledOne() {
         final List<PsiErrorElement> errors = parseForErrors(AldorTypes.TOP_LEVEL, "#pile\nA\n");

@@ -1,6 +1,7 @@
 package aldor.references;
 
 import aldor.psi.AldorId;
+import aldor.test_util.AssumptionAware;
 import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.JUnits;
 import aldor.test_util.SdkProjectDescriptors;
@@ -21,7 +22,7 @@ import org.junit.Assert;
 
 import static com.intellij.testFramework.LightPlatformTestCase.getSourceRoot;
 
-public class SpadLibraryRefTest extends BasePlatformTestCase {
+public class SpadLibraryRefTest extends AssumptionAware.BasePlatformTestCase {
     private final ExecutablePresentRule fricasExecutableRule = new ExecutablePresentRule.Fricas();
 
     public void testReference() {
@@ -56,7 +57,7 @@ public class SpadLibraryRefTest extends BasePlatformTestCase {
 
     @Override
     protected LightProjectDescriptor getProjectDescriptor() {
-        return SdkProjectDescriptors.fricasSdkProjectDescriptor(fricasExecutableRule.prefix());
+        return SdkProjectDescriptors.fricasSdkProjectDescriptor(fricasExecutableRule);
     }
 
     }

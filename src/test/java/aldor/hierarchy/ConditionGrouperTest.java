@@ -57,7 +57,7 @@ public class ConditionGrouperTest {
     }
 
     private static LightProjectDescriptor getProjectDescriptor(ExecutablePresentRule fricasExecutableRule) {
-        return SdkProjectDescriptors.fricasSdkProjectDescriptor(fricasExecutableRule.prefix());
+        return SdkProjectDescriptors.fricasSdkProjectDescriptor(fricasExecutableRule);
 
     }
 

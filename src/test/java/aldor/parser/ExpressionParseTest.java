@@ -1,5 +1,6 @@
 package aldor.parser;
 
+import aldor.test_util.AssumptionAware;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;
 import com.intellij.testFramework.LightProjectDescriptor;
@@ -10,7 +11,7 @@ import java.util.List;
 
 import static aldor.psi.AldorPsiUtils.logPsi;
 
-public class ExpressionParseTest extends LightPlatformCodeInsightFixtureTestCase {
+public class ExpressionParseTest extends AssumptionAware.LightPlatformCodeInsightFixtureTestCase {
 
     public void testParseFunctionCall() {
         String text = "f g x";

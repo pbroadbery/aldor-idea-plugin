@@ -4,6 +4,7 @@ import aldor.language.AldorLanguage;
 import aldor.language.SpadLanguage;
 import aldor.psi.AldorE6;
 import aldor.psi.AldorIdentifier;
+import aldor.test_util.AssumptionAware;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.intellij.lang.Language;
@@ -22,7 +23,7 @@ import java.util.Set;
 
 import static aldor.psi.AldorPsiUtils.logPsi;
 
-public class AldorRefLookupTest extends BasePlatformTestCase {
+public class AldorRefLookupTest extends AssumptionAware.BasePlatformTestCase {
 
     public void testReference() {
         PsiElement whole = createAldorFile("f(n: Integer): Integer == n+1");

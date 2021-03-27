@@ -1,5 +1,6 @@
 package aldor.jps;
 
+import aldor.test_util.AssumptionAware;
 import com.intellij.openapi.diagnostic.Logger;
 import org.junit.Assert;
 

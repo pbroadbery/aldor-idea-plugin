@@ -2,6 +2,7 @@ package aldor.editor;
 
 import aldor.language.AldorLanguage;
 import aldor.psi.AldorDefine;
+import aldor.test_util.AssumptionAware;
 import com.intellij.lang.Language;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -11,7 +12,7 @@ import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCa
 import com.intellij.ui.breadcrumbs.BreadcrumbsProvider;
 import org.junit.Assert;
 
-public class AldorBreadcrumbsProviderTest extends BasePlatformTestCase {
+public class AldorBreadcrumbsProviderTest extends AssumptionAware.BasePlatformTestCase {
 
     public void testReference() {
         PsiElement whole = createAldorFile("Foo: with == add { a == 1 }");

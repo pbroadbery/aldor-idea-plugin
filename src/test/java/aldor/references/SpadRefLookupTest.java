@@ -3,6 +3,7 @@ package aldor.references;
 import aldor.language.SpadLanguage;
 import aldor.psi.AldorIdentifier;
 import aldor.psi.SpadBinaryOp;
+import aldor.test_util.AssumptionAware;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -11,7 +12,7 @@ import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import org.junit.Assert;
 
-public class SpadRefLookupTest extends BasePlatformTestCase {
+public class SpadRefLookupTest extends AssumptionAware.BasePlatformTestCase {
 
 
     public void testReference() {

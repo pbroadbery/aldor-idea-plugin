@@ -1,6 +1,7 @@
 package aldor.parser;
 
 import aldor.psi.elements.AldorTypes;
+import aldor.test_util.AssumptionAware;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.tree.IElementType;
@@ -9,7 +10,7 @@ import org.junit.Assert;
 
 import java.util.List;
 
-public class TopLevelParseTest extends LightPlatformCodeInsightTestCase {
+public class TopLevelParseTest extends AssumptionAware.LightPlatformCodeInsightTestCase {
 
     public void testTopLevelStd() {
         PsiElement psi = parseText("Foo: with == add\nQQQ: Category == with\n");

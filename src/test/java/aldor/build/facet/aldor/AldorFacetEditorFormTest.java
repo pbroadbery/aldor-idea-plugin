@@ -1,6 +1,7 @@
 package aldor.build.facet.aldor;
 
 import aldor.builder.jps.AldorModuleExtensionProperties;
+import aldor.test_util.AssumptionAware;
 import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.FormHelper;
 import aldor.test_util.JUnits;
@@ -24,7 +25,7 @@ import javax.swing.JCheckBox;
 import java.util.Objects;
 import java.util.Optional;
 
-public class AldorFacetEditorFormTest extends LightIdeaTestCase {
+public class AldorFacetEditorFormTest extends AssumptionAware.LightIdeaTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();

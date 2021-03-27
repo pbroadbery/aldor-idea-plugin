@@ -3,6 +3,7 @@ package aldor.references;
 import aldor.language.AldorLanguage;
 import aldor.language.SpadLanguage;
 import aldor.psi.AldorIdentifier;
+import aldor.test_util.AssumptionAware;
 import aldor.test_util.JUnits;
 import com.google.common.collect.Sets;
 import com.intellij.codeInsight.lookup.LookupElement;
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
 
 import static aldor.psi.AldorPsiUtils.logPsi;
 
-public class VariantScopeTest extends BasePlatformTestCase {
+public class VariantScopeTest extends AssumptionAware.BasePlatformTestCase {
 
     public void testFunctionReference() {
         PsiFile whole = createAldorFile("f(n: Integer, m: Integer): Integer == n+1");

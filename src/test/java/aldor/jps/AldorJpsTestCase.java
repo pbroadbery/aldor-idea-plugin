@@ -21,6 +21,7 @@ import aldor.builder.jps.JpsAldorMakeDirectoryOption;
 import aldor.builder.jps.JpsAldorModelSerializerExtension;
 import aldor.builder.jps.JpsAldorModuleExtension;
 import aldor.builder.jps.JpsAldorModuleType;
+import aldor.test_util.AssumptionAware;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileSystemUtil;
 import com.intellij.openapi.util.io.FileUtil;
@@ -74,7 +75,7 @@ import java.util.Map;
 
 import static org.apache.log4j.Level.DEBUG;
 
-public abstract class AldorJpsTestCase extends UsefulTestCase {
+public abstract class AldorJpsTestCase extends AssumptionAware.UsefulTestCase {
     static {
         LogManager.resetConfiguration();
         Appender appender = new ConsoleAppender(new PatternLayout(PatternLayout.TTCC_CONVERSION_PATTERN));
