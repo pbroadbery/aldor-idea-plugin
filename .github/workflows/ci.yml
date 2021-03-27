@@ -30,7 +30,7 @@ jobs:
     - name: Check version
       run: ./gradlew --version
     - name: Build
-      run: ./gradlew assemble -Daldor.plugin.release=${{ RELEASE }}
+      run: ./gradlew assemble -Daldor.plugin.release=${{ env.RELEASE }}
 
     - name: Test
       run: ./gradlew check -Daldor.build.skip_ci=true --continue
@@ -57,6 +57,7 @@ jobs:
     steps:
       - name: Set Version
         run: |
+          set -x
           RELEASE="${GITHUB_REF/refs\/tags\/release-}"
           echo "RELEASE=$RELEASE" >> $GITHUB_ENV
 
