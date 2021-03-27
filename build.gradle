@@ -32,7 +32,7 @@ wrapper {
     gradleVersion='5.6.4'
 }
 
-def isRelease = System.getProperty('aldor.plugin.release')
+def isRelease = System.getProperty('aldor.plugin.release', 'false')
 
 List libFiles = ["aldor", "algebra", "foam", "foamj", "SpadType"]
 def libSource = "/home/pab/Work/IdeaProjects/type-library/aldor-types/types/index/out/jar"
@@ -166,8 +166,6 @@ task generateLexer1(type: JavaExec) {
 
         main = 'jflex.Main'
         classpath = files('lib/jflex/jflex-1.7.0-SNAPSHOT.jar')
-
-        args = ['--skel', 'lib/jflex/idea-flex.skeleton', '-d', "${dstRoot}/${pkg}" , file(src)]
 
         inputs.files files(['lib/jflex/jflex-1.7.0-SNAPSHOT.jar', 'lib/jflex/idea-flex.skeleton', src])
         outputs.files fileTree("${dst}").include('**/*.java')

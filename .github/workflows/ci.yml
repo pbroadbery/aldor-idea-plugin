@@ -1,6 +1,6 @@
 name: Java CI
 
-on: [push]
+on: [push, pull_request]
 
 env:
   GITHUB_REF: ${{ github.ref }}
@@ -17,6 +17,12 @@ jobs:
       with:
         java-version: 11
 
+    - name: Check tag
+      run: |
+        if [[ $GITHUB_REF =~ ^refs/tags/release-.*$ ]];
+	then
+          RELEASE=true
+	fi
     - name: Create mini-script
       run: echo "wrapper {gradleVersion='5.2.1'}" > nada.gradle
     - name: Create Wrapper
@@ -24,7 +30,7 @@ jobs:
     - name: Check version
       run: ./gradlew --version
     - name: Build
-      run: ./gradlew assemble
+      run: ./gradlew assemble -Daldor.plugin.release=${{ RELEASE }}
 
     - name: Test
       run: ./gradlew check -Daldor.build.skip_ci=true --continue
@@ -35,3 +41,52 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         report_paths: '**/test-results/test/TEST-*.xml'
+    
+    - name: Publish build artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: plugin
+        path: build/distribution/*.zip
+        retention-days: 1
+
+  upload_release:
+    runs-on: ubuntu-latest
+    if: contains(github.ref, 'refs/tags/release-')
+    needs: [build]
+
+    steps:
+      - name: Set Version
+        run: |
+          RELEASE="${GITHUB_REF/refs\/tags\/release-}"
+          echo "RELEASE=$RELEASE" >> $GITHUB_ENV
+
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: plugin
+          path: plugin
+
+      - name: Check ${{ env.RELEASE }}
+        run: |
+          set -x
+	  find .
+          if [ -f "plugin/aldor-idea-$RELEASE.zip" ]; then OK_RELEASE=OK; fi
+          echo "OK_RELEASE=$OK_RELEASE" >> $GITHUB_ENV
+
+      - name: Release ${{ env.RELEASE }}
+        if: ${{ env.OK_RELEASE == 'OK' }}
+        uses: ncipollo/release-action@v1
+        with:
+          token: ${{ secrets.RELEASETOKEN }}
+          name: Release ${{ env.RELEASE }}
+          allowUpdates: true
+          prerelease: true
+          artifacts: ${{ format('plugin/aldor-idea-{0}.zip', env.RELEASE) }}
+
+      - name: Incorrect Tag supplied
+        if: ${{ env.OK_RELEASE != 'OK' }}
+        run: |
+          echo "Unexpected release $RELEASE"
+          ls plugin
+          false
+
