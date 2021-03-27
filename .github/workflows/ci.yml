@@ -20,9 +20,9 @@ jobs:
     - name: Check tag
       run: |
         if [[ $GITHUB_REF =~ ^refs/tags/release-.*$ ]];
-	then
+        then
           RELEASE=true
-	fi
+        fi
     - name: Create mini-script
       run: echo "wrapper {gradleVersion='5.2.1'}" > nada.gradle
     - name: Create Wrapper
@@ -69,7 +69,7 @@ jobs:
       - name: Check ${{ env.RELEASE }}
         run: |
           set -x
-	  find .
+          find .
           if [ -f "plugin/aldor-idea-$RELEASE.zip" ]; then OK_RELEASE=OK; fi
           echo "OK_RELEASE=$OK_RELEASE" >> $GITHUB_ENV
 
