@@ -19,10 +19,13 @@ jobs:
 
     - name: Check tag
       run: |
+        set -x
+        RELEASE=false
         if [[ $GITHUB_REF =~ ^refs/tags/release-.*$ ]];
         then
           RELEASE=true
         fi
+        echo "RELEASE=$RELEASE" >> $GITHUB_ENV
     - name: Create mini-script
       run: echo "wrapper {gradleVersion='5.2.1'}" > nada.gradle
     - name: Create Wrapper
