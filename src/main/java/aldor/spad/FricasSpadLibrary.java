@@ -25,13 +25,11 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileContentsChangedAdapter;
 import com.intellij.openapi.vfs.VirtualFileListener;
 import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import org.jetbrains.annotations.NotNull;
@@ -138,7 +136,7 @@ public class FricasSpadLibrary implements SpadLibrary, Disposable {
                 types.stream().map(te -> new ParentType(toSyntax(project, scope, TypePackage.asAbSyn(iface.env(), te.type())),
                                                         te.condition().isNone() ? null : toSyntax(project, scope, te.condition()), null))
                         .collect(Collectors.toList()),
-                sigs.stream().map(ne ->  createOperation(iface, syntax, ne)).collect(Collectors.toList())
+                sigs.stream().map(ne ->  createOperation(iface, ne)).collect(Collectors.toList())
         );
 
     }
@@ -200,20 +198,23 @@ public class FricasSpadLibrary implements SpadLibrary, Disposable {
         AnnotatedAbSyn absyn = fromSyntax(env, source);
         Collection<NamedExport> operations = iface.directOperations(absyn);
 
-        return operations.stream().map(namedExport -> createOperation(iface, source, namedExport))
+        return operations.stream().map(namedExport -> createOperation(iface, namedExport))
                 .peek(op -> LOG.info("Found operation " + op + " from " + source + " decl " + op.declaration()))
                 .collect(Collectors.toList());
     }
 
     @NotNull
-    private Operation createOperation(AxiomInterface iface, Syntax source, NamedExport namedExport) {
+    private Operation createOperation(AxiomInterface iface, NamedExport namedExport) {
         try {
+            Syntax exportForm = null;
+            if (TfGeneral.isGeneral(namedExport.exporter())) {
+                exportForm = toSyntax(project, scope, TfGeneral.coerce(namedExport.exporter()).syntax());
+            }
             return new Operation(namedExport.name().name(),
                     toSyntax(project, scope, TypePackage.asAbSyn(iface.env(), namedExport.type())),
                     namedExport.condition().isNone() ? null : toSyntax(project, scope, namedExport.condition()),
-                    source,
-                    declarationFor(iface, source, namedExport),
-                    containingForm(SyntaxUtils.leadingId(source)));
+                    declarationFor(iface, exportForm, namedExport),
+                    containingForm(SyntaxUtils.leadingId(exportForm)));
         }
         catch (RuntimeException e) {
             throw new FricasSpadLibraryException("Creating operation: " + namedExport.name() + " " + namedExport.type(), e);
@@ -227,7 +228,6 @@ public class FricasSpadLibrary implements SpadLibrary, Disposable {
         if (exportingDefinition == null) {
             return null;
         }
-        PsiElement implementation = exportingDefinition.implementation();
         throw new RuntimeException("to be continued");
     }
 

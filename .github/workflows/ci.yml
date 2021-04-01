@@ -19,7 +19,6 @@ jobs:
 
     - name: Check tag
       run: |
-        set -x
         RELEASE=false
         if [[ $GITHUB_REF =~ ^refs/tags/release-.*$ ]];
         then

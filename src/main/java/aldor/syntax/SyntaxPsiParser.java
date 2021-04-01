@@ -47,7 +47,6 @@ import com.google.common.collect.Lists;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -355,11 +354,6 @@ public final class SyntaxPsiParser {
 
         @Override
         public void visitUnaryWithExpr(@NotNull AldorUnaryWithExpr o) {
-            parentParts().add(new With(o));
-        }
-
-        @Override
-        public void visitWith(@NotNull AldorWith o) {
             parentParts().add(new With(o));
         }
 

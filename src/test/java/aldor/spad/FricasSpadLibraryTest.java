@@ -14,8 +14,6 @@ import aldor.test_util.DirectoryPresentRule;
 import aldor.test_util.JUnits;
 import aldor.test_util.LightPlatformJUnit4TestRule;
 import aldor.test_util.SkipCI;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.Pair;
@@ -24,7 +22,6 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.testFramework.fixtures.CodeInsightTestFixture;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -260,6 +257,25 @@ public class FricasSpadLibraryTest {
         List<SpadLibrary.ParentType> parents = allparents.first;
         List<SpadLibrary.Operation> operations = allparents.second;
     }
+
+    @Test
+    @SkipCI
+    public void testAbelianGroup() {
+        FricasSpadLibrary lib = new FricasSpadLibraryBuilder()
+                .project(testFixture.getProject())
+                .daaseDirectory(projectSdkAlgebraDirectory())
+                .createFricasSpadLibrary();
+
+        Syntax syntax = ParserFunctions.parseToSyntax(testFixture.getProject(), "AbelianGroup");
+        Pair<List<SpadLibrary.ParentType>, List<SpadLibrary.Operation>> allparents = lib.allParents(syntax);
+        List<SpadLibrary.ParentType> parents = allparents.first;
+        List<SpadLibrary.Operation> operations = allparents.second;
+
+        parents.forEach(p -> System.out.println("parent " + p.type() + " " + p.exporter()));
+        operations.forEach(op -> System.out.println("operation " + op.name() + ": " + op.type() + "\t\t" +
+                op.containingForm().getText().substring(0, 20)));
+    }
+
 
     @Test
     @SkipCI

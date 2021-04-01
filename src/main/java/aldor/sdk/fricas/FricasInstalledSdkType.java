@@ -38,6 +38,7 @@ public class FricasInstalledSdkType extends SdkType implements FricasSdkType, Ax
             "/usr/lib/fricas/target/",
             "/opt/lib/fricas/target/"
     };
+
     private static final String[] directPaths = {
             "C:/Fricas/"
     };
@@ -47,11 +48,11 @@ public class FricasInstalledSdkType extends SdkType implements FricasSdkType, Ax
     private static final Set<OrderRootType> applicableRootTypes = Collections.singleton(OrderRootType.SOURCES);
 
     private static final FricasInstalledSdkType instance = new FricasInstalledSdkType();
+
     @Contract(pure = true)
     public static FricasInstalledSdkType instance() {
         return instance;
     }
-
 
     public FricasInstalledSdkType() {
         super("Fricas SDK");
@@ -84,6 +85,11 @@ public class FricasInstalledSdkType extends SdkType implements FricasSdkType, Ax
         return Arrays.stream(homeBasePaths).map(File::new).filter(File::exists).map(File::listFiles).flatMap(Arrays::stream)
                 .filter(isValidSdkHome)
                 .map(File::getAbsolutePath);
+    }
+
+    @Override
+    public @Nullable String fricasPath(Sdk sdk) {
+        return versionQuery.fricasPath(sdk.getHomePath());
     }
 
     @Override
@@ -164,12 +170,6 @@ public class FricasInstalledSdkType extends SdkType implements FricasSdkType, Ax
         File algebraPath = new File(fricasHome.getAbsolutePath() + "/src");
         VirtualFile root = LocalFileSystem.getInstance().findFileByPath(algebraPath.getAbsolutePath());
         return Collections.singletonList(root);
-    }
-
-    @Override
-    @Nullable
-    public String fricasPath(Sdk sdk) {
-        return sdk.getHomePath() + "/bin/fricas";
     }
 
     @Override

@@ -40,7 +40,7 @@ class FricasSimpleModuleBuilder extends AldorModuleBuilder {
                                             Collections.singleton(FricasInstalledSdkType.instance())));
         fields.add(new WizardFieldDocumentation(SELECTED_SDK_NAME_ID + "DOC",
                 "This is the location of your FriCAS home directory." +
-                        "  Typically something like /usr/lib/fricas/target/x86_64-linux-gnu." +
+                        "  Typically something like /usr/lib/fricas/target/x86_64-linux-gnu. " +
                         "Selecting the '+ Add FriCAS SDK' option in the drop down will let you add a new location."));
     }
 

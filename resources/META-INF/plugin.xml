@@ -3,7 +3,7 @@
     <id>pab.aldor</id>
     <name>AldorAndSpad</name>
     <version>1.1</version>
-    <vendor email="p.broadbery@gmail.com" url="http://www.notreally.org">Peter Broadbery</vendor>
+    <vendor email="p.broadbery@gmail.com" url="http://www.github.com/pbroadbery">Peter Broadbery</vendor>
 
     <description><![CDATA[
       Aldor/Spad plugin - Provides editing facilities for Aldor and SPAD programs.
@@ -13,7 +13,7 @@
       This version provides more features
       - running SPAD and .input files
       - full edit support
-      - limited suport for SPAD type hierarchies
+      - limited support for SPAD type hierarchies
     ]]>
     </change-notes>
 
@@ -88,11 +88,19 @@
         <!-- Aldor extras -->
         <lang.refactoringSupport language="Aldor" implementationClass="aldor.references.AldorRefactoringSupportProvider"/>
         <documentationProvider implementation="aldor.editor.documentation.AldorDocumentationProvider"/>
-        <fileTypeFactory implementation="aldor.file.AldorFileTypeFactory"/>
+        <!-- <fileTypeFactory implementation="aldor.file.AldorFileTypeFactory"/> deprecated -->
+
+        <fileType name="Aldor"
+                  fieldName="INSTANCE"
+                  extensions="as" language="Aldor"
+                  implementationClass="aldor.file.AldorFileType"/>
+        <!--<fileType name="Spad" implementationClass="aldor.file.SpadFileType"/>
+        <fileType name="SpadInput" implementationClass="aldor.file.SpadInputFileType"/>
+-->
         <lang.parserDefinition language="Aldor" implementationClass="aldor.parser.AldorParserDefinition"/>
 
         <facetType implementation="aldor.build.facet.aldor.AldorFacetType"/>
-        <library.type implementation="aldor.library.AldorLibraryType"/>
+        <!-- <library.type implementation="aldor.library.AldorLibraryType"/> -->
         <sdkType implementation="aldor.sdk.aldor.AldorInstalledSdkType"/>
         <sdkType implementation="aldor.sdk.aldor.AldorLocalSdkType"/>
 
@@ -107,7 +115,7 @@
 
         <!-- Spad extras -->
         <facetType implementation="aldor.build.facet.fricas.FricasFacetType"/>
-        <fileTypeFactory implementation="aldor.file.SpadFileTypeFactory"/>
+        <!--<fileTypeFactory implementation="aldor.file.SpadFileTypeFactory"/> deprecated -->
         <lang.parserDefinition language="Spad" implementationClass="aldor.parser.SpadParserDefinition"/>
         <stubIndex implementation="aldor.psi.index.AbbrevNameIndex"/>
         <stubIndex implementation="aldor.psi.index.AbbrevAbbrevIndex"/>
@@ -122,7 +130,8 @@
 
 
         <!-- Test language -->
-        <fileTypeFactory implementation="aldor.expression.ExpressionFileTypeFactory"/>
+    <!--  <fileTypeFactory implementation="aldor.expression.ExpressionFileTypeFactory"/> deprecated -->
+        <!--<fileType name="expr" implementationClass="aldor.expression.ExpressionFileType"/>-->
         <lang.parserDefinition language="Expression" implementationClass="aldor.expression.ExpressionParserDefinition"/>
         <stubElementTypeHolder class="aldor.expression.ExpressionTypes"/>
         <stubIndex implementation="aldor.expression.ExpressionDefineStubIndex"/>

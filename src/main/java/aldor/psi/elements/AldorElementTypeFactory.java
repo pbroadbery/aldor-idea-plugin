@@ -2,6 +2,7 @@ package aldor.psi.elements;
 
 import aldor.language.AldorLanguage;
 import aldor.language.SpadLanguage;
+import aldor.psi.AldorUnaryAdd;
 import aldor.psi.AldorWhereBlock;
 import aldor.psi.AldorWith;
 import aldor.psi.impl.AldorBinaryWithExprImpl;
@@ -19,6 +20,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.stubs.EmptyStub;
 import com.intellij.psi.stubs.PsiFileStub;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.IStubFileElementType;
@@ -54,12 +56,11 @@ public class AldorElementTypeFactory {
         factoryForName.put("ALDOR_FILE", ALDOR_FILE_ELEMENT_TYPE);
         factoryForName.put("SPAD_FILE", SPAD_FILE_ELEMENT_TYPE);
         factoryForName.put("WHERE_BLOCK", new EmptyStubElementType<AldorWhereBlock>("Where", AldorLanguage.INSTANCE, AldorWhereBlockImpl::new));
-        factoryForName.put("UNARY_ADD", new EmptyStubElementType<>("UnaryAdd", AldorLanguage.INSTANCE, AldorUnaryAddImpl::new));
 
         factoryForName.put("UNARY_WITH", new EmptyStubElementType<AldorWith>("WithPart", AldorLanguage.INSTANCE, AldorUnaryWithImpl::new));
         factoryForName.put("WITH_PART", new EmptyStubElementType<AldorWith>("BinaryWith", AldorLanguage.INSTANCE, AldorWithPartImpl::new));
-        factoryForName.put("UNARY_WITH_EXPR", new EmptyStubElementType<AldorWith>("UnaryWithExpr", AldorLanguage.INSTANCE, AldorUnaryWithExprImpl::new));
-        factoryForName.put("BINARY_WITH_EXPR", new EmptyStubElementType<AldorWith>("BinaryWithExpr", AldorLanguage.INSTANCE, AldorBinaryWithExprImpl::new));
+        //factoryForName.put("UNARY_WITH_EXPR", new EmptyStubElementType<AldorWith>("UnaryWithExpr", AldorLanguage.INSTANCE, AldorUnaryWithExprImpl::new));
+        //factoryForName.put("BINARY_WITH_EXPR", new EmptyStubElementType<AldorWith>("BinaryWithExpr", AldorLanguage.INSTANCE, AldorBinaryWithExprImpl::new));
     }
 
     public static IElementType createElement(String name) {
