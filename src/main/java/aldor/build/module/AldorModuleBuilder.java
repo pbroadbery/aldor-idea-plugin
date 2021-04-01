@@ -22,11 +22,6 @@ public class AldorModuleBuilder extends ModuleBuilder {
     }
 
     @Override
-    protected boolean isAvailable() {
-        return false;
-    }
-
-    @Override
     public void setupRootModel(final ModifiableRootModel rootModel) throws ConfigurationException {
         doAddContentEntry(rootModel);
     }

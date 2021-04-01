@@ -25,4 +25,8 @@ public interface AldorStubFactory {
         Psi invoke(StubElt stub, IStubElementType<StubElt, Psi> eltType);
     }
 
+    interface StubFactory<StubElt extends StubElement<Psi>, Psi extends PsiElement> {
+        StubElt invoke(StubElement<?> parent);
+    }
+
 }

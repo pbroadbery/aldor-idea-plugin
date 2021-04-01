@@ -7,7 +7,7 @@ jar {
 
 apply plugin: 'org.jetbrains.intellij'
 intellij {
-    version "IC-201.7223.91"
+    version = platformVersion
     plugins = ['java'] // Probably shouldn't be needed, but is
     configureDefaultDependencies = false
 }

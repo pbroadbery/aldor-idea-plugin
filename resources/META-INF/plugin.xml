@@ -3,7 +3,7 @@
     <id>pab.aldor</id>
     <name>AldorAndSpad</name>
     <version>1.1</version>
-    <vendor email="p.broadbery@gmail.com" url="http://www.notreally.org">Peter Broadbery</vendor>
+    <vendor email="p.broadbery@gmail.com" url="http://www.github.com/pbroadbery">Peter Broadbery</vendor>
 
     <description><![CDATA[
       Aldor/Spad plugin - Provides editing facilities for Aldor and SPAD programs.
@@ -13,12 +13,12 @@
       This version provides more features
       - running SPAD and .input files
       - full edit support
-      - limited suport for SPAD type hierarchies
+      - limited support for SPAD type hierarchies
     ]]>
     </change-notes>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-    <idea-version since-build="201"/>
+    <idea-version since-build="201.6668.114" until-build="203.*"/>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
@@ -42,6 +42,21 @@
     </project-components>
 
     <extensions defaultExtensionNs="com.intellij">
+        <fileType name="Aldor"
+                  implementationClass="aldor.file.AldorFileType"
+                  fieldName="INSTANCE"
+                extensions="as" language="Aldor"/>
+        <fileType name="Spad"
+                  implementationClass="aldor.file.SpadFileType"
+                  fieldName="INSTANCE"
+                  extensions="spad" language="Spad"
+                />
+        <fileType name="Input"
+                implementationClass="aldor.file.SpadInputFileType"
+                fieldName="INSTANCE"
+                extensions="input"
+                language="Spad"/>
+
         <!-- Common-->
         <projectService serviceInterface="aldor.build.AldorCompilationService"
                         serviceImplementation="aldor.build.AldorCompilationServiceImpl"/>
@@ -88,11 +103,11 @@
         <!-- Aldor extras -->
         <lang.refactoringSupport language="Aldor" implementationClass="aldor.references.AldorRefactoringSupportProvider"/>
         <documentationProvider implementation="aldor.editor.documentation.AldorDocumentationProvider"/>
-        <fileTypeFactory implementation="aldor.file.AldorFileTypeFactory"/>
+
         <lang.parserDefinition language="Aldor" implementationClass="aldor.parser.AldorParserDefinition"/>
 
         <facetType implementation="aldor.build.facet.aldor.AldorFacetType"/>
-        <library.type implementation="aldor.library.AldorLibraryType"/>
+        <!-- <library.type implementation="aldor.library.AldorLibraryType"/> -->
         <sdkType implementation="aldor.sdk.aldor.AldorInstalledSdkType"/>
         <sdkType implementation="aldor.sdk.aldor.AldorLocalSdkType"/>
 
@@ -107,7 +122,7 @@
 
         <!-- Spad extras -->
         <facetType implementation="aldor.build.facet.fricas.FricasFacetType"/>
-        <fileTypeFactory implementation="aldor.file.SpadFileTypeFactory"/>
+        <!--<fileTypeFactory implementation="aldor.file.SpadFileTypeFactory"/> deprecated -->
         <lang.parserDefinition language="Spad" implementationClass="aldor.parser.SpadParserDefinition"/>
         <stubIndex implementation="aldor.psi.index.AbbrevNameIndex"/>
         <stubIndex implementation="aldor.psi.index.AbbrevAbbrevIndex"/>
@@ -122,7 +137,10 @@
 
 
         <!-- Test language -->
-        <fileTypeFactory implementation="aldor.expression.ExpressionFileTypeFactory"/>
+    <!--  <fileTypeFactory implementation="aldor.expression.ExpressionFileTypeFactory"/> deprecated -->
+        <fileType name="Expression"
+                  implementationClass="aldor.expression.ExpressionFileType"
+                  extensions="expr" language="Expression"/>
         <lang.parserDefinition language="Expression" implementationClass="aldor.expression.ExpressionParserDefinition"/>
         <stubElementTypeHolder class="aldor.expression.ExpressionTypes"/>
         <stubIndex implementation="aldor.expression.ExpressionDefineStubIndex"/>

@@ -42,10 +42,10 @@ public class FricasFacet extends ModuleModifyingFacet<FricasFacetConfiguration> 
             return prev;
         }
         FricasFacet facet = facetManager.createFacet(ft, FricasFacetType.FRICAS_FACET_NAME, null);
+        facet.getConfiguration().loadState(properties);
         ModifiableFacetModel facetModel = facetManager.createModifiableModel();
         facetModel.addFacet(facet);
         facetModel.commit();
-        facet.getConfiguration().loadState(properties);
         FacetManager.getInstance(module).facetConfigurationChanged(facet);
         return facet;
 

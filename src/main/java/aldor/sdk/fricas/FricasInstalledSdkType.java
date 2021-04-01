@@ -38,6 +38,7 @@ public class FricasInstalledSdkType extends SdkType implements FricasSdkType, Ax
             "/usr/lib/fricas/target/",
             "/opt/lib/fricas/target/"
     };
+
     private static final String[] directPaths = {
             "C:/Fricas/"
     };
@@ -47,11 +48,11 @@ public class FricasInstalledSdkType extends SdkType implements FricasSdkType, Ax
     private static final Set<OrderRootType> applicableRootTypes = Collections.singleton(OrderRootType.SOURCES);
 
     private static final FricasInstalledSdkType instance = new FricasInstalledSdkType();
+
     @Contract(pure = true)
     public static FricasInstalledSdkType instance() {
         return instance;
     }
-
 
     public FricasInstalledSdkType() {
         super("Fricas SDK");
@@ -87,6 +88,11 @@ public class FricasInstalledSdkType extends SdkType implements FricasSdkType, Ax
     }
 
     @Override
+    public @Nullable String fricasPath(Sdk sdk) {
+        return versionQuery.fricasPath(sdk.getHomePath());
+    }
+
+    @Override
     @Nonnull
     public String fricasSysName(Sdk sdk) {
         return "FRICASsys";
@@ -99,7 +105,7 @@ public class FricasInstalledSdkType extends SdkType implements FricasSdkType, Ax
 
     @Override
     public boolean isValidSdkHome(String path) {
-        return versionQuery.fricasVersion(path + "/bin/fricas").isPresent();
+        return versionQuery.fricasVersion(path).isPresent();
     }
 
     @Override
@@ -110,7 +116,7 @@ public class FricasInstalledSdkType extends SdkType implements FricasSdkType, Ax
     @Nullable
     @Override
     public String getVersionString(String sdkHome) {
-        return versionQuery.fricasVersion(sdkHome+"/bin/fricas").orElse(msg -> "[unable to determine version - " + msg +"]");
+        return versionQuery.fricasVersion(sdkHome).orElse(msg -> "[unable to determine version - " + msg +"]");
     }
 
     @Nullable
@@ -164,12 +170,6 @@ public class FricasInstalledSdkType extends SdkType implements FricasSdkType, Ax
         File algebraPath = new File(fricasHome.getAbsolutePath() + "/src");
         VirtualFile root = LocalFileSystem.getInstance().findFileByPath(algebraPath.getAbsolutePath());
         return Collections.singletonList(root);
-    }
-
-    @Override
-    @Nullable
-    public String fricasPath(Sdk sdk) {
-        return sdk.getHomePath() + "/bin/fricas";
     }
 
     @Override

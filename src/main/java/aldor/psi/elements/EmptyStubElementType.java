@@ -27,26 +27,29 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class EmptyStubElementType<T extends PsiElement> extends IStubElementType<EmptyStub<T>, T> {
-    private final AldorStubFactory.PsiElementFactory<EmptyStub<T>, T> stubFactory;
+import java.util.function.Supplier;
 
-    protected EmptyStubElementType(@NotNull @NonNls String debugName, @Nullable Language language, AldorStubFactory.PsiElementFactory<EmptyStub<T>, T> stubFactory) {
+public class EmptyStubElementType<T extends PsiElement> extends IStubElementType<EmptyStub<T>, T> {
+    private final AldorStubFactory.PsiElementFactory<EmptyStub<T>, T> psiFactory;
+
+    protected EmptyStubElementType(@NotNull @NonNls String debugName, @Nullable Language language,
+                                   AldorStubFactory.PsiElementFactory<EmptyStub<T>, T> psiFactory) {
         super(debugName, language);
-        this.stubFactory = stubFactory;
+        this.psiFactory = psiFactory;
     }
 
     @Override
     public T createPsi(@NotNull EmptyStub<T> stub) {
-        return stubFactory.invoke(stub, this);
+        return psiFactory.invoke(stub, this);
     }
 
     @NotNull
     @Override
     public final EmptyStub<T> createStub(@NotNull T psi, @SuppressWarnings("rawtypes") StubElement parentStub) {
-        return createStub(parentStub);
+        return create(parentStub);
     }
 
-    protected EmptyStub<T> createStub(StubElement<?> parentStub) {
+    protected EmptyStub<T> create(StubElement<?> parentStub) {
         return new EmptyStub<>(parentStub, this);
     }
 
@@ -63,7 +66,7 @@ public class EmptyStubElementType<T extends PsiElement> extends IStubElementType
     @NotNull
     @Override
     public final EmptyStub<T> deserialize(@NotNull StubInputStream dataStream, @SuppressWarnings("rawtypes") StubElement parentStub) {
-        return createStub(parentStub);
+        return create(parentStub);
     }
 
     @Override

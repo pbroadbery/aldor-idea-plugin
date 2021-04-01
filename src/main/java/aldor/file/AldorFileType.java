@@ -1,6 +1,7 @@
 package aldor.file;
 
 import aldor.language.AldorLanguage;
+import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import icons.AldorIcons;
 import org.jetbrains.annotations.NotNull;
@@ -11,7 +12,7 @@ import javax.swing.Icon;
 
 public final class AldorFileType extends LanguageFileType {
   @SuppressWarnings("TypeMayBeWeakened")
-  public static final AldorFileType INSTANCE = new AldorFileType();
+  public static final FileType INSTANCE = new AldorFileType();
 
   private AldorFileType() {
     super(AldorLanguage.INSTANCE);

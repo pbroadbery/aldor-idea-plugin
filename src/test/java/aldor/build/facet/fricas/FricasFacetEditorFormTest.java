@@ -21,18 +21,15 @@ import org.junit.Assert;
 import static org.junit.Assert.*;
 
 public class FricasFacetEditorFormTest extends AssumptionAware.LightIdeaTestCase {
-    Runnable cleanup = () -> {};
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        cleanup = JUnits.setLogToDebug();
     }
 
     @Override
     protected void tearDown() throws Exception {
         super.tearDown();
-        cleanup.run();
     }
 
     public void testForm() {
