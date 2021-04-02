@@ -40,8 +40,8 @@ jobs:
 
     - name: Test
       run: |
-        ./gradlew check -Daldor.build.skip_ci=true --continue
-        true
+        ./gradlew check -Daldor.build.skip_ci=true --continue || true
+
 
     - name: Publish Test Results
       if: ${{ always() }}
