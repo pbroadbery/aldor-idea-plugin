@@ -64,7 +64,10 @@ intellij {
     pluginName = "${pluginName}"
     version = "${platformVersion}"
     updateSinceUntilBuild = true
+}
 
+buildSearchableOptions {
+    enabled = false
 }
 
 allprojects {
@@ -198,7 +201,7 @@ task updateExternalJars(type: Copy) {
 
 task list(dependsOn: configurations.compile) {
     doLast {
-        println "classpath = ${configurations.compile.collect { File file -> file.toString()}}"
+        println "classpath = ${configurations.runtime.collect { File file -> file.toString()}}"
     }
 }
 

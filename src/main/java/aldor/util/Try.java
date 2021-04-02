@@ -3,6 +3,7 @@ package aldor.util;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -53,6 +54,13 @@ public final class Try<T> {
         } else {
             return fn.apply(e);
         }
+    }
+
+    public Try<T> peekError(Consumer<Throwable> consumer) {
+        if (!isPresent()) {
+            consumer.accept(e);
+        }
+        return this;
     }
 
     public boolean isPresent() {

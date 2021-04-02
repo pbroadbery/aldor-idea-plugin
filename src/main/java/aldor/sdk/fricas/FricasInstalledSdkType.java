@@ -105,7 +105,7 @@ public class FricasInstalledSdkType extends SdkType implements FricasSdkType, Ax
 
     @Override
     public boolean isValidSdkHome(String path) {
-        return versionQuery.fricasVersion(path + "/bin/fricas").isPresent();
+        return versionQuery.fricasVersion(path).isPresent();
     }
 
     @Override
@@ -116,7 +116,7 @@ public class FricasInstalledSdkType extends SdkType implements FricasSdkType, Ax
     @Nullable
     @Override
     public String getVersionString(String sdkHome) {
-        return versionQuery.fricasVersion(sdkHome+"/bin/fricas").orElse(msg -> "[unable to determine version - " + msg +"]");
+        return versionQuery.fricasVersion(sdkHome).orElse(msg -> "[unable to determine version - " + msg +"]");
     }
 
     @Nullable

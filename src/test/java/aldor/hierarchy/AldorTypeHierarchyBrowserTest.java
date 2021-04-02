@@ -56,11 +56,8 @@ public class AldorTypeHierarchyBrowserTest {
         try (TestBrowser browser = new TestBrowser(ensureClosedRule, new AldorTypeHierarchyProvider(), elt, SUPERTYPES_HIERARCHY_TYPE)) {
 
             browser.update();
-
             System.out.println("Root: " + browser.rootDescriptor());
-
             System.out.println("Children: " + browser.childElements());
-
             ((Disposable) ProgressManager.getInstance()).dispose();
         }
     }
@@ -75,11 +72,8 @@ public class AldorTypeHierarchyBrowserTest {
 
         try (TestBrowser browser = new TestBrowser(ensureClosedRule, new AldorTypeHierarchyProvider(), elt, SUPERTYPES_HIERARCHY_TYPE)) {
             browser.update();
-
             System.out.println("Root: " + browser.rootDescriptor());
-
             System.out.println("Children: " + browser.childElements());
-
             ((Disposable) ProgressManager.getInstance()).dispose();
         }
     }
@@ -118,11 +112,8 @@ public class AldorTypeHierarchyBrowserTest {
         AldorIdentifier theId = items.stream().findFirst().flatMap(AldorDefine::defineIdentifier).orElse(null);
 
         try (TestBrowser browser = new TestBrowser(ensureClosedRule, new AldorTypeHierarchyProvider(), theId, SUPERTYPES_HIERARCHY_TYPE)) {
-
             browser.update();
-
             System.out.println("Root: " + browser.rootDescriptor());
-
             System.out.println("Children: " + browser.childElements());
 
             browser.dispose();
@@ -138,16 +129,11 @@ public class AldorTypeHierarchyBrowserTest {
 
         AldorIdentifier theId = items.stream().findFirst().flatMap(AldorDefine::defineIdentifier).orElse(null);
         try (TestBrowser browser = new TestBrowser(ensureClosedRule, new AldorTypeHierarchyProvider(), theId, SUPERTYPES_HIERARCHY_TYPE)) {
-
-            browser.update();
-
+           browser.update();
             System.out.println("Root: " + browser.rootDescriptor());
-
             List<NodeDescriptor<?>> childElements = browser.childElements();
             System.out.println("Children: " + childElements);
-
             Assert.assertEquals(5, childElements.size());
-
             ((Disposable) ProgressManager.getInstance()).dispose();
         }
     }
@@ -170,12 +156,9 @@ public class AldorTypeHierarchyBrowserTest {
              */
 
             System.out.println("Root: " + browser.rootDescriptor());
-
             List<NodeDescriptor<?>> childElements = browser.childElements();
             System.out.println("Children: " + childElements);
-
             Assert.assertEquals(4, childElements.size());
-
             ((Disposable) ProgressManager.getInstance()).dispose();
         }
     }
@@ -200,7 +183,7 @@ public class AldorTypeHierarchyBrowserTest {
                 System.out.println("Operation: " + desc.operation());
                 System.out.println("Decl: " + desc.operation().declaration());
                 System.out.println("Style: " + desc.getHighlightedText().getSectionsIterator().next().getTextAttributes());
-                assertNotNull(desc.operation().declaration());
+                //assertNotNull(desc.operation().declaration());
             }
 
             ((Disposable) ProgressManager.getInstance()).dispose();

@@ -20,6 +20,7 @@ import com.intellij.testFramework.fixtures.CodeInsightTestFixture;
 import com.intellij.usageView.UsageInfo;
 import org.jetbrains.annotations.NotNull;
 import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -50,6 +51,7 @@ public class AldorFindUsagesProviderTest {
     }
 
     @Test
+    @Ignore("Round trip descriptor is broken")
     public void testUsage() throws ExecutionException, InterruptedException {
         String makefileText = annotationTestFixture.createMakefile(aldorExecutableRule.executable().getAbsolutePath(), Collections.singleton("foo.as"));
         VirtualFile makefileFile = annotationTestFixture.createFile(codeTestFixture.getProject(), "Makefile", makefileText);

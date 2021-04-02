@@ -73,8 +73,8 @@ public class AssumptionAware {
     @SuppressWarnings("ALL")
     public abstract static class LightIdeaTestCase extends com.intellij.testFramework.LightIdeaTestCase {
         @Override
-        public void runBareImpl(ThrowableRunnable<?> start) throws Exception {
-            runAwareException(() -> super.runBareImpl(start));
+        public void runBareImpl(ThrowableRunnable<?> start) throws Throwable {
+            runAware(() -> super.runBareImpl(start));
         }
     }
 
@@ -114,23 +114,23 @@ public class AssumptionAware {
 
     public abstract static class LightPlatformCodeInsightTestCase extends com.intellij.testFramework.LightPlatformCodeInsightTestCase {
         @Override
-        public void runBareImpl(ThrowableRunnable<?> start) throws Exception {
-            runAwareException(() -> super.runBareImpl(start));
+        public void runBareImpl(ThrowableRunnable<?> start) throws Throwable {
+            runAware(() -> super.runBareImpl(start));
         }
     }
 
     @SuppressWarnings("UnstableApiUsage")
     public abstract static class LightPlatformTestCase extends com.intellij.testFramework.LightPlatformTestCase {
         @Override
-        public void runBareImpl(ThrowableRunnable<?> start) throws Exception {
-            runAwareException(() -> super.runBareImpl(start));
+        public void runBareImpl(ThrowableRunnable<?> start) throws Throwable {
+            runAware(() -> super.runBareImpl(start));
         }
     }
 
     public abstract static class CodeInsightFixtureTestCase<X extends ModuleFixture, T extends ModuleFixtureBuilder<X>> extends com.intellij.testFramework.fixtures.CodeInsightFixtureTestCase<T> {
         @Override
-        public void runBare() throws Throwable {
-            runAware(super::runBare);
+        public void defaultRunBare() throws Throwable {
+            runAware(super::defaultRunBare);
         }
     }
 }

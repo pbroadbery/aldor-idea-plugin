@@ -214,7 +214,7 @@ public class FricasSpadLibrary implements SpadLibrary, Disposable {
                     toSyntax(project, scope, TypePackage.asAbSyn(iface.env(), namedExport.type())),
                     namedExport.condition().isNone() ? null : toSyntax(project, scope, namedExport.condition()),
                     declarationFor(iface, exportForm, namedExport),
-                    containingForm(SyntaxUtils.leadingId(exportForm)));
+                    (exportForm == null) ? null : containingForm(SyntaxUtils.leadingId(exportForm)));
         }
         catch (RuntimeException e) {
             throw new FricasSpadLibraryException("Creating operation: " + namedExport.name() + " " + namedExport.type(), e);
@@ -244,6 +244,10 @@ public class FricasSpadLibrary implements SpadLibrary, Disposable {
 
     private @Nullable
     PsiNamedElement declarationFor(AxiomInterface iface, String name, TForm originalType, Syntax exporter) {
+        if (exporter == null) {
+            return null;
+        }
+
         Syntax leadingExporter = SyntaxUtils.leadingId(exporter);
         // Find all definitions of "namedExport" in the file containing the exporter
         AldorDefine exportingDefinition = containingForm(leadingExporter);

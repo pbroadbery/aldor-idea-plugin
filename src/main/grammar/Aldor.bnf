@@ -97,6 +97,11 @@
   //stubClass("Comma")='com.intellij.psi.stubs.EmptyStub<aldor.psi.AldorComma>'
 
   // with
+  implements("UnaryWith") = 'aldor.psi.AldorWith'
+  implements("WithPart") = 'aldor.psi.AldorWith'
+  implements("UnaryWithExpr") = 'aldor.psi.AldorWith'
+  implements("BinaryWithExpr") = 'aldor.psi.AldorWith'
+
   stubClass("UnaryWith")='com.intellij.psi.stubs.EmptyStub<aldor.psi.AldorWith>'
   stubClass("WithPart")='com.intellij.psi.stubs.EmptyStub<aldor.psi.AldorWith>'
   stubClass("UnaryWithExpr")='com.intellij.psi.stubs.EmptyStub<aldor.psi.AldorWith>'

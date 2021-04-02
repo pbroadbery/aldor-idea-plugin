@@ -23,8 +23,6 @@ import com.intellij.execution.process.ProcessAdapter;
 import com.intellij.execution.process.ProcessEvent;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.runners.ProgramRunner;
-import com.intellij.execution.target.TargetEnvironment;
-import com.intellij.execution.target.local.LocalTargetEnvironmentFactory;
 import com.intellij.execution.testDiscovery.JavaAutoRunManager;
 import com.intellij.execution.testframework.AbstractTestProxy;
 import com.intellij.execution.testframework.TestConsoleProperties;
@@ -41,7 +39,6 @@ import com.intellij.execution.testframework.ui.BaseTestsOutputConsoleView;
 import com.intellij.facet.FacetManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.ProjectJdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
@@ -66,7 +63,6 @@ public abstract class AbstractAldorUnitRunnableState<T
                 & SMRunnerConsolePropertiesProvider> extends JavaCommandLineState implements RemoteConnectionCreator {
     private static final Logger LOG = Logger.getInstance(AbstractAldorUnitRunnableState.class);
     private final List<ArgumentFileFilter> myArgumentFileFilters = new ArrayList<>(); // TODO: Where is this used?
-    private final LocalTargetEnvironmentFactory factory = new LocalTargetEnvironmentFactory();
     protected File myTempFile = null;
     protected File myWorkingDirsFile = null;
     @SuppressWarnings("FieldHasSetterButNoGetter")
@@ -234,11 +230,12 @@ public abstract class AbstractAldorUnitRunnableState<T
         }
     }
 
+    /*
     @Override
     public @NotNull TargetEnvironment prepareEnvironment(@NotNull ProgressIndicator progressIndicator) throws ExecutionException {
         return factory.prepareRemoteEnvironment(factory.createRequest(), progressIndicator);
     }
-
+*/
 
 }
 

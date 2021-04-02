@@ -18,7 +18,7 @@
     </change-notes>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-    <idea-version since-build="201"/>
+    <idea-version since-build="201.6668.114" until-build="203.*"/>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
@@ -42,6 +42,21 @@
     </project-components>
 
     <extensions defaultExtensionNs="com.intellij">
+        <fileType name="Aldor"
+                  implementationClass="aldor.file.AldorFileType"
+                  fieldName="INSTANCE"
+                extensions="as" language="Aldor"/>
+        <fileType name="Spad"
+                  implementationClass="aldor.file.SpadFileType"
+                  fieldName="INSTANCE"
+                  extensions="spad" language="Spad"
+                />
+        <fileType name="Input"
+                implementationClass="aldor.file.SpadInputFileType"
+                fieldName="INSTANCE"
+                extensions="input"
+                language="Spad"/>
+
         <!-- Common-->
         <projectService serviceInterface="aldor.build.AldorCompilationService"
                         serviceImplementation="aldor.build.AldorCompilationServiceImpl"/>
@@ -88,15 +103,7 @@
         <!-- Aldor extras -->
         <lang.refactoringSupport language="Aldor" implementationClass="aldor.references.AldorRefactoringSupportProvider"/>
         <documentationProvider implementation="aldor.editor.documentation.AldorDocumentationProvider"/>
-        <!-- <fileTypeFactory implementation="aldor.file.AldorFileTypeFactory"/> deprecated -->
 
-        <fileType name="Aldor"
-                  fieldName="INSTANCE"
-                  extensions="as" language="Aldor"
-                  implementationClass="aldor.file.AldorFileType"/>
-        <!--<fileType name="Spad" implementationClass="aldor.file.SpadFileType"/>
-        <fileType name="SpadInput" implementationClass="aldor.file.SpadInputFileType"/>
--->
         <lang.parserDefinition language="Aldor" implementationClass="aldor.parser.AldorParserDefinition"/>
 
         <facetType implementation="aldor.build.facet.aldor.AldorFacetType"/>
@@ -131,7 +138,9 @@
 
         <!-- Test language -->
     <!--  <fileTypeFactory implementation="aldor.expression.ExpressionFileTypeFactory"/> deprecated -->
-        <!--<fileType name="expr" implementationClass="aldor.expression.ExpressionFileType"/>-->
+        <fileType name="Expression"
+                  implementationClass="aldor.expression.ExpressionFileType"
+                  extensions="expr" language="Expression"/>
         <lang.parserDefinition language="Expression" implementationClass="aldor.expression.ExpressionParserDefinition"/>
         <stubElementTypeHolder class="aldor.expression.ExpressionTypes"/>
         <stubIndex implementation="aldor.expression.ExpressionDefineStubIndex"/>

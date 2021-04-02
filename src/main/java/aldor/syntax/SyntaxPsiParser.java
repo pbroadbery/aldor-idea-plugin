@@ -358,6 +358,11 @@ public final class SyntaxPsiParser {
         }
 
         @Override
+        public void visitWith(@NotNull AldorWith o) {
+            parentParts().add(new With(o));
+        }
+
+        @Override
         public void visitAddPart(@NotNull AldorAddPart o) {
             parentParts().add(new Add(o));
         }
