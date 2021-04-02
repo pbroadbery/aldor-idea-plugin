@@ -197,6 +197,9 @@ task updateExternalJars(type: Copy) {
             it.exclude()
         }
     }
+    doLast {
+        println("updated external library files from " + libLocation)
+    }
 }
 
 task list(dependsOn: configurations.compile) {
