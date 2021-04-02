@@ -89,7 +89,7 @@ public class AldorModuleTest extends AssumptionAware.UsefulTestCase {
     private static final class AldorModuleFixtureBuilder<T extends ModuleFixture> extends ModuleFixtureBuilderImpl<ModuleFixture> {
 
         private AldorModuleFixtureBuilder(TestFixtureBuilder<? extends IdeaProjectTestFixture> fixtureBuilder) {
-            super(AldorModuleType.instance(), fixtureBuilder);
+            super(new AldorModuleType(), fixtureBuilder);
         }
 
         @Override

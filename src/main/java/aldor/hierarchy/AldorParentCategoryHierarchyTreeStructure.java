@@ -10,6 +10,7 @@ import aldor.util.Try;
 import com.google.common.collect.Sets;
 import com.intellij.ide.hierarchy.HierarchyNodeDescriptor;
 import com.intellij.ide.hierarchy.HierarchyTreeStructure;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.SmartPointerManager;
@@ -26,6 +27,7 @@ import java.util.stream.Stream;
 import static aldor.syntax.SyntaxUtils.psiElementFromSyntax;
 
 public final class AldorParentCategoryHierarchyTreeStructure extends HierarchyTreeStructure {
+    private static final Logger LOG = Logger.getInstance(AldorParentCategoryHierarchyTreeStructure.class);
     private static final Set<Class<?>> leafElements = Sets.newHashSet(AldorHierarchyOperationDescriptor.class, ErrorNodeDescriptor.class);
     private static final Object[] EMPTY_ARRAY = new Object[0];
     private final SmartPsiElementPointer<PsiElement> smartPointer;
@@ -93,7 +95,9 @@ public final class AldorParentCategoryHierarchyTreeStructure extends HierarchyTr
         }
         Syntax syntax = aldorDescriptor.syntax();
         List<Syntax> parents = Try.of(() -> library.parentCategories(syntax)).orElse(e -> Collections.emptyList());
-        List<SpadLibrary.Operation> operations = Try.of(() -> library.operations(syntax)).orElse(e -> Collections.emptyList());
+        List<SpadLibrary.Operation> operations = Try.of(() -> library.operations(syntax))
+                .peekError(t -> LOG.error("Failed to convert operations from " + syntax, t))
+                .orElse(e -> Collections.emptyList());
         
         Stream<Object> parentNodes = parents.stream().map(psyntax -> createNodeDescriptorMaybe(aldorDescriptor, psyntax));
         Stream<Object> operationNodes = operations.stream().map(op -> createOperationNodeDescriptorMaybe(aldorDescriptor, op));

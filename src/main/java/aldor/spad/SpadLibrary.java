@@ -71,7 +71,6 @@ public interface SpadLibrary {
         private final Syntax type;
         @Nullable
         private final Syntax condition;
-        private final Syntax exporter;
         @Nullable
         private final PsiElement implementation;
         @Nullable
@@ -79,18 +78,17 @@ public interface SpadLibrary {
         @Nullable
         private final PsiElement containingForm;
 
-        public Operation(@NotNull String name, @NotNull Syntax type, @Nullable Syntax condition, Syntax exporter, @Nullable PsiElement declaration, @Nullable PsiElement containingForm) {
+        public Operation(@NotNull String name, @NotNull Syntax type, @Nullable Syntax condition, @Nullable PsiElement declaration, @Nullable PsiElement containingForm) {
             this.name = name;
             this.type = type;
             this.condition = condition;
-            this.exporter = exporter;
             this.declaration = declaration;
             this.implementation = null;
             this.containingForm = containingForm;
         }
 
         public Operation(String name, Syntax type, Syntax condition, Syntax exporter) {
-            this(name, type, condition, exporter, null, null);
+            this(name, type, condition, null, null);
         }
 
         @Override
@@ -131,7 +129,7 @@ public interface SpadLibrary {
             }
             else {
                 Syntax newConditions = (condition == null) ? SyntaxUtils.and(conditions) : SyntaxUtils.and(condition, conditions);
-                return new Operation(name, type, newConditions, exporter, declaration, containingForm);
+                return new Operation(name, type, newConditions, declaration, containingForm);
             }
         }
     }

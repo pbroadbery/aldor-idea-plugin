@@ -32,7 +32,9 @@ class WizardJdkSelector extends WizardInputField<JdkComboBox> {
         this.label = label;
         this.allowedTypes = allowedTypes;
         model = new ProjectSdksModel();
+        LOG.info("Current SDKs: " + Arrays.stream(model.getSdks()).map(Sdk::getName).collect(Collectors.toList()));
         model.syncSdks();
+        LOG.info("After Sync: Current SDKs: " + Arrays.stream(model.getSdks()).map(Sdk::getName).collect(Collectors.toList()));
         this.sdkComboSelector = new JdkComboBox(null, model,
                 this::typeFilter, this::sdkFilter, this::creationFilter, this::sdkAdded);
     }
@@ -45,9 +47,11 @@ class WizardJdkSelector extends WizardInputField<JdkComboBox> {
         if (model.findSdk(sdk.getName()) != null) {
             LOG.info("SDK " + sdk.getName() + " already exists");
         }
-        model.addSdk(sdk);
+        LOG.info("Current SDKs: " + Arrays.stream(model.getSdks()).map(x -> x.getName()).collect(Collectors.toList()));
         try {
             model.apply(null, true);
+            LOG.info("Applied: Current SDKs: " + Arrays.stream(model.getSdks()).map(x -> x.getName()).collect(Collectors.toList()));
+            LOG.info("All sdks: " + Arrays.stream(ProjectJdkTable.getInstance().getAllJdks()).map(x -> x.getName()).collect(Collectors.toList()));
         }
         catch (ConfigurationException e) {
             LOG.error("while creating SDK " + sdk.getName(), e);

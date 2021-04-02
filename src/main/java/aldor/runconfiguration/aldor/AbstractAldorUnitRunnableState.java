@@ -77,7 +77,6 @@ public abstract class AbstractAldorUnitRunnableState<T
         this.remoteConnectionCreator = remoteConnectionCreator;
     }
 
-
     @Override
     protected final JavaParameters createJavaParameters() throws CantRunException {
         final JavaParameters javaParameters = new JavaParameters();
@@ -149,7 +148,6 @@ public abstract class AbstractAldorUnitRunnableState<T
             FileUtil.delete(myWorkingDirsFile);
         }
     }
-
 
     @NotNull
     @Override
@@ -231,6 +229,13 @@ public abstract class AbstractAldorUnitRunnableState<T
             LOG.error(e);
         }
     }
+
+    /*
+    @Override
+    public @NotNull TargetEnvironment prepareEnvironment(@NotNull ProgressIndicator progressIndicator) throws ExecutionException {
+        return factory.prepareRemoteEnvironment(factory.createRequest(), progressIndicator);
+    }
+*/
 
 }
 

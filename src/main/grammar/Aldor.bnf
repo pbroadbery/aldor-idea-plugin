@@ -101,15 +101,20 @@
   implements("WithPart") = 'aldor.psi.AldorWith'
   implements("UnaryWithExpr") = 'aldor.psi.AldorWith'
   implements("BinaryWithExpr") = 'aldor.psi.AldorWith'
+
   stubClass("UnaryWith")='com.intellij.psi.stubs.EmptyStub<aldor.psi.AldorWith>'
   stubClass("WithPart")='com.intellij.psi.stubs.EmptyStub<aldor.psi.AldorWith>'
   stubClass("UnaryWithExpr")='com.intellij.psi.stubs.EmptyStub<aldor.psi.AldorWith>'
   stubClass("BinaryWithExpr")='com.intellij.psi.stubs.EmptyStub<aldor.psi.AldorWith>'
-  mixin("UnaryWithExpr") ="com.intellij.extapi.psi.StubBasedPsiElementBase<com.intellij.psi.stubs.EmptyStub<aldor.psi.AldorWith>>"
-  mixin("BinaryWithExpr") ="com.intellij.extapi.psi.StubBasedPsiElementBase<com.intellij.psi.stubs.EmptyStub<aldor.psi.AldorWith>>"
+
+  mixin("UnaryWith")="aldor.psi.impl.AldorWithMixin"
+  mixin("WithPart")="aldor.psi.impl.AldorWithMixin"
+  mixin("UnaryWithExpr")="aldor.psi.impl.AldorWithMixin"
+  mixin("BinaryWithExpr")="aldor.psi.impl.AldorWithMixin"
 
   // add
-  stubClass("UnaryAdd")='com.intellij.psi.stubs.EmptyStub<com.intellij.psi.PsiElement>'
+  //stubClass("UnaryAdd")='com.intellij.psi.stubs.EmptyStub<com.intellij.psi.PsiElement>'
+  //implements("UnaryAdd")='aldor.psi.AldorAdd'
 
   // Declarations (should be with body only...)
   // Version 2, I think.

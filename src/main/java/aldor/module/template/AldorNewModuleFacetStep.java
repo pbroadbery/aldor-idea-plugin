@@ -1,6 +1,7 @@
 package aldor.module.template;
 
 import aldor.builder.jps.AldorModuleExtensionProperties;
+import com.google.common.annotations.VisibleForTesting;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
@@ -31,6 +32,13 @@ public class AldorNewModuleFacetStep extends ModuleWizardStep {
     public void updateDataModel() {
         AldorModuleExtensionProperties properties = properties();
         this.properties.set(properties.asBuilder().setSdkName(form.aldorSdkName()).build());
+        LOG.info("Setting sdk to " + form.aldorSdkName());
+    }
+
+    @VisibleForTesting
+    public void updateSdk(String sdkName) {
+        AldorModuleExtensionProperties properties = properties();
+        this.properties.set(properties.asBuilder().setSdkName(sdkName).build());
         LOG.info("Setting sdk to " + form.aldorSdkName());
     }
 

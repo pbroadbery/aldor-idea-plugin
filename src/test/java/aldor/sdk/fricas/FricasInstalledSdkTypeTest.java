@@ -43,7 +43,6 @@ public class FricasInstalledSdkTypeTest {
         assertNotNull(sdk.getVersionString(fricasExecutableRule.prefix()));
     }
 
-
     @Test
     public void testSetupPaths() {
         FricasInstalledSdkType sdkType = new FricasInstalledSdkType();

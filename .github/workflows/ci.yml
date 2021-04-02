@@ -19,24 +19,28 @@ jobs:
 
     - name: Check tag
       run: |
-        set -x
         RELEASE=false
         if [[ $GITHUB_REF =~ ^refs/tags/release-.*$ ]];
         then
           RELEASE=true
         fi
+        echo "RELEASE is $RELEASE"
         echo "RELEASE=$RELEASE" >> $GITHUB_ENV
     - name: Create mini-script
-      run: echo "wrapper {gradleVersion='5.2.1'}" > nada.gradle
+      run: echo "wrapper {gradleVersion='5.6.4'}" > nada.gradle
+
     - name: Create Wrapper
       run: gradle -b nada.gradle wrapper
+
     - name: Check version
       run: ./gradlew --version
+
     - name: Build
       run: ./gradlew assemble -Daldor.plugin.release=${{ env.RELEASE }}
 
     - name: Test
-      run: ./gradlew check -Daldor.build.skip_ci=true --continue
+      run: |
+        ./gradlew check -Daldor.build.skip_ci=true --continue
 
     - name: Publish Test Results
       if: ${{ always() }}
@@ -44,9 +48,10 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         report_paths: '**/test-results/test/TEST-*.xml'
-    
+
     - name: Publish build artifact
       uses: actions/upload-artifact@v2
+      if: ${{ always() }}
       with:
         name: plugin
         path: build/distributions/*.zip

@@ -23,9 +23,10 @@ buildscript {
 
 plugins {
     id 'java'
-    id 'org.jetbrains.intellij' version '0.4.22' apply false
-    id "de.undercouch.download" version "3.2.0" apply false
-    id "org.jetbrains.grammarkit" version "2020.3.2" apply false
+    id 'idea'
+    id "org.jetbrains.intellij" version "0.6.3"
+    id "de.undercouch.download" version "3.2.0"
+    id "org.jetbrains.grammarkit" version "2020.3.1"
 }
 
 wrapper {
@@ -41,6 +42,8 @@ def libLocation = new File(libSource).exists() ? libSource : "extjars"
 group 'pab.aldor'
 version isRelease ? baseVersion : "${baseVersion}-SNAPSHOT"
 
+println "VERSION IS ${baseVersion} Release: ${isRelease}"
+
 tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
 tasks.withType(Test) {
     testLogging.showStandardStreams = true
@@ -52,15 +55,20 @@ java {
     sourceCompatibility = JavaVersion.VERSION_11
 }
 
-apply plugin: 'org.jetbrains.intellij'
-apply plugin: 'org.jetbrains.grammarkit'
-apply plugin: 'de.undercouch.download'
-
 intellij {
-//    version "IC-202.8194.7" //version '2020.2.4'
-    version "IC-201.7223.91" //version '2019.2'
+    //version "IC-202.8194.7" //version '2020.2.4'
+    //version "IC-201.7223.91" //version '2019.2'
+    //version "202.8194.7" // 2020.3
     plugins = ['java']
     downloadSources = true
+    type = 'IC'
+    pluginName = "${pluginName}"
+    version = "${platformVersion}"
+    updateSinceUntilBuild = true
+}
+
+buildSearchableOptions {
+    enabled = false
 }
 
 allprojects {
@@ -95,15 +103,21 @@ allprojects {
 grammarKit {
     // version of IntelliJ patched JFlex (see bintray link below), Default is 1.7.0-1 
     jflexRelease = '1.7.0-1'
+    grammarKitRelease = '2020.1'
 }
 
 dependencies {
     compile project('jps-plugin')
     testCompile group: 'junit', name: 'junit', version: '4.13.2'
     compile files(libFiles.collect({"lib/${it}.jar"}))
+
+    compile group: 'org.jetbrains.intellij.deps', name: 'asm-all', version: '8.0.1'
 }
 
 patchPluginXml {
+    sinceBuild("${pluginSinceBuild}")
+    untilBuild("${pluginUntilBuild}")
+
     changeNotes """
       Add change notes here.<br>
       <em>most HTML tags may be used</em>"""
@@ -155,7 +169,6 @@ task generateLexer(type: GenerateLexer) {
 }
 
 task generateLexer1(type: JavaExec) {
-    String dstRoot = "$project.projectDir/src/gen/jflex"
     String pkg = 'aldor/lexer'
     String src = "$project.projectDir/src/main/jflex/${pkg}/aldor.flex"
     String dst = "src/gen/jflex/" + pkg
@@ -188,11 +201,23 @@ task updateExternalJars(type: Copy) {
             it.exclude()
         }
     }
+    doLast {
+        println("updated external library files from " + libLocation)
+    }
 }
 
 task list(dependsOn: configurations.compile) {
     doLast {
-        println "classpath = ${configurations.compile.collect { File file -> file.toString()}}"
+        println "classpath = ${configurations.runtime.collect { File file -> file.toString() }}"
+    }
+}
+
+
+task listCompileOnly(dependsOn: configurations.compile) {
+    doLast {
+        for (f in project.configurations.compileOnly.files) {
+            println "compileOnly  "+ f
+        }
     }
 }
 
@@ -242,6 +267,7 @@ def parserTask(project, parserName, pkg) {
         pathToParser = "${pkg}/${parserName}Parser.java"
         pathToPsiRoot = "${pkg}/psi"
         purgeOldFiles = true
+        def extra = 'fastutil'
     }
     def cleaner = tasks.create("clean${parserName}Parser") {
         outputs.upToDateWhen { false }
@@ -250,6 +276,7 @@ def parserTask(project, parserName, pkg) {
             for (f in tt.outputs.getFiles()) { f.delete() }
         }
     }
+
     tasks.clean.dependsOn cleaner
     return tt
 }
@@ -260,4 +287,10 @@ test {
         exceptionFormat "short"
     }
     maxHeapSize = "6g"
+}
+
+idea {
+    module {
+        downloadSources = true
+    }
 }

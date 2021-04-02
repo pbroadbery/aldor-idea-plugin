@@ -12,12 +12,22 @@ import aldor.psi.stub.AldorDeclareStub;
 import aldor.psi.stub.impl.AldorDeclareConcreteStub;
 import aldor.syntax.SyntaxUtils;
 import aldor.syntax.components.Id;
+import aldor.test_util.JUnits;
+import aldor.test_util.LightPlatformJUnit4TestRule;
 import aldor.test_util.SimpleStringEnumerator;
+import com.intellij.mock.MockApplication;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
+import com.intellij.testFramework.PlatformLiteFixture;
+import com.intellij.testFramework.fixtures.CodeInsightTestFixture;
 import com.intellij.util.io.AbstractStringEnumerator;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.RuleChain;
+import org.junit.rules.TestRule;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -25,9 +35,16 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class AldorDeclareStubCodecTest {
+    private final CodeInsightTestFixture testFixture = LightPlatformJUnit4TestRule.createFixture(null);
+
+    @Rule
+    public final TestRule platformTestRule =
+            RuleChain.emptyRuleChain()
+                    .around(new LightPlatformJUnit4TestRule(testFixture, ""))
+                    .around(JUnits.swingThreadTestRule());
+
     @Test
     public void testEncode() throws Exception {
-
         AldorDeclareStub stub = new AldorDeclareConcreteStub.Builder()
                                         .setBlockType(AldorPsiUtils.WITH)
                                         .setElementType(null)
