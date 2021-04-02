@@ -23,9 +23,10 @@ buildscript {
 
 plugins {
     id 'java'
+    id 'idea'
     id "org.jetbrains.intellij" version "0.6.3"
     id "de.undercouch.download" version "3.2.0"
-    id "org.jetbrains.grammarkit" version "2020.3.2"
+    id "org.jetbrains.grammarkit" version "2020.3.1"
 }
 
 wrapper {
@@ -102,12 +103,15 @@ allprojects {
 grammarKit {
     // version of IntelliJ patched JFlex (see bintray link below), Default is 1.7.0-1 
     jflexRelease = '1.7.0-1'
+    grammarKitRelease = '2020.1'
 }
 
 dependencies {
     compile project('jps-plugin')
     testCompile group: 'junit', name: 'junit', version: '4.13.2'
     compile files(libFiles.collect({"lib/${it}.jar"}))
+
+    compile group: 'org.jetbrains.intellij.deps', name: 'asm-all', version: '8.0.1'
 }
 
 patchPluginXml {
@@ -204,7 +208,16 @@ task updateExternalJars(type: Copy) {
 
 task list(dependsOn: configurations.compile) {
     doLast {
-        println "classpath = ${configurations.runtime.collect { File file -> file.toString()}}"
+        println "classpath = ${configurations.runtime.collect { File file -> file.toString() }}"
+    }
+}
+
+
+task listCompileOnly(dependsOn: configurations.compile) {
+    doLast {
+        for (f in project.configurations.compileOnly.files) {
+            println "compileOnly  "+ f
+        }
     }
 }
 
@@ -254,6 +267,7 @@ def parserTask(project, parserName, pkg) {
         pathToParser = "${pkg}/${parserName}Parser.java"
         pathToPsiRoot = "${pkg}/psi"
         purgeOldFiles = true
+        def extra = 'fastutil'
     }
     def cleaner = tasks.create("clean${parserName}Parser") {
         outputs.upToDateWhen { false }
@@ -262,6 +276,7 @@ def parserTask(project, parserName, pkg) {
             for (f in tt.outputs.getFiles()) { f.delete() }
         }
     }
+
     tasks.clean.dependsOn cleaner
     return tt
 }
@@ -272,4 +287,10 @@ test {
         exceptionFormat "short"
     }
     maxHeapSize = "6g"
+}
+
+idea {
+    module {
+        downloadSources = true
+    }
 }

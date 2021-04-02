@@ -9,8 +9,8 @@ import org.junit.AssumptionViolatedException;
 public class AssumptionAware {
 
     static void assumptionFailed(AssumptionViolatedException e) {
-        //System.out.println("** Assumption failed: " + e.getMessage());
-        //e.printStackTrace();
+        System.out.println("** Assumption failed: " + e.getMessage());
+        e.printStackTrace();
     }
 
     static void runAware(@NotNull WildRunnable r) throws Throwable{
@@ -38,6 +38,8 @@ public class AssumptionAware {
                 super.setUp();
             }
             catch (AssumptionViolatedException e) {
+                System.out.println("Assumption violated "+ e.getMessage());
+                e.printStackTrace();
                 assumptionViolated = true;
             }
         }
@@ -45,7 +47,7 @@ public class AssumptionAware {
         @Override
         protected void runTest() throws Throwable {
             if (!assumptionViolated) {
-                super.runTest();
+                runAware(() -> super.runTest());
             }
         }
 
