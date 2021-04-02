@@ -34,11 +34,27 @@ import static aldor.psi.AldorDefine.DefinitionType.MACRO;
  * Aldor element types
  */
 public class AldorElementTypeFactory {
-    private static final AldorStubFactory stubFactory = new AldorStubFactoryImpl();
-    public static final IElementType SPAD_ABBREV_ELEMENT_TYPE = new SpadAbbrevElementType(stubFactory.abbrevCodec());
-    public static final FileStubElementType ALDOR_FILE_ELEMENT_TYPE = new FileStubElementType(AldorLanguage.INSTANCE, stubFactory.getVersion());
-    public static final FileStubElementType SPAD_FILE_ELEMENT_TYPE = new FileStubElementType(SpadLanguage.INSTANCE, stubFactory.getVersion());
-    private static final AldorElementTypeFactory instance = new AldorElementTypeFactory();
+    private static final AldorStubFactory stubFactory;
+    public static final IElementType SPAD_ABBREV_ELEMENT_TYPE;
+    public static final FileStubElementType ALDOR_FILE_ELEMENT_TYPE;
+    public static final FileStubElementType SPAD_FILE_ELEMENT_TYPE;
+    private static final AldorElementTypeFactory instance;
+
+    static {
+        try {
+            stubFactory = new AldorStubFactoryImpl();
+            SPAD_ABBREV_ELEMENT_TYPE = new SpadAbbrevElementType(stubFactory.abbrevCodec());
+            ALDOR_FILE_ELEMENT_TYPE = new FileStubElementType(AldorLanguage.INSTANCE, stubFactory.getVersion());
+            SPAD_FILE_ELEMENT_TYPE = new FileStubElementType(SpadLanguage.INSTANCE, stubFactory.getVersion());
+            instance = new AldorElementTypeFactory();
+        }
+        catch (Exception e) {
+            System.out.println("Error on startup!  "+ e);
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
 
     private final Map<String, IElementType> factoryForName = Maps.newHashMap();
 
