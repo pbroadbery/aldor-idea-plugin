@@ -24,13 +24,17 @@ jobs:
         then
           RELEASE=true
         fi
+        echo "RELEASE is $RELEASE"
         echo "RELEASE=$RELEASE" >> $GITHUB_ENV
     - name: Create mini-script
-      run: echo "wrapper {gradleVersion='5.2.1'}" > nada.gradle
+      run: echo "wrapper {gradleVersion='5.6.4'}" > nada.gradle
+
     - name: Create Wrapper
       run: gradle -b nada.gradle wrapper
+
     - name: Check version
       run: ./gradlew --version
+
     - name: Build
       run: ./gradlew assemble -Daldor.plugin.release=${{ env.RELEASE }}
 
