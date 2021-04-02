@@ -58,7 +58,7 @@ jobs:
   upload_release:
     runs-on: ubuntu-latest
     if: contains(github.ref, 'refs/tags/release-')
-    needs: [build]
+    needs: [Build]
 
     steps:
       - name: Set Version
