@@ -10,6 +10,9 @@ import org.jetbrains.annotations.Nullable;
 
 public class AldorLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSettingsProvider {
 
+    // TODO: Disable tab size editor - see
+    // GroovyLanguageCodeStyleSettingsProvider for how to select from list of common options
+
     @NotNull
     @Override
     public Language getLanguage() {

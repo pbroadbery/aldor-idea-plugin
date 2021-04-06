@@ -1,0 +1,3194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module relativePaths="true" type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output/>
+    <orderEntry type="inheritedJdk"/>
+    <content url="file://$MODULE_DIR$/">
+      <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false"/>
+      <sourceFolder url="file://$MODULE_DIR$/src/gen/java" isTestSource="false"/>
+      <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true"/>
+      <sourceFolder url="file://$MODULE_DIR$/resources" type="java-resource"/>
+      <excludeFolder url="file://$MODULE_DIR$/.gradle"/>
+      <excludeFolder url="file://$MODULE_DIR$/build"/>
+    </content>
+    <orderEntry type="sourceFolder" forTests="false"/>
+    <orderEntry type="module" module-name="jps-plugin"/>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/org.jetbrains.intellij.deps/asm-all/8.0.1/ad919ff1eeadd1619134a768ecf51748ba35869b/asm-all-8.0.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/org.jetbrains.intellij.deps/asm-all/8.0.1/7c371a4ec8a41d09abb88dc8f6fb17666b42f8a0/asm-all-8.0.1-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.github.JetBrains/Grammar-Kit/76494a417287856e5bf016d5de22ad2ae74470f4/883ba24d56fa7c403c02e56995047fac7a582e68/Grammar-Kit-76494a417287856e5bf016d5de22ad2ae74470f4.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES/>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/org.jetbrains.intellij.deps.jflex/jflex/1.7.0-1/5df008de5b93c349854d864eac810b7115b66b0f/jflex-1.7.0-1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/org.jetbrains.intellij.deps.jflex/jflex/1.7.0-1/356eff24189ef0f8accc87db8f2398d36290be81/jflex-1.7.0-1-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/FastInfoset-1.2.15.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/HdrHistogram-2.1.4.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/aapt2-proto-0.3.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/asm-7.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/asm-all-8.0.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/asm-analysis-7.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/asm-commons-7.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/asm-tree-7.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/asm-util-7.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/automaton-1.12-1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/baksmali-2.2.4.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/batik-anim-1.12.0-8.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/batik-awt-util-1.12.0-8.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/batik-bridge-1.12.0-8.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/batik-codec-1.12.0-8.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/batik-constants-1.12.0-8.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/batik-css-1.12.0-8.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/batik-dom-1.12.0-8.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/batik-ext-1.12.0-8.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/batik-gvt-1.12.0-8.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/batik-parser-1.12.0-8.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/batik-svg-dom-1.12.0-8.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/batik-svggen-1.12.0-8.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/batik-transcoder-1.12.0-8.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/batik-util-1.12.0-8.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/batik-xml-1.12.0-8.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/bcpkix-jdk15on-1.65.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/bcprov-jdk15on-1.65.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/bootstrap.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/built-in-server.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/byte-buddy-agent-1.10.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/cglib-nodep-3.2.4.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/cli-parser-1.1.5.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/common-image-3.5.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/common-io-3.5.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/common-lang-3.5.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/commons-cli-1.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/commons-codec-1.14.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/commons-collections-3.2.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/commons-compress-1.20.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/commons-httpclient-3.1-patched.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/commons-imaging-1.0-RC-1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/commons-io-2.6.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/commons-lang-2.4.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/commons-lang3-3.9.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/commons-logging-1.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/commons-net-3.6.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/configuration-store-impl.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/coverage-common.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/credential-store.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/dbus-java-3.2.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/delight-rhino-sandbox-0.0.11.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/dexlib2-2.2.4.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/dom-impl.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/dom-openapi.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/duplicates-analysis.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/error_prone_annotations-2.3.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/extensions.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/external-system-rt.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/failureaccess-1.0.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/fluent-hc-4.5.12.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/forms-1.1-preview.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/forms_rt.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/grazie-spellchecker-0.1.9.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/groovy-2.5.11.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/groovy-json-2.5.11.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/groovy-jsr223-2.5.11.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/groovy-templates-2.5.11.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/groovy-xml-2.5.11.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/gson-2.8.6.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/guava-29.0-jre.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/hamcrest-core-1.3.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/httpclient-4.5.12.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/httpcore-4.4.13.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/httpmime-4.5.12.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/icons.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/idea.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/idea_rt.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/imageio-core-3.5.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/imageio-metadata-3.5.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/imageio-tiff-3.5.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/imgscalr-lib-4.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/ini4j-0.5.5-2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/intellij-coverage-agent-1.0.512.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/intellij-deps-fastutil-8.3.1-1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/intellij-dvcs.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/intellij-test-discovery-agent-1.0.512.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/intellij-xml.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/ion-java-1.5.2-2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/isorelax-20030108.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/istack-commons-runtime-3.0.7.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/j2objc-annotations-1.3.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/jackson-annotations-2.10.3.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/jackson-core-2.10.3.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/jackson-databind-2.10.3.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/jackson-module-kotlin-2.10.3.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/java-compatibility-1.0.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/java-string-similarity-1.2.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/java-utils-1.0.6.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/javac2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/javax.activation-1.2.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/javax.annotation-api-1.3.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/jaxb-api-2.3.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/jaxb-runtime-2.3.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/jaxen-1.2.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/jb-jdi-2.2.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/jcef-81.2.24-gc0b313d-chromium-81.0.4044.113.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/jcip-annotations-1.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/jcodings-1.0.48.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/jdkAnnotations.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/jdom.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/jediterm-pty-2.29.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/jetCheck-0.2.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/jffi-1.2.19-native.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/jffi-1.2.19.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/jing-20030619.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/jna-platform.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/jna.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/jnr-a64asm-1.0.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/jnr-constants-0.9.12.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/jnr-enxio-0.21.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/jnr-ffi-2.1.10.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/jnr-posix-3.0.50.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/jnr-unixsocket-0.23.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/jnr-x86asm-1.0.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/joni-2.1.32.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/jps-model.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/jsch-0.1.55.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/jshell-frontend.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/json.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/jsoup-1.12.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/jsp-base-openapi.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/jsr305.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/jstun-0.7.5.20200723.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/junit-4.12.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/kotlin-gradle-plugin-model-1.3.70.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/kotlin-reflect-1.3.70.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/kotlin-stdlib-1.3.70.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/kotlin-stdlib-common-1.3.70.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/kotlin-stdlib-jdk7-1.3.70.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/kotlin-stdlib-jdk8-1.3.70.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/kotlin-test-1.3.61.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/kotlin-test-common-1.3.61.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/kotlinx-coroutines-core-1.3.4.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/kotlinx-coroutines-jdk8-1.3.4.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/kryo-2.24.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/ktor-websockets-1.3.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/layout_inspector_java_proto-27.0.0.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/libstudio.proto-27.0.0.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/live_sql_java_proto-27.0.0.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/log4j.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/lz4-java-1.7.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/markdownj-core-0.4.2-SNAPSHOT.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/maven-artifact-3.6.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/maven-builder-support-3.6.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/maven-model-3.6.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/maven-model-builder-3.6.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/maven-repository-metadata-3.6.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/maven-resolver-api-1.3.3.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/maven-resolver-impl-1.3.3.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/maven-resolver-provider-3.6.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/maven-resolver-spi-1.3.3.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/maven-resolver-util-1.3.3.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/memoryfilesystem-2.1.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/microba.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/miglayout-core-5.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/miglayout-swing-5.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/minlog-1.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/nanoxml-2.2.3.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/nekohtml-1.9.22.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/netty-buffer-4.1.47.Final.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/netty-codec-4.1.47.Final.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/netty-codec-http-4.1.47.Final.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/netty-codec-http2-4.1.47.Final.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/netty-codec-socks-4.1.47.Final.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/netty-common-4.1.47.Final.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/netty-handler-4.1.47.Final.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/netty-handler-proxy-4.1.47.Final.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/netty-resolver-4.1.47.Final.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/netty-transport-4.1.47.Final.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/objenesis-3.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/org.eclipse.xtend.lib-2.17.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/org.eclipse.xtend.lib.macro-2.17.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/org.eclipse.xtext.xbase.lib-2.17.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/oro-2.0.8.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/owasp-java-html-sanitizer-20191001.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/platform-api.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/platform-concurrency.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/platform-core-ui.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/platform-diagnostic.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/platform-ide-util-io.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/platform-impl.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/platform-objectSerializer-annotations.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/platform-objectSerializer.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/platform-rd-community.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/platform-serviceContainer.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/platform-statistics-config.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/platform-statistics-devkit.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/platform-statistics-uploader.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/platform-statistics.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/platform-util-ex.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/platform-util-ui.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/plexus-component-annotations-1.7.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/plexus-interpolation-1.25.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/plexus-utils-3.2.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/protobuf-java-3.5.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/proxy-vole-1.0.5-jb.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/pty4j-0.9.6.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/purejavacomm-0.0.11.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/qdox-2.0-M10.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/rd-core-0.202.100.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/rd-framework-0.202.100.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/rd-swing-0.202.100.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/resources.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/resources_en.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/rhino-1.7.12.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/rngom-20051226-patched.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/serviceMessages-2019.1.4.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/slf4j-api-1.7.25.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/slf4j-log4j12-1.7.25.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/snakeyaml-1.26.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/snakeyaml-engine-2.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/spellchecker.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/sqlite-jdbc-3.21.0.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/stax-api-1.0.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/stax-ex-1.8.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/streamex-0.7.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/structuralsearch.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/swingx-core-1.6.2-2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/testFramework-java.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/testFramework.core.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/testFramework.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/tests_bootstrap.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/tips-intellij-idea-community-202.13.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/trang-core.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/trove4j.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/txw2-2.3.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/uast-tests.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/util-2.2.4.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/util.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/velocity-1.7.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/winp-1.28.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/xercesImpl-2.12.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/xml-apis-ext-1.3.04.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/xml-resolver-1.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/xmlbeans-2.6.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/xmlgraphics-commons-2.3.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/xmlpull-1.1.3.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/xmlrpc-2.0.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/xpp3_min-1.1.4c.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/xstream-1.4.11.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/lib/xz-1.8.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/plugins/java/lib/jdkAnnotations.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/plugins/java/lib/jshell-protocol.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/plugins/java/lib/aether-dependency-resolver.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/plugins/java/lib/java_resources_en.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/plugins/java/lib/maven-resolver-connector-basic-1.3.3.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/plugins/java/lib/jps-launcher.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/plugins/java/lib/java-impl.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/plugins/java/lib/maven-resolver-transport-http-1.3.3.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/plugins/java/lib/ecj-4.13.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/plugins/java/lib/jgoodies-common-1.4.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/plugins/java/lib/jps-builders.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/plugins/java/lib/completion-ranking-java-0.2.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/plugins/java/lib/maven-resolver-transport-file-1.3.3.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/plugins/java/lib/jps-builders-6.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/plugins/java/lib/java-api.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/plugins/java/lib/resources_en.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/plugins/java/lib/sa-jdwp-1.14.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/plugins/java/lib/resources.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/plugins/java/lib/javac2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/b1d028673e39dbecbf4aa2a2bcd4f2a72f8860da/ideaIC-2020.2.4/plugins/java/lib/debugger-memory-agent-0.0.11.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2020.2.4/78de574a01ef65cf411f5cf8d1ac3876f879e1f3/ideaIC-2020.2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/19.0.0/efbff6752f67a7c9de3e4251c086a88e23591dfd/annotations-19.0.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/19.0.0/46283be41e938dba9ac928ab98de7be6f7a436f1/annotations-19.0.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/28.2-jre/8ec9ed76528425762174f0011ce8f74ad845b756/guava-28.2-jre.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/28.2-jre/79474f7d08b9a8d03f827161825711d9d62ef09a/guava-28.2-jre-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.google.guava/failureaccess/1.0.1/1dcf1de382a0bf95a3d8b0849546c88bac1292c9/failureaccess-1.0.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.google.guava/failureaccess/1.0.1/1d064e61aad6c51cc77f9b59dc2cccc78e792f5a/failureaccess-1.0.1-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.google.guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/b421526c5f297295adef1c886e5246c39d4ac629/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES/>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/3.0.2/25ea2e8b0c338a877313bd4672d3fe056ea78f0d/jsr305-3.0.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/3.0.2/b19b5927c2c25b6c70f093767041e641ae0b1b35/jsr305-3.0.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/org.checkerframework/checker-qual/2.10.0/5786699a0cb71f9dc32e6cca1d665eef07a0882f/checker-qual-2.10.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/org.checkerframework/checker-qual/2.10.0/e9cee84e891492970403d8bd7281dadeaaf11dd/checker-qual-2.10.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.google.errorprone/error_prone_annotations/2.3.4/dac170e4594de319655ffb62f41cbd6dbb5e601e/error_prone_annotations-2.3.4.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.google.errorprone/error_prone_annotations/2.3.4/950adf6dcd7361e3d1e544a6e13b818587f95d14/error_prone_annotations-2.3.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.google.j2objc/j2objc-annotations/1.3/ba035118bc8bac37d7eff77700720999acd9986d/j2objc-annotations-1.3.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/com.google.j2objc/j2objc-annotations/1.3/d26c56180205cbb50447c3eca98ecb617cf9f58b/j2objc-annotations-1.3-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/aldor.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES/>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/algebra.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES/>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/foam.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES/>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/foamj.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES/>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/SpadType.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES/>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/junit/junit/4.13.2/33987872a811fe4d4001ed494b07854822257f42/junit-4.13.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/pab/.gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/1dc37250fbc78e23a65a67fbbaf71d2e9cbc3c0b/hamcrest-core-1.3-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+  </component>
+  <component name="ModuleRootManager"/>
+</module>

@@ -11,7 +11,6 @@ public class NoTabWidthIndentOptionsEditor extends IndentOptionsEditor {
     @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
-        myTabSizeField.setEnabled(false);
     }
 
 }
