@@ -27,6 +27,7 @@ plugins {
     id "org.jetbrains.intellij" version "0.6.3"
     id "de.undercouch.download" version "3.2.0"
     id "org.jetbrains.grammarkit" version "2020.3.1"
+    id 'net.ltgt.errorprone' version '2.0.1' apply false
 }
 
 wrapper {
@@ -56,9 +57,6 @@ java {
 }
 
 intellij {
-    //version "IC-202.8194.7" //version '2020.2.4'
-    //version "IC-201.7223.91" //version '2019.2'
-    //version "202.8194.7" // 2020.3
     plugins = ['java']
     downloadSources = true
     type = 'IC'
@@ -67,8 +65,11 @@ intellij {
     updateSinceUntilBuild = true
 }
 
+runPluginVerifier {
+    ideVersions pluginVerifierIdeVersions
+}
+
 buildSearchableOptions {
-    enabled = false
 }
 
 allprojects {
@@ -107,6 +108,7 @@ grammarKit {
 }
 
 dependencies {
+    //errorprone 'com.google.errorprone:error_prone_core:2.6.0'
     compile project('jps-plugin')
     testCompile group: 'junit', name: 'junit', version: '4.13.2'
     compile files(libFiles.collect({"lib/${it}.jar"}))
@@ -118,9 +120,7 @@ patchPluginXml {
     sinceBuild("${pluginSinceBuild}")
     untilBuild("${pluginUntilBuild}")
 
-    changeNotes """
-      Add change notes here.<br>
-      <em>most HTML tags may be used</em>"""
+//    changeNotes "Notes"
     version
 }
 
@@ -225,16 +225,8 @@ task listCompileOnly(dependsOn: configurations.compile) {
 tasks.prepareSandbox.dependsOn project('aldorunit').tasks.jar
 tasks.prepareTestingSandbox.dependsOn project('aldorunit').tasks.jar
 prepareTestingSandbox {
-    doFirst {
-        //${project('aldorunit').libsDir}.collect {println "Found file ${it}"}
-        println "outputs ${project('aldorunit').tasks.jar.archiveFile.asFile}"
-        println "copy files ${project('aldorunit').libsDir} ${destinationDir}/${intellij.pluginName}/aldorunit"
-    }
     from(project('aldorunit').tasks.jar) {
         into "${intellij.pluginName}/aldorunit"
-    }
-    eachFile {
-        println "File: ${it}"
     }
 }
 
@@ -284,7 +276,7 @@ def parserTask(project, parserName, pkg) {
 test {
     testLogging {
         events "failed"
-        exceptionFormat "short"
+        exceptionFormat "full"
     }
     maxHeapSize = "6g"
 }

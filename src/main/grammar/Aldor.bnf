@@ -102,15 +102,18 @@
   implements("UnaryWithExpr") = 'aldor.psi.AldorWith'
   implements("BinaryWithExpr") = 'aldor.psi.AldorWith'
 
-  stubClass("UnaryWith")='com.intellij.psi.stubs.EmptyStub<aldor.psi.AldorWith>'
-  stubClass("WithPart")='com.intellij.psi.stubs.EmptyStub<aldor.psi.AldorWith>'
   stubClass("UnaryWithExpr")='com.intellij.psi.stubs.EmptyStub<aldor.psi.AldorWith>'
   stubClass("BinaryWithExpr")='com.intellij.psi.stubs.EmptyStub<aldor.psi.AldorWith>'
+  stubClass("UnaryWith")='com.intellij.psi.stubs.EmptyStub<aldor.psi.AldorWith>'
+  stubClass("WithPart")='com.intellij.psi.stubs.EmptyStub<aldor.psi.AldorWith>'
 
+  mixin("UnaryWithExpr") ="com.intellij.extapi.psi.StubBasedPsiElementBase<com.intellij.psi.stubs.EmptyStub<aldor.psi.AldorWith>>"
+  mixin("BinaryWithExpr") ="com.intellij.extapi.psi.StubBasedPsiElementBase<com.intellij.psi.stubs.EmptyStub<aldor.psi.AldorWith>>"
   mixin("UnaryWith")="aldor.psi.impl.AldorWithMixin"
   mixin("WithPart")="aldor.psi.impl.AldorWithMixin"
-  mixin("UnaryWithExpr")="aldor.psi.impl.AldorWithMixin"
-  mixin("BinaryWithExpr")="aldor.psi.impl.AldorWithMixin"
+
+  //mixin("UnaryWithExpr")="aldor.psi.impl.AldorWithExprMixin"
+  //mixin("BinaryWithExprStubbed")="aldor.psi.impl.AldorWithExprMixin"
 
   // add
   //stubClass("UnaryAdd")='com.intellij.psi.stubs.EmptyStub<com.intellij.psi.PsiElement>'
@@ -274,9 +277,9 @@ private BindingL_Infixed_Collection ::=
                           | BindingL_Infixed_Collection_Define
                           | BindingL_Infixed_Collection_Macro
                           | BindingL_Infixed_Collection_Lambda
+                         // | (Iterator+ <<noRepeatHere>>)
                           | KW_MapsToStar BindingL_Infixed_Collection)
-               | Collection
-
+                | Collection
 left BindingL_Infixed_Collection_Assign ::= KW_Assign BindingL_Infixed_Collection
 left BindingL_Infixed_Collection_Macro ::= KW_MArrow BindingL_Infixed_Collection
 left BindingL_Infixed_Collection_Define ::= KW_2EQ BindingL_Infixed_Collection
@@ -735,12 +738,12 @@ PreDocument ::= TK_PreDoc*
 
 SpadTopLevel ::= <<parseTopLevel "SpadTopLevel">>
 // NB: All spad comments are '++'.  Guess that top level is pre - anything else is post.
-SpadTopLevelExpression ::= SpadAbbrevCmd* PreDocument Expression //{pin=PreDocument} {recoverWhile="TopLevel_Recover"}
+SpadTopLevelExpression ::= SpadAbbrevCmd* PreDocument Expression // {pin=PreDocument} {recoverWhile="TopLevel_Recover"}
 SpadDocument ::= TK_PostDoc*
 SpadAbbrevCmd ::= TK_SysCmdAbbrev
 
 
-//private TopLevel_Recover ::= !(TK_PreDoc)
+//private TopLevel_Recover ::= !(TK_PreDoc | SpadAbbrevCmd)
 
 SpadInfixed ::= Block | Expr
 
@@ -784,8 +787,15 @@ Colon_194_Expr ::= KW_Colon Expr
 //private PrimaryGroup ::= PrimaryExpr
 PrimaryExpr ::= Application
 
+//UnaryWithExpr ::= UnaryWithExprStubbed
+//BinaryWithExpr ::= BinaryWithExprStubbed
 UnaryWithExpr ::= KW_With DeclMolecule
 BinaryWithExpr ::= Expr KW_With DeclMolecule
+
+//UnaryWithExprStubbed ::= KW_With DeclMolecule
+//BinaryWithExprStubbed ::= Expr KW_With DeclMolecule
+
+
 UnaryAddExpr ::= KW_Add DeclMolecule
 BinaryAddExpr ::= Expr KW_Add DeclMolecule
 

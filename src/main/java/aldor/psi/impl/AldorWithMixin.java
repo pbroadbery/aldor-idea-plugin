@@ -1,9 +1,6 @@
 package aldor.psi.impl;
 
 import aldor.psi.AldorWith;
-import aldor.psi.stub.SpadAbbrevStub;
-import aldor.psi.stub.WithStub;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.extapi.psi.StubBasedPsiElementBase;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.EmptyStub;

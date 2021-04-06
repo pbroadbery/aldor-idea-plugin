@@ -25,6 +25,4 @@ public class TopLevelParseTest extends AssumptionAware.LightPlatformCodeInsightT
     private PsiElement parseText(CharSequence text, IElementType elementType) {
         return ParserFunctions.parseAldorText(getProject(), text, elementType);
     }
-
-
 }
