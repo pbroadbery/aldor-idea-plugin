@@ -8,6 +8,7 @@ Features:
 - Symbol lookup
 - Syntax highlighting
 - Aldor syntax checks
+- Browsing type hierarchy
 
 # Status
 
@@ -19,17 +20,17 @@ Features:
 
 Take code, build it, add to intellij as a plugin.
 
-Note that as of today, many features are broken/not implemented.
+# Current state
 
-It is expected that an aldor/fricas project consists of a checked out copy of the
-source repository.  This is done so that the plugin can invoke make on various targets
-instead of having to put together command lines.
-
-# Plans
-
-Version one of this plugin will
+Version one of this plugin:
 
 - Have decent navigation between domains/categories
 - Work with most aldor and fricas source files
-- Support on the fly compilation of aldor files
 - Show ++ style documentation for aldor and spad domains
+
+# Plans
+
+- Support on the fly compilation of aldor files
+- Support editing files in clones of the fricas and aldor git repos
+- Improved hierarchy views 'what implements this domain'
+
