@@ -39,7 +39,7 @@ public class AldorVersionQuery {
         }
         File binary = new File(new File(path), "bin");
         binary = new File(binary, "aldor");
-        if (binary.canExecute()) {
+        if (!binary.canExecute()) {
             return false;
         }
         return true;

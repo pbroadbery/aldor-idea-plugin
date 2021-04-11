@@ -31,6 +31,7 @@ import java.io.File;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -50,7 +51,8 @@ public class AldorSimpleModuleBuilder extends AldorModuleBuilder {
     }
 
     @Override
-    public @NotNull List<WizardInputField<?>> getAdditionalFields() {
+    @NotNull
+    public List<WizardInputField<?>> getAdditionalFields() {
         return Collections.emptyList();
     }
 
@@ -61,7 +63,7 @@ public class AldorSimpleModuleBuilder extends AldorModuleBuilder {
 
     @Override
     public String getDescription() {
-        return "Aldor module with Makefile created<b>" +
+        return "Aldor module with Makefile created<br/>" +
                 "Please treat this as experimental - not all features work as yet";
     }
 
@@ -84,7 +86,7 @@ public class AldorSimpleModuleBuilder extends AldorModuleBuilder {
         }
 
         ContentEntry entry = modifiableRootModel.getContentEntries()[0];
-        VirtualFile contentRootDir = entry.getFile();
+        VirtualFile contentRootDir = Objects.requireNonNull(entry.getFile());
         if (this.createInitialStructure) {
             createFileLayout(contentRootDir, modifiableRootModel);
 
