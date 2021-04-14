@@ -211,6 +211,7 @@ public final class AldorTokenTypes {
     public static IElementType createTokenType(String token) {
         IElementType tokenType = tokenTypeForString.get(token);
         if (tokenType == null) {
+            System.out.println("Missing token " + token);
             throw new IllegalArgumentException("Unknown token: " + token);
         }
 

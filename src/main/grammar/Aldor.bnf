@@ -251,7 +251,7 @@ private BindingL_Infixed_AnyStatement ::=
                           | KW_Implies Binding_AnyStatement)?
                | AnyStatement
 
-left BindingL_Infixed_AnyStatement_Define ::= KW_2EQ BindingL_Infixed_AnyStatement
+left BindingL_Infixed_AnyStatement_Define ::= KW_2EQ BindingL_Infixed_AnyStatement { pin="KW_2EQ"}
 left BindingL_Infixed_AnyStatement_Macro ::= KW_MArrow BindingL_Infixed_AnyStatement
 left BindingL_Infixed_AnyStatement_Assign ::= KW_Assign BindingL_Infixed_AnyStatement
 left BindingL_Infixed_AnyStatement_Lambda ::= KW_MapsTo BindingL_Infixed_AnyStatement
@@ -268,7 +268,7 @@ private BindingL_Infixed_BalStatement ::=
 
 left BindingL_Infixed_BalStatement_Assign ::= KW_Assign BindingL_Infixed_BalStatement
 left BindingL_Infixed_BalStatement_Macro ::= KW_MArrow BindingL_Infixed_BalStatement
-left BindingL_Infixed_BalStatement_Define ::= KW_2EQ BindingL_Infixed_BalStatement
+left BindingL_Infixed_BalStatement_Define ::= KW_2EQ BindingL_Infixed_BalStatement { pin="KW_2EQ"}
 left BindingL_Infixed_BalStatement_Lambda ::= KW_MapsTo BindingL_Infixed_BalStatement
 
 // TODO: Similar left factoring as above.
@@ -282,7 +282,7 @@ private BindingL_Infixed_Collection ::=
                 | Collection
 left BindingL_Infixed_Collection_Assign ::= KW_Assign BindingL_Infixed_Collection
 left BindingL_Infixed_Collection_Macro ::= KW_MArrow BindingL_Infixed_Collection
-left BindingL_Infixed_Collection_Define ::= KW_2EQ BindingL_Infixed_Collection
+left BindingL_Infixed_Collection_Define ::= KW_2EQ BindingL_Infixed_Collection { pin="KW_2EQ"}
 left BindingL_Infixed_Collection_Lambda ::= KW_MapsTo BindingL_Infixed_Collection
 
 /*
@@ -320,7 +320,7 @@ private BindingR_InfixedExprsDecl_AnyStatement ::= InfixedExprsDecl (Binding_Any
                                                              | KW_MapsToStar Binding_AnyStatement)?
 
 left Binding_AnyStatement_Assign ::= KW_Assign Binding_AnyStatement
-left Binding_AnyStatement_Define ::= KW_2EQ Binding_AnyStatement
+left Binding_AnyStatement_Define ::= KW_2EQ Binding_AnyStatement { pin="KW_2EQ"}
 left Binding_AnyStatement_Macro ::= KW_MArrow Binding_AnyStatement
 //no_semicolon ::= ! KW_Semicolon
 //AnyStatement ::= KW_If CommaItem KW_Then Binding_AnyStatement | Flow_AnyStatement
@@ -612,7 +612,7 @@ DeclBlock ::= Curly_Labelled | DeclPiled_Expression
 Block ::= Curly_Labelled | Piled_Expression
 
 RecoverableExpression ::= Expression { recoverWhile=ExpressionRecover}
-private ExpressionRecover ::= !(KW_CParen| KW_CBrack | <<blockEnd>> | SpadAbbrevCmd)
+private ExpressionRecover ::= !(KW_CParen| KW_CBrack | <<blockEnd>> | TK_SysCmdAbbrev)
 
 Parened ::= KW_OParen (KW_CParen | RecoverableExpression KW_CParen) { pin="KW_OParen"}
 
@@ -689,10 +689,12 @@ private enlist1a_Labelled_SEMICOLON ::= Labelled (Semicolon Labelled)* Semicolon
 TopLevel ::= CurlyContents_Labelled (KW_StartPile Piled_Content KW_EndPile?)?
 
 //Piled_E ::= KW_BlkStart PileContents_E KW_BlkEnd
-private Piled_Expression ::= KW_BlkStart Piled_Content <<blockEnd>>
+private Piled_Expression ::= KW_BlkStart Piled_Content <<blockEnd>> { recoverWhile=BlockEndRecover }
 DeclPiled_Expression ::= KW_BlkStart DeclPiled_Content <<blockEnd>>
 Piled_Content ::= <<parsePiledContent "Pile">>
 DeclPiled_Content ::= <<parsePiledContent "Pile">>
+
+private BlockEndRecover ::= !(<<blockEnd>> | TK_SysCmdAbbrev)
 //Piled_Expression ::= KW_BlkStart PileContents_Expression <<backTab>>
 //Piled_Expression ::= KW_BlkStart Doc_Expression (KW_BlkNext Doc_Expression)* KW_BlkNext? <<backTab>>
 
@@ -738,12 +740,12 @@ PreDocument ::= TK_PreDoc*
 
 SpadTopLevel ::= <<parseTopLevel "SpadTopLevel">>
 // NB: All spad comments are '++'.  Guess that top level is pre - anything else is post.
-SpadTopLevelExpression ::= SpadAbbrevCmd* PreDocument Expression // {pin=PreDocument} {recoverWhile="TopLevel_Recover"}
+SpadTopLevelExpression ::= SpadAbbrevCmd* PreDocument SpadTopLevelExpression_Inner // {pin=PreDocument} {recoverWhile="TopLevel_Recover"}
 SpadDocument ::= TK_PostDoc*
 SpadAbbrevCmd ::= TK_SysCmdAbbrev
 
-
-//private TopLevel_Recover ::= !(TK_PreDoc | SpadAbbrevCmd)
+SpadTopLevelExpression_Inner ::= Expression { recoverWhile="TopLevel_Recover"}
+private TopLevel_Recover ::= !(TK_PreDoc | TK_SysCmdAbbrev)
 
 SpadInfixed ::= Block | Expr
 
