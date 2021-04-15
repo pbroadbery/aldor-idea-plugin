@@ -122,6 +122,7 @@ public class SpadParsingTest {
     public void testTopLevelSeq() {
         PsiElement psi = parseText("++ Foo\nFoo: with == add\n++ Bar\nBar: with == add\n");
         final List<PsiErrorElement> errors = ParserFunctions.getPsiErrorElements(psi);
+        logPsi(psi);
         Assert.assertEquals(0, errors.size());
     }
 

@@ -77,7 +77,6 @@ public class AldorElementTypeFactory {
 
     public static IElementType createElement(String name) {
         try {
-            System.out.println("create " + name);
             return instance.createElementImpl(name);
         }
         catch (RuntimeException e) {

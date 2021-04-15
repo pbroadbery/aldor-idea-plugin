@@ -251,7 +251,7 @@ private BindingL_Infixed_AnyStatement ::=
                           | KW_Implies Binding_AnyStatement)?
                | AnyStatement
 
-left BindingL_Infixed_AnyStatement_Define ::= KW_2EQ BindingL_Infixed_AnyStatement { pin="KW_2EQ"}
+left BindingL_Infixed_AnyStatement_Define ::= KW_2EQ BindingL_Infixed_AnyStatement //{ pin="KW_2EQ"}
 left BindingL_Infixed_AnyStatement_Macro ::= KW_MArrow BindingL_Infixed_AnyStatement
 left BindingL_Infixed_AnyStatement_Assign ::= KW_Assign BindingL_Infixed_AnyStatement
 left BindingL_Infixed_AnyStatement_Lambda ::= KW_MapsTo BindingL_Infixed_AnyStatement
@@ -268,7 +268,7 @@ private BindingL_Infixed_BalStatement ::=
 
 left BindingL_Infixed_BalStatement_Assign ::= KW_Assign BindingL_Infixed_BalStatement
 left BindingL_Infixed_BalStatement_Macro ::= KW_MArrow BindingL_Infixed_BalStatement
-left BindingL_Infixed_BalStatement_Define ::= KW_2EQ BindingL_Infixed_BalStatement { pin="KW_2EQ"}
+left BindingL_Infixed_BalStatement_Define ::= KW_2EQ BindingL_Infixed_BalStatement //{ pin="KW_2EQ"}
 left BindingL_Infixed_BalStatement_Lambda ::= KW_MapsTo BindingL_Infixed_BalStatement
 
 // TODO: Similar left factoring as above.
@@ -282,7 +282,7 @@ private BindingL_Infixed_Collection ::=
                 | Collection
 left BindingL_Infixed_Collection_Assign ::= KW_Assign BindingL_Infixed_Collection
 left BindingL_Infixed_Collection_Macro ::= KW_MArrow BindingL_Infixed_Collection
-left BindingL_Infixed_Collection_Define ::= KW_2EQ BindingL_Infixed_Collection { pin="KW_2EQ"}
+left BindingL_Infixed_Collection_Define ::= KW_2EQ BindingL_Infixed_Collection //{ pin="KW_2EQ"}
 left BindingL_Infixed_Collection_Lambda ::= KW_MapsTo BindingL_Infixed_Collection
 
 /*
@@ -320,7 +320,7 @@ private BindingR_InfixedExprsDecl_AnyStatement ::= InfixedExprsDecl (Binding_Any
                                                              | KW_MapsToStar Binding_AnyStatement)?
 
 left Binding_AnyStatement_Assign ::= KW_Assign Binding_AnyStatement
-left Binding_AnyStatement_Define ::= KW_2EQ Binding_AnyStatement { pin="KW_2EQ"}
+left Binding_AnyStatement_Define ::= KW_2EQ Binding_AnyStatement
 left Binding_AnyStatement_Macro ::= KW_MArrow Binding_AnyStatement
 //no_semicolon ::= ! KW_Semicolon
 //AnyStatement ::= KW_If CommaItem KW_Then Binding_AnyStatement | Flow_AnyStatement
@@ -744,8 +744,8 @@ SpadTopLevelExpression ::= SpadAbbrevCmd* PreDocument SpadTopLevelExpression_Inn
 SpadDocument ::= TK_PostDoc*
 SpadAbbrevCmd ::= TK_SysCmdAbbrev
 
-SpadTopLevelExpression_Inner ::= Expression { recoverWhile="TopLevel_Recover"}
-private TopLevel_Recover ::= !(TK_PreDoc | TK_SysCmdAbbrev)
+private SpadTopLevelExpression_Inner ::= Expression// { recoverWhile="TopLevel_Recover"}
+private TopLevel_Recover ::= !(TK_PreDoc | TK_SysCmdAbbrev| KW_BlkNext | KW_BlkEnd)
 
 SpadInfixed ::= Block | Expr
 
