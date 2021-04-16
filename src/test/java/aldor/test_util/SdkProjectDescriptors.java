@@ -56,6 +56,7 @@ public final class SdkProjectDescriptors {
     }
 
     private interface SdkDescriptor {
+        @SuppressWarnings("ClassReferencesSubclass")
         SdkOption sdkOption();
         String name(String prefix);
 
@@ -354,7 +355,7 @@ public final class SdkProjectDescriptors {
             @Nullable Sdk sdk = ProjectJdkTable.getInstance().findJdk(sdkDescriptor.name(prefix));
             if (sdk == null) {
                 sdk = createSDK();
-                ProjectJdkTable.getInstance().addJdk(sdk);
+                //ProjectJdkTable.getInstance().addJdk(sdk);
             }
             return sdk;
         }

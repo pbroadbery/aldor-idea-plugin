@@ -19,6 +19,11 @@ import com.intellij.codeInsight.completion.CompletionType;
 import com.intellij.codeInsight.completion.util.ParenthesesInsertHandler;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import com.intellij.openapi.application.ex.ApplicationUtil;
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.progress.ProcessCanceledException;
+import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.patterns.ElementPattern;
 import com.intellij.patterns.PatternCondition;
 import com.intellij.patterns.StandardPatterns;
@@ -27,6 +32,7 @@ import com.intellij.util.ProcessingContext;
 import icons.AldorIcons;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +44,7 @@ import static com.intellij.patterns.StandardPatterns.object;
 import static com.intellij.patterns.StandardPatterns.or;
 
 public class AldorCompletionContributor extends CompletionContributor {
+    private static final Logger LOG = Logger.getInstance(AldorCompletionContributor.class);
 
     public AldorCompletionContributor() {
 
@@ -50,10 +57,10 @@ public class AldorCompletionContributor extends CompletionContributor {
     }
 
     private CompletionProvider<CompletionParameters> idCompletion() {
-        return new CompletionProvider<CompletionParameters>() {
+        return new CompletionProvider<>() {
             @Override
             protected void addCompletions(@NotNull CompletionParameters parameters,
-                                          ProcessingContext context,
+                                          @NotNull ProcessingContext context,
                                           @NotNull CompletionResultSet result) {
                 List<LookupElement> element = allTypes(parameters);
                 result.addAllElements(element);
@@ -64,20 +71,33 @@ public class AldorCompletionContributor extends CompletionContributor {
     public List<LookupElement> allTypes(CompletionParameters parameters) {
         PsiElement elt = parameters.getPosition();
         SpadLibrary spadLibrary = SpadLibraryManager.getInstance(parameters.getOriginalFile().getProject()).spadLibraryForElement(elt);
-        return (spadLibrary == null) ? Collections.emptyList() : allTypes(spadLibrary);
+        return (spadLibrary == null) ? Collections.emptyList() : allTypes_withCancel(spadLibrary);
     }
 
     @VisibleForTesting
-    public static List<LookupElement> allTypes(SpadLibrary spadLibrary) {
-        List<Syntax> allTypes = spadLibrary.allTypes();
+    public static List<LookupElement> allTypes_withCancel(SpadLibrary spadLibrary) {
+        try {
+            ProgressIndicator progressIndicator = ProgressManager.getInstance().getProgressIndicator();
+            return asElements(spadLibrary, ApplicationUtil.runWithCheckCanceled(spadLibrary::allTypes, progressIndicator));
+        }
+        catch (ProcessCanceledException e) {
+            LOG.info("Cancelled completion");
+        } catch (Exception e) {
+            LOG.error("Failed to collect all types", e);
+        }
+        return Collections.emptyList();
+    }
+
+    @VisibleForTesting
+    public static List<LookupElement> asElements(SpadLibrary spadLibrary, Collection<Syntax> allTypes) {
         return allTypes.stream()
-                .flatMap(e -> createLookupElement(spadLibrary, e).map(Stream::of).orElse(Stream.empty()))
+                .flatMap(e -> createLookupElement(spadLibrary, e).stream())
                 .collect(Collectors.toList());
     }
 
     private static Optional<LookupElement> createLookupElement(SpadLibrary spadLibrary, Syntax syntax) {
         Optional<Id> id = SyntaxUtils.leadingId(syntax).maybeAs(Id.class);
-        if (!id.isPresent()) {
+        if (id.isEmpty()) {
             return Optional.empty();
         }
         else {
@@ -110,7 +130,7 @@ public class AldorCompletionContributor extends CompletionContributor {
     private static final class AldorPatterns {
         static ElementPattern<PsiElement> isFirstChild() {
             //noinspection InnerClassTooDeeplyNested
-            return psiElement().with(new PatternCondition<PsiElement>("firstChild") {
+            return psiElement().with(new PatternCondition<>("firstChild") {
                 @Override
                 public boolean accepts(@NotNull PsiElement psiElement, ProcessingContext context) {
                     return (psiElement.getParent() != null) && psiElement.getParent().getFirstChild().equals(psiElement);

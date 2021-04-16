@@ -14,7 +14,7 @@ buildscript {
             url 'https://jetbrains.bintray.com/intellij-plugin-service'
         }
         maven {
-            url 'https://jetbrains.bintray.com/intellij-third-party-dependencies'
+            url 'https://cache-redirector.jetbrains.com/intellij-dependencies'
         }
 
     }

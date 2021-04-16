@@ -9,18 +9,19 @@ import aldor.test_util.DirectoryPresentRule;
 import aldor.test_util.SdkProjectDescriptors;
 import aldor.test_util.Timer;
 import com.intellij.codeInsight.lookup.LookupElement;
+import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.LightProjectDescriptor;
-import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Assume;
 
 import java.util.List;
 
-public class AldorCompletionContributorTest extends AssumptionAware.BasePlatformTestCase {
+public class AldorCompletionContributorTest extends AssumptionAware.LightIdeaTestCase {
 
     private final DirectoryPresentRule directory = new DirectoryPresentRule("/home/pab/Work/fricas/opt/lib/fricas/target/x86_64-linux-gnu");
 
@@ -30,30 +31,40 @@ public class AldorCompletionContributorTest extends AssumptionAware.BasePlatform
         Assume.assumeTrue(directory.isPresent());
     }
 
+    @Override
+    protected boolean runInDispatchThread() {
+        return true;
+    }
+
     public void testLoadAllBenchmark() {
         VirtualFile algebraDirectory = projectSdkAlgebraDirectory();
         SpadLibrary lib = new FricasSpadLibraryBuilder()
                 .project(getProject())
                 .daaseDirectory(algebraDirectory)
                 .createFricasSpadLibrary();
-        for (int i=0; i<1; i++) {
-            Timer timer = new Timer("loadAllTypes-" + i);
-            try (Timer.TimerRun run = timer.run()) {
-                AldorCompletionContributor.allTypes(lib);
-            } catch (Exception ignore) {
-                Assert.fail();
+        ProgressManager.getInstance().executeNonCancelableSection(() -> {
+            for(int i = 0; i<1;i++) {
+                Timer timer = new Timer("loadAllTypes-" + i);
+                try (Timer.TimerRun run = timer.run()) {
+                    AldorCompletionContributor.allTypes_withCancel(lib);
+                } catch (Exception ignore) {
+                    Assert.fail();
+                }
+                System.out.println("Read files: " + timer);
             }
-            System.out.println("Read files: "+ timer);
-        }
+        });
     }
 
     public void testLoadAll() {
         SpadLibrary lib = new FricasSpadLibraryBuilder().project(getProject())
                 .daaseDirectory(projectSdkAlgebraDirectory())
                 .createFricasSpadLibrary();
-        List<LookupElement> allTypes = AldorCompletionContributor.allTypes(lib);
-        System.out.println("All types: " + allTypes.size());
-        Assert.assertFalse(allTypes.isEmpty());
+
+        ProgressManager.getInstance().executeNonCancelableSection(() -> {
+            List<LookupElement> allTypes = AldorCompletionContributor.allTypes_withCancel(lib);
+            System.out.println("All types: " + allTypes.size());
+            Assert.assertFalse(allTypes.isEmpty());
+        });
     }
 
     @NotNull
@@ -66,7 +77,7 @@ public class AldorCompletionContributorTest extends AssumptionAware.BasePlatform
     }
 
     @Override
-    protected LightProjectDescriptor getProjectDescriptor() {
+    protected @NotNull LightProjectDescriptor getProjectDescriptor() {
         return SdkProjectDescriptors.fricasSdkProjectDescriptor(directory);
     }
 

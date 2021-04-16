@@ -6,6 +6,7 @@ import aldor.build.facet.fricas.FricasFacet;
 import aldor.builder.jps.SpadFacetProperties;
 import aldor.file.AldorFileType;
 import aldor.file.SpadFileType;
+import aldor.file.SpadInputFileType;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleType;
@@ -50,6 +51,7 @@ public class AldorModuleType extends ModuleType<AldorModuleBuilder> {
         return "Module containing spad/aldor sources";
     }
 
+    @NotNull
     @Override
     public Icon getNodeIcon(@Deprecated boolean isOpened) {
         return AldorIcons.MODULE;
@@ -64,11 +66,15 @@ public class AldorModuleType extends ModuleType<AldorModuleBuilder> {
         return ModuleType.is(module, this);
     }
 
-    public @Nullable SpadFacet<? extends SpadFacetProperties> facetModuleType(Module module, FileType fileType) {
+    @Nullable
+    public SpadFacet<? extends SpadFacetProperties> facetModuleType(Module module, FileType fileType) {
         if (fileType.equals(AldorFileType.INSTANCE)) {
             return AldorFacet.forModule(module);
         }
         else if (fileType.equals(SpadFileType.INSTANCE)) {
+            return FricasFacet.forModule(module);
+        }
+        else if (fileType.equals(SpadInputFileType.INSTANCE)) {
             return FricasFacet.forModule(module);
         }
         return null;

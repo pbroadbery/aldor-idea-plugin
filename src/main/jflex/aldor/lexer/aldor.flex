@@ -2,7 +2,6 @@ package aldor.lexer;
 
 import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
-import aldor.lexer.AldorTokenTypes;
 import com.intellij.psi.TokenType;
 
 %%
@@ -55,7 +54,7 @@ import com.intellij.psi.TokenType;
 %eof{  return null;
 %eof}
 
-%state LINE_START
+//%state LINE_START
 %state IF_TEXT
 %state NORMAL
 %state TRAILING_QUOTES
@@ -101,7 +100,7 @@ SPAD_SYSCMD_ABBREV=\)abbrev[^\r\n]*
 "TK_SysCmd" { yybegin(NORMAL); return AldorTokenTypes.TK_SysCmd; }
 "TK_Error" { yybegin(NORMAL); return AldorTokenTypes.TK_Error; }
 */
-<YYINITIAL, LINE_START, NORMAL> {
+<YYINITIAL, NORMAL> {
 { COMMENT } {yybegin(NORMAL); return AldorTokenTypes.TK_Comment;}
 { PREDOC }  { yybegin(NORMAL); return AldorTokenTypes.TK_PreDoc;}
 { POSTDOC }  { yybegin(NORMAL); return AldorTokenTypes.TK_PostDoc;}
@@ -220,7 +219,7 @@ SPAD_SYSCMD_ABBREV=\)abbrev[^\r\n]*
 "\|\|" { yybegin(NORMAL); return AldorTokenTypes.KW_2Bar; }
 }
 
-<LINE_START, YYINITIAL> {
+<YYINITIAL> {
     { SYSCMD_IF } { yybegin(IF_TEXT); return AldorTokenTypes.TK_SysCmdIf;}
     { SYSCMD_ENDIF } { yybegin(NORMAL); return AldorTokenTypes.TK_SysCmdEndIf;}
 
@@ -253,12 +252,12 @@ SPAD_SYSCMD_ABBREV=\)abbrev[^\r\n]*
 //"KW_Juxtapose" { return AldorTokenTypes.KW_Juxtapose; }
 
 //"TK_LIMIT" { return AldorTokenTypes.TK_LIMIT; }
-<YYINITIAL, LINE_START, NORMAL> {
+<YYINITIAL, NORMAL> {
     { ID } { if (lexMode() == LexMode.Spad) yybegin(TRAILING_QUOTES); else { yybegin(NORMAL); return AldorTokenTypes.TK_Id; }}
     { ESCID } { yybegin(NORMAL); return AldorTokenTypes.TK_Id; }
     { INT } { yybegin(NORMAL); return AldorTokenTypes.TK_Int; }
-    { ESC_CRLF } { yybegin(LINE_START); return TokenType.WHITE_SPACE; }
-    { CRLF } { yybegin(LINE_START); return AldorTokenTypes.KW_NewLine; }
+    { ESC_CRLF } { yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
+    { CRLF } { yybegin(YYINITIAL); return AldorTokenTypes.KW_NewLine; }
     { STRING } { yybegin(NORMAL); return AldorTokenTypes.TK_String; }
     . { System.out.println("Bad token `" + yytext() + "'"); return TokenType.BAD_CHARACTER; }
 }

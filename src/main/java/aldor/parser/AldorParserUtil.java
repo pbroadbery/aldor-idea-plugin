@@ -128,9 +128,8 @@ public class AldorParserUtil extends GeneratedParserUtilBase {
         return parsePiledContent(b, l, type);
     }
 
-        public static boolean parsePiledContent(@NotNull PsiBuilder b, int l, String type) {
+    public static boolean parsePiledContent(@NotNull PsiBuilder b, int l, String type) {
         int indentLevel = currentIndentLevel(b);
-        //System.out.println("Curr: " + b.getCurrentOffset() + " " + b.getTokenType() + " " + b.getTokenText());
         boolean r = parseOneExpression(b, l + 1, type);
         int c = current_position_(b);
         //noinspection LoopWithImplicitTerminationCondition
@@ -157,6 +156,25 @@ public class AldorParserUtil extends GeneratedParserUtilBase {
         return r;
     }
 
+    static final Parser pileRecoveryParser(int currentIndent) {
+        return new Parser() {
+            @Override
+            public boolean parse(PsiBuilder b, int level) {
+                boolean r = false;
+                while (true) {
+                    if (b.eof()) {
+                        break;
+                    }
+                    r = consumeToken(b, KW_BlkEnd);
+                    if (r && (currentIndent >= currentIndentLevel(b))) {
+                        break;
+                    }
+                }
+                return !r;
+            }
+        };
+    }
+
     @SuppressWarnings("InnerClassTooDeeplyNested")
     private enum ExprParser {
         Pile {
@@ -176,9 +194,14 @@ public class AldorParserUtil extends GeneratedParserUtilBase {
     }
 
     private static boolean parseOneExpression(@NotNull PsiBuilder b, int l, String type) {
-        return ExprParser.valueOf(type).parse(b, l);
+        //System.out.println("Parsing One Expression: level: " + l + " offset: " + b.getCurrentOffset() + " tok: " + b.getTokenType() + " text: " + b.getTokenText());
+        //int currentIndentLevel = currentIndentLevel(b);
+        //PsiBuilder.Marker marker_ = enter_section_(b, l, _NONE_, RECOVERABLE_EXPRESSION, "<parseOneExpression>");
+        boolean r =  ExprParser.valueOf(type).parse(b, l+1);
+        //exit_section_(b, l, marker_, r, false, null);
+        //System.out.println("Parsing One Expression level: "  + l + " result: " + r + " offset: " + b.getCurrentOffset() + " type: " + b.getTokenType() + " text: " + b.getTokenText());
+        return r;
     }
-
 
     private static boolean checkCurrentIndent(@NotNull PsiBuilder builder, int indentLevel) {
         int currentIndentLevel = currentIndentLevel(builder);
@@ -187,7 +210,7 @@ public class AldorParserUtil extends GeneratedParserUtilBase {
     }
 
     private static int currentIndentLevel(@NotNull PsiBuilder builder) {
-        AldorIndentLexer lexer = (AldorIndentLexer) ((Builder) builder).getLexer();
+        AldorIndentLexer lexer = lexer(builder);
         int level = lexer.indentLevel(builder.getCurrentOffset());
         if (level < 0) {
             return 0;
@@ -196,13 +219,15 @@ public class AldorParserUtil extends GeneratedParserUtilBase {
     }
 
     static boolean isSpadMode(@NotNull PsiBuilder builder, int indentLevel) {
-        AldorIndentLexer lexer = (AldorIndentLexer) ((Builder) builder).getLexer();
-        return lexer.isSpadMode();
+        return lexer(builder).isSpadMode();
     }
 
     static boolean isAldorMode(@NotNull PsiBuilder builder, int indentLevel) {
-        AldorIndentLexer lexer = (AldorIndentLexer) ((Builder) builder).getLexer();
-        return lexer.isAldorMode();
+        return lexer(builder).isAldorMode();
+    }
+
+    private static AldorIndentLexer lexer(@NotNull PsiBuilder builder) {
+        return (AldorIndentLexer) ((Builder) builder).getLexer();
     }
 
 }

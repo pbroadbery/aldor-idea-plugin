@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 
 import static aldor.hierarchy.AldorTypeHierarchyConstants.GROUPED_HIERARCHY_TYPE;
 import static com.intellij.ide.hierarchy.TypeHierarchyBrowserBase.SUPERTYPES_HIERARCHY_TYPE;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class AldorTypeHierarchyBrowserTest {
@@ -45,6 +46,22 @@ public class AldorTypeHierarchyBrowserTest {
                     .around(ensureClosedRule)
                     .around(new LightPlatformJUnit4TestRule(codeTestFixture, ""))
                     .around(JUnits.swingThreadTestRule());
+
+    @Test
+    public void testInputFile() {
+        String text = "BasicType";
+        PsiFile whole = codeTestFixture.addFileToProject("test.input", text);
+
+        PsiElement elt = whole.findElementAt(0);
+
+        try (TestBrowser browser = new TestBrowser(ensureClosedRule, new AldorTypeHierarchyProvider(), elt, SUPERTYPES_HIERARCHY_TYPE)) {
+
+            browser.update();
+            assertEquals(2, browser.hierarchy.getChildElements(browser.rootDescriptor()).length);
+            System.out.println("Children: " + browser.childElements());
+            ((Disposable) ProgressManager.getInstance()).dispose();
+        }
+    }
 
     @Test
     public void testReference() {

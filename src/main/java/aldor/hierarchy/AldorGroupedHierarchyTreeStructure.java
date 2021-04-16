@@ -51,7 +51,7 @@ public class AldorGroupedHierarchyTreeStructure extends HierarchyTreeStructure {
 
     @NotNull
     @Override
-    protected Object @NotNull [] buildChildren(@NotNull HierarchyNodeDescriptor descriptor) {
+    protected Object[] buildChildren(@NotNull HierarchyNodeDescriptor descriptor) {
         if (descriptor instanceof ErrorNodeDescriptor) {
             return EMPTY_ARRAY;
         }
