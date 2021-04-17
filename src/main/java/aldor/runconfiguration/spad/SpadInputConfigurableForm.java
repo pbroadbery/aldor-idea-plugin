@@ -1,10 +1,12 @@
 package aldor.runconfiguration.spad;
 
 import aldor.file.SpadInputFileType;
+import aldor.sdk.SdkTypes;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.ui.DocumentAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -21,14 +23,16 @@ import static aldor.runconfiguration.spad.SpadInputRunConfigurationType.SpadInpu
 @SuppressWarnings({"serial", "SerializableHasSerializationMethods"})
 public class SpadInputConfigurableForm extends JComponent {
     private final Project project;
+    private final Sdk sdk;
     private JPanel wholePanel;
     private TextFieldWithBrowseButton myInputFile;
     private JCheckBox loadSpad;
     private JCheckBox keepProcess;
     private JTextPane fricasCommand;
 
-    public SpadInputConfigurableForm(Project project, @Nullable Module module) {
+    public SpadInputConfigurableForm(Project project, @Nullable Module module, Sdk sdk) {
         this.project = project;
+        this.sdk = sdk;
     }
 
     public JPanel wholePanel() {
@@ -53,8 +57,9 @@ public class SpadInputConfigurableForm extends JComponent {
 
     private void updateText() {
         SpadInputConfigurationBean bean = new SpadInputConfigurationBean();
+        String execPath = SdkTypes.axiomSysPath(sdk);
         updateConfiguration(bean);
-        GeneralCommandLine commandLine = SpadInputProcesses.executionCommandLine(bean, "$FRICAS");
+        GeneralCommandLine commandLine = SpadInputProcesses.executionCommandLine(bean, execPath);
         fricasCommand.setText(commandLine.getCommandLineString());
     }
 

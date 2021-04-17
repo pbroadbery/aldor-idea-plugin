@@ -1,15 +1,14 @@
 package aldor.file;
 
 import aldor.language.SpadLanguage;
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.fileTypes.LanguageFileType;
+import icons.AldorIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.Icon;
 
 public final class SpadFileType extends LanguageFileType {
-    @SuppressWarnings("TypeMayBeWeakened")
     public static final SpadFileType INSTANCE = new SpadFileType();
 
     private SpadFileType() {
@@ -34,9 +33,8 @@ public final class SpadFileType extends LanguageFileType {
         return "spad";
     }
 
-    @Nullable
-    @Override
+    @NotNull @Override
     public Icon getIcon() {
-        return AllIcons.FileTypes.Custom;
+        return AldorIcons.SPAD_FILE;
     }
 }

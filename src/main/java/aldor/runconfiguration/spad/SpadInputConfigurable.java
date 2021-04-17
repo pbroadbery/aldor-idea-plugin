@@ -3,6 +3,7 @@ package aldor.runconfiguration.spad;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.projectRoots.Sdk;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,8 +13,8 @@ class SpadInputConfigurable extends SettingsEditor<SpadInputConfiguration> {
     @NotNull
     private final SpadInputConfigurableForm form;
 
-    SpadInputConfigurable(Project project, @Nullable Module module) {
-        this.form = new SpadInputConfigurableForm(project, module);
+    SpadInputConfigurable(Project project, @Nullable Module module, Sdk sdk) {
+        this.form = new SpadInputConfigurableForm(project, module, sdk);
     }
 
     @Override

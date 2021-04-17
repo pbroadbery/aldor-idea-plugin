@@ -16,8 +16,7 @@ public class SpadInputRunConfigurationType extends SimpleConfigurationType {
 
     protected SpadInputRunConfigurationType() {
         super("SpadInputRunConfigurationType", "Spad Input File", "Execute a Spad .input file",
-                NotNullLazyValue.createValue(() -> AldorIcons.SPAD_FILE));
-
+                NotNullLazyValue.createValue(() -> AldorIcons.SPAD_INPUT_FILE));
     }
 
     @NotNull

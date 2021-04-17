@@ -24,6 +24,7 @@ public final class AldorIcons {
     // Not the best artwork in the world, but whatever...
     public static final Icon ALDOR_FILE = IconLoader.getIcon("/icons/as.svg", AldorIcons.class);
     public static final Icon SPAD_FILE = IconLoader.getIcon("/icons/sp.svg", AldorIcons.class);
+    public static final Icon SPAD_INPUT_FILE = IconLoader.getIcon("/icons/In.svg", AldorIcons.class);
     public static final Icon MODULE = AllIcons.FileTypes.Custom;
 
     public static final Icon IDENTIFIER = IconLoader.getIcon("/icons/D-Def.svg", AldorIcons.class);
