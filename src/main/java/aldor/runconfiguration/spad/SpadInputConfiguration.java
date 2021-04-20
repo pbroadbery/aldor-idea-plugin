@@ -29,7 +29,9 @@ import java.util.Collection;
 /**
  * Configuration - the settings (file name, how to run, etc)
  */
-public class SpadInputConfiguration extends ModuleBasedConfiguration<RunConfigurationModule, Element> implements SpadRunProfile, RunConfigurationWithSuppressedDefaultDebugAction {
+public class SpadInputConfiguration
+        extends ModuleBasedConfiguration<RunConfigurationModule, Element>
+        implements SpadRunProfile, RunConfigurationWithSuppressedDefaultDebugAction {
     private final SpadInputRunConfigurationType.SpadInputConfigurationBean bean = new SpadInputRunConfigurationType.SpadInputConfigurationBean();
 
     public SpadInputConfiguration(String name, @NotNull RunConfigurationModule configurationModule, @NotNull ConfigurationFactory factory) {
@@ -55,7 +57,7 @@ public class SpadInputConfiguration extends ModuleBasedConfiguration<RunConfigur
     public SettingsEditor<SpadInputConfiguration> getConfigurationEditor() {
         SettingsEditorGroup<SpadInputConfiguration> group = new SettingsEditorGroup<>();
 
-        group.addEditor("Run details", new SpadInputConfigurable(getProject(), getConfigurationModule().getModule()));
+        group.addEditor("Run details", new SpadInputConfigurable(getProject(), getConfigurationModule().getModule(), effectiveSdk()));
 
         return group;
     }
@@ -80,7 +82,8 @@ public class SpadInputConfiguration extends ModuleBasedConfiguration<RunConfigur
     }
 
     @Override
-    public @Nullable Sdk configuredSdk() {
+    @Nullable
+    public Sdk configuredSdk() {
         // Ideally, we'd check with the form...
         if (getConfigurationModule().getModule() == null) {
             return null;
