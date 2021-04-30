@@ -17,7 +17,7 @@ public interface GuardedRunnable<E extends Exception> {
         }
     }
 
-    static <E extends Exception> void gaurd(Class<E> exn, GuardedRunnable<E> runnable) {
+    static <E extends Exception> void guard(Class<E> exn, GuardedRunnable<E> runnable) {
         //noinspection OverlyBroadCatchBlock
         try {
             runnable.callInternal();

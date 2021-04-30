@@ -15,10 +15,10 @@ import org.junit.rules.RuleChain;
 import org.junit.rules.TestRule;
 
 import java.util.List;
+import java.util.Objects;
 
 import static aldor.test_util.LightPlatformJUnit4TestRule.createFixture;
 import static aldor.test_util.SdkProjectDescriptors.fricasLocalSdkProjectDescriptor;
-import static com.intellij.testFramework.PlatformTestUtil.notNull;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
@@ -42,7 +42,8 @@ public class FricasLocalSpadLibraryTest {
         assertNotNull(baseBuildPath);
         FricasSpadLibrary lib = new FricasSpadLibraryBuilder()
                 .project(testFixture.getProject())
-                .nrlibDirectory(notNull(baseBuildPath.findFileByRelativePath("src/algebra")), baseBuildPath.findFileByRelativePath("../fricas/src/algebra"))
+                .nrlibDirectory(Objects.requireNonNull(baseBuildPath.findFileByRelativePath("src/algebra")),
+                                baseBuildPath.findFileByRelativePath("../fricas/src/algebra"))
                 .createFricasSpadLibrary();
 
         System.out.println("All types: " + lib.allTypes());

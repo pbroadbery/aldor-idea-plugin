@@ -12,6 +12,7 @@ import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -75,7 +76,7 @@ final class AldorGitModuleBuilder extends AldorModuleBuilder {
 
 
     @Override
-    public void setupRootModel(final ModifiableRootModel modifiableRootModel) throws ConfigurationException {
+    public void setupRootModel(@NotNull final ModifiableRootModel modifiableRootModel) throws ConfigurationException {
         super.setupRootModel(modifiableRootModel);
         detail.setupRootModel(modifiableRootModel);
     }

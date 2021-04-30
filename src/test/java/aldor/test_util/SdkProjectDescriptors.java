@@ -173,7 +173,6 @@ public final class SdkProjectDescriptors {
 
     public static LightProjectDescriptor aldorSdkProjectDescriptor(ExecutablePresentRule rule) {
         Assume.assumeTrue(rule.shouldRunTest());
-        Assume.assumeTrue(false);
         return instance.getProjectDescriptor(SdkOption.Aldor, rule.prefix());
     }
 

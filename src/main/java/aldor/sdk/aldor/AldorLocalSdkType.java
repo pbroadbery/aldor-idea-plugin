@@ -68,7 +68,8 @@ public class AldorLocalSdkType extends SdkType implements AldorSdkType {
     }
 
     @Override
-    public void showCustomCreateUI(@NotNull SdkModel sdkModel, @NotNull JComponent parentComponent, Sdk parentSdk, @NotNull Consumer<Sdk> sdkCreatedCallback) {
+    public void showCustomCreateUI(@NotNull SdkModel sdkModel, @NotNull JComponent parentComponent, Sdk parentSdk,
+                                   @NotNull Consumer<? super Sdk> sdkCreatedCallback) {
         ProjectJdkImpl sdk = new ProjectJdkImpl("Local Aldor Build", this);
         sdk.setVersionString("git repository");
         sdkCreatedCallback.consume(sdk);
@@ -94,6 +95,4 @@ public class AldorLocalSdkType extends SdkType implements AldorSdkType {
     public SdkAdditionalData loadAdditionalData(Element additional) {
         return additionalDataHelper.loadAdditionalData(additional);
     }
-
-
 }

@@ -11,13 +11,11 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.tree.IElementType;
-import com.intellij.testFramework.LightPlatformCodeInsightTestCase;
 import org.junit.Assert;
 
 import java.util.List;
 
 import static aldor.psi.AldorPsiUtils.logPsi;
-import static com.intellij.ide.lightEdit.LightEditUtil.getProject;
 
 public class ExpressionTest extends AssumptionAware.LightPlatformCodeInsightTestCase {
 

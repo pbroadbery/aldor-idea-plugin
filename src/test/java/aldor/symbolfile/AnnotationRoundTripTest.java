@@ -102,11 +102,6 @@ public class AnnotationRoundTripTest extends AssumptionAware.BasePlatformTestCas
     }
 
     @Override
-    protected void invokeTestRunnable(@NotNull Runnable runnable) {
-        runnable.run();
-    }
-
-    @Override
     protected boolean runInDispatchThread() {
         return false;
     }

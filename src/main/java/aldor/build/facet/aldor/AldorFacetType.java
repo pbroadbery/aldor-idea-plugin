@@ -16,7 +16,7 @@ public class AldorFacetType extends FacetType<AldorFacet, AldorFacetConfiguratio
         super(TYPE_ID, AldorFacetConstants.ID, AldorFacetConstants.NAME);
     }
 
-    public static FacetType<AldorFacet, AldorFacetConfiguration> instance() {
+    public static AldorFacetType instance() {
         return findInstance(AldorFacetType.class);
     }
 

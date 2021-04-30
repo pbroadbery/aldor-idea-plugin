@@ -13,13 +13,10 @@ import com.intellij.ide.util.projectWizard.WizardInputField;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
-import com.intellij.openapi.roots.ui.configuration.JdkComboBox;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectSdksModel;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
@@ -32,7 +29,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static aldor.module.template.TemplateFiles.saveFile;
@@ -78,7 +74,7 @@ public class AldorSimpleModuleBuilder extends AldorModuleBuilder {
     }
 
     @Override
-    public void setupRootModel(final ModifiableRootModel modifiableRootModel) throws ConfigurationException {
+    public void setupRootModel(@NotNull final ModifiableRootModel modifiableRootModel) throws ConfigurationException {
         super.setupRootModel(modifiableRootModel);
         String contentEntryPath = getContentEntryPath();
         if (StringUtil.isEmpty(contentEntryPath)) {
@@ -95,12 +91,10 @@ public class AldorSimpleModuleBuilder extends AldorModuleBuilder {
 
                 if (file != null) {
                     entry.addSourceFolder(file + "/src", AldorSourceRootType.INSTANCE);
-                    entry.addExcludeFolder(file + "/src/out");
                 }
             }
         }
     }
-
 
     private void createFileLayout(VirtualFile contentRootDir, ModifiableRootModel model) throws ConfigurationException {
         VirtualFile file = getOrCreateExternalProjectConfigFile(contentRootDir.getPath() + "/src", "Makefile");

@@ -13,11 +13,13 @@ import org.jetbrains.jps.model.JpsElementTypeWithDefaultProperties;
 import org.jetbrains.jps.model.library.JpsOrderRootType;
 import org.jetbrains.jps.model.library.sdk.JpsSdkType;
 import org.jetbrains.jps.model.module.JpsModule;
+import org.jetbrains.jps.model.module.JpsModuleSourceRootType;
 import org.jetbrains.jps.model.serialization.JpsModelSerializerExtension;
 import org.jetbrains.jps.model.serialization.facet.JpsFacetConfigurationSerializer;
 import org.jetbrains.jps.model.serialization.library.JpsLibraryRootTypeSerializer;
 import org.jetbrains.jps.model.serialization.library.JpsSdkPropertiesSerializer;
 import org.jetbrains.jps.model.serialization.module.JpsModulePropertiesSerializer;
+import org.jetbrains.jps.model.serialization.module.JpsModuleSourceRootPropertiesSerializer;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -77,6 +79,11 @@ public class JpsAldorModelSerializerExtension extends JpsModelSerializerExtensio
         return Collections.singletonList(new JpsAldorFacetConfigurationSerializer());
     }
 
+    @Override
+    public @NotNull List<? extends JpsModuleSourceRootPropertiesSerializer<?>> getModuleSourceRootPropertiesSerializers() {
+        return Collections.singletonList(new JpsAldorSourceRootSerializer());
+    }
+
     private static class AldorLocalSdkPropertiesSerializer extends JpsSdkPropertiesSerializer<JpsDummyElement>{
         public static final AldorLocalSdkPropertiesSerializer local = new AldorLocalSdkPropertiesSerializer("Aldor Local SDK", JpsAldorSdkType.LOCAL);
         public static final AldorLocalSdkPropertiesSerializer installed = new AldorLocalSdkPropertiesSerializer("Aldor SDK", JpsAldorSdkType.INSTALLED);
@@ -128,12 +135,21 @@ public class JpsAldorModelSerializerExtension extends JpsModelSerializerExtensio
             LOG.info("Loaded facet extension " + props + " " + props.buildJavaComponents());
             return new JpsAldorModuleExtension(props);
         }
+    }
+
+    private class JpsAldorSourceRootSerializer extends JpsModuleSourceRootPropertiesSerializer<AldorSourceRootProperties> {
+        JpsAldorSourceRootSerializer() {
+            super(AldorSourceRootType.INSTANCE, "AldorSource");
+        }
 
         @Override
-        protected void saveExtension(JpsAldorModuleExtension extension, Element facetConfigurationTag, JpsModule module) {
-            LOG.info("Saving facet extension");
-            module.getSdkReferencesTable();
-            XmlSerializer.serializeInto(extension.getProperties(), facetConfigurationTag);
+        public AldorSourceRootProperties loadProperties(@NotNull Element sourceRootTag) {
+            return new AldorSourceRootProperties(sourceRootTag.getAttributeValue("outputDirectory"));
+        }
+
+        @Override
+        public void saveProperties(@NotNull AldorSourceRootProperties properties, @NotNull Element sourceRootTag) {
+            sourceRootTag.setAttribute("outputDirectory", properties.outputDirectory());
         }
     }
 }

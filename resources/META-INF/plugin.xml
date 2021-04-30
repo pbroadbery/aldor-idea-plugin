@@ -64,7 +64,7 @@
         <moduleService serviceInterface="aldor.spad.AldorModuleSpadLibraryManager"
                         serviceImplementation="aldor.spad.AldorModuleSpadLibraryManagerImpl"/>
 
-        <compileServer.plugin classpath="aldor-jps-plugin.jar"/>
+        <compileServer.plugin classpath="aldorutil.jar;aldor-jps-plugin.jar"/>
         <postStartupActivity implementation="aldor.build.AldorCompilationStartupActivity"/>
         <compiler.buildTargetScopeProvider implementation="aldor.build.builders.AldorBuildTargetScopeProvider" />
         <compiler.buildTargetScopeProvider implementation="aldor.build.builders.AldorJarBuildTargetScopeProvider"/>
@@ -73,6 +73,7 @@
                     implementationClass="aldor.build.module.AldorModuleType"/>
         <moduleConfigurationEditorProvider implementation="aldor.build.module.AldorModuleConfigEditorProvider"/>
 
+        <projectStructure.sourceRootEditHandler implementation="aldor.build.roots.AldorSourceRootEditHandler"/>
         <lang.syntaxHighlighterFactory language="Aldor" implementationClass="aldor.editor.AldorSyntaxHighlighterFactory"/>
         <lang.braceMatcher language="Aldor" implementationClass="aldor.editor.AldorBracketMatcher"/>
 

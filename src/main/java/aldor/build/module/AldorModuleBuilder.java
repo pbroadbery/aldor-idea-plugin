@@ -6,6 +6,7 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.ProjectType;
 import com.intellij.openapi.projectRoots.SdkTypeId;
 import com.intellij.openapi.roots.ModifiableRootModel;
+import org.jetbrains.annotations.NotNull;
 
 public class AldorModuleBuilder extends ModuleBuilder {
     public static final ProjectType ALDOR_PROJECT_TYPE = new ProjectType("Aldor & Fricas");
@@ -22,7 +23,7 @@ public class AldorModuleBuilder extends ModuleBuilder {
     }
 
     @Override
-    public void setupRootModel(final ModifiableRootModel rootModel) throws ConfigurationException {
+    public void setupRootModel(@NotNull final ModifiableRootModel rootModel) throws ConfigurationException {
         doAddContentEntry(rootModel);
     }
 

@@ -1,0 +1,17 @@
+# Aldor makefile
+# Will live in output directory (content_root/out)
+
+# Targets: .ao, .abn, .asy, .al, .jar
+
+ALDOR_SDK = @ALDOR_SDK@
+JAVA_SDK = @JAVA_SDK@
+ALDOR_FILES = @ALDOR_FILES@
+OUT_DIR = @OUT_DIR@
+EXCLUDED_FILES =
+
+ao_files = $(patsubst %,%.ao,$(ALDOR_FILES))
+
+$(ao_files): %.ao: %(srcdir)/%.as
+    mkdir -p $$(dirname $@)
+    $(ALDOR_SDK)/bin/aldor -Fao=$@ $(srcdir)/$*.as
+

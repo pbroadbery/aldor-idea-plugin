@@ -3,24 +3,22 @@ package aldor.module.template;
 import aldor.build.facet.aldor.AldorFacet;
 import aldor.build.facet.aldor.AldorFacetConstants;
 import aldor.build.facet.aldor.AldorFacetType;
-import aldor.build.module.AldorModuleBuilder;
 import aldor.sdk.aldor.AldorInstalledSdkType;
 import aldor.test_util.AssumptionAware;
 import aldor.test_util.JUnits;
 import com.intellij.facet.FacetManager;
-import com.intellij.ide.projectWizard.NewProjectWizardTestCase;
 import com.intellij.ide.wizard.Step;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.JavaSdk;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.util.Consumer;
 import org.junit.Assert;
 import org.junit.Ignore;
 
 import java.io.IOException;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 @Ignore("Does need to work, but not at the moment")
 public class AldorSimpleModuleBuilderWizardTest extends AssumptionAware.NewProjectWizardTestCase {
@@ -38,7 +36,7 @@ public class AldorSimpleModuleBuilderWizardTest extends AssumptionAware.NewProje
     public void testWizardSettings() throws IOException {
         Project project = createProjectFromTemplate("Aldor", "Simple Aldor module", new Consumer<Step>() {
             @Override
-            public void consume(Step step) {
+            public void accept(Step step) {
                 LOG.info("Adjusting " + step + "  " + step.getClass());
                 adjust(step);
                 LOG.info("Adjusted " + step + "  " + step.getClass());

@@ -1,20 +1,33 @@
 package aldor.builder.jps;
 
-import org.jetbrains.jps.model.JpsDummyElement;
-import org.jetbrains.jps.model.ex.JpsElementTypeWithDummyProperties;
+import com.intellij.openapi.diagnostic.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.jps.model.JpsElementChildRole;
 import org.jetbrains.jps.model.module.JpsModuleSourceRootType;
 
-public final class AldorSourceRootType extends JpsElementTypeWithDummyProperties implements JpsModuleSourceRootType<JpsDummyElement> {
-  public static final AldorSourceRootType INSTANCE = new AldorSourceRootType(false);
-  public static final AldorSourceRootType TEST = new AldorSourceRootType(true);
-  private final boolean isTest;
+public final class AldorSourceRootType implements JpsModuleSourceRootType<AldorSourceRootProperties> {
+    private static final Logger LOG = Logger.getInstance(AldorSourceRootType.class);
+    public static final AldorSourceRootType INSTANCE = new AldorSourceRootType(false);
+    public static final AldorSourceRootType TEST = new AldorSourceRootType(true);
+    private final boolean isTest;
 
-  private AldorSourceRootType(boolean isTest) {
-    this.isTest = isTest;
-  }
+    private AldorSourceRootType(boolean isTest) {
+        this.isTest = isTest;
+    }
 
-  @Override
-  public boolean isForTests() {
-    return isTest;
-  }
+    @Override
+    public boolean isForTests() {
+        return isTest;
+    }
+
+    @Override
+    public @NotNull JpsElementChildRole<AldorSourceRootProperties> getPropertiesRole() {
+        return AldorSourceRootRole.INSTANCE;
+    }
+
+    @Override
+    public @NotNull AldorSourceRootProperties createDefaultProperties() {
+        return new AldorSourceRootProperties("file://$MODULE_DIR$/src/main/java");
+    }
+
 }

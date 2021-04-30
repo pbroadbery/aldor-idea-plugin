@@ -83,7 +83,8 @@ public class FricasFacetEditorForm extends FacetPropertiesEditorTab<FricasFacetP
     }
 
     @Override
-    public @NotNull JComponent createComponent() {
+    @NotNull
+    public JComponent createComponent() {
         return panel;
     }
 
@@ -106,7 +107,8 @@ public class FricasFacetEditorForm extends FacetPropertiesEditorTab<FricasFacetP
     }
 
     @Override
-    public @Nls(capitalization = Nls.Capitalization.Title) String getDisplayName() {
+    @Nls(capitalization = Nls.Capitalization.Title)
+    public String getDisplayName() {
         return "Fricas Settings";
     }
 }

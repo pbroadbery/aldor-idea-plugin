@@ -27,8 +27,6 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Supplier;
-
 public class EmptyStubElementType<T extends PsiElement> extends IStubElementType<EmptyStub<T>, T> {
     private final AldorStubFactory.PsiElementFactory<EmptyStub<T>, T> psiFactory;
 
@@ -45,7 +43,7 @@ public class EmptyStubElementType<T extends PsiElement> extends IStubElementType
 
     @NotNull
     @Override
-    public final EmptyStub<T> createStub(@NotNull T psi, @SuppressWarnings("rawtypes") StubElement parentStub) {
+    public final EmptyStub<T> createStub(@NotNull T psi, StubElement<?> parentStub) {
         return create(parentStub);
     }
 

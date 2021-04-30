@@ -33,7 +33,7 @@ public abstract class StubCodecElementType<CStub extends StubElement<CPsi>, CPsi
 
     @NotNull
     @Override
-    public final CStub createStub(@NotNull CPsi psi, @SuppressWarnings("rawtypes") StubElement parentStub) {
+    public final CStub createStub(@NotNull CPsi psi, StubElement<?> parentStub) {
         return codec.createStub(parentStub, this.toElType(), psi);
     }
 
@@ -50,9 +50,10 @@ public abstract class StubCodecElementType<CStub extends StubElement<CPsi>, CPsi
 
     @NotNull
     @Override
-    public final CStub deserialize(@NotNull StubInputStream dataStream, @SuppressWarnings("rawtypes") StubElement parentStub) throws IOException {
+    public final CStub deserialize(@NotNull StubInputStream dataStream, StubElement parentStub) throws IOException {
         return codec.decode(dataStream, this.toElType(), parentStub);
     }
+
 
     public static class NoIndexElementType<IStub extends StubElement<IPsi>,
                                            IPsi extends PsiElement> extends StubCodecElementType<IStub, IPsi, IStubElementType<IStub, IPsi>> {
@@ -65,7 +66,6 @@ public abstract class StubCodecElementType<CStub extends StubElement<CPsi>, CPsi
         IStubElementType<IStub, IPsi> toElType() {
             return this;
         }
-
 
         @Override
         public final void indexStub(@NotNull IStub stub, @NotNull IndexSink sink) {

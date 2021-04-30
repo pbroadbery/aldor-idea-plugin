@@ -8,6 +8,7 @@ import aldor.test_util.AssumptionAware;
 import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.JUnits;
 import aldor.test_util.SdkProjectDescriptors;
+import com.intellij.execution.ExecutionException;
 import com.intellij.execution.PsiLocation;
 import com.intellij.execution.RunnerAndConfigurationSettings;
 import com.intellij.execution.actions.ConfigurationContext;
@@ -23,7 +24,6 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.EdtTestUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
-import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import org.junit.Assert;
 
 import java.util.Collections;
@@ -65,16 +65,11 @@ public class AldorUnitRunnableStateTest extends AssumptionAware.BasePlatformTest
     }
 
     @Override
-    protected void invokeTestRunnable(Runnable runnable) {
-        runnable.run();
-    }
-
-    @Override
     protected boolean shouldRunTest() {
         return super.shouldRunTest() && aldorExecutableRule.shouldRunTest();
     }
 
-    public void testRunSimpleConfiguration() throws InterruptedException {
+    public void testRunSimpleConfiguration() throws InterruptedException, ExecutionException {
         Ref<PsiElement> eltRef = new Ref<>();
         //getProject().getProjectFile().refresh(false, false);
         EdtTestUtil.runInEdtAndWait(() -> {

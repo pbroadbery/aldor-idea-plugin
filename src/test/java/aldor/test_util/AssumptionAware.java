@@ -45,10 +45,8 @@ public class AssumptionAware {
         }
 
         @Override
-        protected void runTest() throws Throwable {
-            if (!assumptionViolated) {
-                runAware(() -> super.runTest());
-            }
+        protected boolean shouldRunTest() {
+            return super.shouldRunTest() && !assumptionViolated;
         }
 
         @Override
@@ -56,11 +54,6 @@ public class AssumptionAware {
             if (!assumptionViolated) {
                 super.tearDown();
             }
-        }
-
-        @Override
-        public void runBare() throws Throwable {
-            runAware(super::runBare);
         }
     }
 
@@ -74,10 +67,7 @@ public class AssumptionAware {
 
     @SuppressWarnings("ALL")
     public abstract static class LightIdeaTestCase extends com.intellij.testFramework.LightIdeaTestCase {
-        @Override
-        public void runBareImpl(ThrowableRunnable<?> start) throws Throwable {
-            runAware(() -> super.runBareImpl(start));
-        }
+
     }
 
     private interface WildRunnable {
@@ -87,52 +77,52 @@ public class AssumptionAware {
     public abstract static class UsefulTestCase extends com.intellij.testFramework.UsefulTestCase {
 
         @Override
-        public void runBare() throws Throwable {
-            runAware(super::runBare);
+        protected void runBare(@NotNull ThrowableRunnable<Throwable> testRunnable) throws Throwable {
+            super.runBare(() -> runAware(testRunnable::run));
         }
     }
 
     public abstract static class HeavyPlatformTestCase extends com.intellij.testFramework.HeavyPlatformTestCase {
         @Override
-        public void runBare() throws Throwable {
-            runAware(super::runBare);
+        protected void runBare(@NotNull ThrowableRunnable<Throwable> testRunnable) throws Throwable {
+            super.runBare(() -> runAware(testRunnable::run));
         }
     }
 
     public abstract static class NewProjectWizardTestCase extends com.intellij.ide.projectWizard.NewProjectWizardTestCase {
         @Override
-        public void runBare() throws Throwable {
-            runAware(super::runBare);
+        protected void runBare(@NotNull ThrowableRunnable<Throwable> testRunnable) throws Throwable {
+            super.runBare(() -> runAware(testRunnable::run));
         }
     }
 
     @Deprecated
     public abstract static class LightPlatformCodeInsightFixtureTestCase extends com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase {
         @Override
-        public void runBare() throws Throwable {
-            runAware(super::runBare);
+        protected void runBare(@NotNull ThrowableRunnable<Throwable> testRunnable) throws Throwable {
+            super.runBare(() -> runAware(testRunnable::run));
         }
     }
 
     public abstract static class LightPlatformCodeInsightTestCase extends com.intellij.testFramework.LightPlatformCodeInsightTestCase {
         @Override
-        public void runBareImpl(ThrowableRunnable<?> start) throws Throwable {
-            runAware(() -> super.runBareImpl(start));
+        protected void runBare(@NotNull ThrowableRunnable<Throwable> testRunnable) throws Throwable {
+            super.runBare(() -> runAware(testRunnable::run));
         }
     }
 
     @SuppressWarnings("UnstableApiUsage")
     public abstract static class LightPlatformTestCase extends com.intellij.testFramework.LightPlatformTestCase {
         @Override
-        public void runBareImpl(ThrowableRunnable<?> start) throws Throwable {
-            runAware(() -> super.runBareImpl(start));
+        protected void runBare(@NotNull ThrowableRunnable<Throwable> testRunnable) throws Throwable {
+            super.runBare(() -> runAware(testRunnable::run));
         }
     }
 
     public abstract static class CodeInsightFixtureTestCase<X extends ModuleFixture, T extends ModuleFixtureBuilder<X>> extends com.intellij.testFramework.fixtures.CodeInsightFixtureTestCase<T> {
         @Override
-        public void defaultRunBare() throws Throwable {
-            runAware(super::defaultRunBare);
+        protected void runTestRunnable(@NotNull ThrowableRunnable<Throwable> testRunnable) throws Throwable {
+            super.runTestRunnable(() -> runAware(testRunnable::run));
         }
     }
 }

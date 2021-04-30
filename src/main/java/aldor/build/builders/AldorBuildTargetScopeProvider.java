@@ -45,7 +45,7 @@ public class AldorBuildTargetScopeProvider extends BuildTargetScopeProvider {
         for (VirtualFile file: files) {
             targetIds.add(AldorTargetIds.aldorFileTargetId(file.getPath()));
         }
-        TargetTypeBuildScope req = TargetTypeBuildScope.newBuilder()
+        TargetTypeBuildScope req = (TargetTypeBuildScope) TargetTypeBuildScope.newBuilder()
                 .setTypeId(ALDOR_FILE_TARGET)
                 .setForceBuild(forceBuild)
                 .addAllTargetId(targetIds)
@@ -54,11 +54,11 @@ public class AldorBuildTargetScopeProvider extends BuildTargetScopeProvider {
         List<TargetTypeBuildScope> targetTypeBuildScopes = new ArrayList<>();
         Arrays.stream(baseScope.getAffectedModules())
                 .filter(AldorModuleType.instance()::is)
-                .filter(module -> AldorModuleType.instance().facetModuleType(module, SpadFileType.INSTANCE) != null)
+                .filter(module -> AldorModuleType.facetModuleType(module, AldorFileType.INSTANCE) != null)
                 .map(module -> ModuleRootManager.getInstance(module).getSourceRoots())
                 .flatMap(Arrays::stream)
                 .peek(vf -> LOG.info("Found source root: " + vf.getCanonicalPath()))
-                .map(root -> TargetTypeBuildScope.newBuilder()
+                .map(root -> (TargetTypeBuildScope) TargetTypeBuildScope.newBuilder()
                         .setTypeId(ALDOR_JAR_TARGET)
                         .setForceBuild(forceBuild)
                         .addTargetId(AldorTargetIds.aldorJarTargetId(root.getPath()))
@@ -71,5 +71,4 @@ public class AldorBuildTargetScopeProvider extends BuildTargetScopeProvider {
 
         return targetTypeBuildScopes;
     }
-
 }

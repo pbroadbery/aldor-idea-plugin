@@ -4,38 +4,44 @@ import aldor.build.facet.FacetPropertiesEditorTab;
 import aldor.builder.jps.AldorModuleExtensionProperties;
 import aldor.builder.jps.JpsAldorMakeDirectoryOption;
 import aldor.sdk.aldor.AldorInstalledSdkType;
-import aldor.sdk.aldor.AldorSdkType;
 import com.google.common.annotations.VisibleForTesting;
 import com.intellij.facet.ui.FacetEditorContext;
-import com.intellij.facet.ui.FacetEditorTab;
 import com.intellij.facet.ui.FacetEditorValidator;
 import com.intellij.facet.ui.FacetValidatorsManager;
 import com.intellij.facet.ui.ValidationResult;
+import com.intellij.ide.util.BrowseFilesListener;
+import com.intellij.openapi.actionSystem.LangDataKeys;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.project.Project;
+import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
+import com.intellij.openapi.fileChooser.FileChooserFactory;
+import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.projectRoots.AdditionalDataConfigurable;
 import com.intellij.openapi.projectRoots.JavaSdk;
+import com.intellij.openapi.projectRoots.ProjectJdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkAdditionalData;
 import com.intellij.openapi.projectRoots.SdkModel;
 import com.intellij.openapi.projectRoots.SdkModificator;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.projectRoots.SdkTypeId;
-import com.intellij.openapi.projectRoots.impl.UnknownSdkType;
 import com.intellij.openapi.roots.ui.configuration.JdkComboBox;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectSdksModel;
 import com.intellij.openapi.util.Condition;
+import com.intellij.ui.FieldPanel;
+import com.intellij.ui.InsertPathAction;
+import com.intellij.ui.components.fields.ExtendableTextField;
 import org.jdom.Element;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.naming.OperationNotSupportedException;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import java.awt.event.ActionEvent;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -50,6 +56,7 @@ public class AldorFacetEditorForm extends FacetPropertiesEditorTab<AldorModuleEx
     private JdkComboBox javaSdkComboBox;
     private JPanel panel;
     private JTextField outputDirectoryField;
+    private FieldPanel outputDirectoryFieldPanel;
     private ProjectSdksModel model = null;
 
     public AldorFacetEditorForm(FacetEditorContext editorContext, FacetValidatorsManager validatorsManager) {
@@ -102,26 +109,22 @@ public class AldorFacetEditorForm extends FacetPropertiesEditorTab<AldorModuleEx
         Condition<SdkTypeId> javaSdkFilter = sdkType -> JavaSdk.getInstance().equals(sdkType);
         aldorSdkComboBox = new JdkComboBox(project(), model, aldorSdkFilter, null, aldorSdkFilter, this::sdkAdded);
         javaSdkComboBox = new JdkComboBox(project(), model, javaSdkFilter, null, javaSdkFilter, this::sdkAdded);
+
+        outputDirectoryFieldPanel = createDirectoryFieldPanel(this::updateOutputDirectory);
+    }
+
+    private void updateOutputDirectory() {
+
     }
 
 
     private void sdkAdded(Sdk sdk) {
-        if ((sdk == null) || (model == null)) {
-            return;
-        }
-        if (sdk.getSdkType() instanceof MissingSdkType) {
-            return;
-        }
         LOG.info("Adding SDK: " + sdk.getName());
-        if (model.findSdk(sdk.getName()) != null) {
-            LOG.info("SDK " + sdk.getName() + " already exists");
+        if (ProjectJdkTable.getInstance().findJdk(sdk.getName()) == null) {
+            ApplicationManager.getApplication().runWriteAction(() -> ProjectJdkTable.getInstance().addJdk(sdk));
         }
-        model.addSdk(sdk);
-        try {
-            model.apply(null, true);
-        }
-        catch (ConfigurationException e) {
-            LOG.error("while creating SDK " + sdk.getName(), e);
+        else {
+            LOG.warn("SDK " + sdk.getName() + " has already been created");
         }
     }
 
@@ -147,7 +150,7 @@ public class AldorFacetEditorForm extends FacetPropertiesEditorTab<AldorModuleEx
     public AldorModuleExtensionProperties currentState() {
         return AldorModuleExtensionProperties.builder()
             .setSdkName(Optional.ofNullable(aldorSdkComboBox.getSelectedJdk()).map(Sdk::getName).orElse(null))
-            .setOutputDirectory(outputDirectoryField.getText())
+            .setOutputDirectory(outputDirectoryFieldPanel.getText())
             .setOption(JpsAldorMakeDirectoryOption.Source)
             .setBuildJavaComponents(buildJavaCheckBox.isSelected())
             .setJavaSdkName(Optional.ofNullable(javaSdkComboBox.getSelectedJdk()).map(Sdk::getName).orElse(null))
@@ -160,7 +163,7 @@ public class AldorFacetEditorForm extends FacetPropertiesEditorTab<AldorModuleEx
         if (state == null) {
             aldorSdkComboBox.setSelectedJdk(null);
             aldorSdkComboBox.setSelectedJdk(null);
-            outputDirectoryField.setText("");
+            outputDirectoryField.setText(Optional.ofNullable(ProjectUtil.guessModuleDir(module())).map(x -> x.getPath() + "/out").orElse(""));
             buildJavaCheckBox.setSelected(false);
         }
         else {
@@ -206,7 +209,8 @@ public class AldorFacetEditorForm extends FacetPropertiesEditorTab<AldorModuleEx
         }
 
         @Override
-        public @Nullable String suggestHomePath() {
+        @Nullable
+        public String suggestHomePath() {
             return null;
         }
 
@@ -216,7 +220,8 @@ public class AldorFacetEditorForm extends FacetPropertiesEditorTab<AldorModuleEx
         }
 
         @Override
-        public @NotNull String suggestSdkName(@Nullable String currentSdkName, String sdkHome) {
+        @NotNull
+        public String suggestSdkName(@Nullable String currentSdkName, String sdkHome) {
             throw new UnsupportedOperationException("suggest sdk name");
         }
 
@@ -226,7 +231,9 @@ public class AldorFacetEditorForm extends FacetPropertiesEditorTab<AldorModuleEx
         }
 
         @Override
-        public @NotNull @Nls(capitalization = Nls.Capitalization.Title) String getPresentableName() {
+        @NotNull
+        @Nls(capitalization = Nls.Capitalization.Title)
+        public String getPresentableName() {
             return getName();
         }
 
@@ -235,4 +242,23 @@ public class AldorFacetEditorForm extends FacetPropertiesEditorTab<AldorModuleEx
         }
     }
 
+    FieldPanel createDirectoryFieldPanel(Runnable commit) {
+        JTextField field = new ExtendableTextField();
+        final FileChooserDescriptor outputPathsChooserDescriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
+        outputPathsChooserDescriptor.putUserData(LangDataKeys.MODULE_CONTEXT, module());
+        outputPathsChooserDescriptor.setHideIgnored(false);
+        InsertPathAction.addTo(field, outputPathsChooserDescriptor);
+        FileChooserFactory.getInstance().installFileCompletion(field, outputPathsChooserDescriptor, true, null);
+
+        Runnable docListener = () -> {LOG.info("Document changed"); commit.run();};
+
+        return new FieldPanel(field, null, null,
+                new BrowseFilesListener(field, "Title", "Description", outputPathsChooserDescriptor) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                super.actionPerformed(e);
+                commit.run();
+            }
+        }, docListener);
+    }
 }

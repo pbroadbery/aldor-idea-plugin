@@ -1,0 +1,10 @@
+
+
+jar {
+    archiveFileName = "aldorutil.jar"
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+

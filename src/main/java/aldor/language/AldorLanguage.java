@@ -1,12 +1,12 @@
 package aldor.language;
 
 import com.intellij.lang.Language;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Information about the AldorLanguage
  */
 public final class AldorLanguage extends Language {
-
     public static final AldorLanguage INSTANCE = new AldorLanguage();
 
     private AldorLanguage() {
@@ -16,5 +16,11 @@ public final class AldorLanguage extends Language {
     @Override
     public boolean isCaseSensitive() {
         return true;
+    }
+
+    @Override
+    @NotNull
+    public String getDisplayName() {
+        return "Aldor";
     }
 }

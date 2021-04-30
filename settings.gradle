@@ -1,3 +1,4 @@
 rootProject.name = 'aldor-idea'
 include 'jps-plugin'
 include 'aldorunit'
+include 'aldor-util'

@@ -110,6 +110,7 @@ grammarKit {
 dependencies {
     //errorprone 'com.google.errorprone:error_prone_core:2.6.0'
     compile project('jps-plugin')
+    compile project('aldor-util')
     testCompile group: 'junit', name: 'junit', version: '4.13.2'
     compile files(libFiles.collect({"lib/${it}.jar"}))
 
@@ -224,14 +225,15 @@ task listCompileOnly(dependsOn: configurations.compile) {
 
 tasks.prepareSandbox.dependsOn project('aldorunit').tasks.jar
 tasks.prepareTestingSandbox.dependsOn project('aldorunit').tasks.jar
+
 prepareTestingSandbox {
-    from(project('aldorunit').tasks.jar) {
+    from([project('aldorunit').tasks.jar]) {
         into "${intellij.pluginName}/aldorunit"
     }
 }
 
 prepareSandbox {
-    from(project('aldorunit').tasks.jar) {
+    from([project('aldorunit').tasks.jar]) {
         into "${intellij.pluginName}/aldorunit"
     }
     eachFile {

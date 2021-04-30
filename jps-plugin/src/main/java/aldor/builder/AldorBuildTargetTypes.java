@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.jps.builders.BuildTarget;
 import org.jetbrains.jps.builders.BuildTargetLoader;
 import org.jetbrains.jps.builders.BuildTargetType;
+import org.jetbrains.jps.incremental.CompileScope;
 import org.jetbrains.jps.incremental.TargetBuilder;
 import org.jetbrains.jps.model.JpsModel;
 

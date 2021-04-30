@@ -20,6 +20,8 @@ import javax.swing.Icon;
 
 /**
  * Represents an aldor module.
+ *
+ * Note: Try to avoid using this class; module characteristics should be defined by facets
  */
 public class AldorModuleType extends ModuleType<AldorModuleBuilder> {
     public static final String NAME = "Aldor Module";
@@ -66,8 +68,9 @@ public class AldorModuleType extends ModuleType<AldorModuleBuilder> {
         return ModuleType.is(module, this);
     }
 
+    // TODO: This should be by language - file type is a bit odd
     @Nullable
-    public SpadFacet<? extends SpadFacetProperties> facetModuleType(Module module, FileType fileType) {
+    public static SpadFacet<? extends SpadFacetProperties> facetModuleType(Module module, FileType fileType) {
         if (fileType.equals(AldorFileType.INSTANCE)) {
             return AldorFacet.forModule(module);
         }

@@ -80,7 +80,7 @@ class FricasSimpleModuleBuilder extends AldorModuleBuilder {
     }
 
     @Override
-    public void setupRootModel(final ModifiableRootModel modifiableRootModel) throws ConfigurationException {
+    public void setupRootModel(@NotNull final ModifiableRootModel modifiableRootModel) throws ConfigurationException {
         super.setupRootModel(modifiableRootModel);
         // From this point, call
         //    ContentEntry entries = modifiableRootModel.getContentEntries()[0];

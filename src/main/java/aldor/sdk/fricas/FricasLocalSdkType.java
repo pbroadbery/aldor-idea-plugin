@@ -88,10 +88,17 @@ public class FricasLocalSdkType extends SdkType implements FricasSdkType {
     }
 
     @Override
-    public void showCustomCreateUI(@NotNull SdkModel sdkModel, @NotNull JComponent parentComponent, Sdk parentSdk, @NotNull Consumer<Sdk> sdkCreatedCallback) {
+    public void showCustomCreateUI(@NotNull SdkModel sdkModel, @NotNull JComponent parentComponent,
+                                   Sdk parentSdk, @NotNull Consumer<? super Sdk> sdkCreatedCallback) {
         ProjectJdkImpl sdk = new ProjectJdkImpl("Local Fricas Build", this);
         sdk.setVersionString("git repository");
         sdkCreatedCallback.consume(sdk);
+        /*
+        /home/pab/Work/IdeaProjects/week1/aldorparse_19/aldorparse/src/main/java/aldor/sdk/fricas/FricasLocalSdkType.java:91: error: name clash:
+            showCustomCreateUI(SdkModel,JComponent,Sdk,@org.jetbrains.annotations.NotNull Consumer<? super Sdk>) in
+            showCustomCreateUI(SdkModel,JComponent,Sdk,Consumer<Sdk>) in SdkType have the same erasure, yet neither overrides the other
+
+         */
     }
 
 }

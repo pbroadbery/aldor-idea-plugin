@@ -40,7 +40,7 @@ public class AldorFacet extends ModuleModifyingFacet<AldorFacetConfiguration> im
     //should only be called from write action
     public static AldorFacet createFacetIfMissing(@NotNull Module module, AldorModuleExtensionProperties properties) {
         FacetManager facetManager = FacetManager.getInstance(module);
-        AldorFacetType ft = FacetType.findInstance(AldorFacetType.class);
+        AldorFacetType ft = AldorFacetType.instance();
         AldorFacet prev = facetManager.getFacetByType(ft.getId());
         if (prev != null) {
             return prev;

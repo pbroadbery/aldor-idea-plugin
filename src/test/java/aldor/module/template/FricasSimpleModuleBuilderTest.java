@@ -5,7 +5,6 @@ import aldor.sdk.fricas.FricasInstalledSdkType;
 import aldor.test_util.AssumptionAware;
 import aldor.test_util.JUnits;
 import aldor.test_util.Swings;
-import com.intellij.ide.projectWizard.NewProjectWizardTestCase;
 import com.intellij.ide.projectWizard.ProjectSettingsStep;
 import com.intellij.ide.wizard.Step;
 import com.intellij.openapi.diagnostic.Logger;
@@ -14,12 +13,12 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ui.configuration.JdkComboBox;
-import com.intellij.util.Consumer;
 import org.junit.Assert;
 import org.junit.Ignore;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import static java.util.Objects.requireNonNull;
 
@@ -43,7 +42,7 @@ public class FricasSimpleModuleBuilderTest extends AssumptionAware.NewProjectWiz
     }
 
     public void testCreateProject() throws IOException {
-        Consumer<Step> consumer = s -> {
+        Consumer<? super Step> consumer = s -> {
             LOG.info("Adjust " + s.getClass().getCanonicalName());
             if (s instanceof ProjectSettingsStep) {
                 LOG.info("Setting SDK to " + fricasSdk);

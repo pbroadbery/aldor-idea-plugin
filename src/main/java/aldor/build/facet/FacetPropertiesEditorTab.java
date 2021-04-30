@@ -6,7 +6,11 @@ import com.intellij.facet.ui.FacetEditorContext;
 import com.intellij.facet.ui.FacetEditorTab;
 import com.intellij.facet.ui.FacetValidatorsManager;
 import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.module.ModifiableModuleModel;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ModifiableRootModel;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -19,6 +23,15 @@ public abstract class FacetPropertiesEditorTab<S, C extends FacetConfiguration &
 
     public Project project() {
         return editorContext.getProject();
+    }
+
+    @NotNull
+    public Module module() {
+        return editorContext.getModule();
+    }
+
+    public ModifiableRootModel modifiableRootModel() {
+        return editorContext.getModifiableRootModel();
     }
 
     protected Facet<C> facet() {
