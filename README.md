@@ -3,12 +3,18 @@ Aldor plugin for intellij
 
 This plugin supports SPAD and Aldor editing with the intellij IDE.
 
-Features:
+# Features:
 
 - Symbol lookup
 - Syntax highlighting
 - Aldor syntax checks
 - Browsing type hierarchy
+
+# Screenshots
+
+Editing SPAD code![image](https://user-images.githubusercontent.com/222125/116973608-b5da3780-acb4-11eb-9751-0d2e3e75b6e6.png)
+
+
 
 # Status
 
