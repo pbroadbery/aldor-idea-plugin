@@ -1,11 +1,9 @@
 package aldor.jps;
 
-import aldor.test_util.AssumptionAware;
 import com.intellij.openapi.diagnostic.Logger;
 import org.junit.Assert;
 
 import java.io.File;
-import java.io.IOException;
 
 public class JpsAldorInstalledBuildTest extends AldorJpsTestCase {
     private static final Logger LOG = Logger.getInstance(JpsAldorInstalledBuildTest.class);

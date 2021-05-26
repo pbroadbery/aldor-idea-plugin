@@ -1,0 +1,9 @@
+\#include "aldor"
+\#include "aldorio"
+#pile
+
+#library EXAMPLE "example.ao"
+import from EXAMPLE
+import from ExampleIntegerFunctions
+
+stdout << "Even 12? " << exampleEven?(12)

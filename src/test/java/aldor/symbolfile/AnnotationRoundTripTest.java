@@ -21,8 +21,6 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.EdtTestUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
-import com.intellij.testFramework.fixtures.BasePlatformTestCase;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Rule;
 
@@ -109,7 +107,7 @@ public class AnnotationRoundTripTest extends AssumptionAware.BasePlatformTestCas
 
     @Override
     protected LightProjectDescriptor getProjectDescriptor() {
-        return SdkProjectDescriptors.aldorSdkProjectDescriptor(aldorExecutableRule.prefix());
+        return SdkProjectDescriptors.aldorSdkProjectDescriptor(aldorExecutableRule, SdkProjectDescriptors.SourceFileStorageType.Real);
     }
 
 }

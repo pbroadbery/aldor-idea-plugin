@@ -1,6 +1,6 @@
 package aldor.sdk.aldor;
 
-import aldor.module.template.GitProcess;
+import aldor.module.template.git.GitProcess;
 import aldor.psi.index.AldorDefineTopLevelIndex;
 import aldor.symbolfile.AnnotationFileTestFixture;
 import aldor.test_util.DirectoryPresentRule;
@@ -95,11 +95,11 @@ public class AldorLocalSdkRoundTripTest {
 
     }
 
-    static class GitResetRule implements TestRule {
+    private static final class GitResetRule implements TestRule {
         private final String path;
         private final GitProcess process = new GitProcess();
 
-        public GitResetRule(String path) {
+        private GitResetRule(String path) {
             this.path = path;
         }
 

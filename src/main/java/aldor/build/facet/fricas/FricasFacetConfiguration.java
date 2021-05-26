@@ -1,6 +1,5 @@
 package aldor.build.facet.fricas;
 
-import aldor.builder.jps.AldorModuleExtensionProperties;
 import com.intellij.facet.FacetConfiguration;
 import com.intellij.facet.ui.FacetEditorContext;
 import com.intellij.facet.ui.FacetEditorTab;

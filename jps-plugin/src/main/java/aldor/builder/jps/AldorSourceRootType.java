@@ -27,7 +27,7 @@ public final class AldorSourceRootType implements JpsModuleSourceRootType<AldorS
 
     @Override
     public @NotNull AldorSourceRootProperties createDefaultProperties() {
-        return new AldorSourceRootProperties("file://$MODULE_DIR$/src/main/java");
+        return new AldorSourceRootProperties("file://$MODULE_DIR$/src/main/aldor");
     }
 
 }

@@ -2,22 +2,18 @@ package aldor.builder.jars;
 
 import aldor.builder.AldorBuildTargetTypes;
 import aldor.builder.AldorBuilderService;
-import aldor.builder.jps.AldorModuleExtensionProperties;
-import aldor.builder.jps.JpsAldorModuleType;
+import aldor.builder.jps.module.AldorModuleFacade;
 import com.intellij.openapi.diagnostic.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.jps.builders.BuildTargetLoader;
 import org.jetbrains.jps.builders.BuildTargetType;
 import org.jetbrains.jps.model.JpsModel;
-import org.jetbrains.jps.model.JpsSimpleElement;
 import org.jetbrains.jps.model.module.JpsModule;
 import org.jetbrains.jps.model.module.JpsModuleSourceRoot;
-import org.jetbrains.jps.model.module.JpsTypedModule;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static aldor.builder.AldorBuildConstants.ALDOR_JAR_TARGET;
@@ -49,25 +45,23 @@ public class  AldorJarBuildTargetType extends BuildTargetType<AldorJarBuildTarge
     }
 
     /**
-     * We only want to build the jar file
-     * - if the project has 'buildJavaComponents'
-     * - if the makefile supports it (we can't check this at the moment).
+     * We only want to build the jar file<ul>
+     * <li>if the project has 'buildJavaComponents'</li>
+     * <li>if the makefile supports it (we can't check this at the moment).</li>
+     * </ul>
      * @param module The module
      * @return build targets appropriate to the module
      */
     @NotNull
     private List<AldorJarBuildTarget> moduleBuildTargets(JpsModule module) {
         LOG.info("Module: "+ module + " type: " + module.getModuleType());
-        LOG.info("Build Java: "+ Optional.ofNullable(JpsAldorModuleType.INSTANCE.moduleProperties(module))
-                                    .map(AldorModuleExtensionProperties::buildJavaComponents));
-
-        JpsTypedModule<JpsSimpleElement<AldorModuleExtensionProperties>> aldorModule = module.asTyped(JpsAldorModuleType.INSTANCE);
-        if (aldorModule == null) {
+        AldorModuleFacade aldor = AldorModuleFacade.facade(module);
+        if (aldor == null) {
             return Collections.emptyList();
         }
+        LOG.info("Build Java: "+ aldor.buildJavaComponents());
 
-        AldorModuleExtensionProperties properties = JpsAldorModuleType.INSTANCE.moduleProperties(aldorModule);
-        if ((properties == null) || !properties.buildJavaComponents()) {
+        if (!aldor.buildJavaComponents()) {
             return Collections.emptyList();
         }
         else {

@@ -1,0 +1,16 @@
+-- This is an example input file for Fricas.
+
+-- To execute, select 'Run example.spad' from the 'Run' menu above or via the context menu
+
+-- You can edit the configuration via the run menu to change some properties -
+-- eg. to keep the process active (and ready for input) after the file is processed.
+
+-- The following line will load the functions defined in example.spad
+)co example
+
+-- and we can then use the functions defined there
+a: Integer := 22
+
+exampleEven? a
+
+exampleOdd? a

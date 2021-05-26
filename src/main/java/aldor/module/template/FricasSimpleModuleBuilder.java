@@ -4,6 +4,9 @@ import aldor.build.facet.fricas.FricasFacet;
 import aldor.build.facet.fricas.FricasFacetProperties;
 import aldor.build.module.AldorModuleBuilder;
 import aldor.build.module.AldorModuleType;
+import aldor.module.template.wizard.WizardFieldContainer;
+import aldor.module.template.wizard.WizardFieldDocumentation;
+import aldor.module.template.wizard.WizardJdkSelector;
 import aldor.sdk.fricas.FricasInstalledSdkType;
 import com.google.common.collect.Maps;
 import com.intellij.ide.util.projectWizard.WizardInputField;
@@ -14,6 +17,7 @@ import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,6 +39,13 @@ class FricasSimpleModuleBuilder extends AldorModuleBuilder {
         createAdditionalFields();
     }
 
+    @Override
+    @Nullable
+    @NonNls
+    public String getBuilderId() {
+        return "Simple-Fricas-Module";
+    }
+
     private void createAdditionalFields() {
         fields.add(new WizardJdkSelector(SELECTED_SDK_NAME_ID, "Fricas Version", null,
                                             Collections.singleton(FricasInstalledSdkType.instance())));
@@ -50,7 +61,8 @@ class FricasSimpleModuleBuilder extends AldorModuleBuilder {
     }
 
     @Override
-    protected @NotNull List<WizardInputField<?>> getAdditionalFields() {
+    @NotNull
+    protected List<WizardInputField<?>> getAdditionalFields() {
         return fields.fields();
     }
 

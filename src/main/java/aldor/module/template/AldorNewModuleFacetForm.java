@@ -11,17 +11,22 @@ import com.intellij.openapi.roots.ui.configuration.JdkComboBox;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectSdksModel;
 import com.intellij.openapi.util.Condition;
 
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import java.util.Optional;
 
 public class AldorNewModuleFacetForm {
     private static final Logger LOG = Logger.getInstance(AldorNewModuleFacetForm.class);
     private final Project project;
-    private JdkComboBox aldorSdkComboBox;
-    private JTextField buildDirectoryTextField;
     private JPanel panel;
+    private JCheckBox createMakefilesCheckBox;
+    private JTextPane pathHelp;
+    private JLabel makefileHelp;
     private ProjectSdksModel model = null;
     private final int id = InstanceCounter.instance().next(AldorNewModuleFacetForm.class);
 
@@ -38,27 +43,11 @@ public class AldorNewModuleFacetForm {
     }
 
     public void createUIComponents() {
-        LOG.info("Creating components for " + null);
-        model = new ProjectSdksModel();
-        Condition<SdkTypeId> aldorSdkFilter = sdkType -> AldorInstalledSdkType.instance().equals(sdkType);
-        aldorSdkComboBox = new JdkComboBox(project(), model, aldorSdkFilter, null, aldorSdkFilter, this::sdkAdded);
+        makefileHelp.setEnabled(false);
+        pathHelp.setEnabled(false);
     }
 
-    private void sdkAdded(Sdk sdk) {
-        if ((sdk == null) || (model == null)) {
-            return;
-        }
-        LOG.info("Adding SDK: " + sdk.getName());
-        model.addSdk(sdk);
-        try {
-            model.apply(null, true);
-        }
-        catch (ConfigurationException e) {
-            LOG.error("while creating SDK " + sdk.getName(), e);
-        }
-    }
-
-    public String aldorSdkName() {
-        return Optional.ofNullable(aldorSdkComboBox.getSelectedJdk()).map(Sdk::getName).orElse(null);
+    public boolean createMakefiles() {
+        return createMakefilesCheckBox.isSelected();
     }
 }

@@ -35,7 +35,7 @@ import static org.junit.Assert.assertTrue;
 public class AldorRoundTripDocumentationTest {
 
     private final ExecutablePresentRule aldorExecutableRule = new ExecutablePresentRule.Aldor();
-    private final CodeInsightTestFixture codeTestFixture = LightPlatformJUnit4TestRule.createFixture(SdkProjectDescriptors.aldorSdkProjectDescriptor(aldorExecutableRule.prefix()));
+    private final CodeInsightTestFixture codeTestFixture = LightPlatformJUnit4TestRule.createFixture(SdkProjectDescriptors.aldorSdkProjectDescriptor(aldorExecutableRule, SdkProjectDescriptors.SourceFileStorageType.Real));
     private final AnnotationFileTestFixture annotationTestFixture = new AnnotationFileTestFixture();
 
     @Rule

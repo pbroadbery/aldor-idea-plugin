@@ -4,9 +4,12 @@ import aldor.build.facet.SpadFacet;
 import aldor.build.facet.aldor.AldorFacet;
 import aldor.build.facet.fricas.FricasFacet;
 import aldor.builder.jps.SpadFacetProperties;
+import aldor.builder.jps.module.JpsAldorModuleType;
 import aldor.file.AldorFileType;
 import aldor.file.SpadFileType;
 import aldor.file.SpadInputFileType;
+import com.intellij.ide.util.projectWizard.EmptyModuleBuilder;
+import com.intellij.ide.util.projectWizard.ModuleBuilder;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleType;
@@ -23,9 +26,9 @@ import javax.swing.Icon;
  *
  * Note: Try to avoid using this class; module characteristics should be defined by facets
  */
-public class AldorModuleType extends ModuleType<AldorModuleBuilder> {
+public class AldorModuleType extends ModuleType<ModuleBuilder> {
     public static final String NAME = "Aldor Module";
-    public static final String ID = "ALDOR-MODULE";
+    public static final String ID = JpsAldorModuleType.ID;
 
     public static AldorModuleType instance() {
         return (AldorModuleType) ModuleTypeManager.getInstance().findByID(ID);
@@ -37,8 +40,13 @@ public class AldorModuleType extends ModuleType<AldorModuleBuilder> {
 
     @NotNull
     @Override
-    public AldorModuleBuilder createModuleBuilder() {
-        return new AldorModuleBuilder(this);
+    public ModuleBuilder createModuleBuilder() {
+        return new EmptyModuleBuilder() {
+            @Override
+            public boolean isAvailable() {
+                return false;
+            }
+        };
     }
 
     @NotNull

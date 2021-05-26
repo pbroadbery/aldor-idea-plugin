@@ -6,7 +6,7 @@ import com.intellij.util.ThrowableRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.junit.AssumptionViolatedException;
 
-public class AssumptionAware {
+public final class AssumptionAware {
 
     static void assumptionFailed(AssumptionViolatedException e) {
         System.out.println("** Assumption failed: " + e.getMessage());
@@ -45,6 +45,11 @@ public class AssumptionAware {
         }
 
         @Override
+        protected void runTestRunnable(@NotNull ThrowableRunnable<Throwable> testRunnable) throws Throwable {
+            runAware(() -> super.runTestRunnable(testRunnable));
+        }
+
+        @Override
         protected boolean shouldRunTest() {
             return super.shouldRunTest() && !assumptionViolated;
         }
@@ -74,6 +79,7 @@ public class AssumptionAware {
         void run() throws Throwable;
     }
 
+    @SuppressWarnings("ClassNameSameAsAncestorName")
     public abstract static class UsefulTestCase extends com.intellij.testFramework.UsefulTestCase {
 
         @Override
@@ -82,6 +88,7 @@ public class AssumptionAware {
         }
     }
 
+    @SuppressWarnings("ClassNameSameAsAncestorName")
     public abstract static class HeavyPlatformTestCase extends com.intellij.testFramework.HeavyPlatformTestCase {
         @Override
         protected void runBare(@NotNull ThrowableRunnable<Throwable> testRunnable) throws Throwable {
@@ -89,6 +96,7 @@ public class AssumptionAware {
         }
     }
 
+    @SuppressWarnings("ClassNameSameAsAncestorName")
     public abstract static class NewProjectWizardTestCase extends com.intellij.ide.projectWizard.NewProjectWizardTestCase {
         @Override
         protected void runBare(@NotNull ThrowableRunnable<Throwable> testRunnable) throws Throwable {
@@ -96,6 +104,7 @@ public class AssumptionAware {
         }
     }
 
+    @SuppressWarnings("ClassNameSameAsAncestorName")
     @Deprecated
     public abstract static class LightPlatformCodeInsightFixtureTestCase extends com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase {
         @Override
@@ -104,6 +113,7 @@ public class AssumptionAware {
         }
     }
 
+    @SuppressWarnings("ClassNameSameAsAncestorName")
     public abstract static class LightPlatformCodeInsightTestCase extends com.intellij.testFramework.LightPlatformCodeInsightTestCase {
         @Override
         protected void runBare(@NotNull ThrowableRunnable<Throwable> testRunnable) throws Throwable {
@@ -111,7 +121,7 @@ public class AssumptionAware {
         }
     }
 
-    @SuppressWarnings("UnstableApiUsage")
+    @SuppressWarnings({"ClassNameSameAsAncestorName"})
     public abstract static class LightPlatformTestCase extends com.intellij.testFramework.LightPlatformTestCase {
         @Override
         protected void runBare(@NotNull ThrowableRunnable<Throwable> testRunnable) throws Throwable {
@@ -119,6 +129,7 @@ public class AssumptionAware {
         }
     }
 
+    @SuppressWarnings("ClassNameSameAsAncestorName")
     public abstract static class CodeInsightFixtureTestCase<X extends ModuleFixture, T extends ModuleFixtureBuilder<X>> extends com.intellij.testFramework.fixtures.CodeInsightFixtureTestCase<T> {
         @Override
         protected void runTestRunnable(@NotNull ThrowableRunnable<Throwable> testRunnable) throws Throwable {

@@ -6,7 +6,6 @@ public class AldorUnitRunLineMarkerContributorTest {
 
     @Test
     public void test() throws InterruptedException {
-        Thread.sleep(30*1000);
     }
 
 }

@@ -2,7 +2,6 @@ package aldor.build.roots;
 
 import aldor.builder.jps.AldorSourceRootProperties;
 import aldor.builder.jps.AldorSourceRootType;
-import aldor.module.template.AldorSimpleModuleBuilder;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.CustomShortcutSet;
 import com.intellij.openapi.diagnostic.Logger;
@@ -18,7 +17,6 @@ import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.jps.model.JpsDummyElement;
 
 import javax.swing.Box;
 import javax.swing.Icon;

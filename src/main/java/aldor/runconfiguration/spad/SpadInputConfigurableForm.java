@@ -18,6 +18,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextPane;
 import javax.swing.event.DocumentEvent;
 
+import java.util.Optional;
+
 import static aldor.runconfiguration.spad.SpadInputRunConfigurationType.SpadInputConfigurationBean;
 
 @SuppressWarnings({"serial", "SerializableHasSerializationMethods"})
@@ -57,7 +59,7 @@ public class SpadInputConfigurableForm extends JComponent {
 
     private void updateText() {
         SpadInputConfigurationBean bean = new SpadInputConfigurationBean();
-        String execPath = SdkTypes.axiomSysPath(sdk);
+        String execPath = Optional.ofNullable(sdk).map(SdkTypes::axiomSysPath).orElse("'fricas-path'");
         updateConfiguration(bean);
         GeneralCommandLine commandLine = SpadInputProcesses.executionCommandLine(bean, execPath);
         fricasCommand.setText(commandLine.getCommandLineString());

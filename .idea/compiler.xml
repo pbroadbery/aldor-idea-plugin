@@ -2,6 +2,12 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel>
+      <module name="IntelliJ_Platform_Plugin_Template" target="1.8" />
+      <module name="IntelliJ_Platform_Plugin_Template.main" target="1.8" />
+      <module name="IntelliJ_Platform_Plugin_Template.test" target="1.8" />
+      <module name="julia-intellij" target="11" />
+      <module name="julia-intellij.main" target="11" />
+      <module name="julia-intellij.test" target="11" />
       <module name="org.jetbrains.intellij.plugins.gradle-intellij-plugin.main" target="1.8" />
       <module name="org.jetbrains.intellij.plugins.gradle-intellij-plugin.test" target="1.8" />
     </bytecodeTargetLevel>

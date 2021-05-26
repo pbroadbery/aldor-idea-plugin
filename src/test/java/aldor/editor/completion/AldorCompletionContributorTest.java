@@ -6,6 +6,7 @@ import aldor.spad.FricasSpadLibraryBuilder;
 import aldor.spad.SpadLibrary;
 import aldor.test_util.AssumptionAware;
 import aldor.test_util.DirectoryPresentRule;
+import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.SdkProjectDescriptors;
 import aldor.test_util.Timer;
 import com.intellij.codeInsight.lookup.LookupElement;
@@ -23,12 +24,12 @@ import java.util.List;
 
 public class AldorCompletionContributorTest extends AssumptionAware.LightIdeaTestCase {
 
-    private final DirectoryPresentRule directory = new DirectoryPresentRule("/home/pab/Work/fricas/opt/lib/fricas/target/x86_64-linux-gnu");
+    private final ExecutablePresentRule directory = new ExecutablePresentRule.Fricas();
 
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        Assume.assumeTrue(directory.isPresent());
+        Assume.assumeTrue(directory.shouldRunTest());
     }
 
     @Override

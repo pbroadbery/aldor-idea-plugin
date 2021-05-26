@@ -23,6 +23,7 @@ buildscript {
 
 plugins {
     id 'java'
+    id 'java-test-fixtures'
     id 'idea'
     id "org.jetbrains.intellij" version "0.6.3"
     id "de.undercouch.download" version "3.2.0"
@@ -111,7 +112,9 @@ dependencies {
     //errorprone 'com.google.errorprone:error_prone_core:2.6.0'
     compile project('jps-plugin')
     compile project('aldor-util')
+    compile project('aldor-templates')
     testCompile group: 'junit', name: 'junit', version: '4.13.2'
+    testCompile(testFixtures(project(":aldor-util")))
     compile files(libFiles.collect({"lib/${it}.jar"}))
 
     compile group: 'org.jetbrains.intellij.deps', name: 'asm-all', version: '8.0.1'
@@ -209,10 +212,15 @@ task updateExternalJars(type: Copy) {
 
 task list(dependsOn: configurations.compile) {
     doLast {
-        println "classpath = ${configurations.runtime.collect { File file -> file.toString() }}"
+        configurations.runtime.forEach { File file -> println "{classpath += ${file.toString()}" }
     }
 }
 
+task listTest(dependsOn: configurations.testCompile) {
+    doLast {
+        configurations.testCompile.forEach { File file -> println "{classpath += ${file.toString()}" }
+    }
+}
 
 task listCompileOnly(dependsOn: configurations.compile) {
     doLast {
@@ -221,6 +229,7 @@ task listCompileOnly(dependsOn: configurations.compile) {
         }
     }
 }
+
 
 
 tasks.prepareSandbox.dependsOn project('aldorunit').tasks.jar

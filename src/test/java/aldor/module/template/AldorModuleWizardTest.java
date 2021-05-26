@@ -14,7 +14,6 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.platform.ProjectTemplate;
-import com.intellij.testFramework.HeavyPlatformTestCase;
 import org.junit.Assert;
 
 import java.io.IOException;

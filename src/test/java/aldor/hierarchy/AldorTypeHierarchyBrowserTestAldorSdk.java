@@ -55,7 +55,7 @@ public class AldorTypeHierarchyBrowserTestAldorSdk {
         FileBasedIndex.getInstance().ensureUpToDate(StubUpdatingIndex.INDEX_ID, codeTestFixture.getProject(), null);
 
         String text = "x: List X == empty()";
-        PsiFile whole = codeTestFixture.addFileToProject("test.as", text);
+        PsiFile whole = codeTestFixture.addFileToProject("xtest.as", text);
 
         PsiElement elt = whole.findElementAt(text.indexOf("List"));
 
@@ -89,7 +89,7 @@ public class AldorTypeHierarchyBrowserTestAldorSdk {
     @Test
     public void testGrouped() {
         String text = "Ring";
-        PsiFile whole = codeTestFixture.addFileToProject("test.as", text);
+        PsiFile whole = codeTestFixture.addFileToProject("xtest.as", text);
 
         PsiElement elt = whole.findElementAt(text.indexOf("Ring"));
 
@@ -110,7 +110,7 @@ public class AldorTypeHierarchyBrowserTestAldorSdk {
     @Test
     public void testRing() {
         String text = "Ring";
-        PsiFile whole = codeTestFixture.addFileToProject("test.as", text);
+        PsiFile whole = codeTestFixture.addFileToProject("xtest.as", text);
 
         PsiElement elt = whole.findElementAt(text.indexOf("Ring"));
 

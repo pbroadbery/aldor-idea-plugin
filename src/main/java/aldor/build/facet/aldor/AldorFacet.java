@@ -1,8 +1,9 @@
 package aldor.build.facet.aldor;
 
+import aldor.build.facet.ModuleModifyingFacet;
 import aldor.build.facet.ModuleModifyingFacetUtil;
 import aldor.build.facet.SpadFacet;
-import aldor.builder.jps.AldorModuleExtensionProperties;
+import aldor.builder.jps.module.AldorFacetExtensionProperties;
 import aldor.sdk.aldor.AldorInstalledSdkType;
 import com.intellij.facet.Facet;
 import com.intellij.facet.FacetManager;
@@ -15,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class AldorFacet extends ModuleModifyingFacet<AldorFacetConfiguration> implements SpadFacet<AldorModuleExtensionProperties> {
+public class AldorFacet extends ModuleModifyingFacet<AldorFacetConfiguration> implements SpadFacet<AldorFacetExtensionProperties> {
     private static final Logger LOG = Logger.getInstance(AldorFacet.class);
 
     public AldorFacet(@NotNull FacetType facetType, @NotNull Module module, @NotNull String name, @NotNull AldorFacetConfiguration configuration,
@@ -38,7 +39,7 @@ public class AldorFacet extends ModuleModifyingFacet<AldorFacetConfiguration> im
     }
 
     //should only be called from write action
-    public static AldorFacet createFacetIfMissing(@NotNull Module module, AldorModuleExtensionProperties properties) {
+    public static AldorFacet createFacetIfMissing(@NotNull Module module, AldorFacetExtensionProperties properties) {
         FacetManager facetManager = FacetManager.getInstance(module);
         AldorFacetType ft = AldorFacetType.instance();
         AldorFacet prev = facetManager.getFacetByType(ft.getId());
@@ -69,7 +70,7 @@ public class AldorFacet extends ModuleModifyingFacet<AldorFacetConfiguration> im
 
 
     @Override
-    public Optional<AldorModuleExtensionProperties> getProperties() {
+    public Optional<AldorFacetExtensionProperties> getProperties() {
         return Optional.ofNullable(getConfiguration().getState());
     }
 }

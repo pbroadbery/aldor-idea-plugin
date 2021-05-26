@@ -7,7 +7,7 @@ import org.jetbrains.idea.maven.utils.library.RepositoryLibraryProperties;
 
 import java.util.Collection;
 
-public final class Mavens {
+public final class  Mavens {
     public static final String JUNIT_VERSION = "4.12";
 
     public static Collection<OrderRoot> downloadDependenciesWhenRequired(Project project,

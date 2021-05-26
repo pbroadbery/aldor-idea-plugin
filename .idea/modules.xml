@@ -2,8 +2,17 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/IntelliJ_Platform_Plugin_Template.iml" filepath="$PROJECT_DIR$/.idea/modules/IntelliJ_Platform_Plugin_Template.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/IntelliJ_Platform_Plugin_Template.main.iml" filepath="$PROJECT_DIR$/.idea/modules/IntelliJ_Platform_Plugin_Template.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/IntelliJ_Platform_Plugin_Template.test.iml" filepath="$PROJECT_DIR$/.idea/modules/IntelliJ_Platform_Plugin_Template.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../../type-library/aldor-types/aldor-types.iml" filepath="$PROJECT_DIR$/../../../type-library/aldor-types/aldor-types.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/gradle-intellij-plugin.iml" filepath="$PROJECT_DIR$/.idea/modules/gradle-intellij-plugin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/gradle-intellij-plugin.main.iml" filepath="$PROJECT_DIR$/.idea/modules/gradle-intellij-plugin.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/gradle-intellij-plugin.test.iml" filepath="$PROJECT_DIR$/.idea/modules/gradle-intellij-plugin.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../../type-library/aldor-types/javatypes/javatypes.iml" filepath="$PROJECT_DIR$/../../../type-library/aldor-types/javatypes/javatypes.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/julia-intellij.iml" filepath="$PROJECT_DIR$/.idea/modules/julia-intellij.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/julia-intellij.main.iml" filepath="$PROJECT_DIR$/.idea/modules/julia-intellij.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/julia-intellij.test.iml" filepath="$PROJECT_DIR$/.idea/modules/julia-intellij.test.iml" />
     </modules>
   </component>
 </project>

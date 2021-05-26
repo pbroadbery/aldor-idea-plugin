@@ -32,7 +32,7 @@ public class AnnotationFileTest {
 
     private final AnnotationFileTestFixture annotationTestFixture = new AnnotationFileTestFixture();
     private final ExecutablePresentRule aldorExecutableRule = new ExecutablePresentRule.Aldor();
-    private final CodeInsightTestFixture insightTestFixture = LightPlatformJUnit4TestRule.createFixture(SdkProjectDescriptors.aldorSdkProjectDescriptor(aldorExecutableRule.prefix()));
+    private final CodeInsightTestFixture insightTestFixture = LightPlatformJUnit4TestRule.createFixture(SdkProjectDescriptors.aldorSdkProjectDescriptor(aldorExecutableRule, SdkProjectDescriptors.SourceFileStorageType.Real));
 
     @Before
     public void setUp() {

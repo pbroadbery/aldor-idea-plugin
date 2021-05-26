@@ -152,6 +152,6 @@ public class AldorDocumentationProviderTest {
     }
 
     protected LightProjectDescriptor getProjectDescriptor() {
-       return SdkProjectDescriptors.aldorSdkProjectDescriptor(aldorExecutableRule.prefix());
+       return SdkProjectDescriptors.aldorSdkProjectDescriptor(aldorExecutableRule, SdkProjectDescriptors.SourceFileStorageType.Real);
     }
 }

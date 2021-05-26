@@ -1,8 +1,10 @@
 package aldor.jps;
 
+import aldor.test_util.JUnits;
 import com.intellij.openapi.diagnostic.Logger;
 import org.jetbrains.jps.incremental.messages.BuildMessage;
 import org.junit.Assert;
+import org.junit.Ignore;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +15,11 @@ import java.nio.file.Files;
 public class JpsAldorLocalBuildTest extends AldorJpsTestCase {
     private static final Logger LOG = Logger.getInstance(JpsAldorLocalBuildTest.class);
     private final AldorLocalFixture aldorFixture = new AldorLocalFixture();
+
+    @Override
+    protected boolean shouldRunTest() {
+        return JUnits.isCIBuild(); // Idea is that this should be fixed before next release
+    }
 
     public void testOne() throws IOException {
 

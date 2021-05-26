@@ -1,7 +1,7 @@
 package aldor.builder.jars;
 
 import aldor.builder.AldorBuilderService;
-import aldor.builder.jps.JpsAldorModuleType;
+import aldor.builder.jps.module.JpsAldorModuleType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.jps.model.JpsElement;
 import org.jetbrains.jps.model.JpsEventDispatcher;

@@ -1,7 +1,6 @@
 package aldor.test_util;
 
 import org.junit.Assume;
-import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
@@ -19,7 +18,7 @@ import java.util.Optional;
  * 3) Maybe some other places...
  * Explicit places beat PATH lookup.
  */
-public class ExecutablePresentRule implements TestRule {
+public class ExecutablePresentRule implements PathBasedTestRule {
     private final String executableName;
     private final List<String> places;
 
@@ -43,6 +42,11 @@ public class ExecutablePresentRule implements TestRule {
         Optional<File> executable = findExecutable();
         Assume.assumeTrue(executable.isPresent());
         return executable.get();
+    }
+
+    @Override
+    public String path() {
+        return prefix();
     }
 
     private Optional<File> findExecutable() {
@@ -120,6 +124,7 @@ public class ExecutablePresentRule implements TestRule {
      * For JUnit3/LightPlatformTestCase
      * @return true if test is runnable
      */
+    @Override
     public boolean shouldRunTest() {
         return findExecutable().isPresent();
     }

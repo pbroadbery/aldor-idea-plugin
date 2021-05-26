@@ -1,6 +1,6 @@
 package aldor.build.facet.aldor;
 
-import aldor.builder.jps.AldorModuleExtensionProperties;
+import aldor.builder.jps.module.AldorFacetExtensionProperties;
 import aldor.test_util.AssumptionAware;
 import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.FormHelper;
@@ -16,12 +16,12 @@ import com.intellij.openapi.roots.ui.configuration.JdkComboBox;
 import com.intellij.openapi.roots.ui.configuration.ModuleEditor;
 import com.intellij.openapi.roots.ui.configuration.ModulesConfigurator;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
-import com.intellij.testFramework.LightIdeaTestCase;
 import com.intellij.testFramework.LightProjectDescriptor;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -39,7 +39,7 @@ public class AldorFacetEditorFormTest extends AssumptionAware.LightIdeaTestCase 
         configurator.getOrCreateModuleEditor(getModule());
         Facet<?> facet = facetConfigurator.createAndAddFacet(getModule(), AldorFacetType.instance(), null);
         FacetEditorImpl editor = facetConfigurator.getOrCreateEditor(facet);
-        AldorFacetEditorForm tab = editor.getEditorTab(AldorFacetEditorForm.class);
+        AldorFacetEditor tab = editor.getEditorTab(AldorFacetEditor.class);
 
         System.out.println(tab.currentState());
         //noinspection OverlyStrongTypeCast
@@ -56,8 +56,9 @@ public class AldorFacetEditorFormTest extends AssumptionAware.LightIdeaTestCase 
         configurator.getOrCreateModuleEditor(getModule());
         AldorFacet facet = (AldorFacet) facetConfigurator.createAndAddFacet(getModule(), AldorFacetType.instance(), null);
         FacetEditorImpl editor = facetConfigurator.getOrCreateEditor(facet);
-        AldorFacetEditorForm tab = editor.getEditorTab(AldorFacetEditorForm.class);
-        JCheckBox checkBox = FormHelper.component(tab, JCheckBox.class, "buildJavaCheckBox");
+        AldorFacetEditor tab = editor.getEditorTab(AldorFacetEditor.class);
+        JComponent topComponent = tab.createComponent();
+        JCheckBox checkBox = FormHelper.component(tab.form(), JCheckBox.class, "buildJavaCheckBox");
         checkBox.setSelected(true);
         Assert.assertTrue(tab.isModified());
         tab.apply();
@@ -74,14 +75,16 @@ public class AldorFacetEditorFormTest extends AssumptionAware.LightIdeaTestCase 
         configurator.setContext(new StructureConfigurableContext(getProject(), configurator));
         ProjectFacetsConfigurator facetConfigurator = configurator.getFacetsConfigurator();
         AldorFacet facet = AldorFacet.forModule(getModule());
-        AldorModuleExtensionProperties state = facet.getConfiguration().getState();
+        AldorFacetExtensionProperties state = facet.getConfiguration().getState();
         facet.getConfiguration().updateState(state);
         @NotNull ModuleEditor moduleEditor = configurator.getOrCreateModuleEditor(getModule());
         FacetEditorImpl editor = facetConfigurator.getOrCreateEditor(facet);
-        AldorFacetEditorForm tab = editor.getEditorTab(AldorFacetEditorForm.class);
-        JdkComboBox comboBox = FormHelper.component(tab, JdkComboBox.class, "aldorSdkComboBox");
+        AldorFacetEditor tab = editor.getEditorTab(AldorFacetEditor.class);
+        JdkComboBox comboBox = FormHelper.component(tab.form(), JdkComboBox.class, "aldorSdkComboBox");
+        tab.reset();
         LOG.info("Name " + Optional.ofNullable(comboBox.getSelectedJdk()).map(Sdk::getName).orElse(null));
         LOG.info("Mod: " + tab.isModified());
+        Assert.assertNotNull(facet.getConfiguration().getState());
         Assert.assertEquals(facet.getConfiguration().getState().sdkName(), Optional.ofNullable(comboBox.getSelectedJdk()).map(Sdk::getName).orElse(null));
         Assert.assertFalse(tab.isModified());
         LOG.info("Finished!");
@@ -96,17 +99,18 @@ public class AldorFacetEditorFormTest extends AssumptionAware.LightIdeaTestCase 
         configurator.setContext(new StructureConfigurableContext(getProject(), configurator));
         ProjectFacetsConfigurator facetConfigurator = configurator.getFacetsConfigurator();
         AldorFacet facet = AldorFacet.forModule(getModule());
-        AldorModuleExtensionProperties state = facet.getConfiguration().getState();
+        AldorFacetExtensionProperties state = facet.getConfiguration().getState();
+        Assert.assertNotNull(state);
 //        facet.getConfiguration().updateState(state.asBuilder().setSdkName("Not a current SDK").build());
         facet.getConfiguration().updateState(state.asBuilder().setSdkName("nope").build());
 
         @NotNull ModuleEditor moduleEditor = configurator.getOrCreateModuleEditor(getModule()); // needed to keep next fn happy
         FacetEditorImpl editor = facetConfigurator.getOrCreateEditor(facet);
-        AldorFacetEditorForm tab = editor.getEditorTab(AldorFacetEditorForm.class);
-        JdkComboBox comboBox = FormHelper.component(tab, JdkComboBox.class, "aldorSdkComboBox");
+        AldorFacetEditor tab = editor.getEditorTab(AldorFacetEditor.class);
+        JdkComboBox comboBox = FormHelper.component(tab.form(), JdkComboBox.class, "aldorSdkComboBox");
         LOG.info("Name " + Optional.ofNullable(comboBox.getSelectedJdk()).map(Sdk::getName).orElse(null));
         LOG.info("Mod: " + tab.isModified());
-        Assert.assertEquals(null, Optional.ofNullable(comboBox.getSelectedJdk()).map(Sdk::getName).orElse(null));
+        Assert.assertNull(Optional.ofNullable(comboBox.getSelectedJdk()).map(Sdk::getName).orElse(null));
         Assert.assertTrue(tab.isModified());
         LOG.info("Finished!");
     }

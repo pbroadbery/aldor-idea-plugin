@@ -1,0 +1,15 @@
+\#include "aldor"
+\#include "aldorio"
+#pile
+
++++ Basic Aldor package exporting two functions.
++++ It is expected that your code will be more interesting.
+ExampleIntegerFunctions: with
+    exampleEven?: Integer -> Boolean
+        ++ True if the argument is even
+    exampleOdd?: Integer -> Boolean
+        ++ True if the argument is odd
+ == add
+    exampleEven?(n: Integer): Boolean == n rem 2 = 0
+    exampleOdd?(n: Integer): Boolean == n rem 2 = 1
+

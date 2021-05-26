@@ -84,7 +84,7 @@ public class SpadInputRunConfigurationProducerTest {
         executionEnvironment.setCallback(new ProgramRunner.Callback() {
                                         @Override
                                         public void processStarted(RunContentDescriptor descriptor) {
-                                            System.out.println("Runing: " + descriptor);
+                                            System.out.println("Running: " + descriptor);
                                             descriptorBox[0] = descriptor;
                                         }});
 
@@ -100,7 +100,7 @@ public class SpadInputRunConfigurationProducerTest {
     }
 
     protected LightProjectDescriptor getProjectDescriptor() {
-        return SdkProjectDescriptors.fricasSdkProjectDescriptor(directory);
+        return SdkProjectDescriptors.fricasSdkProjectDescriptor(directory, SdkProjectDescriptors.SourceFileStorageType.Real);
     }
 
 }

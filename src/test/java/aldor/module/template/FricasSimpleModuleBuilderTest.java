@@ -37,8 +37,12 @@ public class FricasSimpleModuleBuilderTest extends AssumptionAware.NewProjectWiz
 
     @Override
     public void tearDown() throws Exception {
-        super.tearDown();
-        tearDown.tearDown();
+        try {
+            tearDown.tearDown();
+        }
+        finally {
+            super.tearDown();
+        }
     }
 
     public void testCreateProject() throws IOException {

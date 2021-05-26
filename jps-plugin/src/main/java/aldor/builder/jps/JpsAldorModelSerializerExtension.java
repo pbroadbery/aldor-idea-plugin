@@ -1,8 +1,12 @@
 package aldor.builder.jps;
 
 import aldor.build.facet.aldor.AldorFacetConstants;
+import aldor.builder.jps.module.AldorFacetExtensionProperties;
+import aldor.builder.jps.module.JpsAldorFacetExtension;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.xmlb.XmlSerializer;
+import org.jdom.Content;
+import org.jdom.Document;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -13,7 +17,6 @@ import org.jetbrains.jps.model.JpsElementTypeWithDefaultProperties;
 import org.jetbrains.jps.model.library.JpsOrderRootType;
 import org.jetbrains.jps.model.library.sdk.JpsSdkType;
 import org.jetbrains.jps.model.module.JpsModule;
-import org.jetbrains.jps.model.module.JpsModuleSourceRootType;
 import org.jetbrains.jps.model.serialization.JpsModelSerializerExtension;
 import org.jetbrains.jps.model.serialization.facet.JpsFacetConfigurationSerializer;
 import org.jetbrains.jps.model.serialization.library.JpsLibraryRootTypeSerializer;
@@ -41,7 +44,7 @@ public class JpsAldorModelSerializerExtension extends JpsModelSerializerExtensio
     @NotNull
     @Override
     public List<? extends JpsModulePropertiesSerializer<?>> getModulePropertiesSerializers() {
-        return Collections.singletonList(new AldorModulePropertiesSerializer());
+        return Collections.singletonList(new AldorModuleStateSerializer());
     }
 
     @Override
@@ -97,6 +100,7 @@ public class JpsAldorModelSerializerExtension extends JpsModelSerializerExtensio
         public JpsDummyElement loadProperties(@Nullable Element propertiesElement) {
             LOG.info("Loading sdk properties for: "
                     + getTypeId() + " elt --> " + Optional.ofNullable(propertiesElement).map(Element::getAttributes).orElse(null));
+            LOG.info("... from " + Optional.ofNullable(propertiesElement).map(Content::getDocument).map(Document::getBaseURI).orElse("missing doc"));
             return JpsElementFactory.getInstance().createDummyElement();
         }
 
@@ -124,16 +128,16 @@ public class JpsAldorModelSerializerExtension extends JpsModelSerializerExtensio
         }
     }
 
-    private static final class JpsAldorFacetConfigurationSerializer extends JpsFacetConfigurationSerializer<JpsAldorModuleExtension> {
+    private static final class JpsAldorFacetConfigurationSerializer extends JpsFacetConfigurationSerializer<JpsAldorFacetExtension> {
         private JpsAldorFacetConfigurationSerializer() {
-            super(JpsAldorModuleExtension.ROLE, AldorFacetConstants.ID, AldorFacetConstants.NAME);
+            super(JpsAldorFacetExtension.ROLE, AldorFacetConstants.ID, AldorFacetConstants.NAME);
         }
 
         @Override
-        protected JpsAldorModuleExtension loadExtension(@NotNull Element facetConfigElement, String name, JpsElement parent, JpsModule module) {
-            AldorModuleExtensionProperties props = XmlSerializer.deserialize(facetConfigElement, AldorModuleExtensionProperties.class);
+        protected JpsAldorFacetExtension loadExtension(@NotNull Element facetConfigElement, String name, JpsElement parent, JpsModule module) {
+            AldorFacetExtensionProperties props = XmlSerializer.deserialize(facetConfigElement, AldorFacetExtensionProperties.class);
             LOG.info("Loaded facet extension " + props + " " + props.buildJavaComponents());
-            return new JpsAldorModuleExtension(props);
+            return new JpsAldorFacetExtension(props);
         }
     }
 
@@ -144,11 +148,13 @@ public class JpsAldorModelSerializerExtension extends JpsModelSerializerExtensio
 
         @Override
         public AldorSourceRootProperties loadProperties(@NotNull Element sourceRootTag) {
+            LOG.info("Loading aldor root properties " + sourceRootTag.getText());
             return new AldorSourceRootProperties(sourceRootTag.getAttributeValue("outputDirectory"));
         }
 
         @Override
         public void saveProperties(@NotNull AldorSourceRootProperties properties, @NotNull Element sourceRootTag) {
+            LOG.info("saving aldor root properties " + sourceRootTag.getText());
             sourceRootTag.setAttribute("outputDirectory", properties.outputDirectory());
         }
     }

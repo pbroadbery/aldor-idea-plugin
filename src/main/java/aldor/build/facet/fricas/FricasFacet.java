@@ -2,7 +2,7 @@ package aldor.build.facet.fricas;
 
 import aldor.build.facet.ModuleModifyingFacetUtil;
 import aldor.build.facet.SpadFacet;
-import aldor.build.facet.aldor.ModuleModifyingFacet;
+import aldor.build.facet.ModuleModifyingFacet;
 import aldor.sdk.fricas.FricasInstalledSdkType;
 import com.intellij.facet.Facet;
 import com.intellij.facet.FacetManager;

@@ -15,12 +15,13 @@
  */
 package aldor.jps;
 
-import aldor.builder.jps.AldorModuleExtensionProperties;
+import aldor.builder.jps.module.AldorFacetExtensionProperties;
 import aldor.builder.jps.AldorSourceRootType;
-import aldor.builder.jps.JpsAldorMakeDirectoryOption;
 import aldor.builder.jps.JpsAldorModelSerializerExtension;
-import aldor.builder.jps.JpsAldorModuleExtension;
-import aldor.builder.jps.JpsAldorModuleType;
+import aldor.builder.jps.module.AldorModuleState;
+import aldor.builder.jps.module.JpsAldorFacetExtension;
+import aldor.builder.jps.module.JpsAldorModuleType;
+import aldor.builder.jps.module.MakeConvention;
 import aldor.test_util.AssumptionAware;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileSystemUtil;
@@ -151,25 +152,32 @@ public abstract class AldorJpsTestCase extends AssumptionAware.UsefulTestCase {
     }
 
     JpsModule addAldorModule(String moduleName) {
-        AldorModuleExtensionProperties properties = new AldorModuleExtensionProperties("aldor-sdk", "out/ao",
-                JpsAldorMakeDirectoryOption.Source, AldorModuleExtensionProperties.WithJava.Enabled, "java-sdk");
-        JpsSimpleElement<AldorModuleExtensionProperties> simpleElement = JpsElementFactory.getInstance().createSimpleElement(properties);
-        JpsModule module = new JpsModuleImpl<>(JpsAldorModuleType.INSTANCE, moduleName, simpleElement);
+        AldorModuleState properties = AldorModuleState.newBuilder()
+                .relativeOutputDirectory("out/ao")
+                .build();
+        // AldorModuleExtensionProperties properties = new AldorModuleExtensionProperties("aldor-sdk", "out/ao",
+        //                JpsAldorMakeDirectoryOption.Source, AldorModuleExtensionProperties.WithJava.Enabled, "java-sdk");
+        //
+        JpsSimpleElement<AldorModuleState> simpleElement = JpsElementFactory.getInstance().createSimpleElement(properties);
+
+        JpsModule module = JpsElementFactory.getInstance().createModule(moduleName, JpsAldorModuleType.INSTANCE, simpleElement);
+
         myProject.addModule(module);
         module.getContentRootsList().addUrl(JpsPathUtil.pathToUrl(new File(getOrCreateProjectDir(), moduleName).toString()));
         return module;
     }
 
     private JpsModule addLocalAldorModule(String moduleName, String outputDirectoryName) {
-        AldorModuleExtensionProperties data = new AldorModuleExtensionProperties("aldor-sdk", outputDirectoryName, JpsAldorMakeDirectoryOption.BuildRelative, AldorModuleExtensionProperties.WithJava.Enabled, "java-sdk");
-        JpsSimpleElement<AldorModuleExtensionProperties> simpleElement = JpsElementFactory.getInstance().createSimpleElement(data);
+        AldorFacetExtensionProperties data = new AldorFacetExtensionProperties("aldor-sdk", AldorFacetExtensionProperties.WithJava.Enabled, "java-sdk",
+                MakeConvention.Source, "", "");
+        AldorModuleState properties = AldorModuleState.newBuilder().build();
+        JpsSimpleElement<AldorModuleState> simpleElement = JpsElementFactory.getInstance().createSimpleElement(properties);
         JpsModule module = new JpsModuleImpl<>(JpsAldorModuleType.INSTANCE, moduleName, simpleElement);
         myProject.addModule(module);
         module.getContentRootsList().addUrl(JpsPathUtil.pathToUrl(new File(getOrCreateProjectDir(), moduleName).toString()));
 
         return module;
     }
-
 
     protected BuildResult doBuild(final ProjectDescriptor descriptor, CompileScopeTestBuilder scopeBuilder) {
         IncProjectBuilder builder = new IncProjectBuilder(descriptor, BuilderRegistry.getInstance(), myBuildParams, CanceledStatus.NULL, true);
@@ -207,7 +215,6 @@ public abstract class AldorJpsTestCase extends AssumptionAware.UsefulTestCase {
         res.assertFailed();
         return res;
     }
-
 
     protected BuildResult makeAll() {
         return doBuild(CompileScopeTestBuilder.make().all());
@@ -332,8 +339,8 @@ public abstract class AldorJpsTestCase extends AssumptionAware.UsefulTestCase {
             module.getSdkReferencesTable().setSdkReference(JpsAldorModelSerializerExtension.JpsAldorSdkType.LOCAL, sdkReference);
 
             // This is wrong for a local aldor git clone
-            module.getContainer().setChild(JpsAldorModuleExtension.ROLE,
-                    new JpsAldorModuleExtension(AldorModuleExtensionProperties.builder().setOutputDirectory(outputDirectoryName).setOption(JpsAldorMakeDirectoryOption.BuildRelative).build()));
+            module.getContainer().setChild(JpsAldorFacetExtension.ROLE,
+                    new JpsAldorFacetExtension(AldorFacetExtensionProperties.builder().build()));
 
             return module;
         }
@@ -362,10 +369,10 @@ public abstract class AldorJpsTestCase extends AssumptionAware.UsefulTestCase {
             module.getSdkReferencesTable().setSdkReference(JpsAldorModelSerializerExtension.JpsAldorSdkType.LOCAL,
                                                           elementFactory.createSdkReference("Local",
                                                                                     JpsAldorModelSerializerExtension.JpsAldorSdkType.LOCAL));
-            module.getContainer().setChild(JpsAldorModuleExtension.ROLE,
-                    new JpsAldorModuleExtension(AldorModuleExtensionProperties.builder()
-                            .setOutputDirectory(outputDirectoryName)
-                            .setOption(JpsAldorMakeDirectoryOption.Source)
+            module.getContainer().setChild(JpsAldorFacetExtension.ROLE,
+                    new JpsAldorFacetExtension(AldorFacetExtensionProperties.builder()
+                            .setSdkName("Local")
+                            .setRelativeOutputDirectory("out/ao")
                             .build()));
 
             return module;

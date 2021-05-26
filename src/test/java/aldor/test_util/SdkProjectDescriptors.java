@@ -4,9 +4,8 @@ import aldor.build.facet.aldor.AldorFacet;
 import aldor.build.facet.fricas.FricasFacet;
 import aldor.build.facet.fricas.FricasFacetProperties;
 import aldor.build.module.AldorModuleType;
-import aldor.builder.jps.AldorModuleExtensionProperties;
+import aldor.builder.jps.module.AldorFacetExtensionProperties;
 import aldor.builder.jps.AldorSourceRootType;
-import aldor.builder.jps.JpsAldorMakeDirectoryOption;
 import aldor.module.template.AldorSimpleModuleBuilder;
 import aldor.module.template.AldorTemplateFactory;
 import aldor.sdk.aldor.AldorInstalledSdkType;
@@ -36,6 +35,8 @@ import com.intellij.platform.ProjectTemplate;
 import com.intellij.testFramework.LightProjectDescriptor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.jps.model.java.JavaSourceRootType;
+import org.jetbrains.jps.model.module.JpsModuleSourceRootType;
 import org.junit.Assume;
 
 import java.io.IOException;
@@ -62,22 +63,33 @@ public final class SdkProjectDescriptors {
 
         Sdk editSdk(Sdk theSdk);
 
-        ModuleType getModuleType();
+        ModuleType<?> getModuleType();
 
         void editFacet(Module module);
+
+        JpsModuleSourceRootType<?> rootType();
+
+        SourceFileStorageType sourceFileType();
+    }
+
+    public enum SourceFileStorageType {
+        Virtual,
+        Real
     }
 
     private enum SdkOption implements SdkDescriptor {
 
-        Fricas(new FricasInstalledSdkType()),
-        Aldor(new AldorInstalledSdkType()),
-        FricasLocal(new FricasLocalSdkType()),
-        AldorLocal(new AldorLocalSdkType());
+        Fricas(new FricasInstalledSdkType(), JavaSourceRootType.SOURCE),
+        Aldor(new AldorInstalledSdkType(), AldorSourceRootType.INSTANCE),
+        FricasLocal(new FricasLocalSdkType() , JavaSourceRootType.SOURCE),
+        AldorLocal(new AldorLocalSdkType(), AldorSourceRootType.INSTANCE);
 
         private final SdkType sdkType;
+        private final JpsModuleSourceRootType<?> sourceRootType;
 
-        SdkOption(SdkType type) {
+        SdkOption(SdkType type, JpsModuleSourceRootType<?> rootType) {
             this.sdkType = type;
+            this.sourceRootType = rootType;
         }
 
         @Nullable
@@ -108,13 +120,26 @@ public final class SdkProjectDescriptors {
         @Override
         public void editFacet(Module module) {
         }
+
+        @Override
+        public SourceFileStorageType sourceFileType() {
+            return SourceFileStorageType.Virtual;
+        }
+
+        @Override
+        public JpsModuleSourceRootType<?> rootType() {
+            return sourceRootType;
+        }
+
+        SdkDescriptor withStorageType(SourceFileStorageType storageType) {
+            return new WithSourceStorageType(this, storageType);
+        }
     }
 
-    private static class WithAldorUnit implements SdkDescriptor {
-        private SdkDescriptor innerSdkDescriptor;
-        private String aldorUnitHomePath = "/home/pab/IdeaProjects/type-library/out/artifacts/aldorunit";
+    private static class DelegatingDescriptor implements SdkDescriptor {
+        private final SdkDescriptor innerSdkDescriptor;
 
-        WithAldorUnit(SdkDescriptor descriptor) {
+        DelegatingDescriptor(SdkDescriptor descriptor) {
             this.innerSdkDescriptor = descriptor;
         }
 
@@ -130,12 +155,59 @@ public final class SdkProjectDescriptors {
 
         @Override
         public Sdk editSdk(Sdk theSdk) {
-            return theSdk;
+            return innerSdkDescriptor.editSdk(theSdk);
         }
 
         @Override
-        public ModuleType getModuleType() {
+        public ModuleType<?> getModuleType() {
             return innerSdkDescriptor.getModuleType();
+        }
+
+        @Override
+        public void editFacet(Module module) {
+            innerSdkDescriptor.editFacet(module);
+        }
+
+        @Override
+        public JpsModuleSourceRootType<?> rootType() {
+            return innerSdkDescriptor.rootType();
+        }
+
+        @Override
+        public SourceFileStorageType sourceFileType() {
+            return innerSdkDescriptor.sourceFileType();
+        }
+    }
+
+    private static class WithSourceStorageType extends DelegatingDescriptor {
+        private final SourceFileStorageType sourceFileStorageType;
+
+        WithSourceStorageType(SdkDescriptor descriptor, SourceFileStorageType sourceFileStorageType) {
+            super(descriptor);
+            this.sourceFileStorageType = sourceFileStorageType;
+        }
+
+        @Override
+        public String name(String prefix) {
+            return super.name(prefix) + "_" + sourceFileStorageType;
+        }
+
+        @Override
+        public SourceFileStorageType sourceFileType() {
+            return SourceFileStorageType.Real;
+        }
+    }
+
+    private static class WithAldorUnit extends DelegatingDescriptor {
+        private static String aldorUnitHomePath = "/home/pab/IdeaProjects/type-library/out/artifacts/aldorunit";
+
+        WithAldorUnit(SdkDescriptor descriptor) {
+            super(descriptor);
+        }
+
+        @Override
+        public String name(String prefix) {
+            return super.name(prefix) + "_withAldorUnit";
         }
 
         @Override
@@ -143,8 +215,6 @@ public final class SdkProjectDescriptors {
             Sdk javaSdk = createJDK();
             AldorFacet facet = AldorFacet.forModule(module);
             facet.getConfiguration().loadState(facet.getConfiguration().getState().asBuilder()
-                    .setOutputDirectory("out/ao")
-                    .setOption(JpsAldorMakeDirectoryOption.Source)
                     .setBuildJavaComponents(true)
                     .setJavaSdkName(javaSdk.getName())
                     .build());
@@ -155,25 +225,35 @@ public final class SdkProjectDescriptors {
             ProjectJdkTable.getInstance().addJdk(jdk);
             return jdk;
         }
+
+        @Override
+        public SourceFileStorageType sourceFileType() {
+            return SourceFileStorageType.Real;
+        }
     }
 
-    public static LightProjectDescriptor fricasSdkProjectDescriptor(DirectoryPresentRule prefix) {
-        Assume.assumeTrue(prefix.isPresent());
+    public static LightProjectDescriptor fricasSdkProjectDescriptor(PathBasedTestRule prefix) {
+        Assume.assumeTrue(prefix.shouldRunTest());
         return instance.getProjectDescriptor(SdkOption.Fricas, prefix.path());
     }
 
-    public static LightProjectDescriptor fricasSdkProjectDescriptor(ExecutablePresentRule rule) {
-        Assume.assumeTrue(rule.shouldRunTest());
-        return instance.getProjectDescriptor(SdkOption.Fricas, rule.prefix());
+    public static LightProjectDescriptor fricasSdkProjectDescriptor(PathBasedTestRule prefix, SourceFileStorageType sourceFileStorageType) {
+        Assume.assumeTrue(prefix.shouldRunTest());
+        return instance.getProjectDescriptor(SdkOption.Fricas.withStorageType(sourceFileStorageType), prefix.path());
     }
 
     public static LightProjectDescriptor aldorSdkProjectDescriptor(String prefix) {
         return instance.getProjectDescriptor(SdkOption.Aldor, prefix);
     }
 
-    public static LightProjectDescriptor aldorSdkProjectDescriptor(ExecutablePresentRule rule) {
+    public static LightProjectDescriptor aldorSdkProjectDescriptor(PathBasedTestRule rule) {
         Assume.assumeTrue(rule.shouldRunTest());
-        return instance.getProjectDescriptor(SdkOption.Aldor, rule.prefix());
+        return instance.getProjectDescriptor(SdkOption.Aldor, rule.path());
+    }
+
+    public static LightProjectDescriptor aldorSdkProjectDescriptor(PathBasedTestRule rule, SourceFileStorageType storageType) {
+        Assume.assumeTrue(rule.shouldRunTest());
+        return instance.getProjectDescriptor(SdkOption.Aldor.withStorageType(storageType), rule.path());
     }
 
     public static LightProjectDescriptor aldorSdkProjectDescriptorWithAldorUnit(String prefix) {
@@ -257,13 +337,14 @@ public final class SdkProjectDescriptors {
             AldorSimpleModuleBuilder aldorBuilder = (AldorSimpleModuleBuilder) template.createModuleBuilder();
             aldorBuilder.setCreateInitialStructure(false);
             aldorBuilder.setSdk(Objects.requireNonNull(this.getSdk()));
+            aldorBuilder.setRelativeBuildDirectory("out/ao");
             aldorBuilder.setContentEntryPath(srcRoot.getPath());
             return aldorBuilder;
         }
 
         private void createAldorFacet(Module module) {
             assertNotNull(builder);
-            AldorModuleExtensionProperties properties = ((AldorSimpleModuleBuilder) builder).properties();
+            AldorFacetExtensionProperties properties = ((AldorSimpleModuleBuilder) builder).properties();
             AldorFacet.createFacetIfMissing(module, properties);
         }
 
@@ -330,12 +411,34 @@ public final class SdkProjectDescriptors {
         }
 
         @Override
+        @NotNull
+        protected JpsModuleSourceRootType<?> getSourceRootType() {
+            return AldorSourceRootType.INSTANCE;
+        }
+
+        @Override
         protected VirtualFile createSourceRoot(@NotNull Module module, String srcPath) {
+            if (sdkDescriptor.sourceFileType() == SourceFileStorageType.Virtual) {
+                return super.createSourceRoot(module, srcPath);
+            }
+
             try {
+                VirtualFile root = module.getProject().getBaseDir().getFileSystem().findFileByPath("/tmp");
+                if (root == null) {
+                    throw new IllegalStateException("Failed to find /tmp directory");
+                }
+                String moduleName = module.getProject().getName() + "_" + module.getName();
+                VirtualFile srcRoot = root.createChildDirectory(this, moduleName).createChildDirectory(this, srcPath);
+                srcRoot.refresh(false, false);
+                return srcRoot;
+            } catch (IOException e) {
+                throw new RuntimeException("No way", e);
+            }
+            /*try {
                 VirtualFile root = module.getProject().getBaseDir().getFileSystem().findFileByPath("/tmp");
                 assert root != null;
                 String moduleName = module.getProject().getName() + "_" + module.getName();
-                VirtualFile srcRoot = root.findChild(moduleName);
+                VirtualFile srcRoot = root.findChild(moduleName).createChildDirectory(null, srcPath);
                 if (srcRoot == null) {
                     return root.createChildDirectory(null, moduleName);
                 }
@@ -346,6 +449,7 @@ public final class SdkProjectDescriptors {
             }catch (IOException e) {
                 throw new RuntimeException("No way", e);
             }
+            */
         }
 
         @Nullable

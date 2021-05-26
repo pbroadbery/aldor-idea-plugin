@@ -1,7 +1,7 @@
 package aldor.build.facet.aldor;
 
 import aldor.build.facet.SpadFacet;
-import aldor.builder.jps.AldorModuleExtensionProperties;
+import aldor.builder.jps.module.AldorFacetExtensionProperties;
 import com.intellij.facet.FacetConfiguration;
 import com.intellij.facet.ui.FacetEditorContext;
 import com.intellij.facet.ui.FacetEditorTab;
@@ -15,21 +15,24 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class AldorFacetConfiguration implements FacetConfiguration, PersistentStateComponent<AldorModuleExtensionProperties>, SpadFacet<AldorModuleExtensionProperties> {
+public class AldorFacetConfiguration implements FacetConfiguration, PersistentStateComponent<AldorFacetExtensionProperties>, SpadFacet<AldorFacetExtensionProperties> {
     private static final Logger LOG = Logger.getInstance(AldorFacetConfiguration.class);
     public static final FacetEditorTab[] NO_EDITOR_TABS = new FacetEditorTab[0];
-    private AldorModuleExtensionProperties state = new AldorModuleExtensionProperties();
+    private AldorFacetExtensionProperties state = new AldorFacetExtensionProperties();
 
     public AldorFacetConfiguration() {}
 
     @Override
     public FacetEditorTab[] createEditorTabs(FacetEditorContext editorContext, FacetValidatorsManager validatorsManager) {
-        return new FacetEditorTab[] {new AldorFacetEditorForm(editorContext, validatorsManager)}; // FIXME: BuildPath/SDK/Java
+        return new FacetEditorTab[] {
+                new AldorFacetEditor(editorContext, validatorsManager),
+        //        new AldorFacetPathsEditor(editorContext, validatorsManager)
+        }; // FIXME: BuildPath/SDK/Java
     }
 
     @Nullable
     @Override
-    public AldorModuleExtensionProperties getState() {
+    public AldorFacetExtensionProperties getState() {
         return state;
     }
 
@@ -37,12 +40,12 @@ public class AldorFacetConfiguration implements FacetConfiguration, PersistentSt
      * Called from the UI
      * @param state - updated state
      */
-    void updateState(AldorModuleExtensionProperties state) {
+    void updateState(AldorFacetExtensionProperties state) {
         this.state = state;
     }
 
     @Override
-    public void loadState(@NotNull AldorModuleExtensionProperties state) {
+    public void loadState(@NotNull AldorFacetExtensionProperties state) {
         this.state = state;
     }
 
@@ -66,7 +69,7 @@ public class AldorFacetConfiguration implements FacetConfiguration, PersistentSt
     }
 
     @Override
-    public Optional<AldorModuleExtensionProperties> getProperties() {
+    public Optional<AldorFacetExtensionProperties> getProperties() {
         //noinspection CallToSimpleGetterFromWithinClass
         return Optional.ofNullable(getState());
     }

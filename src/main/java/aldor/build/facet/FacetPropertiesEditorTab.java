@@ -16,9 +16,11 @@ import java.util.Objects;
 
 public abstract class FacetPropertiesEditorTab<S, C extends FacetConfiguration & PersistentStateComponent<S>> extends FacetEditorTab {
     private final FacetEditorContext editorContext;
+    private final FacetValidatorsManager validatorsManager;
 
     protected FacetPropertiesEditorTab(FacetEditorContext editorContext, FacetValidatorsManager validatorsManager) {
         this.editorContext = editorContext;
+        this.validatorsManager = validatorsManager;
     }
 
     public Project project() {
@@ -28,6 +30,10 @@ public abstract class FacetPropertiesEditorTab<S, C extends FacetConfiguration &
     @NotNull
     public Module module() {
         return editorContext.getModule();
+    }
+
+    public FacetValidatorsManager validatorsManager() {
+        return validatorsManager;
     }
 
     public ModifiableRootModel modifiableRootModel() {

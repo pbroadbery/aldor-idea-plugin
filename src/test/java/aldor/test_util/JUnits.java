@@ -78,7 +78,7 @@ public final class JUnits {
                 Thread.currentThread().setName(threadName.substring(0, threadName.indexOf(' ')));
             }
         });
-        Appender appender = new ConsoleAppender(new PatternLayout("%r [%40t] %p %.40c %x - %m%n"));
+        Appender appender = new ConsoleAppender(new PatternLayout("%r [%t] %p %.40c %x - %m%n"));
         appender.setName("Console");
         LogManager.getRootLogger().addAppender(appender);
         LogManager.getRootLogger().setLevel(level);

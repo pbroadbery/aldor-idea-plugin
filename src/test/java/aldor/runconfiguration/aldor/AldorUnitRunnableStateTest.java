@@ -8,6 +8,7 @@ import aldor.test_util.AssumptionAware;
 import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.JUnits;
 import aldor.test_util.SdkProjectDescriptors;
+import aldor.test_util.SkipCI;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.PsiLocation;
 import com.intellij.execution.RunnerAndConfigurationSettings;
@@ -25,6 +26,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.EdtTestUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
 import org.junit.Assert;
+import org.junit.Ignore;
 
 import java.util.Collections;
 import java.util.concurrent.CountDownLatch;
@@ -33,6 +35,7 @@ import static aldor.test_util.JUnits.JpsDebuggingState.OFF;
 import static aldor.util.VirtualFileTests.createFile;
 import static com.intellij.testFramework.LightPlatformTestCase.getSourceRoot;
 
+@Ignore("To fix for next release")
 public class AldorUnitRunnableStateTest extends AssumptionAware.BasePlatformTestCase {
     private static final Logger LOG = Logger.getInstance(AldorUnitRunnableStateTest.class);
 

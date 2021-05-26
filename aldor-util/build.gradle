@@ -1,10 +1,10 @@
-
-
 jar {
     archiveFileName = "aldorutil.jar"
 }
 
+apply plugin: 'java-test-fixtures'
+
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testFixturesApi group: 'junit', name: 'junit', version: '4.12'
 }
 

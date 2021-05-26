@@ -34,7 +34,7 @@ public class IdentifierDocumentProviderTest {
     private static final Logger LOG = Logger.getInstance(IdentifierDocumentProviderTest.class);
 
     private final ExecutablePresentRule aldorExecutableRule = new ExecutablePresentRule.Aldor();
-    private final CodeInsightTestFixture codeTestFixture = LightPlatformJUnit4TestRule.createFixture(SdkProjectDescriptors.aldorSdkProjectDescriptor(aldorExecutableRule.prefix()));
+    private final CodeInsightTestFixture codeTestFixture = LightPlatformJUnit4TestRule.createFixture(SdkProjectDescriptors.aldorSdkProjectDescriptor(aldorExecutableRule, SdkProjectDescriptors.SourceFileStorageType.Real));
     private final AnnotationFileTestFixture annotationTestFixture= new AnnotationFileTestFixture();
 
     @Rule

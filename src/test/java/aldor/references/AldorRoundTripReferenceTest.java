@@ -9,7 +9,6 @@ import aldor.test_util.JUnits;
 import aldor.test_util.LightPlatformJUnit4TestRule;
 import aldor.test_util.SdkProjectDescriptors;
 import com.google.common.collect.ImmutableMap;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
@@ -37,7 +36,7 @@ import static org.junit.Assert.assertTrue;
 public class AldorRoundTripReferenceTest {
 
     private final ExecutablePresentRule aldorExecutableRule = new ExecutablePresentRule.Aldor();
-    private final CodeInsightTestFixture codeTestFixture = LightPlatformJUnit4TestRule.createFixture(SdkProjectDescriptors.aldorSdkProjectDescriptor(aldorExecutableRule.prefix()));
+    private final CodeInsightTestFixture codeTestFixture = LightPlatformJUnit4TestRule.createFixture(SdkProjectDescriptors.aldorSdkProjectDescriptor(aldorExecutableRule, SdkProjectDescriptors.SourceFileStorageType.Real));
     private final AnnotationFileTestFixture annotationTestFixture= new AnnotationFileTestFixture();
 
     @Rule
@@ -50,6 +49,7 @@ public class AldorRoundTripReferenceTest {
 
     @Before
     public void doBefore() {
+        JUnits.enableJpsDebugging(JUnits.JpsDebuggingState.OFF);
     }
 
     @After

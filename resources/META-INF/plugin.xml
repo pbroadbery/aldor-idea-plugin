@@ -72,6 +72,8 @@
         <moduleType id="ALDOR-MODULE" classpathProvider="false"
                     implementationClass="aldor.build.module.AldorModuleType"/>
         <moduleConfigurationEditorProvider implementation="aldor.build.module.AldorModuleConfigEditorProvider"/>
+        <moduleExtension implementation="aldor.build.module.AldorModuleExtension"/>
+        <moduleExtension implementation="aldor.build.module.AldorEnabledModuleExtension"/>
 
         <projectStructure.sourceRootEditHandler implementation="aldor.build.roots.AldorSourceRootEditHandler"/>
         <lang.syntaxHighlighterFactory language="Aldor" implementationClass="aldor.editor.AldorSyntaxHighlighterFactory"/>

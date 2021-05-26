@@ -2,6 +2,7 @@ package aldor.util;
 
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class Functions {
 
@@ -13,5 +14,10 @@ public class Functions {
             return Optional.empty();
         };
     }
+
+    public static <T, V> Predicate<T> compose(Function<T, V> fn, Predicate<V> pred) {
+        return t -> pred.test(fn.apply(t));
+    }
+
 
 }

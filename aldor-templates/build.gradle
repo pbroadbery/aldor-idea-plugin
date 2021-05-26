@@ -1,0 +1,10 @@
+jar {
+    archiveFileName = "aldor-templates.jar"
+}
+
+// This project is needed as file templates can only appear once in the classpath,
+// but the main source directory is included twice when run as a test (once as a jar file
+// and once in-place)
+dependencies {
+}
+

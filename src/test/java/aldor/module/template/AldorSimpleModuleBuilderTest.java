@@ -9,6 +9,7 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.testFramework.fixtures.IdeaProjectTestFixture;
 import com.intellij.testFramework.fixtures.IdeaTestFixtureFactory;
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -35,13 +36,16 @@ public class AldorSimpleModuleBuilderTest {
         File tmp = Files.createTempDir();
         try {
             AldorSimpleModuleBuilder builder = new AldorSimpleModuleBuilder();
+            builder.setContentEntryPath(tmp.getPath());
             builder.setName("Simple");
             builder.setModuleFilePath(tmp.getPath());
             Module module = ApplicationManager.getApplication().runWriteAction((ThrowableComputable<Module, Exception>) () -> builder.createModule(model));
             assertNotNull(module);
         }
         finally {
-            tmp.delete();
+            if (!tmp.delete()) {
+                Assert.fail();
+            }
         }
     }
 

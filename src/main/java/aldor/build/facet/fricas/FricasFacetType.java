@@ -1,12 +1,17 @@
 package aldor.build.facet.fricas;
 
+import aldor.build.facet.aldor.AldorFacet;
 import aldor.build.module.AldorModuleType;
 import com.intellij.facet.Facet;
+import com.intellij.facet.FacetManager;
 import com.intellij.facet.FacetType;
 import com.intellij.facet.FacetTypeId;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 public class FricasFacetType extends FacetType<FricasFacet, FricasFacetConfiguration> {
     public static final String FRICAS_FACET_ID = "Fricas Facet";
@@ -36,5 +41,10 @@ public class FricasFacetType extends FacetType<FricasFacet, FricasFacetConfigura
     public boolean isSuitableModuleType(ModuleType moduleType) {
         return moduleType instanceof AldorModuleType;
     }
+
+    public Optional<FricasFacet> facetIfPresent(Module module) {
+        return Optional.ofNullable(FacetManager.getInstance(module).getFacetByType(this.getId()));
+    }
+
 }
 

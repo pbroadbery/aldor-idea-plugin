@@ -3,7 +3,7 @@ package aldor.runconfiguration.aldor;
 import aldor.build.facet.aldor.AldorFacet;
 import aldor.build.facet.aldor.AldorFacetConfiguration;
 import aldor.build.facet.aldor.AldorFacetType;
-import aldor.builder.jps.AldorModuleExtensionProperties;
+import aldor.builder.jps.module.AldorFacetExtensionProperties;
 import aldor.util.Mavens;
 import aldor.util.StringUtilsAldorRt;
 import com.intellij.execution.CantRunException;
@@ -120,7 +120,7 @@ public class AldorUnitRunnableState extends AbstractAldorUnitRunnableState<Aldor
         Optional<String> sdkName = Optional.ofNullable(facet)
                 .map(Facet::getConfiguration)
                 .map(AldorFacetConfiguration::getState)
-                .map(AldorModuleExtensionProperties::sdkName);
+                .map(AldorFacetExtensionProperties::sdkName);
         Optional<Sdk> sdk = sdkName.map(name -> ProjectJdkTable.getInstance().findJdk(name));
         if (!sdk.isPresent()) {
             LOG.error("Missing aldor implementation for " + configuration.getName() + " implementation: " + sdkName.orElse("<missing>")

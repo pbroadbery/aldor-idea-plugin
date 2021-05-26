@@ -1,11 +1,10 @@
 package aldor.module.template;
 
-import aldor.builder.jps.AldorModuleExtensionProperties;
+import aldor.builder.jps.module.AldorFacetExtensionProperties;
 import com.google.common.annotations.VisibleForTesting;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
 
 import javax.annotation.Nonnull;
 import javax.swing.JComponent;
@@ -16,9 +15,9 @@ public class AldorNewModuleFacetStep extends ModuleWizardStep {
 
     private final AldorNewModuleFacetForm form;
     @Nonnull
-    private final AtomicReference<AldorModuleExtensionProperties> properties;
+    private final AtomicReference<AldorFacetExtensionProperties> properties;
 
-    public AldorNewModuleFacetStep(Project project, @Nonnull AtomicReference<AldorModuleExtensionProperties> properties) {
+    public AldorNewModuleFacetStep(Project project, @Nonnull AtomicReference<AldorFacetExtensionProperties> properties) {
         this.form = new AldorNewModuleFacetForm(project);
         this.properties = properties;
     }
@@ -30,19 +29,21 @@ public class AldorNewModuleFacetStep extends ModuleWizardStep {
 
     @Override
     public void updateDataModel() {
-        AldorModuleExtensionProperties properties = properties();
-        this.properties.set(properties.asBuilder().setSdkName(form.aldorSdkName()).build());
-        LOG.info("Setting sdk to " + form.aldorSdkName());
+        AldorFacetExtensionProperties properties = properties();
     }
 
     @VisibleForTesting
     public void updateSdk(String sdkName) {
-        AldorModuleExtensionProperties properties = properties();
+        AldorFacetExtensionProperties properties = properties();
         this.properties.set(properties.asBuilder().setSdkName(sdkName).build());
-        LOG.info("Setting sdk to " + form.aldorSdkName());
     }
 
-    private AldorModuleExtensionProperties properties() {
-        return (properties.get() == null) ? new AldorModuleExtensionProperties() : properties.get();
+    private AldorFacetExtensionProperties properties() {
+        return (properties.get() == null) ? new AldorFacetExtensionProperties() : properties.get();
     }
+
+    private boolean createMakefiles() {
+        return form.createMakefiles();
+    }
+
 }
