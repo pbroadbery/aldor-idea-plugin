@@ -5,6 +5,7 @@ import aldor.language.SpadLanguage;
 import aldor.psi.AldorE6;
 import aldor.psi.AldorIdentifier;
 import aldor.test_util.AssumptionAware;
+import aldor.test_util.JUnits;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.intellij.lang.Language;
@@ -362,6 +363,21 @@ public class AldorRefLookupTest extends AssumptionAware.BasePlatformTestCase {
         assertReferences(text, nameRefToMap, nulls);
     }
 
+    public void testTopLevelScope() {
+        JUnits.setLogToDebug();
+        String text = "X == 2; Foo(X)";
+
+        assertReferences(text, ImmutableMap.<String, String>builder()
+                .put("X)", "X ==").build(), Collections.emptySet());
+    }
+
+    public void testMacroTopLevel() {
+        JUnits.setLogToDebug();
+        String text = "macro Z == Integer; Foo(Z)";
+
+        assertReferences(text, ImmutableMap.<String, String>builder()
+                .put("Z)", "Z ==").build(), Collections.emptySet());
+    }
 
     private void assertReferences(String text, Map<String, String> nameRefToMap, Iterable<String> nulls) {
         assertReferences(text, nameRefToMap, nulls, AldorLanguage.INSTANCE);
@@ -380,7 +396,7 @@ public class AldorRefLookupTest extends AssumptionAware.BasePlatformTestCase {
         }
 
         for (Map.Entry<String, String> entry: nameRefToMap.entrySet()) {
-            Assert.assertEquals("Failed to ref: " + entry, text.indexOf(entry.getValue()), refMap.get(entry.getKey()).getTextOffset());
+            Assert.assertEquals("Failed to ref: " + entry + " found " + refMap.get(entry.getKey()), text.indexOf(entry.getValue()), refMap.get(entry.getKey()).getTextOffset());
         }
 
         for (String txt: nulls) {

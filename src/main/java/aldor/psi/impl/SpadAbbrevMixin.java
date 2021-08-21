@@ -4,6 +4,7 @@ import aldor.lexer.AldorTokenTypes;
 import aldor.lexer.SysCmd;
 import aldor.psi.AbbrevClassifier;
 import aldor.psi.AldorElementFactory;
+import aldor.psi.AldorVisitor;
 import aldor.psi.SpadAbbrev;
 import aldor.psi.stub.AbbrevInfo;
 import aldor.psi.stub.SpadAbbrevStub;
@@ -11,6 +12,7 @@ import aldor.references.SpadAbbrevReference;
 import com.intellij.extapi.psi.StubBasedPsiElementBase;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry;
 import com.intellij.psi.stubs.IStubElementType;
@@ -82,5 +84,19 @@ public class SpadAbbrevMixin extends StubBasedPsiElementBase<SpadAbbrevStub> imp
         PsiReference ref = new SpadAbbrevReference(this);
         return ArrayUtil.prepend(ref, fromProviders);
     }
+
+    @Override
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        if (visitor instanceof AldorVisitor) {
+            accept((AldorVisitor)visitor);
+        } else {
+            super.accept(visitor);
+        }
+    }
+
+    public void accept(@NotNull AldorVisitor aldorVisitor) {
+        aldorVisitor.visitSpadAbbrev(this);
+    }
+
 
 }

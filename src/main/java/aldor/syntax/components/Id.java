@@ -56,29 +56,6 @@ public class Id extends AbstractId {
         return createMissingId((AldorTokenType) elt.getNode().getElementType(), s);
     }
 
-    public static Id withFactory(Producer<AldorIdentifier> elt) {
-        return new Id(new SyntaxRepresentation<AldorIdentifier>() {
-
-            @Nullable
-            @Override
-            public AldorIdentifier element() {
-                return elt.produce();
-            }
-
-            @Nullable
-            @Override
-            public AldorTokenType tokenType() {
-                return TK_Id;
-            }
-
-            @NotNull
-            @Override
-            public String text() {
-                return Optional.ofNullable(element()).map(PsiElement::getText).orElse("<missing>");
-            }
-        });
-    }
-
     public Id(SyntaxRepresentation<AldorIdentifier> syntaxRepresentation) {
         this.rep = syntaxRepresentation;
     }

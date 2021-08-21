@@ -64,7 +64,7 @@ public class AldorGroupedHierarchyTreeStructure extends HierarchyTreeStructure {
 
     @NotNull
     private Object[] buildRootChildren(@NotNull HierarchyNodeDescriptor descriptor) {
-        AldorHierarchyNodeDescriptor nodeDescriptor = (AldorHierarchyNodeDescriptor) descriptor;
+            AldorHierarchyNodeDescriptor nodeDescriptor = (AldorHierarchyNodeDescriptor) descriptor;
         if (descriptor.getProject() == null) {
             return new Object[] { "Missing project"};
         }
@@ -100,6 +100,4 @@ public class AldorGroupedHierarchyTreeStructure extends HierarchyTreeStructure {
     private Object createOperationNodeDescriptorMaybe(@NotNull AldorHierarchyNodeDescriptor parent, SpadLibrary.Operation operation) {
         return new AldorHierarchyOperationDescriptor(this.myProject, parent, operation);
     }
-
-
 }

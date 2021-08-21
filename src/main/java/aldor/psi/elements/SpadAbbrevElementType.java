@@ -26,4 +26,9 @@ public class SpadAbbrevElementType extends StubCodecElementType<SpadAbbrevStub, 
     SpadAbbrevElementType toElType() {
         return this;
     }
+
+    @Override
+    public @NotNull String getExternalId() {
+        return "Spad.SpadAbbrev";
+    }
 }

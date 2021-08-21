@@ -6,7 +6,7 @@ jar {
 def libFiles = ["foam", "foamj"]
 
 dependencies {
-   compile files(libFiles.collect({"../lib/${it}.jar"}))
-   compile group: 'junit', name: 'junit', version: '4.12'
+   implementation files(libFiles.collect({"../lib/${it}.jar"}))
+   implementation group: 'junit', name: 'junit', version: '4.12'
 }
 

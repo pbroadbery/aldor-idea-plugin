@@ -174,7 +174,7 @@ public class AnnotationFileTestFixture extends BaseFixture {
                     "$(patsubst %,out/ao/%.ao, $(ALDOR_FILES)): out/ao/%.ao: %.as\n" +
                             "\techo Making $@ - $^\n"+
                             "\tmkdir -p out/ao\n" +
-                            "\t$(ALDOR) -Y out/ao -Fasy -Fao=out/ao/$*.ao -Fabn=out/ao/$*.abn $*.as\n" +
+                            "\t$(ALDOR) -Y out/ao -Fasy=out/ao/$*.asy -Fao=out/ao/$*.ao -Fabn=out/ao/$*.abn $*.as\n" +
                             "\n";
             rules.add(aoRule);
         }

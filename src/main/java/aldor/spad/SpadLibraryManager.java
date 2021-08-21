@@ -28,6 +28,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -145,7 +146,7 @@ public final class SpadLibraryManager implements Disposable {
         }
         SdkType sdkType = (SdkType) sdk.getSdkType();
         if (sdkType instanceof AldorSdkType) {
-            FricasSpadLibrary lib = new AldorSdkSpadLibraryBuilder(project, sdk.getHomeDirectory()).createFricasSpadLibrary();
+            FricasSpadLibrary lib = new AldorSdkSpadLibraryBuilder(project, sdk.getHomeDirectory()).build();
             Disposer.register(this, lib);
             return lib;
         }
@@ -176,6 +177,12 @@ public final class SpadLibraryManager implements Disposable {
         if (!psiElement.getContainingFile().getLanguage().isKindOf(AldorLanguage.INSTANCE)) {
             return null;
         }
+        if (!psiElement.getContainingFile().getLanguage().is(AldorLanguage.INSTANCE)) {
+            SpadLibrary lib = forAldorFile(psiElement.getContainingFile(), module);
+            if (lib != null) {
+                return lib;
+            }
+        }
         if (module != null) {
             SpadLibrary library = forModule(module, psiElement.getContainingFile().getFileType());
             if (library != null) {
@@ -203,20 +210,24 @@ public final class SpadLibraryManager implements Disposable {
         return forProject(psiElement.getProject());
     }
 
+    private SpadLibrary forAldorFile(PsiFile file, Module module) {
+        return null;
+    }
+
     @Override
     public void dispose() {
         container.dispose();
     }
 
     private static class SdkLibraryContainer {
-        private final Map<Sdk, SpadLibrary> libaryForSdk = new ConcurrentHashMap<>();
+        private final Map<Sdk, SpadLibrary> libraryForSdk = new ConcurrentHashMap<>();
 
         Optional<SpadLibrary> find(Sdk sdk) {
-            return Optional.ofNullable(libaryForSdk.get(sdk));
+            return Optional.ofNullable(libraryForSdk.get(sdk));
         }
 
         SpadLibrary putIfAbsent(Sdk sdk, SpadLibrary spadLibrary) {
-            SpadLibrary oldValue = libaryForSdk.putIfAbsent(sdk, spadLibrary);
+            SpadLibrary oldValue = libraryForSdk.putIfAbsent(sdk, spadLibrary);
             if (oldValue != null) {
                 return oldValue;
             }
@@ -224,11 +235,11 @@ public final class SpadLibraryManager implements Disposable {
         }
 
         public void dispose() {
-            LOG.info("Disposing SDK container.. " + libaryForSdk.size());
-            for (Sdk sdk: libaryForSdk.keySet()) {
+            LOG.info("Disposing SDK container.. " + libraryForSdk.size());
+            for (Sdk sdk: libraryForSdk.keySet()) {
                 LOG.info("SDK: " + sdk + " path: " + sdk.getHomePath());
             }
-            libaryForSdk.clear();
+            libraryForSdk.clear();
         }
     }
 

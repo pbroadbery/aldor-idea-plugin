@@ -101,6 +101,9 @@ public class LineariseTest {
                 "FileName : FileNameCategory == add\n");
         Linearise lineariser = new Linearise();
         List<Linearise.PiledSection> pp = lineariser.scanForPiledSections(lla);
-        assertEquals(4, pp.get(0).lines().size());
+        for (var line: pp.get(0).lines()) {
+            System.out.println("Line: " + line);
+        }
+        assertEquals(5, pp.get(0).lines().size());
     }
 }

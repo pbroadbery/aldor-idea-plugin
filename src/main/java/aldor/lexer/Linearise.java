@@ -1,6 +1,5 @@
 package aldor.lexer;
 
-import aldor.lexer.SysCmd.SysCommandType;
 import aldor.util.IntegerRange;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -26,6 +25,7 @@ import static aldor.lexer.AldorTokenTypes.KW_CCurly;
 import static aldor.lexer.AldorTokenTypes.KW_CParen;
 import static aldor.lexer.AldorTokenTypes.KW_Catch;
 import static aldor.lexer.AldorTokenTypes.KW_Else;
+import static aldor.lexer.AldorTokenTypes.KW_EndPile;
 import static aldor.lexer.AldorTokenTypes.KW_Finally;
 import static aldor.lexer.AldorTokenTypes.KW_Indent;
 import static aldor.lexer.AldorTokenTypes.KW_NewLine;
@@ -33,6 +33,7 @@ import static aldor.lexer.AldorTokenTypes.KW_OCurly;
 import static aldor.lexer.AldorTokenTypes.KW_OParen;
 import static aldor.lexer.AldorTokenTypes.KW_Repeat;
 import static aldor.lexer.AldorTokenTypes.KW_Slash;
+import static aldor.lexer.AldorTokenTypes.KW_StartPile;
 import static aldor.lexer.AldorTokenTypes.KW_Then;
 import static aldor.lexer.AldorTokenTypes.KW_Try;
 import static aldor.lexer.AldorTokenTypes.KW_Where;
@@ -80,7 +81,7 @@ public class Linearise {
     public List<PiledSection> scanForPiledSections(AldorLexerAdapter lexer) {
         List<PiledSection> piles = new ArrayList<>();
         while (lexer.getTokenStart() < lexer.getBufferEnd()) {
-            if (isSysCommand(SysCommandType.Pile, lexer)) {
+            if (isPileSysCommand(lexer)) {
                 advanceLexerToLineStart(lexer);
                 PiledSection ps = parsePiledSection(lexer);
                 if (!ps.lines().isEmpty()) {
@@ -106,17 +107,13 @@ public class Linearise {
         lexer.advance();
     }
 
-    private static boolean isSysCommand(SysCommandType command, AldorLexerAdapter lexer) {
-        IElementType eltType = lexer.getTokenType();
-        if (Objects.equals(eltType, TK_SysCmd) || Objects.equals(eltType, TK_SysCmdAbbrev)) {
-            SysCmd sysCmd = SysCmd.parse(lexer.getTokenText());
-            if (sysCmd.type() == command) {
-                return true;
-            }
-        }
-        return false;
+    private static boolean isPileSysCommand(AldorLexerAdapter lexer) {
+        return KW_StartPile.equals(lexer.getTokenType());
     }
 
+    private static boolean isEndPileSysCommand(AldorLexerAdapter lexer) {
+        return KW_EndPile.equals(lexer.getTokenType());
+    }
 
     private IndentNode scan(PiledSection section, final int startIndex) {
         List<IndentNode> children = Lists.newArrayList();
@@ -356,7 +353,7 @@ public class Linearise {
         List<SrcLine> lines = new ArrayList<>();
         while (lexer.getTokenStart() < lexer.getBufferEnd()) {
             IElementType eltType = lexer.getTokenType();
-            if (isSysCommand(SysCommandType.EndPile, lexer)) {
+            if (isEndPileSysCommand(lexer)) {
                 advanceLexerToLineStart(lexer);
                 break;
             }
@@ -618,8 +615,7 @@ public class Linearise {
         }
     }
 
-
-    private static class SrcLine {
+    public static class SrcLine {
         private final List<IElementType> tokens = new ArrayList<>();
         private final Collection<IElementType> allTokens = new ArrayList<>(); // Probably don't need this.
         private int indent;

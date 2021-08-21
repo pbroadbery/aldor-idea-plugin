@@ -5,6 +5,7 @@ import aldor.psi.AldorDeclare;
 import aldor.psi.AldorDefine;
 import aldor.psi.AldorId;
 import aldor.psi.AldorPsiUtils;
+import aldor.psi.AldorVisitor;
 import aldor.psi.stub.AldorDeclareStub;
 import aldor.references.FileScopeWalker;
 import aldor.references.ScopeContext;
@@ -15,6 +16,7 @@ import aldor.syntax.components.Id;
 import com.intellij.extapi.psi.StubBasedPsiElementBase;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.stubs.IStubElementType;
@@ -92,4 +94,16 @@ public abstract class AldorColonExprMixin extends StubBasedPsiElementBase<AldorD
     public PsiElement setName(@NotNull String name) throws IncorrectOperationException {
         throw new IncorrectOperationException("no rename for definitions (yet)");
     }
+
+    @Override
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        if (visitor instanceof AldorVisitor) accept((AldorVisitor)visitor);
+        else super.accept(visitor);
+    }
+
+    public void accept(@NotNull AldorVisitor aldorVisitor) {
+        aldorVisitor.visitColonExpr(this);
+    }
+
+
 }

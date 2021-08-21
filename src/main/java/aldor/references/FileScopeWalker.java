@@ -5,17 +5,12 @@ import aldor.annotations.AnnotationFileNavigatorManager;
 import aldor.psi.AldorDeclare;
 import aldor.psi.AldorDefine;
 import aldor.psi.AldorIdentifier;
-import aldor.psi.AldorTopLevel;
 import aldor.psi.ScopeFormingElement;
 import aldor.psi.index.AldorDefineTopLevelIndex;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.FileIndexFacade;
-import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.Key;
-import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.util.KeyWithDefaultValue;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiManager;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -30,6 +25,7 @@ import static java.util.Optional.ofNullable;
 public final class FileScopeWalker {
     private static final Logger LOG = Logger.getInstance(FileScopeWalker.class);
     public static final Key<ScopeContext> scopeContextKey = new Key<>("ScopeContext");
+    public static final Key<AldorDefine.DefinitionType> definitionTypeKey = KeyWithDefaultValue.create("definitionType", AldorDefine.DefinitionType.CONSTANT);
     // idea is that once we get to file level
     // 1) Look for up to date abn file
     //      - if present, try to dig out details

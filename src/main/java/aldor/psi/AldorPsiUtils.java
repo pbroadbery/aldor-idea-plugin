@@ -105,9 +105,24 @@ public final class AldorPsiUtils {
             isTopLevel = false;
         }
 
+        @Override
+        public void visitDeclaration(@NotNull AldorDeclaration o) {
+            if ((o.getKWDefine() != null) || (o.getKWExtend() != null)) {
+                o.getParent().accept(this);
+            }
+            else {
+                isTopLevel = false;
+            }
+        }
+
         // until exported macros work...
         @Override
         public void visitMacroBody(@NotNull AldorMacroBody e) { isTopLevel = false; }
+
+        @Override
+        public void visitBindingAnyStatementDefine(@NotNull AldorBindingAnyStatementDefine o) {
+            super.visitBindingAnyStatementDefine(o);
+        }
 
         public boolean isTopLevel() {
             return isTopLevel;
@@ -400,9 +415,11 @@ public final class AldorPsiUtils {
 
     public static class Binding {
         private final PsiElement element;
+        private final AldorDefine.DefinitionType definitionType;
 
-        Binding(PsiElement element) {
+        Binding(AldorDefine.DefinitionType type, PsiElement element) {
             this.element = element;
+            this.definitionType = type;
         }
 
         public PsiElement element() {
@@ -414,9 +431,15 @@ public final class AldorPsiUtils {
                     ? Optional.of(clss.cast(element))
                     : Optional.empty());
         }
+
+        public AldorDefine.DefinitionType definitionType() {
+            return definitionType;
+        }
+
     }
 
     public static class BindingSearchVisitor extends CollectingAldorVisitor<Binding> {
+        private AldorDefine.DefinitionType type = AldorDefine.DefinitionType.CONSTANT;
 
         @Override
         public void visitElement(PsiElement element) {
@@ -424,13 +447,21 @@ public final class AldorPsiUtils {
         }
 
         @Override
+        public void visitMacroBody(@NotNull AldorMacroBody o) {
+            AldorDefine.DefinitionType prev = type;
+            type = AldorDefine.DefinitionType.MACRO;
+            super.visitMacroBody(o);
+            type = prev;
+        }
+
+        @Override
         public void visitDefine(@NotNull AldorDefine o) {
-            add(new Binding(o));
+            add(new Binding(type, o));
         }
 
         @Override
         public void visitDeclare(@NotNull AldorDeclare o) {
-            add(new Binding(o));
+            add(new Binding(AldorDefine.DefinitionType.CONSTANT, o));
         }
 
         @Override
@@ -441,7 +472,6 @@ public final class AldorPsiUtils {
         public void visitWhereBlock(@NotNull AldorWhereBlock o) {
         }
     }
-
 
     public static Optional<AldorId> findUniqueIdentifier(PsiElement element) {
         return new UniqueIdVisitor<>(AldorId.class).apply(element);

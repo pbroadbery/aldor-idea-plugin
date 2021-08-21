@@ -4,6 +4,7 @@ import aldor.psi.AldorDeclare;
 import aldor.psi.AldorDefine;
 import aldor.psi.AldorIdentifier;
 import aldor.psi.SpadAbbrev;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiElement;
 
 import java.util.Arrays;
@@ -13,6 +14,8 @@ import java.util.concurrent.ConcurrentMap;
 
 @SuppressWarnings("NonConstantFieldWithUpperCaseName")
 class TypeAndProviders {
+    private static final Logger LOG = Logger.getInstance(TypeAndProviders.class);
+
     private final ConcurrentMap<Class<? extends PsiElement>, TypeAndProvider<?>> lookup = new ConcurrentHashMap<>();
     private final TypeAndProvider<AldorIdentifier> IDENTIFIER = new TypeAndProvider<>(AldorIdentifier.class, new IdentifierDocumentationProvider());
     private final TypeAndProvider<AldorDefine> DEFINE = new TypeAndProvider<>(AldorDefine.class, new DefineDocumentationProvider());

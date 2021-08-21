@@ -131,7 +131,6 @@ public class FricasSpadLibrary implements SpadLibrary, Disposable {
         List<TypeExport> types = exports.parentTypes();
         List<NamedExport> sigs = exports.signatures();
 
-
         return Pair.create(
                 types.stream().map(te -> new ParentType(toSyntax(project, scope, TypePackage.asAbSyn(iface.env(), te.type())),
                                                         te.condition().isNone() ? null : toSyntax(project, scope, te.condition()), null))
@@ -242,7 +241,8 @@ public class FricasSpadLibrary implements SpadLibrary, Disposable {
         return elt;
     }
 
-    private @Nullable
+    @Nullable
+    private
     PsiNamedElement declarationFor(AxiomInterface iface, String name, TForm originalType, Syntax exporter) {
         if (exporter == null) {
             return null;
@@ -296,17 +296,24 @@ public class FricasSpadLibrary implements SpadLibrary, Disposable {
         return decl -> matchDeclaration(librarySyntax, decl);
     }
 
+    /* TODO: declaration lookup should be lazier */
     private boolean matchDeclaration(Syntax librarySyntax, AldorDeclare decl) {
         Optional<AldorDeclareStub> stub = Optional.ofNullable(decl.getGreenStub());
-        if (!stub.isPresent()) {
-            stub = Optional.ofNullable(decl.getStub());
+        Optional<Syntax> sourceSyntaxViaStub = stub
+                .map(s -> s.syntax().as(DeclareNode.class).rhs());
+        if (sourceSyntaxViaStub.isPresent()) {
+            boolean matched = SyntaxUtils.match(sourceSyntaxViaStub.get(), librarySyntax);
+            LOG.info("Stub match: " + librarySyntax + " Source: " + sourceSyntaxViaStub + " "+ matched);
+            if (matched) return true;
         }
-        Syntax sourceSyntax = stub
-                .map(s -> s.syntax().as(DeclareNode.class).rhs())
-                .orElse(SyntaxPsiParser.parse(decl.rhs()));
+        Syntax sourceSyntaxViaSource = SyntaxPsiParser.parse(decl.rhs());
 
-        LOG.info("Lib syntax: " + librarySyntax + " Source: " + sourceSyntax);
-        return SyntaxUtils.match(sourceSyntax, librarySyntax);
+        LOG.info("Lib syntax: " + librarySyntax + " Source: " + sourceSyntaxViaSource);
+        boolean matched = SyntaxUtils.match(sourceSyntaxViaSource, librarySyntax);
+
+        LOG.info("Source match: " + librarySyntax + " Source: " + sourceSyntaxViaSource + " "+ matched);
+
+        return matched;
     }
 
     @NotNull

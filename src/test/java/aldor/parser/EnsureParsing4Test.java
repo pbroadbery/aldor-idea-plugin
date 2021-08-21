@@ -61,6 +61,17 @@ public class EnsureParsing4Test {
     }
 
     @Test
+    public void testParseBase() {
+        Assert.assertNotNull(getProject());
+
+        Project project = getProject();
+        File file = existingFile("/home/pab/Work/aldorgit/aldor/aldor/lib/aldor/src/base/sal_base.as");
+        final List<PsiErrorElement> errors = parseFile(project, file);
+        Assert.assertEquals(0, errors.size());
+    }
+
+
+    @Test
     public void testParseITools() {
         Assert.assertNotNull(getProject());
 

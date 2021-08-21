@@ -199,6 +199,7 @@
     <inspection_tool class="ContinueStatementWithLabel" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ControlFlowStatementWithoutBraces" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="Convert2Lambda" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+    <inspection_tool class="Convert2MethodRef" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
     <inspection_tool class="ConvertAnnotations" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ConvertJavadoc" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ConvertOldAnnotations" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -371,12 +372,12 @@
     <inspection_tool class="MarkerInterface" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="MethodCanBeVariableArityMethod" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="MethodCount" enabled="true" level="WARNING" enabled_by_default="true">
-      <scope name="Tests" level="INFO" enabled="true">
+      <scope name="Project Files" level="WARNING" enabled="true">
         <option name="m_limit" value="20" />
         <option name="ignoreGettersAndSetters" value="false" />
         <option name="ignoreOverridingMethods" value="false" />
       </scope>
-      <scope name="Project Files" level="WARNING" enabled="true">
+      <scope name="Tests" level="INFO" enabled="true">
         <option name="m_limit" value="20" />
         <option name="ignoreGettersAndSetters" value="false" />
         <option name="ignoreOverridingMethods" value="false" />
@@ -617,8 +618,8 @@
     <inspection_tool class="SafeLock" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="SamePackageImport" enabled="true" level="ERROR" enabled_by_default="true" />
     <inspection_tool class="SameParameterValue" enabled="true" level="WARNING" enabled_by_default="true">
-      <scope name="Tests" level="WEAK WARNING" enabled="true" />
       <scope name="Project Files" level="WARNING" enabled="true" />
+      <scope name="Tests" level="WEAK WARNING" enabled="true" />
     </inspection_tool>
     <inspection_tool class="SerialPersistentFieldsWithWrongSignature" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="SerialVersionUIDNotStaticFinal" enabled="true" level="WARNING" enabled_by_default="true" />

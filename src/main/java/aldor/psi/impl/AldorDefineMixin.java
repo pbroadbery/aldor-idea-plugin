@@ -4,6 +4,7 @@ import aldor.psi.AldorDefine;
 import aldor.psi.AldorId;
 import aldor.psi.AldorIdentifier;
 import aldor.psi.AldorPsiUtils;
+import aldor.psi.AldorVisitor;
 import aldor.psi.stub.AldorDefineStub;
 import aldor.references.FileScopeWalker;
 import aldor.references.ScopeContext;
@@ -18,6 +19,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.stubs.IStubElementType;
@@ -39,6 +41,16 @@ public class AldorDefineMixin extends StubBasedPsiElementBase<AldorDefineStub> i
 
     public AldorDefineMixin(AldorDefineStub stub, IStubElementType<AldorDefineStub, AldorDefine> type) {
         super(stub, type);
+    }
+
+    @Override
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        if (visitor instanceof AldorVisitor) accept((AldorVisitor)visitor);
+        else super.accept(visitor);
+    }
+
+    public void accept(@NotNull AldorVisitor visitor) {
+        visitor.visitDefine(this);
     }
 
     @NotNull

@@ -11,6 +11,7 @@ import com.intellij.psi.search.GlobalSearchScopesCore;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,7 +60,6 @@ public class AldorModuleSpadLibraryBuilder {
 
         @Override
         public AxiomInterface create() {
-            LOG.info("Creating aldor library: " + name + " " + root + " " + dependencies);
             return AxiomInterface.createAldorLibrary(root.getPath(), dependencies.stream()
                     .map(SpadLibrary::environment).collect(Collectors.toList()));
         }

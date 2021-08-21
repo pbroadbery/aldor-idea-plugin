@@ -11,7 +11,7 @@ class TypedDocumentationProvider<T extends PsiElement> {
     }
 
     @Nullable
-    public String getQuickNavigateInfo(T element, T originalElement) {
+    public String getQuickNavigateInfo(T element, PsiElement originalElement) {
         return null;
     }
 }

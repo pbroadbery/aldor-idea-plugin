@@ -4,10 +4,10 @@ import aldor.psi.AldorDeclaration;
 import aldor.psi.AldorDeclare;
 import aldor.psi.AldorDefine;
 import aldor.psi.AldorIdentifier;
-import aldor.syntax.DeclareFunctions;
 import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxPsiParser;
 import aldor.syntax.components.Id;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import org.jetbrains.annotations.Nullable;
@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class AldorScopeProcessor extends AbstractAldorScopeProcessor {
+    private static final Logger LOG = Logger.getInstance(AldorScopeProcessor.class);
     private final List<PsiElement> myResultList;
     private final Options options;
     private final String name;
@@ -26,6 +27,7 @@ public class AldorScopeProcessor extends AbstractAldorScopeProcessor {
     }
 
     public AldorScopeProcessor(Options options, String name) {
+        LOG.info("Resolve " + name);
         this.myResultList = new ArrayList<>();
         this.options = options;
         this.name = name;
@@ -38,8 +40,10 @@ public class AldorScopeProcessor extends AbstractAldorScopeProcessor {
 
     @Override
     protected boolean executeDefinition(AldorDefine o, ResolveState state) {
+        AldorDefine.DefinitionType definitionType = state.get(FileScopeWalker.definitionTypeKey);
+        LOG.info("Definition: " + definitionType + " " + o.defineIdentifier().map(x -> x.getText()));
         Optional<AldorIdentifier> identMaybe = o.defineIdentifier();
-        if (identMaybe.isPresent() && identMaybe.get().getText().equals(this.name) && options.isAccepted(o.definitionType())) {
+        if (identMaybe.isPresent() && identMaybe.get().getText().equals(this.name) && options.isAccepted(definitionType)) {
             this.myResultList.add(o);
             return false;
         }

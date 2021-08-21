@@ -3,6 +3,7 @@ package aldor.psi.impl;
 import aldor.psi.AldorDefine;
 import aldor.psi.AldorIdentifier;
 import aldor.psi.AldorPsiUtils;
+import aldor.psi.AldorVisitor;
 import aldor.psi.stub.AldorDefineStub;
 import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxPsiParser;
@@ -13,6 +14,7 @@ import com.intellij.extapi.psi.StubBasedPsiElementBase;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.LocalSearchScope;
@@ -28,6 +30,7 @@ import java.util.Optional;
 
 public class AldorMacroMixin extends StubBasedPsiElementBase<AldorDefineStub> implements AldorDefine {
     private static final Key<Optional<Syntax>> cachedLhsSyntax = new Key<>("LhsSyntax");
+    private static final long serialVersionUID = 5335530555698048661L;
 
     public AldorMacroMixin(@NotNull AldorDefineStub stub, @NotNull IStubElementType<AldorDefineStub, AldorDefine> nodeType) {
         super(stub, nodeType);
@@ -39,6 +42,16 @@ public class AldorMacroMixin extends StubBasedPsiElementBase<AldorDefineStub> im
 
     public AldorMacroMixin(AldorDefineStub stub, IElementType nodeType, ASTNode node) {
         super(stub, nodeType, node);
+    }
+
+    @Override
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        if (visitor instanceof AldorVisitor) accept((AldorVisitor)visitor);
+        else super.accept(visitor);
+    }
+
+    public void accept(@NotNull AldorVisitor aldorVisitor) {
+        aldorVisitor.visitDefine(this);
     }
 
     @Override

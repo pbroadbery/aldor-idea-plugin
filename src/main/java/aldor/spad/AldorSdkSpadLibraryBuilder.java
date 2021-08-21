@@ -12,7 +12,7 @@ public class AldorSdkSpadLibraryBuilder {
         this.sdkDir = sdkDir;
     }
 
-    public FricasSpadLibrary createFricasSpadLibrary() {
+    public FricasSpadLibrary build() {
         return new FricasSpadLibrary(project, createAldorEnvironment());
     }
 

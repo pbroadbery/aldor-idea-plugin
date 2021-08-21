@@ -121,7 +121,6 @@ public final class AnnotatedSyntax {
             }
         }
 
-
         public Syntax toSyntax(AnnotatedId id) {
             String name = id.id().name();
             if ("Map".equals(name)) {

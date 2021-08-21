@@ -2,6 +2,10 @@ package aldor.syntax;
 
 
 import aldor.lexer.AldorTokenTypes;
+import aldor.psi.AldorDefine;
+import aldor.psi.AldorIdentifier;
+import aldor.psi.AldorRecoverableExpression;
+import aldor.references.AldorReference;
 import aldor.syntax.components.Apply;
 import aldor.syntax.components.Comma;
 import aldor.syntax.components.DeclareNode;
@@ -10,6 +14,7 @@ import aldor.syntax.components.Id;
 import aldor.syntax.components.Literal;
 import aldor.syntax.components.Other;
 import aldor.util.Streams;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -24,6 +29,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public final class SyntaxUtils {
+    private static final Logger LOG = Logger.getInstance(SyntaxUtils.class);
 
     /* a: X --> {a: X},
      * a(x: X, y: Y): Z == { x: X, y: Y }
@@ -180,7 +186,7 @@ public final class SyntaxUtils {
     }
 
     public static boolean match(Syntax sourceSyntax, Syntax librarySyntax) {
-        //System.out.println("match " + sourceSyntax + " " + librarySyntax);
+        LOG.info("match " + sourceSyntax + " " + librarySyntax);
         return match1(sourceSyntax, librarySyntax);
     }
 
@@ -188,8 +194,9 @@ public final class SyntaxUtils {
         if (sourceSyntax.is(DeclareNode.class)) {
             return match(sourceSyntax.as(DeclareNode.class).rhs(), librarySyntax);
         }
-        if (sourceSyntax.is(Id.class) && librarySyntax.is(Id.class)) {
-            return sourceSyntax.as(Id.class).symbol().equals(librarySyntax.as(Id.class).symbol());
+        if (sourceSyntax.is(Id.class)) {
+            return  (librarySyntax.is(Id.class) && sourceSyntax.as(Id.class).symbol().equals(librarySyntax.as(Id.class).symbol()))
+                    || matchMacro(sourceSyntax.as(Id.class), librarySyntax);
         }
         if (sourceSyntax.is(Apply.class) && librarySyntax.is(Apply.class)) {
             Apply sourceApply = sourceSyntax.as(Apply.class);
@@ -204,12 +211,28 @@ public final class SyntaxUtils {
             if (sourceComma.children().size() != libraryComma.children().size()) {
                 return false;
             }
-            return  Streams.zip(sourceComma.children().stream(), libraryComma.children().stream(), SyntaxUtils::match).allMatch(m -> m);
+            return Streams.zip(sourceComma.children().stream(), libraryComma.children().stream(), SyntaxUtils::match).allMatch(m -> m);
         }
         if (sourceSyntax.is(Literal.class) && librarySyntax.is(Literal.class)) {
             return sourceSyntax.as(Literal.class).text().equals(librarySyntax.as(Literal.class).text());
         }
         return false;
+    }
+
+    private static boolean matchMacro(Id sourceId, Syntax librarySyntax) {
+        if ((sourceId.psiElement() == null) || !(sourceId.psiElement() instanceof AldorIdentifier)) {
+            return false;
+        }
+        AldorIdentifier sourceIdElt = (AldorIdentifier) sourceId.psiElement();
+        LOG.info("Match macro " + sourceId.name() + " " + librarySyntax + " " + Optional.ofNullable(sourceIdElt.getReference()).map(ref -> ref.resolveMacro()));
+
+        PsiElement resolved = Optional.ofNullable(sourceIdElt.getReference())
+                .map(AldorReference::resolveMacro).orElse(null);
+        if (!(resolved instanceof AldorDefine)) {
+            return false;
+        }
+        AldorDefine macroDef = (AldorDefine) resolved;
+        return match(SyntaxPsiParser.parse(macroDef.rhs()), librarySyntax);
     }
 
     public static Syntax and(@NotNull Syntax condition, List<Syntax> stream) {

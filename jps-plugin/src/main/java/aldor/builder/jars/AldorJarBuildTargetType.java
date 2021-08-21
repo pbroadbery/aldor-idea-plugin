@@ -3,6 +3,7 @@ package aldor.builder.jars;
 import aldor.builder.AldorBuildTargetTypes;
 import aldor.builder.AldorBuilderService;
 import aldor.builder.jps.module.AldorModuleFacade;
+import aldor.builder.jps.module.JpsAldorModuleType;
 import com.intellij.openapi.diagnostic.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.jps.builders.BuildTargetLoader;
@@ -55,6 +56,9 @@ public class  AldorJarBuildTargetType extends BuildTargetType<AldorJarBuildTarge
     @NotNull
     private List<AldorJarBuildTarget> moduleBuildTargets(JpsModule module) {
         LOG.info("Module: "+ module + " type: " + module.getModuleType());
+        if (!module.getModuleType().equals(JpsAldorModuleType.INSTANCE)) {
+            return Collections.emptyList();
+        }
         AldorModuleFacade aldor = AldorModuleFacade.facade(module);
         if (aldor == null) {
             return Collections.emptyList();

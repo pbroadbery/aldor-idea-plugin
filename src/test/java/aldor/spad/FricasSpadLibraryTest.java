@@ -201,6 +201,7 @@ public class FricasSpadLibraryTest {
                                 "(If (Apply has X AbelianMonoid) AbelianMonoid)",
                                 "AbelianSemiGroup")),
                 parents.stream().map(Object::toString).collect(Collectors.toSet()));
+        lib.dispose();
     }
 
     @Test

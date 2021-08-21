@@ -2,6 +2,7 @@ package aldor.psi;
 
 import aldor.file.AldorFileType;
 import aldor.file.SpadFileType;
+import aldor.psi.impl.AldorTopLevelImpl;
 import aldor.test_util.AssumptionAware;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -24,6 +25,29 @@ public class AldorPsiUtilsTest extends AssumptionAware.BasePlatformTestCase {
         Assert.assertTrue(AldorPsiUtils.isTopLevel(definition.getParent()));
     }
 
+    public void testIsTopLevelDefine() {
+        PsiFile file = createLightFile(AldorFileType.INSTANCE, "define A: B == C");
+
+        AldorDefine definition = PsiTreeUtil.findChildOfType(file, AldorDefine.class);
+        Assert.assertNotNull(definition);
+        Assert.assertTrue(AldorPsiUtils.isTopLevel(definition.getParent()));
+    }
+
+    public void testIsTopLevelExtend() {
+        PsiFile file = createLightFile(AldorFileType.INSTANCE, "extend A: B == C");
+
+        AldorDefine definition = PsiTreeUtil.findChildOfType(file, AldorDefine.class);
+        Assert.assertNotNull(definition);
+        Assert.assertTrue(AldorPsiUtils.isTopLevel(definition.getParent()));
+    }
+
+    public void testIsTopLevelLocal() {
+        PsiFile file = createLightFile(AldorFileType.INSTANCE, "local A: B == C");
+
+        AldorDefine definition = PsiTreeUtil.findChildOfType(file, AldorDefine.class);
+        Assert.assertNotNull(definition);
+        Assert.assertFalse(AldorPsiUtils.isTopLevel(definition.getParent()));
+    }
     public void testIsTopLevelWithWhere() {
         String text = "Outer: B == C where { B ==> with { inner == b }}";
         PsiFile file = createLightFile(AldorFileType.INSTANCE, text);
@@ -176,6 +200,15 @@ public class AldorPsiUtilsTest extends AssumptionAware.BasePlatformTestCase {
         AldorDefine define = PsiTreeUtil.findChildOfType(file, AldorDefine.class);
         Assert.assertNotNull(define);
         List<AldorPsiUtils.Binding> childBindings = AldorPsiUtils.childBindings(define.rhs());
+        Assert.assertEquals(2, childBindings.size());
+    }
+
+    public void testChildBindingsWithDomainDef() {
+        String text = "Wibble: with == add; Foo: with {x: String -> String} == add { testOne(): () == return; testTwo(): () == never }";
+        PsiFile file = createLightFile(AldorFileType.INSTANCE, text);
+        AldorTopLevel topLevel = PsiTreeUtil.findChildOfType(file, AldorTopLevel.class);
+        Assert.assertNotNull(topLevel);
+        List<AldorPsiUtils.Binding> childBindings = AldorPsiUtils.childBindings(topLevel);
         Assert.assertEquals(2, childBindings.size());
     }
 

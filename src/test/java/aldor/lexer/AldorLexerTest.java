@@ -24,8 +24,15 @@ import static aldor.lexer.AldorTokenTypes.TK_PostDoc;
 import static aldor.lexer.AldorTokenTypes.TK_String;
 import static aldor.lexer.AldorTokenTypes.TK_SysCmd;
 import static aldor.lexer.AldorTokenTypes.TK_SysCmdAbbrev;
+import static aldor.lexer.AldorTokenTypes.TK_SysCmdAssert;
 import static aldor.lexer.AldorTokenTypes.TK_SysCmdEndIf;
+import static aldor.lexer.AldorTokenTypes.TK_SysCmdId;
 import static aldor.lexer.AldorTokenTypes.TK_SysCmdIf;
+import static aldor.lexer.AldorTokenTypes.TK_SysCmdInclude;
+import static aldor.lexer.AldorTokenTypes.TK_SysCmdLibrary;
+import static aldor.lexer.AldorTokenTypes.TK_SysCmdPrefix;
+import static aldor.lexer.AldorTokenTypes.TK_SysCmdString;
+import static aldor.lexer.AldorTokenTypes.TK_SysCmdWS;
 import static aldor.lexer.AldorTokenTypes.WHITE_SPACE;
 import static aldor.lexer.LexMode.Aldor;
 import static aldor.lexer.LexMode.Spad;
@@ -108,7 +115,7 @@ public class AldorLexerTest {
         AldorLexerAdapter lla = new AldorLexerAdapter(null);
         lla.start("\n#foo\n");
         List<IElementType> tokens = LexerFunctions.readTokens(lla);
-        assertEquals(Lists.newArrayList(KW_NewLine, TK_SysCmd, KW_NewLine), tokens);
+        assertEquals(Lists.newArrayList(KW_NewLine, TK_SysCmdPrefix, TK_SysCmdId, KW_NewLine), tokens);
     }
 
 
@@ -185,5 +192,32 @@ public class AldorLexerTest {
         lla.start(text);
         List<IElementType> tokens = LexerFunctions.readTokens(lla);
         assertEquals(Lists.newArrayList(TK_Id, WHITE_SPACE, TK_Id, WHITE_SPACE, TK_Id, WHITE_SPACE, TK_Id, KW_NewLine), tokens);
+    }
+
+    @Test
+    public void testSysCmdInclude() {
+        AldorLexerAdapter lla = new AldorLexerAdapter(Aldor, null);
+        String text = "#include \"foo.as\"\n";
+        lla.start(text);
+        List<IElementType> tokens = LexerFunctions.readTokens(lla);
+        assertEquals(Lists.newArrayList(TK_SysCmdInclude, KW_NewLine), tokens);
+    }
+
+    @Test
+    public void testSysCmdLibrary() {
+        AldorLexerAdapter lla = new AldorLexerAdapter(Aldor, null);
+        String text = "#library Foo \"foo.ao\"\n";
+        lla.start(text);
+        List<IElementType> tokens = LexerFunctions.readTokens(lla);
+        assertEquals(Lists.newArrayList(TK_SysCmdLibrary, KW_NewLine), tokens);
+    }
+
+    @Test
+    public void testSysCmdAssert() {
+        AldorLexerAdapter lla = new AldorLexerAdapter(Aldor, null);
+        String text = "#assert Foo\n";
+        lla.start(text);
+        List<IElementType> tokens = LexerFunctions.readTokens(lla);
+        assertEquals(Lists.newArrayList(TK_SysCmdAssert, KW_NewLine), tokens);
     }
 }

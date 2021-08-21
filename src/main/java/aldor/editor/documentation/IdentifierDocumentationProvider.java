@@ -52,7 +52,7 @@ public class IdentifierDocumentationProvider extends TypedDocumentationProvider<
 
     @Nullable
     @Override
-    public String getQuickNavigateInfo(AldorIdentifier element, AldorIdentifier originalElement) {
+    public String getQuickNavigateInfo(AldorIdentifier element, PsiElement originalElement) {
         AnnotatedOptional<Syme, String> symeMaybe = AnnotatedOptional.ofNullable(originalElement, () -> "")
             .flatMap(e -> docUtils.symeForElement(e));
 

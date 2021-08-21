@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="JDK" pattern="ext[&lt; Open JDK 11 &gt;]:*/" />
+</component>

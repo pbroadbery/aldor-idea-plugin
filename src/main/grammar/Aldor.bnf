@@ -45,6 +45,9 @@
   mixin("Declaration")="aldor.psi.impl.AldorDeclarationMixin"
   mixin("DeclBlock")="aldor.psi.impl.AldorDeclBlockMixin"
 
+  // Top Level
+  mixin("TopLevel")='aldor.psi.impl.AldorTopLevelMixin'
+
   // We need to do some gymnastics for Spad expression stubs.
   // First, all Expressions inherit PsiElementBase, then stubbed expressions use StubbedElementBase.
   extends("Expr")="com.intellij.extapi.psi.PsiElementBase"
@@ -125,6 +128,7 @@
   tokens = [
           TK_Id TK_Blank TK_Int TK_Float TK_String TK_PreDoc TK_PostDoc
           TK_Comment TK_SysCmd TK_SysCmdAbbrev TK_Error
+          TK_SysCmdLibrary TK_SycCmdInclude
 
           KW_Add KW_And KW_Always KW_Assert KW_Break KW_But KW_By
           KW_Case KW_Catch KW_Default KW_Define KW_Delay KW_Do KW_Else
@@ -187,7 +191,7 @@ private Labelled ::= Declaration | KW_At Atom opt_Labelled | Comma
 
 Declaration ::=
           KW_Macro MacroBody
-        | KW_Extend Sig
+        | KW_Extend ExtendBody
         | KW_Local Sig
         | KW_Free Sig
         | KW_Fluid Sig
@@ -205,6 +209,7 @@ ToPart ::= KW_To Infixed
 FromPart ::= KW_From enlist1_Infixed_KW_Comma
 
 MacroBody ::= Sig | ExportDecl | KW_Import Sig opt_FromPart
+ExtendBody ::= Sig
 
 Sig ::= Block | DeclBinding
 
@@ -541,14 +546,14 @@ NakedOp ::= UnqualOp_ArrowTok
 | UnqualOp_TimesTok
 | UnqualOp_PowerTok
 
-ArrowOp ::=	 QualOp_ArrowTok
-LatticeOp::=	 QualOp_LatticeTok
-RelationOp::=	 QualOp_RelationTok
-SegOp::= 		 QualOp_SegTok
-PlusOp::=	 QualOp_PlusTok
-QuotientOp::=	 QualOp_QuotientTok
-TimesOp::= 	 QualOp_TimesTok
-PowerOp::= 	 QualOp_PowerTok
+ArrowOp    ::= QualOp_ArrowTok
+LatticeOp  ::= QualOp_LatticeTok
+RelationOp ::= QualOp_RelationTok
+SegOp      ::= QualOp_SegTok
+PlusOp     ::= QualOp_PlusTok
+QuotientOp ::= QualOp_QuotientTok
+TimesOp    ::= QualOp_TimesTok
+PowerOp    ::= QualOp_PowerTok
 
 fake InfixedTok ::=
 ArrowTok::=	 KW_RArrow | KW_LArrow | KW_MapStar

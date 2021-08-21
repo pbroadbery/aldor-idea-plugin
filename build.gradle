@@ -2,16 +2,10 @@ import org.jetbrains.grammarkit.tasks.GenerateParser
 import org.jetbrains.grammarkit.tasks.GenerateLexer
 
 buildscript {
-    dependencies {
-        classpath "org.jetbrains.intellij.plugins:gradle-intellij-plugin:0.5.0-SNAPSHOT"
-    }
     repositories {
         mavenCentral()
         maven {
             url "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
-        maven {
-            url 'https://jetbrains.bintray.com/intellij-plugin-service'
         }
         maven {
             url 'https://cache-redirector.jetbrains.com/intellij-dependencies'
@@ -20,19 +14,18 @@ buildscript {
     }
 }
 
-
 plugins {
     id 'java'
     id 'java-test-fixtures'
     id 'idea'
-    id "org.jetbrains.intellij" version "0.6.3"
-    id "de.undercouch.download" version "3.2.0"
-    id "org.jetbrains.grammarkit" version "2020.3.1"
-    id 'net.ltgt.errorprone' version '2.0.1' apply false
+    id "org.jetbrains.intellij" version "1.1.4"
+    //id "de.undercouch.download" version "3.2.0"
+    id "org.jetbrains.grammarkit" version "2021.1.3"
+    //id 'net.ltgt.errorprone' version '2.0.1' apply false
 }
 
 wrapper {
-    gradleVersion='5.6.4'
+    gradleVersion='7.1.1'
 }
 
 def isRelease = System.getProperty('aldor.plugin.release', 'false')
@@ -64,11 +57,16 @@ intellij {
     pluginName = "${pluginName}"
     version = "${platformVersion}"
     updateSinceUntilBuild = true
+
+    patchPluginXml {
+//        sinceBuild "${pluginSinceBuild}"
+//        untilBuild "${pluginUntilBuild}"
+    }
 }
 
-runPluginVerifier {
-    ideVersions pluginVerifierIdeVersions
-}
+//runPluginVerifier {
+//    ideVersions pluginVerifierIdeVersions
+//}
 
 buildSearchableOptions {
 }
@@ -81,13 +79,6 @@ allprojects {
       mavenCentral()
       maven {
           url 'https://oss.sonatype.org/content/repositories/snapshots/'
-      }
-      maven {
-          url 'https://dl.bintray.com/jetbrains/intellij-plugin-service'
-      }
-
-      maven {
-          url 'https://dl.bintray.com/jetbrains/intellij-third-party-dependencies/'
       }
   }
 
@@ -105,29 +96,21 @@ allprojects {
 grammarKit {
     // version of IntelliJ patched JFlex (see bintray link below), Default is 1.7.0-1 
     jflexRelease = '1.7.0-1'
-    grammarKitRelease = '2020.1'
+    grammarKitRelease = '2020.3.1'
 }
 
 dependencies {
     //errorprone 'com.google.errorprone:error_prone_core:2.6.0'
-    compile project('jps-plugin')
-    compile project('aldor-util')
-    compile project('aldor-templates')
-    testCompile group: 'junit', name: 'junit', version: '4.13.2'
-    testCompile(testFixtures(project(":aldor-util")))
-    compile files(libFiles.collect({"lib/${it}.jar"}))
+    implementation project('jps-plugin')
+    implementation project('aldor-util')
+    implementation files(libFiles.collect({"lib/${it}.jar"}))
+    implementation project('aldor-templates')
+    testImplementation group: 'junit', name: 'junit', version: '4.13.2'
+    testImplementation(testFixtures(project(":aldor-util")))
 
-    compile group: 'org.jetbrains.intellij.deps', name: 'asm-all', version: '8.0.1'
+    implementation group: 'org.jetbrains.intellij.deps', name: 'asm-all', version: '8.0.1'
 }
-
-patchPluginXml {
-    sinceBuild("${pluginSinceBuild}")
-    untilBuild("${pluginUntilBuild}")
-
-//    changeNotes "Notes"
-    version
-}
-
+/*
 task downloadGrammarKit(type: Download) {
     src 'https://github.com/JetBrains/Grammar-Kit/releases/download/2019.1/grammar-kit-2019.1.zip'
     dest 'download/GrammarKit.zip'
@@ -148,7 +131,7 @@ task downloadJFlex(type: Download) {
     overwrite false
     outputs.file 'lib/jflex/jflex-1.7.0-SNAPSHOT.jar'
 }
-
+*/
 task cleanLexer {
     doLast {
         for (f in generateLexer.outputs.files) { delete f }
@@ -210,27 +193,18 @@ task updateExternalJars(type: Copy) {
     }
 }
 
-task list(dependsOn: configurations.compile) {
+
+task list() {
     doLast {
         configurations.runtime.forEach { File file -> println "{classpath += ${file.toString()}" }
     }
 }
 
-task listTest(dependsOn: configurations.testCompile) {
+task listTest() {
     doLast {
         configurations.testCompile.forEach { File file -> println "{classpath += ${file.toString()}" }
     }
 }
-
-task listCompileOnly(dependsOn: configurations.compile) {
-    doLast {
-        for (f in project.configurations.compileOnly.files) {
-            println "compileOnly  "+ f
-        }
-    }
-}
-
-
 
 tasks.prepareSandbox.dependsOn project('aldorunit').tasks.jar
 tasks.prepareTestingSandbox.dependsOn project('aldorunit').tasks.jar
@@ -250,8 +224,8 @@ prepareSandbox {
     }
 }
 
-tasks.generateLexer.dependsOn tasks.downloadJFlex
-tasks.generateLexer.dependsOn tasks.downloadJFlexSkel
+//tasks.generateLexer.dependsOn tasks.downloadJFlex
+//tasks.generateLexer.dependsOn tasks.downloadJFlexSkel
 
 parserTask(project, "Aldor", "aldor/parser")
 parserTask(project, "Expression", "aldor/expression")

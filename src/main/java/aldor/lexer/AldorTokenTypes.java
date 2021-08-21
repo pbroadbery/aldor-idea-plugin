@@ -44,7 +44,13 @@ public final class AldorTokenTypes {
     public static final AldorTokenType TK_SysCmdAbbrev  = createTokenType("TK_SysCmdAbbrev", new AldorTokenAttributes(0, "TK_SysCmdAbbrev", 1, 1, 0, 0, 0, 0, 1, 0, 170, 0));
     public static final AldorTokenType TK_SysCmdIf  = createTokenType("TK_SysCmdIf", new AldorTokenAttributes(0, "TK_SysCmdIf", 1, 1, 0, 0, 0, 0, 1, 0, 170, 0));
     public static final AldorTokenType TK_SysCmdEndIf  = createTokenType("TK_SysCmdEndIf", new AldorTokenAttributes(0, "TK_SysCmdEndIf", 1, 1, 0, 0, 0, 0, 1, 0, 170, 0));
-    public static final AldorTokenType TK_SysCmdIncude = createTokenType("TK_SysCmdInclude", new AldorTokenAttributes(0, "TK_SysCmdInclude", 1, 1, 0, 0, 0, 0, 1, 0, 170, 0));
+    public static final AldorTokenType TK_SysCmdInclude = createTokenType("TK_SysCmdInclude", new AldorTokenAttributes(0, "TK_SysCmdInclude", 1, 1, 0, 0, 0, 0, 1, 0, 170, 0));
+    public static final AldorTokenType TK_SysCmdLibrary = createTokenType("TK_SysCmdLibrary", new AldorTokenAttributes(0, "TK_SysCmdLibrary", 1, 1, 0, 0, 0, 0, 1, 0, 170, 0));
+    public static final AldorTokenType TK_SysCmdAssert = createTokenType("TK_SysCmdLibrary", new AldorTokenAttributes(0, "TK_SysCmdAssert", 1, 1, 0, 0, 0, 0, 1, 0, 170, 0));
+    public static final AldorTokenType TK_SysCmdWS = createTokenType("TK_SysCmdWS", new AldorTokenAttributes(0, "TK_SysCmdWS", 1, 1, 0, 0, 0, 0, 1, 0, 170, 0));
+    public static final AldorTokenType TK_SysCmdId = createTokenType("TK_SysCmdId", new AldorTokenAttributes(0, "TK_SysCmdId", 1, 1, 0, 0, 0, 0, 1, 0, 170, 0));
+    public static final AldorTokenType TK_SysCmdString = createTokenType("TK_SysCmdString", new AldorTokenAttributes(0, "TK_SysCmdString", 1, 1, 0, 0, 0, 0, 1, 0, 170, 0));
+    public static final AldorTokenType TK_SysCmdPrefix = createTokenType("TK_SysCmdPrefix", new AldorTokenAttributes(0, "TK_SysCmdPrefix", 1, 1, 0, 0, 0, 0, 1, 0, 170, 0));
     public static final AldorTokenType TK_Error     = createTokenType("TK_Error", new AldorTokenAttributes(0, "TK_Error", 1, 0, 0, 0, 0, 0, 1, 0, 0, 0));
     public static final AldorTokenType TK_IfLine = createTokenType("TK_IfLine", new AldorTokenAttributes(0, "TK_IfLine", 1, 0, 0, 0, 0, 0, 1, 0, 0, 0));
 
@@ -192,14 +198,19 @@ public final class AldorTokenTypes {
 
     public static final AldorTokenType TK_LIMIT = createTokenType("TK_LIMIT", new AldorTokenAttributes(0, "TK_LIMIT", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0));
 
-    public static final TokenSet WHITESPACE_TOKENS = TokenSet.create(TK_PreDoc, TK_PostDoc, TK_Comment, TK_SysCmdEndIf, TK_SysCmdIf, TK_IfLine, TK_SysCmd);
+    public static final TokenSet WHITESPACE_TOKENS = TokenSet.create(
+            TK_PreDoc, TK_PostDoc, TK_Comment, TK_SysCmdEndIf, TK_SysCmdIf,
+            TK_SysCmdAssert, TK_SysCmdString, TK_SysCmdPrefix, TK_SysCmdWS, TK_SysCmdId,
+            TK_IfLine, TK_SysCmd, TK_SysCmdLibrary, TK_SysCmdInclude);
     public static final TokenSet NEWLINE_TOKENS = TokenSet.create(KW_NewLine, KW_BlkNext, KW_BlkStart, KW_BlkEnd);
+    /* - Not used, but just checking
     public static final TokenSet PARSER_WHITESPACE_TOKENS = TokenSet.create(TokenType.WHITE_SPACE, KW_NewLine,
                                                                                 TK_Comment,
                                                                                 TK_SysCmdIf, TK_SysCmdEndIf,
                                                                                 TK_IfLine,
+                                                                                TK_SysCmdInclude, TK_SysCmdLibrary,
                                                                                 KW_Indent, TK_SysCmd);
-
+    */
     private static AldorTokenType createTokenType(String name, AldorTokenAttributes aldorTokenAttributes) {
         AldorTokenType tokenType = tokenTypeFactory.createTokenType(name, aldorTokenAttributes);
         tokenTypeForString.put(name, tokenType);

@@ -143,6 +143,25 @@ public class AldorTypeHierarchyBrowserTestAldorSdk {
         ((Disposable) ProgressManager.getInstance()).dispose();
     }
 
+    @Test
+    public void testSymbol() {
+        Collection<AldorDefine> items = AldorDefineTopLevelIndex.instance.get("Symbol", codeTestFixture.getProject(), GlobalSearchScope.allScope(codeTestFixture.getProject()));
+
+        AldorIdentifier theId = items.stream().findFirst().flatMap(AldorDefine::defineIdentifier).orElse(null);
+
+        TestBrowser browser = new TestBrowser(ensureClosedRule, new AldorTypeHierarchyProvider(), theId, SUPERTYPES_HIERARCHY_TYPE);
+
+        browser.update();
+
+        System.out.println("Root: " + browser.rootDescriptor());
+
+        System.out.println("Children: " + browser.childElements());
+
+        browser.dispose();
+        ((Disposable) ProgressManager.getInstance()).dispose();
+    }
+
+
     private static LightProjectDescriptor getProjectDescriptor(ExecutablePresentRule executableRule) {
         return SdkProjectDescriptors.aldorSdkProjectDescriptor(executableRule.prefix());
     }

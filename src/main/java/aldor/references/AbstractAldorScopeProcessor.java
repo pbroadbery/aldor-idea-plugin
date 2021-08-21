@@ -5,7 +5,9 @@ import aldor.psi.AldorDeclaration;
 import aldor.psi.AldorDeclare;
 import aldor.psi.AldorDefine;
 import aldor.psi.AldorIdentifier;
+import aldor.psi.AldorMacroBody;
 import aldor.psi.ReturningAldorVisitor;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
@@ -14,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class AbstractAldorScopeProcessor implements PsiScopeProcessor {
+    private static final Logger LOG = Logger.getInstance(AbstractAldorScopeProcessor.class);
 
     // Return false to stop processing..
     @Override
@@ -23,6 +26,7 @@ public abstract class AbstractAldorScopeProcessor implements PsiScopeProcessor {
 
     private class ScopeVisitor extends ReturningAldorVisitor<Boolean> {
         private final ResolveState state;
+        private boolean isMacro = false;
 
         ScopeVisitor(ResolveState state) {
             this.state = state;
@@ -39,6 +43,13 @@ public abstract class AbstractAldorScopeProcessor implements PsiScopeProcessor {
         }
 
         @Override
+        public void visitMacroBody(@NotNull AldorMacroBody o) {
+            isMacro = true;
+            super.visitMacroBody(o);
+            isMacro = false;
+        }
+
+        @Override
         public void visitColonExpr(@NotNull AldorColonExpr o) {
             returnValue(executeDeclare((AldorDeclare) o, state));
         }
@@ -50,7 +61,8 @@ public abstract class AbstractAldorScopeProcessor implements PsiScopeProcessor {
 
         @Override
         public void visitDefine(@NotNull AldorDefine o) {
-            returnValue(executeDefinition(o, state));
+            AldorDefine.DefinitionType definitionType = isMacro ? AldorDefine.DefinitionType.MACRO: state.get(FileScopeWalker.definitionTypeKey);
+            returnValue(executeDefinition(o, state.put(FileScopeWalker.definitionTypeKey, definitionType)));
         }
 
         @Override

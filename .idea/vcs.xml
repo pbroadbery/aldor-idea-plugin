@@ -3,5 +3,7 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$/../../../type-library/aldor-types" vcs="Git" />
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../../../intellij/erlang/intellij-erlang" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../../../intellij/julia/julia-intellij" vcs="Git" />
   </component>
 </project>

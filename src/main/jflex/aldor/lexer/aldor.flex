@@ -60,6 +60,7 @@ import com.intellij.psi.TokenType;
 %state TRAILING_QUOTES
 %state ALDOR_ID
 %state SPAD_ID
+%state SYSCMD
 
 ESC_CRLF=_(\n|\r|\r\n)
 CRLF=\n|\r|\r\n
@@ -76,12 +77,17 @@ COMMENT="-""-"[^\r\n]*
 PREDOC=\+\+\+[^\r\n]*
 POSTDOC=\+\+[^\r\n]*
 
-SYSCMD=#[^\n\r]*
+SYSCMD=#[ \t]*
 
 SYSCMD_IF=#if[ \t][^\r\n]*
 SYSCMD_ENDIF=#endif[^\r\n]*
+SYSCMD_ASSERT=#assert[ \t][^\r\n]*
+SYSCMD_INCLUDE=#include[ \t][^\r\n]*
+SYSCMD_LIBRARY=#library[ \t][^\r\n]*
 IF_LINE=[^\r\n]+
 SPAD_SYSCMD=\)[^\r\n]*
+SYSCMD_PILE=#pile[^\r\n]*
+SYSCMD_ENDPILE=#endpile[^\r\n]*
 
 SPAD_SYSCMD_IF=\)if[ \t][^\r\n]*
 SPAD_SYSCMD_ENDIF=\)endif[^\r\n]*
@@ -220,17 +226,27 @@ SPAD_SYSCMD_ABBREV=\)abbrev[^\r\n]*
 }
 
 <YYINITIAL> {
-    { SYSCMD_IF } { yybegin(IF_TEXT); return AldorTokenTypes.TK_SysCmdIf;}
-    { SYSCMD_ENDIF } { yybegin(NORMAL); return AldorTokenTypes.TK_SysCmdEndIf;}
-
     { SPAD_SYSCMD_IF } { yybegin(IF_TEXT); return AldorTokenTypes.TK_SysCmdIf;}
     { SPAD_SYSCMD_ENDIF } { yybegin(NORMAL); return AldorTokenTypes.TK_SysCmdEndIf;}
     { SPAD_SYSCMD_ABBREV} { yybegin(NORMAL); return AldorTokenTypes.TK_SysCmdAbbrev;}
+    { SYSCMD_INCLUDE } {yybegin(SYSCMD); return AldorTokenTypes.TK_SysCmdInclude;}
+    { SYSCMD_LIBRARY } {yybegin(SYSCMD); return AldorTokenTypes.TK_SysCmdLibrary;}
+    { SYSCMD_IF } { yybegin(IF_TEXT); return AldorTokenTypes.TK_SysCmdIf;}
+    { SYSCMD_ASSERT } { yybegin(NORMAL); return AldorTokenTypes.TK_SysCmdAssert;}
+    { SYSCMD_PILE } { yybegin(NORMAL); return AldorTokenTypes.KW_StartPile;}
+    { SYSCMD_ENDPILE } { yybegin(NORMAL); return AldorTokenTypes.KW_EndPile;}
+    { SYSCMD } { yybegin(SYSCMD); return AldorTokenTypes.TK_SysCmdPrefix;}
 
-    { SYSCMD } { yybegin(NORMAL); return AldorTokenTypes.TK_SysCmd;}
     { SPAD_SYSCMD } { yybegin(NORMAL); return AldorTokenTypes.TK_SysCmd;}
     { INDENT } { yybegin(NORMAL); return AldorTokenTypes.KW_Indent; }
     [^] { yypushback(1); yybegin(NORMAL); }
+}
+
+<SYSCMD> {
+    { WHITE_SPACE } {yybegin(SYSCMD); return AldorTokenTypes.TK_SysCmdWS;}
+    { STRING } {yybegin(SYSCMD); return AldorTokenTypes.TK_SysCmdString;}
+    { ID } {yybegin(SYSCMD); return AldorTokenTypes.TK_SysCmdId;}
+    { CRLF } {yybegin(YYINITIAL); return AldorTokenTypes.KW_NewLine;}
 }
 
 <IF_TEXT> {

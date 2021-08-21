@@ -106,6 +106,7 @@
         <!-- Aldor extras -->
         <lang.refactoringSupport language="Aldor" implementationClass="aldor.references.AldorRefactoringSupportProvider"/>
         <documentationProvider implementation="aldor.editor.documentation.AldorDocumentationProvider"/>
+        <include.provider implementation="aldor.include.AldorFileIncludeProvider"/>
 
         <lang.parserDefinition language="Aldor" implementationClass="aldor.parser.AldorParserDefinition"/>
 
