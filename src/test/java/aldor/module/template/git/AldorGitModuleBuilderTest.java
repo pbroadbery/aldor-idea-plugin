@@ -5,14 +5,11 @@ import aldor.test_util.AssumptionAware;
 import aldor.test_util.JUnits;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.ModifiableModuleModel;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.roots.ui.configuration.DefaultModulesProvider;
-import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.fixtures.IdeaProjectTestFixture;
 import com.intellij.testFramework.fixtures.IdeaTestFixtureFactory;
@@ -37,7 +34,6 @@ public class AldorGitModuleBuilderTest extends AssumptionAware.UsefulTestCase {
 
     @Rule
     public TestRule testRule = RuleChain.emptyRuleChain()
-            //.around(JUnits.swingThreadTestRule())
             .around(JUnits.fixtureRule(fixture))
             .around(JUnits.setLogToDebugTestRule)
             ;
@@ -53,8 +49,6 @@ public class AldorGitModuleBuilderTest extends AssumptionAware.UsefulTestCase {
             builder.setContentEntryPath(tmp.toString());
             builder.setName("Git_Aldor");
             builder.setModuleFilePath(tmp.toString());
-            Module module = ApplicationManager.getApplication().runWriteAction((ThrowableComputable<Module, Exception>) () -> builder.createModule(model));
-            assertNotNull(module);
             ModuleWizardStep[] steps = builder.createFinishingSteps(new WizardContext(fixture.getProject(), fixture.getTestRootDisposable()), modulesProvider);
             for (var step: steps) {
                 step.getComponent();
@@ -75,6 +69,7 @@ public class AldorGitModuleBuilderTest extends AssumptionAware.UsefulTestCase {
                 step.onWizardFinished();
             }
 
+            builder.commitModule(model.getProject(), null);
             List<VirtualFile> roots = ProjectRootManager.getInstance(fixture.getProject()).getModuleSourceRoots(Set.of(AldorSourceRootType.INSTANCE));
             assertFalse(roots.isEmpty());
             LOG.debug("Roots " + roots);

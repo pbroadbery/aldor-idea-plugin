@@ -21,6 +21,7 @@ import com.intellij.ide.wizard.CommitStepException;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.module.ModuleWithNameAlreadyExists;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
@@ -151,8 +152,10 @@ public final class AldorGitModuleBuilder extends AldorModuleBuilder {
     Consumer<ModifiableModuleModel> commitThing = null;
 
     @Override
-    public @NotNull Module createModule(@NotNull ModifiableModuleModel moduleModel) throws InvalidDataException, IOException, ModuleWithNameAlreadyExists, ConfigurationException, JDOMException {
-        Module module = super.createModule(moduleModel);
+    public @NotNull Module createModule(@NotNull ModifiableModuleModel moduleModel) throws InvalidDataException, ConfigurationException {
+        final ModuleType moduleType = getModuleType();
+        final Module module = moduleModel.newModule(this.getModuleFilePath(), moduleType.getId());
+        setupModule(module);
         if (commitThing != null) {
             commitThing.accept(moduleModel);
         }
@@ -297,10 +300,12 @@ public final class AldorGitModuleBuilder extends AldorModuleBuilder {
         private final AldorRepoProjectDetector detector;
         private final WizardContext wizardContext;
         private final ProjectFromSourcesBuilderImpl fromSourcesBuilder;
+        private final ModulesProvider modulesProvider;
 
         GitProjectFinaliseStep(@NotNull WizardContext wizardContext, @NotNull ModulesProvider modulesProvider) {
             detector = ProjectStructureDetector.EP_NAME.findExtension(AldorRepoProjectDetector.class);
             this.wizardContext = wizardContext;
+            this.modulesProvider = modulesProvider;
             fromSourcesBuilder = new ProjectFromSourcesBuilderImpl(wizardContext, modulesProvider);
         }
 
@@ -331,7 +336,7 @@ public final class AldorGitModuleBuilder extends AldorModuleBuilder {
             detector.configure(fromSourcesBuilder.getProjectDescriptor(detector), projectRoots, settings);
             LOG.info("Updating datamodel complete");
             setCommitThing(rootModel -> {
-                fromSourcesBuilder.commit(rootModel.getProject(), rootModel, fromSourcesBuilder.getContext().getModulesProvider());
+                fromSourcesBuilder.commit(rootModel.getProject(), rootModel, modulesProvider);
             });
         }
 

@@ -31,6 +31,7 @@ import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
@@ -158,8 +159,9 @@ public class AldorRepoProjectDetector extends ProjectStructureDetector {
                             mgr.commit();
                             LOG.info("Created facet " + facet.getName());
 
-                            ContentEntry entry = rootModel.getContentEntries()[0];
-                            VirtualFile srcDir = Optional.ofNullable(entry.getFile()).map( f -> f.findChild("src")).orElse(null);
+                            var rootVirtualDir = LocalFileSystem.getInstance().findFileByIoFile(root.getDirectory());
+                            ContentEntry entry = (rootModel.getContentEntries().length == 0) ? null : rootModel.getContentEntries()[0];
+                            VirtualFile srcDir = Optional.ofNullable(rootVirtualDir).map( f -> f.findChild("src")).orElse(null);
                             if ((srcDir != null) && srcDir.isDirectory()) {
                                 LOG.info("setupProjectStructure::LibUpdate:srcDir: " +  srcDir);
                                 entry.addSourceFolder(srcDir, AldorSourceRootType.INSTANCE);
