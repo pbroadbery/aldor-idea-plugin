@@ -104,10 +104,14 @@ public class ExecutablePresentRule implements PathBasedTestRule {
     }
 
     public static class AldorDev extends ExecutablePresentRule {
-        public static final ExecutablePresentRule INSTANCE = new AldorDev();
+        public static final AldorDev INSTANCE = new AldorDev();
 
         public AldorDev() {
             super(Collections.singletonList("/home/pab/Work/aldorgit/utypes/opt/bin"), "aldor");
+        }
+
+        public String repoRoot() {
+            return "/home/pab/Work/aldorgit/utypes/aldor";
         }
     }
 

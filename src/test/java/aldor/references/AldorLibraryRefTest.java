@@ -8,8 +8,6 @@ import aldor.test_util.SdkProjectDescriptors;
 import aldor.util.VirtualFileTests;
 import com.intellij.openapi.projectRoots.ProjectJdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ContentIterator;
-import com.intellij.openapi.roots.ModuleFileIndex;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -17,12 +15,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiReference;
-import com.intellij.psi.stubs.StubUpdatingIndex;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
-import com.intellij.testFramework.fixtures.BasePlatformTestCase;
-import com.intellij.util.indexing.FileBasedIndex;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Assume;
 
@@ -50,8 +44,6 @@ public class AldorLibraryRefTest extends AssumptionAware.BasePlatformTestCase {
 
         String text = "Foo: Category == Ring with\n";
         VirtualFile file = createAldorFile(text);
-        FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
-        FileBasedIndex.getInstance().ensureUpToDate(StubUpdatingIndex.INDEX_ID, getProject(), null);
         PsiFile whole = PsiManager.getInstance(getProject()).findFile(file);
 
         PsiElement theId = PsiTreeUtil.findChildrenOfType(whole, AldorId.class).stream().filter(id -> "Ring".equals(id.getText())).findFirst().orElse(null);

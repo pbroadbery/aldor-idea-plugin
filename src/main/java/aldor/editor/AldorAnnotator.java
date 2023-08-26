@@ -7,6 +7,7 @@ import aldor.psi.elements.AldorTypes;
 import com.intellij.lang.annotation.Annotation;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
+import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.util.TextRange;
@@ -39,8 +40,7 @@ public class AldorAnnotator implements Annotator {
             return;
         }
         TextRange range = element.getTextRange();
-        Annotation typeAnnotation = holder.createInfoAnnotation(range, "");
-        typeAnnotation.setTextAttributes(AldorHighlightingColors.TYPE);
+        holder.newAnnotation(HighlightSeverity.INFORMATION, "").range(range).textAttributes(AldorHighlightingColors.TYPE).create();
     }
 
     private static final class AldorHighlightingColors {

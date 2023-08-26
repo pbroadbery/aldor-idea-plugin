@@ -1,7 +1,7 @@
 package aldor.build.facet.aldor;
 
 import aldor.build.facet.SpadFacet;
-import aldor.builder.jps.module.AldorFacetExtensionProperties;
+import aldor.builder.jps.module.AldorFacetProperties;
 import com.intellij.facet.FacetConfiguration;
 import com.intellij.facet.ui.FacetEditorContext;
 import com.intellij.facet.ui.FacetEditorTab;
@@ -15,10 +15,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class AldorFacetConfiguration implements FacetConfiguration, PersistentStateComponent<AldorFacetExtensionProperties>, SpadFacet<AldorFacetExtensionProperties> {
+public class AldorFacetConfiguration implements FacetConfiguration, PersistentStateComponent<AldorFacetProperties>, SpadFacet<AldorFacetProperties> {
     private static final Logger LOG = Logger.getInstance(AldorFacetConfiguration.class);
     public static final FacetEditorTab[] NO_EDITOR_TABS = new FacetEditorTab[0];
-    private AldorFacetExtensionProperties state = new AldorFacetExtensionProperties();
+    private AldorFacetProperties state = new AldorFacetProperties();
 
     public AldorFacetConfiguration() {}
 
@@ -32,7 +32,7 @@ public class AldorFacetConfiguration implements FacetConfiguration, PersistentSt
 
     @Nullable
     @Override
-    public AldorFacetExtensionProperties getState() {
+    public AldorFacetProperties getState() {
         return state;
     }
 
@@ -40,12 +40,12 @@ public class AldorFacetConfiguration implements FacetConfiguration, PersistentSt
      * Called from the UI
      * @param state - updated state
      */
-    void updateState(AldorFacetExtensionProperties state) {
+    void updateState(AldorFacetProperties state) {
         this.state = state;
     }
 
     @Override
-    public void loadState(@NotNull AldorFacetExtensionProperties state) {
+    public void loadState(@NotNull AldorFacetProperties state) {
         this.state = state;
     }
 
@@ -56,7 +56,7 @@ public class AldorFacetConfiguration implements FacetConfiguration, PersistentSt
 
     @Override
     public void initializeComponent() {
-        LOG.info("Initialise component");
+        LOG.info("Initialise aldor facet component");
     }
 
     @Nullable
@@ -69,7 +69,7 @@ public class AldorFacetConfiguration implements FacetConfiguration, PersistentSt
     }
 
     @Override
-    public Optional<AldorFacetExtensionProperties> getProperties() {
+    public Optional<AldorFacetProperties> getProperties() {
         //noinspection CallToSimpleGetterFromWithinClass
         return Optional.ofNullable(getState());
     }

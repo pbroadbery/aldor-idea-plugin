@@ -1,15 +1,13 @@
 package aldor.hierarchy;
 
+import com.intellij.ide.hierarchy.TypeHierarchyBrowserBase;
 import icons.AldorIcons;
-
-import static com.intellij.ide.hierarchy.TypeHierarchyBrowserBase.SUPERTYPES_HIERARCHY_TYPE;
-
 public class ViewParentHierarchyAction extends AbstractChangeHierarchyViewAction {
     ViewParentHierarchyAction() {
         super("Parent View", "View hierarchy", AldorIcons.ParentHierarchyView); // TODO: Wrong icon
     }
     @Override
     protected String getTypeName() {
-        return SUPERTYPES_HIERARCHY_TYPE;
+        return TypeHierarchyBrowserBase.getSupertypesHierarchyType();
     }
 }

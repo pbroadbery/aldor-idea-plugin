@@ -2,7 +2,6 @@ package aldor.build.module;
 
 import aldor.builder.jps.module.AldorModuleState;
 import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.State;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ModuleExtension;
 import com.intellij.openapi.roots.ModuleRootManager;
@@ -13,15 +12,20 @@ import org.jetbrains.annotations.Nullable;
 public class AldorModuleExtension extends ModuleExtension implements PersistentStateComponent<AldorModuleState.Wrapper>  {
     @Nullable
     private AldorModuleExtension source;
-    private AldorModuleState state = new AldorModuleState();
+    @NotNull
+    private AldorModuleState state;
 
     public AldorModuleExtension() {
+        state = new AldorModuleState();
     }
 
     @NonInjectable
     public AldorModuleExtension(AldorModuleExtension source) {
         this.source = source;
-        if (source != null) {
+        if (source == null) {
+            this.state = new AldorModuleState();
+        }
+        else {
             this.state = new AldorModuleState(source.state);
         }
     }
@@ -51,7 +55,7 @@ public class AldorModuleExtension extends ModuleExtension implements PersistentS
         }
     }
 
-    public void setState(AldorModuleState state) {
+    public void setState(@NotNull AldorModuleState state) {
         this.state = state;
     }
 

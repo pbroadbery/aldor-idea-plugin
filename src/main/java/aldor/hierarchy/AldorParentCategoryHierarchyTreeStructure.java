@@ -93,6 +93,7 @@ public final class AldorParentCategoryHierarchyTreeStructure extends HierarchyTr
         if (library == null) {
             return new Object[] { "Missing library"};
         }
+
         Syntax syntax = aldorDescriptor.syntax();
         List<Syntax> parents = Try.of(() -> library.parentCategories(syntax)).orElse(e -> Collections.emptyList());
         List<SpadLibrary.Operation> operations = Try.of(() -> library.operations(syntax))

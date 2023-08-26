@@ -3,7 +3,7 @@ package aldor.build.facet.aldor;
 import aldor.build.facet.ModuleModifyingFacet;
 import aldor.build.facet.ModuleModifyingFacetUtil;
 import aldor.build.facet.SpadFacet;
-import aldor.builder.jps.module.AldorFacetExtensionProperties;
+import aldor.builder.jps.module.AldorFacetProperties;
 import aldor.sdk.aldor.AldorInstalledSdkType;
 import com.intellij.facet.Facet;
 import com.intellij.facet.FacetManager;
@@ -16,10 +16,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class AldorFacet extends ModuleModifyingFacet<AldorFacetConfiguration> implements SpadFacet<AldorFacetExtensionProperties> {
+public class AldorFacet extends ModuleModifyingFacet<AldorFacetConfiguration> implements SpadFacet<AldorFacetProperties> {
     private static final Logger LOG = Logger.getInstance(AldorFacet.class);
 
-    public AldorFacet(@NotNull FacetType facetType, @NotNull Module module, @NotNull String name, @NotNull AldorFacetConfiguration configuration,
+    public AldorFacet(@NotNull FacetType facetType, @NotNull Module module, @NotNull String name,
+                      @NotNull AldorFacetConfiguration configuration,
                       @Nullable Facet underlyingFacet) {
         super(facetType, module, name, configuration, underlyingFacet);
     }
@@ -39,38 +40,37 @@ public class AldorFacet extends ModuleModifyingFacet<AldorFacetConfiguration> im
     }
 
     //should only be called from write action
-    public static AldorFacet createFacetIfMissing(@NotNull Module module, AldorFacetExtensionProperties properties) {
+    public static AldorFacet createFacetIfMissing(@NotNull Module module, AldorFacetProperties properties) {
         FacetManager facetManager = FacetManager.getInstance(module);
-        AldorFacetType ft = AldorFacetType.instance();
-        AldorFacet prev = facetManager.getFacetByType(ft.getId());
+        AldorFacet prev = facetManager.getFacetByType(AldorFacetType.TYPE_ID);
         if (prev != null) {
             return prev;
         }
-        AldorFacet facet = facetManager.createFacet(ft, AldorFacetConstants.NAME, null);
+        AldorFacet facet = facetManager.createFacet(AldorFacetType.instance(), module.getName() + "." + AldorFacetConstants.ALDOR_FACET_NAME, null);
         ModifiableFacetModel facetModel = facetManager.createModifiableModel();
         facetModel.addFacet(facet);
         facetModel.commit();
         facet.getConfiguration().loadState(properties);
-        FacetManager.getInstance(module).facetConfigurationChanged(facet);
+        facetManager.facetConfigurationChanged(facet);
         return facet;
     }
 
     @Override
     public void initFacet() {
-        LOG.info("Initialising facet " + this.getTypeId());
+        LOG.info("Initialising facet " + this.getTypeId() + " "+ getName() + " "+ getProperties());
         super.initFacet();
         updateModule();
     }
 
     @Override
     public void disposeFacet() {
-        LOG.info("Disposing facet " + this.getTypeId());
+        LOG.info("Disposing facet " + this.getTypeId() + " "+ getName() + " " + getProperties());
         super.disposeFacet();
     }
 
 
     @Override
-    public Optional<AldorFacetExtensionProperties> getProperties() {
+    public Optional<AldorFacetProperties> getProperties() {
         return Optional.ofNullable(getConfiguration().getState());
     }
 }

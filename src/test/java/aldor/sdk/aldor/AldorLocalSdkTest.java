@@ -11,9 +11,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.GlobalSearchScopesCore;
-import com.intellij.psi.stubs.StubUpdatingIndex;
 import com.intellij.testFramework.fixtures.CodeInsightTestFixture;
-import com.intellij.util.indexing.FileBasedIndex;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -43,9 +41,6 @@ public class AldorLocalSdkTest {
         PsiFile[] files = FilenameIndex.getFilesByName(project, "sal_lang.as", GlobalSearchScopesCore.projectProductionScope(project));
 
         assertEquals(1, files.length);
-
-        FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
-        FileBasedIndex.getInstance().ensureUpToDate(StubUpdatingIndex.INDEX_ID, project, null);
 
         Collection<AldorDefine> ll = AldorDefineNameIndex.instance.get("Category", project, GlobalSearchScope.allScope(project));
         assertFalse(ll.isEmpty());

@@ -1,9 +1,14 @@
 package aldor.lexer;
 
 import com.google.common.collect.Lists;
+import com.google.common.io.CharStreams;
 import com.intellij.psi.tree.IElementType;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.io.StringReader;
 import java.util.List;
 
@@ -22,7 +27,6 @@ import static aldor.lexer.AldorTokenTypes.TK_IfLine;
 import static aldor.lexer.AldorTokenTypes.TK_Int;
 import static aldor.lexer.AldorTokenTypes.TK_PostDoc;
 import static aldor.lexer.AldorTokenTypes.TK_String;
-import static aldor.lexer.AldorTokenTypes.TK_SysCmd;
 import static aldor.lexer.AldorTokenTypes.TK_SysCmdAbbrev;
 import static aldor.lexer.AldorTokenTypes.TK_SysCmdAssert;
 import static aldor.lexer.AldorTokenTypes.TK_SysCmdEndIf;
@@ -31,8 +35,6 @@ import static aldor.lexer.AldorTokenTypes.TK_SysCmdIf;
 import static aldor.lexer.AldorTokenTypes.TK_SysCmdInclude;
 import static aldor.lexer.AldorTokenTypes.TK_SysCmdLibrary;
 import static aldor.lexer.AldorTokenTypes.TK_SysCmdPrefix;
-import static aldor.lexer.AldorTokenTypes.TK_SysCmdString;
-import static aldor.lexer.AldorTokenTypes.TK_SysCmdWS;
 import static aldor.lexer.AldorTokenTypes.WHITE_SPACE;
 import static aldor.lexer.LexMode.Aldor;
 import static aldor.lexer.LexMode.Spad;
@@ -219,5 +221,16 @@ public class AldorLexerTest {
         lla.start(text);
         List<IElementType> tokens = LexerFunctions.readTokens(lla);
         assertEquals(Lists.newArrayList(TK_SysCmdAssert, KW_NewLine), tokens);
+    }
+
+    @Test
+    public void testAldorScanTest() throws IOException {
+        InputStream resource =  this.getClass().getResourceAsStream("scan.as");
+        Reader reader = new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("scan.as"));
+        String text = CharStreams.toString(reader);
+        AldorLexerAdapter lla = new AldorLexerAdapter(Aldor, reader);
+        lla.start(text);
+        var tokens = LexerFunctions.readTokens(lla);
+        System.out.println("Tokens: " + tokens);
     }
 }

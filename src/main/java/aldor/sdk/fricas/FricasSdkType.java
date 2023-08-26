@@ -2,15 +2,13 @@ package aldor.sdk.fricas;
 
 import aldor.sdk.AxiomSdk;
 import com.intellij.openapi.projectRoots.Sdk;
-import org.jetbrains.annotations.Nullable;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public interface FricasSdkType extends AxiomSdk {
-    @Nullable
+    @NotNull
     String fricasPath(Sdk sdk);
 
-    @Nonnull
+    @NotNull
     String fricasSysName(Sdk sdk);
 
     String fricasEnvVar();

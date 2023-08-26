@@ -1,6 +1,5 @@
 package aldor.spad;
 
-import aldor.test_util.AssumptionAware;
 import aldor.test_util.DirectoryPresentRule;
 import aldor.test_util.JUnits;
 import aldor.test_util.LightPlatformJUnit4TestRule;

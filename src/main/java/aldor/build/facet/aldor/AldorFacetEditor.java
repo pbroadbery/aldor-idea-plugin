@@ -1,16 +1,15 @@
 package aldor.build.facet.aldor;
 
 import aldor.build.facet.FacetPropertiesEditorTab;
-import aldor.builder.jps.module.AldorFacetExtensionProperties;
+import aldor.builder.jps.module.AldorFacetProperties;
 import com.google.common.annotations.VisibleForTesting;
 import com.intellij.facet.ui.FacetEditorContext;
 import com.intellij.facet.ui.FacetValidatorsManager;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.JComponent;
-import java.util.Objects;
 
-public class AldorFacetEditor extends FacetPropertiesEditorTab<AldorFacetExtensionProperties, AldorFacetConfiguration> {
+public class AldorFacetEditor extends FacetPropertiesEditorTab<AldorFacetProperties, AldorFacetConfiguration> {
     private AldorFacetEditorForm form = null;
 
     public AldorFacetEditor(FacetEditorContext editorContext, FacetValidatorsManager validatorsManager) {
@@ -24,11 +23,6 @@ public class AldorFacetEditor extends FacetPropertiesEditorTab<AldorFacetExtensi
             form = new AldorFacetEditorForm(this);
         }
         return form.topPanel();
-    }
-
-    @Override
-    public boolean isModified() {
-        return !Objects.equals(facetState(), currentState());
     }
 
     @Override
@@ -49,7 +43,7 @@ public class AldorFacetEditor extends FacetPropertiesEditorTab<AldorFacetExtensi
 
     @Override
     @NotNull
-    public AldorFacetExtensionProperties currentState() {
+    public AldorFacetProperties currentState() {
         return form.currentState();
     }
     @VisibleForTesting

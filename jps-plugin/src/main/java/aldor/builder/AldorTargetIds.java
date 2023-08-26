@@ -12,6 +12,10 @@ public final class AldorTargetIds {
         return moduleName;
     }
 
+    public static String aldorConfiguredModuleTargetId(String moduleName) {
+        return "module-" + moduleName;
+    }
+
     public static String aldorJarTargetId(JpsModuleSourceRoot sourceRoot) {
         return sourceRoot.getFile().toString();
     }

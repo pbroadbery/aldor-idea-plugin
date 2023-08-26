@@ -41,8 +41,6 @@ public class AldorDeclareIndexTest  {
         byte[] content = Files.readAllBytes(sourceFile.toPath());
 
         VirtualFile file = createFile(getSourceRoot(), "any.spad", content);
-
-        FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
     }
 
     @Test
@@ -55,8 +53,6 @@ public class AldorDeclareIndexTest  {
         byte[] content = Files.readAllBytes(sourceFile.toPath());
 
         VirtualFile file = createFile(getSourceRoot(), "cliques.as", content);
-
-        FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
     }
 
 

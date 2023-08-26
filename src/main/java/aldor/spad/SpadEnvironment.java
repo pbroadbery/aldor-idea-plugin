@@ -14,5 +14,5 @@ public interface SpadEnvironment {
     GlobalSearchScope scope(Project project);
 
     /* Used to determine changed files */
-    boolean containsFile(VirtualFile file);
+    boolean containsBuildFile(VirtualFile file);
 }

@@ -25,18 +25,18 @@ import java.util.stream.Collectors;
 
 import static aldor.util.StringUtilsAldorRt.trimExtension;
 
-public class AldorModuleFacade {
+public class AldorJpsModuleFacade {
     private final AldorModuleState state;
-    private final AldorFacetExtensionProperties facet;
+    private final AldorFacetProperties facet;
     private final List<JpsTypedModuleSourceRoot<AldorSourceRootProperties>> roots;
     private final String aldorSdk;
     private final String javaSdk = null;
 
-    public AldorModuleFacade(JpsModule module) {
+    public AldorJpsModuleFacade(JpsModule module) {
         JpsTypedModule<JpsSimpleElement<AldorModuleState>> typedModule = module.asTyped(JpsAldorModuleType.INSTANCE);
         JpsAldorFacetExtension facetExtension = JpsAldorFacetExtension.getExtension(module);
         if ((typedModule == null) || (facetExtension == null)) {
-            throw new IllegalStateException("should check that the module is an aldor module " + module.getName());
+            throw new IllegalStateException("should check that the module is an aldor module " + module.getName() + " " + typedModule + " " + facetExtension);
         }
 
         state = typedModule.getProperties().getData();
@@ -51,7 +51,7 @@ public class AldorModuleFacade {
     }
 
     @VisibleForTesting
-    public AldorModuleFacade(AldorModuleState state, AldorFacetExtensionProperties facet) {
+    public AldorJpsModuleFacade(AldorModuleState state, AldorFacetProperties facet) {
         this.state = state;
         this.facet = facet;
         this.roots = Collections.emptyList();
@@ -59,15 +59,15 @@ public class AldorModuleFacade {
     }
 
     @Nullable
-    public static AldorModuleFacade facade(JpsModule module) {
+    public static AldorJpsModuleFacade facade(JpsModule module) {
         if (module.asTyped(JpsAldorModuleType.INSTANCE) == null) {
             return null;
         }
-        return new AldorModuleFacade(module);
-    }
-
-    public boolean generateMakefile() {
-        return false;
+        JpsAldorFacetExtension facetExtension = JpsAldorFacetExtension.getExtension(module);
+        if (facetExtension == null) {
+            return null;
+        }
+        return new AldorJpsModuleFacade(module);
     }
 
     /** The directory from which make should be invoked */
@@ -86,7 +86,6 @@ public class AldorModuleFacade {
     }
 
     private File configuredBuildDirectory(File contentRoot, File sourceRoot, File sourceFile) {
-        File baseDir = contentRoot; // should be location of configure.ac
         return Path.of(facet.outputDirectory(), FileUtilRt.getRelativePath(contentRoot, sourceRoot)).toFile();
     }
 
@@ -96,12 +95,16 @@ public class AldorModuleFacade {
         switch (facet.makeConvention()) {
             case Configured:
                 throw new IllegalStateException();
-            case Source:
+            case Source: {
                 String destFile = FileUtilRt.getNameWithoutExtension(file.getName()) + ".ao";
                 String base = FileUtilRt.getRelativePath(sourceRoot, file.getParentFile());
                 Path resolved = Path.of(facet.relativeOutputDirectory(), base, destFile);
                 return resolved.normalize().toString();
-            case Build:
+            }
+            case Build: {
+                String base = FileUtilRt.getRelativePath(sourceRoot, file.getParentFile());
+                return Path.of(base + "/" + FileUtilRt.getNameWithoutExtension(file.getName()) + ".ao").normalize().toString();
+            }
             default:
                 throw new IllegalStateException("Not implemented");
         }
@@ -129,7 +132,7 @@ public class AldorModuleFacade {
      */
     @VisibleForTesting
     @Deprecated
-    public AldorFacetExtensionProperties facet() {
+    public AldorFacetProperties facet() {
         return facet;
     }
 
@@ -153,6 +156,14 @@ public class AldorModuleFacade {
 
     public String javaSdkPath() {
         return facet.javaSdkName();
+    }
+
+    public boolean buildEnabled() {
+        return facet.makeConvention().enabled();
+    }
+
+    public boolean isConfiguredModule() {
+        return facet.makeConvention() == MakeConvention.Configured;
     }
 
     /*

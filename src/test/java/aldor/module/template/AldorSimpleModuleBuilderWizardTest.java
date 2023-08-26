@@ -1,12 +1,10 @@
 package aldor.module.template;
 
 import aldor.build.facet.aldor.AldorFacet;
-import aldor.build.facet.aldor.AldorFacetConstants;
-import aldor.build.facet.aldor.AldorFacetType;
+import aldor.build.module.AldorModuleFacade;
 import aldor.sdk.aldor.AldorInstalledSdkType;
 import aldor.test_util.AssumptionAware;
 import aldor.test_util.JUnits;
-import com.intellij.facet.FacetManager;
 import com.intellij.ide.projectWizard.ProjectSettingsStep;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.wizard.Step;
@@ -57,9 +55,8 @@ public class AldorSimpleModuleBuilderWizardTest extends AssumptionAware.NewProje
         LOG.info("Created project");
 
         Module module = ModuleManager.getInstance(project).getModules()[0];
-        FacetManager facetManager = FacetManager.getInstance(module);
-        AldorFacet facet = facetManager.findFacet(AldorFacetType.instance().getId(), AldorFacetConstants.NAME);
-
+        AldorModuleFacade facade = AldorModuleFacade.forModule(module).orElseThrow();
+        AldorFacet facet = facade.facetForTesting();
         LOG.info("Facet " + facet);
         Assert.assertNotNull(facet);
 

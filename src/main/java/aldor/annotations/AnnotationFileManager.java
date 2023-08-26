@@ -35,9 +35,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.Future;
+import java.util.concurrent.CompletableFuture;
 
 import static aldor.util.StringUtilsAldorRt.trimExtension;
 
@@ -187,7 +186,7 @@ public class AnnotationFileManager implements Disposable {
     }
 
 
-    public Future<Void> requestRebuild(PsiFile psiFile) {
+    public CompletableFuture<Void> requestRebuild(PsiFile psiFile) {
         return annotationFileBuilder.invokeAnnotationBuild(psiFile);
     }
 

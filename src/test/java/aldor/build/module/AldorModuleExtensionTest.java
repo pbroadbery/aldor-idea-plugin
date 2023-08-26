@@ -44,8 +44,9 @@ public class AldorModuleExtensionTest extends AssumptionAware.LightIdeaTestCase 
         AldorModuleExtension extension = ModuleRootManager.getInstance(getModule()).getModuleExtension(AldorModuleExtension.class).getModifiableModel(true);
         AldorModuleState state = extension.state();
         assert state != null;
-        extension.setState(state.asBuilder().outputDirectory("omg ponies")
-                .makeConvention(MakeConvention.Build)
+        extension.setState(state.asBuilder()
+                //.outputDirectory("omg ponies")
+                //.makeConvention(MakeConvention.Build)
                 .build());
         Element serialised = XmlSerializer.serialize(extension.getState());
 

@@ -3,11 +3,10 @@ package aldor.builder.files;
 import aldor.builder.AldorBuildTargetTypes;
 import aldor.builder.AldorBuilderService;
 import aldor.builder.jps.AldorSourceRootProperties;
-import aldor.builder.jps.module.AldorModuleFacade;
 import aldor.builder.jps.JpsAldorModelSerializerExtension;
-import aldor.builder.jps.module.JpsAldorModuleType;
+import aldor.builder.jps.module.AldorJpsModuleFacade;
 import aldor.builder.jps.module.AldorModuleState;
-import com.google.common.collect.ImmutableMap;
+import aldor.builder.jps.module.JpsAldorModuleType;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileUtil;
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -57,7 +55,9 @@ public class AldorFileBuildTargetType extends BuildTargetType<AldorFileBuildTarg
     @Override
     public List<AldorFileBuildTarget> computeAllTargets(@NotNull final JpsModel model) {
         return model.getProject().getModules().stream()
-                .map(this::moduleBuildTargets).flatMap(Collection::stream).collect(Collectors.toList());
+                .map(this::moduleBuildTargets)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
     }
 
     @NotNull
@@ -74,19 +74,22 @@ public class AldorFileBuildTargetType extends BuildTargetType<AldorFileBuildTarg
 
     @NotNull
     private List<AldorFileBuildTarget> aldorModuleBuildTargets(JpsTypedModule<JpsSimpleElement<AldorModuleState>> aldorModule) {
-        AldorModuleFacade aldor = new AldorModuleFacade(aldorModule);
-        LOG.info("Build target context " + aldor.toString());
+        AldorJpsModuleFacade aldor = AldorJpsModuleFacade.facade(aldorModule);
+        if ((aldor == null) || aldor.isConfiguredModule()) {
+            return Collections.emptyList();
+        }
+        LOG.info("Build target context " + aldor);
         List<String> contentRoots = aldorModule.getContentRootsList().getUrls();
         List<File> rootFiles = contentRoots.stream().filter(url -> url.startsWith("file:/"))
                 .map(JpsPathUtil::urlToFile).collect(Collectors.toList());
         List<JpsTypedModuleSourceRoot<AldorSourceRootProperties>> sourceRoots = aldor.sourceRoots();
-        LOG.info("Creating build targets for roots " + rootFiles);
+        LOG.info("Creating build targets for roots " + rootFiles + " enabled: " + aldor.buildEnabled());
         List<AldorFileBuildTarget> targets = new ArrayList<>();
 
-        /*Map<String, String> properties = ImmutableMap.<String, String>builder();
-                .put("in_ALDOR_SDK", aldor.sdkPath())
-                .build();
-*/
+        if (!aldor.buildEnabled()) {
+            return Collections.emptyList();
+        }
+
         for (JpsModuleSourceRoot sourceRoot: sourceRoots) {
             LOG.info("Source root: " + sourceRoot.getFile() + " type: " + sourceRoot.getRootType());
             File file = sourceRoot.getFile();

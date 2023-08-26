@@ -3,29 +3,23 @@ package aldor.test_util;
 import aldor.build.facet.aldor.AldorFacet;
 import aldor.build.facet.fricas.FricasFacet;
 import aldor.build.facet.fricas.FricasFacetProperties;
-import aldor.build.module.AldorModuleType;
-import aldor.builder.jps.module.AldorFacetExtensionProperties;
 import aldor.builder.jps.AldorSourceRootType;
+import aldor.builder.jps.module.AldorFacetProperties;
 import aldor.module.template.AldorSimpleModuleBuilder;
 import aldor.module.template.AldorTemplateFactory;
-import aldor.sdk.aldor.AldorInstalledSdkType;
 import aldor.sdk.aldor.AldorLocalSdkType;
-import aldor.sdk.fricas.FricasInstalledSdkType;
-import aldor.sdk.fricas.FricasLocalSdkType;
 import com.intellij.ide.util.projectWizard.ModuleBuilder;
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.CompositeDisposable;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.JavaSdk;
 import com.intellij.openapi.projectRoots.ProjectJdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkModificator;
-import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.projectRoots.impl.ProjectJdkImpl;
 import com.intellij.openapi.roots.CompilerModuleExtension;
 import com.intellij.openapi.roots.ContentEntry;
@@ -35,14 +29,12 @@ import com.intellij.platform.ProjectTemplate;
 import com.intellij.testFramework.LightProjectDescriptor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.jps.model.java.JavaSourceRootType;
 import org.jetbrains.jps.model.module.JpsModuleSourceRootType;
 import org.junit.Assume;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static org.junit.Assert.assertNotNull;
@@ -54,148 +46,6 @@ public final class SdkProjectDescriptors {
 
     public SdkProjectDescriptors() {
         descriptorForPrefix = new ConcurrentHashMap<>();
-    }
-
-    private interface SdkDescriptor {
-        @SuppressWarnings("ClassReferencesSubclass")
-        SdkOption sdkOption();
-        String name(String prefix);
-
-        Sdk editSdk(Sdk theSdk);
-
-        ModuleType<?> getModuleType();
-
-        void editFacet(Module module);
-
-        JpsModuleSourceRootType<?> rootType();
-
-        SourceFileStorageType sourceFileType();
-    }
-
-    public enum SourceFileStorageType {
-        Virtual,
-        Real
-    }
-
-    private enum SdkOption implements SdkDescriptor {
-
-        Fricas(new FricasInstalledSdkType(), JavaSourceRootType.SOURCE),
-        Aldor(new AldorInstalledSdkType(), AldorSourceRootType.INSTANCE),
-        FricasLocal(new FricasLocalSdkType() , JavaSourceRootType.SOURCE),
-        AldorLocal(new AldorLocalSdkType(), AldorSourceRootType.INSTANCE);
-
-        private final SdkType sdkType;
-        private final JpsModuleSourceRootType<?> sourceRootType;
-
-        SdkOption(SdkType type, JpsModuleSourceRootType<?> rootType) {
-            this.sdkType = type;
-            this.sourceRootType = rootType;
-        }
-
-        @Nullable
-        public SdkType sdkType() {
-            return sdkType;
-        }
-
-        @Override
-        public SdkOption sdkOption() {
-            return this;
-        }
-
-        @Override
-        public String name(String prefix) {
-            return name() + "_" + prefix;
-        }
-
-        @Override
-        public Sdk editSdk(Sdk theSdk) {
-            return theSdk;
-        }
-
-        @Override
-        public ModuleType getModuleType() {
-            return AldorModuleType.instance();
-        }
-
-        @Override
-        public void editFacet(Module module) {
-        }
-
-        @Override
-        public SourceFileStorageType sourceFileType() {
-            return SourceFileStorageType.Virtual;
-        }
-
-        @Override
-        public JpsModuleSourceRootType<?> rootType() {
-            return sourceRootType;
-        }
-
-        SdkDescriptor withStorageType(SourceFileStorageType storageType) {
-            return new WithSourceStorageType(this, storageType);
-        }
-    }
-
-    private static class DelegatingDescriptor implements SdkDescriptor {
-        private final SdkDescriptor innerSdkDescriptor;
-
-        DelegatingDescriptor(SdkDescriptor descriptor) {
-            this.innerSdkDescriptor = descriptor;
-        }
-
-        @Override
-        public SdkOption sdkOption() {
-            return innerSdkDescriptor.sdkOption();
-        }
-
-        @Override
-        public String name(String prefix) {
-            return innerSdkDescriptor.name(prefix) + "_AldorUnit";
-        }
-
-        @Override
-        public Sdk editSdk(Sdk theSdk) {
-            return innerSdkDescriptor.editSdk(theSdk);
-        }
-
-        @Override
-        public ModuleType<?> getModuleType() {
-            return innerSdkDescriptor.getModuleType();
-        }
-
-        @Override
-        public void editFacet(Module module) {
-            innerSdkDescriptor.editFacet(module);
-        }
-
-        @Override
-        public JpsModuleSourceRootType<?> rootType() {
-            return innerSdkDescriptor.rootType();
-        }
-
-        @Override
-        public SourceFileStorageType sourceFileType() {
-            return innerSdkDescriptor.sourceFileType();
-        }
-    }
-
-    private static class WithSourceStorageType extends DelegatingDescriptor {
-        private final SourceFileStorageType sourceFileStorageType;
-
-        WithSourceStorageType(SdkDescriptor descriptor, SourceFileStorageType sourceFileStorageType) {
-            super(descriptor);
-            this.sourceFileStorageType = sourceFileStorageType;
-        }
-
-        @Override
-        public String name(String prefix) {
-            return super.name(prefix) + "_" + sourceFileStorageType;
-        }
-
-        @Override
-        public SourceFileStorageType sourceFileType() {
-            return SourceFileStorageType.Real;
-        }
     }
 
     private static class WithAldorUnit extends DelegatingDescriptor {
@@ -215,8 +65,8 @@ public final class SdkProjectDescriptors {
             Sdk javaSdk = createJDK();
             AldorFacet facet = AldorFacet.forModule(module);
             facet.getConfiguration().loadState(facet.getConfiguration().getState().asBuilder()
-                    .setBuildJavaComponents(true)
-                    .setJavaSdkName(javaSdk.getName())
+                    .java(AldorFacetProperties.WithJava.Enabled)
+                    .javaSdkName(javaSdk.getName())
                     .build());
         }
 
@@ -336,7 +186,8 @@ public final class SdkProjectDescriptors {
             assertNotNull(template);
             AldorSimpleModuleBuilder aldorBuilder = (AldorSimpleModuleBuilder) template.createModuleBuilder();
             aldorBuilder.setCreateInitialStructure(false);
-            aldorBuilder.setSdk(Objects.requireNonNull(this.getSdk()));
+
+            //aldorBuilder.setSdk(Objects.requireNonNull(this.getSdk()));
             aldorBuilder.setRelativeBuildDirectory("out/ao");
             aldorBuilder.setContentEntryPath(srcRoot.getPath());
             return aldorBuilder;
@@ -344,7 +195,7 @@ public final class SdkProjectDescriptors {
 
         private void createAldorFacet(Module module) {
             assertNotNull(builder);
-            AldorFacetExtensionProperties properties = ((AldorSimpleModuleBuilder) builder).properties();
+            AldorFacetProperties properties = ((AldorSimpleModuleBuilder) builder).properties();
             AldorFacet.createFacetIfMissing(module, properties);
         }
 

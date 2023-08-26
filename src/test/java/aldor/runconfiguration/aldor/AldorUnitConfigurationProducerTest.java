@@ -26,7 +26,6 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
-import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Rule;
@@ -50,14 +49,15 @@ public class AldorUnitConfigurationProducerTest extends AssumptionAware.BasePlat
 
     public void testRunSimpleConfiguration() {
         VirtualFile file = createFile(getSourceRoot(), "foo.as",
-                "#include \"aldor.as\"\n" +
-                        "#pile\n" +
-                        "export FooTest to Foreign Java(\"aldor.test\")\n" +
-                        "FooTest: with\n" +
-                        "    test: () -> ()\n" +
-                        "== add \n" +
-                        "    test() == never\n" +
-                        "\n");
+                """
+                        #include "aldor.as"
+                        #pile
+                        export FooTest to Foreign Java("aldor.test")
+                        FooTest: with
+                            test: () -> ()
+                        == add
+                            test() == never
+                        """);
 
         PsiFile whole = PsiManager.getInstance(getProject()).findFile(file);
         Assert.assertNotNull(whole);
@@ -86,14 +86,16 @@ public class AldorUnitConfigurationProducerTest extends AssumptionAware.BasePlat
     public void testStartOutside() {
         JUnits.setLogToInfo();
         VirtualFile file = createFile(getSourceRoot(), "foo.as",
-                "#include \"aldor.as\"\n" +
-                        "#pile\n" +
-                        "export FooTest to Foreign Java(\"aldor.test\")\n" +
-                        "FooTest: with\n" +
-                        "    test: () -> ()\n" +
-                        "== add \n" +
-                        "    test() == never\n" +
-                        "\n");
+                """
+                        #include "aldor.as"
+                        #pile
+                        export FooTest to Foreign Java("aldor.test")
+                        FooTest: with
+                            test: () -> ()
+                        == add\s
+                            test() == never
+
+                        """);
 
         PsiFile whole = PsiManager.getInstance(getProject()).findFile(file);
         Assert.assertNotNull(whole);

@@ -9,6 +9,7 @@ import aldor.test_util.AssumptionAware;
 import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.JUnits;
 import aldor.test_util.SdkProjectDescriptors;
+import aldor.test_util.SourceFileStorageType;
 import com.intellij.codeInsight.documentation.DocumentationManager;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.diagnostic.Logger;
@@ -107,7 +108,7 @@ public class AnnotationRoundTripTest extends AssumptionAware.BasePlatformTestCas
 
     @Override
     protected LightProjectDescriptor getProjectDescriptor() {
-        return SdkProjectDescriptors.aldorSdkProjectDescriptor(aldorExecutableRule, SdkProjectDescriptors.SourceFileStorageType.Real);
+        return SdkProjectDescriptors.aldorSdkProjectDescriptor(aldorExecutableRule, SourceFileStorageType.Real);
     }
 
 }

@@ -78,6 +78,12 @@ public abstract class AbstractAldorUnitRunnableState<T
     }
 
     @Override
+    public JavaParameters getJavaParameters() throws ExecutionException {
+        prepareRoots();
+        return super.getJavaParameters();
+    }
+
+    @Override
     protected final JavaParameters createJavaParameters() throws CantRunException {
         final JavaParameters javaParameters = new JavaParameters();
 
@@ -98,6 +104,8 @@ public abstract class AbstractAldorUnitRunnableState<T
 
     protected abstract void configureParameters(JavaParameters javaParameters);
 
+    protected abstract void prepareRoots() throws CantRunException;
+
     @Nullable
     private Sdk selectJdk() {
         final Module module = getConfiguration().getConfigurationModule().getModule();
@@ -105,7 +113,7 @@ public abstract class AbstractAldorUnitRunnableState<T
             return null;
         }
         AldorFacet facet = FacetManager.getInstance(module).getFacetByType(AldorFacetType.instance().getId());
-        if (facet == null) {
+        if ((facet == null) || (facet.getConfiguration().getState() == null)) {
             return null;
         }
         String jdkName = facet.getConfiguration().getState().javaSdkName();

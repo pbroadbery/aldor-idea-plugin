@@ -1,6 +1,7 @@
 package aldor.builder.files;
 
 import aldor.builder.AldorTargetIds;
+import aldor.builder.jps.autoconf.BuildStaticState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.jps.builders.BuildRootIndex;
@@ -94,7 +95,7 @@ public class AldorFileBuildTarget extends BuildTarget<AldorFileRootDescriptor> {
     }
 
     public ExecutorService executor() {
-        return getAldorTargetType().buildService().executorService();
+        return BuildStaticState.instance().executionEnvironment().executorService();
     }
 
     @Override

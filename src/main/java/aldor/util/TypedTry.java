@@ -1,7 +1,11 @@
 package aldor.util;
 
+import com.intellij.openapi.options.ConfigurationException;
+
+import java.util.function.Consumer;
 import java.util.function.Function;
 
+/** Use subclasses! */
 @SuppressWarnings("ProhibitedExceptionThrown")
 public class TypedTry<V, E extends Exception> {
     Class<E> clzz = null;
@@ -20,9 +24,25 @@ public class TypedTry<V, E extends Exception> {
         return value;
     }
 
+    public V orElse(V exnValue) {
+        if (exception != null)
+            return exnValue;
+        return value;
+    }
+
+    public <V2> TypedTry<V2, E> map(Function<V, V2> fn) {
+        return (exception == null) ? succeed(clzz, fn.apply(value)) : TypedTry.fail(clzz, exception);
+    }
+
+    public void onFailure(Consumer<E> consumer) {
+        if (exception != null) {
+            consumer.accept(exception);
+        }
+    }
+
 
     public interface FailingSupplier<V, E extends Exception> {
-        V compute() throws E;
+        V compute() throws E, ConfigurationException;
     }
 
     @SuppressWarnings("OverlyBroadCatchBlock")

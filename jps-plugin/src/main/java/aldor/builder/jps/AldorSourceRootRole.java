@@ -8,14 +8,4 @@ import org.jetbrains.jps.model.JpsEventDispatcher;
 public class AldorSourceRootRole extends JpsElementChildRole<AldorSourceRootProperties> {
     private static final Logger LOG = Logger.getInstance(AldorSourceRootRole.class);
     public static final AldorSourceRootRole INSTANCE = new AldorSourceRootRole();
-
-    @Override
-    public void fireElementAdded(@NotNull JpsEventDispatcher dispatcher, @NotNull AldorSourceRootProperties element) {
-        LOG.info("AldorSourceRootRole::Added " + dispatcher + " " + element);
-    }
-
-    @Override
-    public void fireElementRemoved(@NotNull JpsEventDispatcher dispatcher, @NotNull AldorSourceRootProperties element) {
-        LOG.info("AldorSourceRootRole::Removed " + dispatcher + " " + element);
-    }
 }

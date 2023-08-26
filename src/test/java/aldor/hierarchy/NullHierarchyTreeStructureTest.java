@@ -43,6 +43,6 @@ public class NullHierarchyTreeStructureTest {
         NodeDescriptor<?> child = (NodeDescriptor<?>) children[0];
         child.update();
         System.out.println("Child: " + child);
-
+        assertEquals(0, structure.getChildElements(child).length);
     }
 }

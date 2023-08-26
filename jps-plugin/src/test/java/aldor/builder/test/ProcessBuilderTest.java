@@ -13,7 +13,7 @@ public class ProcessBuilderTest {
     @Test
     public void testOne() throws IOException, InterruptedException {
         ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.command("echo", "hello");
+        processBuilder.command("echo", "hello\nworld");
         processBuilder.redirectOutput(ProcessBuilder.Redirect.PIPE);
 
         Process process = processBuilder.start();
@@ -26,8 +26,8 @@ public class ProcessBuilderTest {
                 count++;
             }
         }
-        Assert.assertEquals(1, count);
+        int result = process.waitFor();
+        Assert.assertEquals(0, result);
+        Assert.assertEquals(2, count);
     }
-
-
 }

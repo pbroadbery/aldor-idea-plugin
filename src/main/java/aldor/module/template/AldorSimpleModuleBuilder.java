@@ -6,7 +6,8 @@ import aldor.build.module.AldorModuleBuilder;
 import aldor.build.module.AldorModuleExtension;
 import aldor.build.module.AldorModuleType;
 import aldor.builder.jps.AldorSourceRootType;
-import aldor.builder.jps.module.AldorFacetExtensionProperties;
+import aldor.builder.jps.module.AldorFacetProperties;
+import aldor.builder.jps.module.MakeConvention;
 import aldor.module.template.wizard.WizardCheckBox;
 import aldor.module.template.wizard.WizardFieldContainer;
 import aldor.module.template.wizard.WizardFieldDocumentation;
@@ -145,7 +146,7 @@ public class AldorSimpleModuleBuilder extends AldorModuleBuilder {
     private void createFileLayout(ModifiableRootModel rootModel) throws ConfigurationException {
         ContentEntry contentEntry = rootModel.getContentEntries()[0];
         SourceFolder sourceRoot = contentEntry.getSourceFolders()[0];
-        AldorFacetExtensionProperties facetProperties = this.properties();
+        AldorFacetProperties facetProperties = this.properties();
         String moduleName = rootModel.getModule().getName();
         String projectName = rootModel.getProject().getName();
 
@@ -220,8 +221,8 @@ public class AldorSimpleModuleBuilder extends AldorModuleBuilder {
                 "Should makefiles be created as part of setting up this module."));
     }
 
-    public AldorFacetExtensionProperties properties() {
-        return AldorFacetExtensionProperties.builder().setSdkName(sdkName()).setRelativeOutputDirectory(relativeOutputDirectory).build();
+    public AldorFacetProperties properties() {
+        return AldorFacetProperties.newBuilder().makeConvention(MakeConvention.Source).sdkName(sdkName()).relativeOutputDirectory(relativeOutputDirectory).build();
     }
 
     private static class LiveCheckboxValidator extends WizardCheckBox {

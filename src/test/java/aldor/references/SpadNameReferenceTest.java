@@ -4,15 +4,14 @@ import aldor.language.SpadLanguage;
 import aldor.psi.AldorId;
 import aldor.psi.AldorIdentifier;
 import aldor.test_util.AssumptionAware;
-import aldor.test_util.DirectoryPresentRule;
 import aldor.test_util.ExecutablePresentRule;
+import aldor.test_util.JUnits;
 import aldor.test_util.SdkProjectDescriptors;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
-import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import org.junit.Assert;
 import org.junit.Assume;
 
@@ -39,12 +38,12 @@ public class SpadNameReferenceTest extends AssumptionAware.BasePlatformTestCase 
     }
 
     public void testMacroReference() {
-        String text = "Foo(X: Integer): Exp == Impl\n"
-                        + " where\n"
-                        + "    Exp ==> with\n"
+        JUnits.setLogToInfo();
+        String text = "Foo(X: Integer): Exp == Impl where\n"
+                        + "    Exp == with\n"
                         + "    Impl ==> add";
         PsiFile file = createSpadFile(text);
-        AldorIdentifier implElt = PsiTreeUtil.findElementOfClassAtOffset(file, text.indexOf("Impl\n"), AldorId.class, true);
+        AldorIdentifier implElt = PsiTreeUtil.findElementOfClassAtOffset(file, text.indexOf("Impl where"), AldorId.class, true);
         Assert.assertNotNull(implElt);
         AldorReference ref = implElt.getReference();
         Assert.assertNotNull(ref);
@@ -57,9 +56,9 @@ public class SpadNameReferenceTest extends AssumptionAware.BasePlatformTestCase 
         Assert.assertNotNull(expElt);
         AldorReference expRef = expElt.getReference();
         Assert.assertNotNull(expRef);
-        PsiElement expResolved = expRef.resolveMacro();
+        PsiElement expResolved = expRef.resolve();
         Assert.assertNotNull(expResolved);
-        Assert.assertEquals("Exp ==> with", expResolved.getText());
+        Assert.assertEquals("Exp == with", expResolved.getText());
     }
 
     public void testNoMacroReference_unresolved() {
@@ -89,6 +88,20 @@ public class SpadNameReferenceTest extends AssumptionAware.BasePlatformTestCase 
 
         PsiElement resolved = ref.resolveMacro();
         Assert.assertNull(resolved);
+    }
+
+    public void testMacroReferenceToDefine_where2() {
+        String text = "Foo(X: Integer): Exp == Impl where\n"
+                + "    Exp ==> with\n"
+                + "    Impl ==> add\n";
+        PsiFile file = createSpadFile(text);
+        AldorIdentifier elt = PsiTreeUtil.findElementOfClassAtOffset(file, text.indexOf("Exp"), AldorId.class, true);
+        Assert.assertNotNull(elt);
+        AldorReference ref = elt.getReference();
+        Assert.assertNotNull(ref);
+
+        PsiElement resolved = ref.resolveMacro();
+        Assert.assertNotNull(resolved);
     }
 
     private PsiFile createSpadFile(String text) {

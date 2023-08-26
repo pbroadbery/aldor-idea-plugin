@@ -88,6 +88,7 @@ IF_LINE=[^\r\n]+
 SPAD_SYSCMD=\)[^\r\n]*
 SYSCMD_PILE=#pile[^\r\n]*
 SYSCMD_ENDPILE=#endpile[^\r\n]*
+SYSCMD_JUNK=[^\r\n]+
 
 SPAD_SYSCMD_IF=\)if[ \t][^\r\n]*
 SPAD_SYSCMD_ENDIF=\)endif[^\r\n]*
@@ -247,6 +248,7 @@ SPAD_SYSCMD_ABBREV=\)abbrev[^\r\n]*
     { STRING } {yybegin(SYSCMD); return AldorTokenTypes.TK_SysCmdString;}
     { ID } {yybegin(SYSCMD); return AldorTokenTypes.TK_SysCmdId;}
     { CRLF } {yybegin(YYINITIAL); return AldorTokenTypes.KW_NewLine;}
+    . {yybegin(SYSCMD); return TokenType.BAD_CHARACTER; }
 }
 
 <IF_TEXT> {

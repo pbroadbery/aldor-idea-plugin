@@ -43,7 +43,7 @@ public class AldorDeclareIndexTopLevelTest {
 
         VirtualFile file = createFile(getSourceRoot(), "simpleTopLevel.as", "Foo: with { x: String } == add { x: String == 2}");
 
-        FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
+        //FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
 
         Collection<String> ll = AldorDeclareTopIndex.instance.getAllKeys(project);
 
@@ -62,8 +62,6 @@ public class AldorDeclareIndexTopLevelTest {
         VirtualFile file = createFile(getSourceRoot(), "infix.spad", "QQ: SetCategory with\n" +
                 "    \"*\" : (%, %) -> %\n" +
                 "== add");
-
-        FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
 
         Collection<String> ll = AldorDeclareTopIndex.instance.getAllKeys(project);
 

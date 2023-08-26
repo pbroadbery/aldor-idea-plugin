@@ -6,6 +6,7 @@ import aldor.test_util.DirectoryPresentRule;
 import aldor.test_util.JUnits;
 import aldor.test_util.LightPlatformJUnit4TestRule;
 import aldor.test_util.SdkProjectDescriptors;
+import aldor.test_util.SourceFileStorageType;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionTargetManager;
 import com.intellij.execution.Executor;
@@ -22,12 +23,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
-import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import com.intellij.testFramework.fixtures.CodeInsightTestFixture;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.junit.Assert;
-import org.junit.Assume;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -100,7 +97,7 @@ public class SpadInputRunConfigurationProducerTest {
     }
 
     protected LightProjectDescriptor getProjectDescriptor() {
-        return SdkProjectDescriptors.fricasSdkProjectDescriptor(directory, SdkProjectDescriptors.SourceFileStorageType.Real);
+        return SdkProjectDescriptors.fricasSdkProjectDescriptor(directory, SourceFileStorageType.Real);
     }
 
 }

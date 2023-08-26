@@ -1,6 +1,5 @@
 package aldor.build.facet.fricas;
 
-import aldor.build.facet.aldor.AldorFacet;
 import aldor.build.module.AldorModuleType;
 import com.intellij.facet.Facet;
 import com.intellij.facet.FacetManager;

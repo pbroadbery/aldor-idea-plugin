@@ -51,9 +51,7 @@ public class AldorTestLocator implements SMTestLocator {
                 if (PsiTreeUtil.isAncestor(domain, method, true)) {
                     locations.add(new AldorTestMethodLocation(domain, method));
                 }
-
             }
-
         }
         return locations;
     }

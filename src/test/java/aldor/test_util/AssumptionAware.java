@@ -1,5 +1,6 @@
 package aldor.test_util;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.testFramework.builders.ModuleFixtureBuilder;
 import com.intellij.testFramework.fixtures.ModuleFixture;
 import com.intellij.util.ThrowableRunnable;
@@ -71,8 +72,29 @@ public final class AssumptionAware {
     }
 
     @SuppressWarnings("ALL")
-    public abstract static class LightIdeaTestCase extends com.intellij.testFramework.LightIdeaTestCase {
+    public abstract static class LightIdeaTestCase extends com.intellij.testFramework.LightIdeaTestCase implements JUnits.TearDownAware {
+        JUnits.JUnit3TearDown tearDown = new JUnits.JUnit3TearDown();
 
+        @Override
+        protected void setUp() throws Exception {
+            super.setUp();
+            tearDown.setup(this.getClass(), super::tearDown);
+        }
+
+        @Override
+        public JUnits.JUnit3TearDown tearDownTracker() {
+            return tearDown;
+        }
+
+        @Override
+        protected void tearDown() throws Exception {
+            tearDownTracker().tearDown();
+        }
+
+        @Override
+        protected void runBare(@NotNull ThrowableRunnable<Throwable> testRunnable) throws Throwable {
+            super.runBare(() -> runAware(testRunnable::run));
+        }
     }
 
     private interface WildRunnable {
@@ -90,6 +112,38 @@ public final class AssumptionAware {
 
     @SuppressWarnings("ClassNameSameAsAncestorName")
     public abstract static class HeavyPlatformTestCase extends com.intellij.testFramework.HeavyPlatformTestCase {
+        @Override
+        protected void runBare(@NotNull ThrowableRunnable<Throwable> testRunnable) throws Throwable {
+            super.runBare(() -> runAware(testRunnable::run));
+        }
+    }
+
+
+    public abstract static class ImportFromSourcesTestCase extends com.intellij.ide.projectWizard.ImportFromSourcesTestCase implements JUnits.TearDownAware {
+        JUnits.JUnit3TearDown tearDown = new JUnits.JUnit3TearDown();
+
+        @Override
+        public void setUp() throws Exception {
+            super.setUp();
+            tearDown.setup(this.getClass(), super::tearDown);
+        }
+
+        @Override
+        public JUnits.JUnit3TearDown tearDownTracker() {
+            return tearDown;
+        }
+
+        @SuppressWarnings("MethodDoesntCallSuperMethod")
+        @Override
+        public void tearDown() throws Exception {
+            if (ApplicationManager.getApplication().isDispatchThread()) {
+                tearDownTracker().tearDown();
+            }
+            else {
+                ApplicationManager.getApplication().invokeAndWait(() -> tearDownTracker().tearDown());
+            }
+        }
+
         @Override
         protected void runBare(@NotNull ThrowableRunnable<Throwable> testRunnable) throws Throwable {
             super.runBare(() -> runAware(testRunnable::run));
@@ -121,8 +175,21 @@ public final class AssumptionAware {
         }
     }
 
-    @SuppressWarnings({"ClassNameSameAsAncestorName"})
-    public abstract static class LightPlatformTestCase extends com.intellij.testFramework.LightPlatformTestCase {
+    @SuppressWarnings({"ClassNameSameAsAncestorName", "MethodDoesntCallSuperMethod"})
+    public abstract static class LightPlatformTestCase extends com.intellij.testFramework.LightPlatformTestCase implements JUnits.TearDownAware {
+        JUnits.JUnit3TearDown tearDown = new JUnits.JUnit3TearDown();
+
+        @Override
+        public void setUp() throws Exception {
+            super.setUp();
+            tearDown.setup(this.getClass(), super::tearDown);
+        }
+
+        @Override
+        public JUnits.JUnit3TearDown tearDownTracker() {
+            return tearDown;
+        }
+
         @Override
         protected void runBare(@NotNull ThrowableRunnable<Throwable> testRunnable) throws Throwable {
             super.runBare(() -> runAware(testRunnable::run));

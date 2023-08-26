@@ -2,11 +2,11 @@ package aldor.annotations;
 
 import com.intellij.psi.PsiFile;
 
-import java.util.concurrent.Future;
+import java.util.concurrent.CompletableFuture;
 
 public interface AnnotationFileBuilder {
 
-    Future<Void> invokeAnnotationBuild(PsiFile psiFile);
+    CompletableFuture<Void> invokeAnnotationBuild(PsiFile psiFile);
 
     final class CompilerResult {
         private final boolean aborted;

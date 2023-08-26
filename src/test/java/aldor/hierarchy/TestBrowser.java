@@ -27,7 +27,7 @@ class TestBrowser implements Disposable, AutoCloseable {
     private final CloseCheck closeCheck;
 
     TestBrowser(CloseCheck check, AldorTypeHierarchyProvider provider, PsiElement element, String hierarchyType) {
-        DataContext context = SimpleDataContext.getSimpleContext(CommonDataKeys.PSI_ELEMENT.getName(), element,
+        DataContext context = SimpleDataContext.getSimpleContext(CommonDataKeys.PSI_ELEMENT, element,
                 SimpleDataContext.getProjectContext(element.getProject()));
         PsiElement target = provider.getTarget(context);
         Assert.assertNotNull(target);

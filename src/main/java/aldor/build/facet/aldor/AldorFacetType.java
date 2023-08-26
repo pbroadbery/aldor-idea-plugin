@@ -13,10 +13,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 public class AldorFacetType extends FacetType<AldorFacet, AldorFacetConfiguration> {
-    public static final FacetTypeId<AldorFacet> TYPE_ID = new FacetTypeId<>(AldorFacetConstants.ID);
+    public static final FacetTypeId<AldorFacet> TYPE_ID = new FacetTypeId<>(AldorFacetConstants.ALDOR_FACET_ID);
 
     public AldorFacetType() {
-        super(TYPE_ID, AldorFacetConstants.ID, AldorFacetConstants.NAME);
+        super(TYPE_ID, AldorFacetConstants.ALDOR_FACET_ID, AldorFacetConstants.ALDOR_FACET_NAME);
     }
 
     public static AldorFacetType instance() {

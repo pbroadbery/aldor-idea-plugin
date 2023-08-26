@@ -24,6 +24,8 @@ import org.junit.Test;
 import org.junit.rules.RuleChain;
 import org.junit.rules.TestRule;
 
+import java.io.IOException;
+
 import static aldor.psi.AldorPsiUtils.logPsi;
 import static aldor.test_util.LightProjectDescriptors.ALDOR_MODULE_DESCRIPTOR;
 import static aldor.util.VirtualFileTests.createFile;
@@ -49,12 +51,10 @@ public final class AldorGotoSymbolContributorTest {
     }
 
     @Test
-    public void testGotoSymbol() {
+    public void testGotoSymbol() throws IOException {
         Project project = testFixture.getProject();
-        VirtualFile file = createFile(getSourceRoot(), "foo.as", "Something: with == add { aNumber == " + System.currentTimeMillis() + "}");
 
-        FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
-        FileBasedIndex.getInstance().ensureUpToDate(StubUpdatingIndex.INDEX_ID, project, null);
+        VirtualFile file = createFile(getSourceRoot(), "foo.as", "Something: with == add { aNumber == " + System.currentTimeMillis() + "}");
 
         ChooseByNameContributor gotoSymbolContributor = new AldorGotoSymbolContributor();
 
@@ -71,7 +71,7 @@ public final class AldorGotoSymbolContributorTest {
 
     @SkipCI
     @Test
-    @Ignore("Broken - becuase we index definitions, not declarations")
+    @Ignore("Broken - because we index definitions, not declarations")
     public void testGotoSymbolDeclareCategory() {
         Project project = testFixture.getProject();
         VirtualFile file = createFile(testFixture.getProject().getBaseDir(), "foo.as", String.format("Something: Category == with { foo: String_%s }", System.currentTimeMillis()));

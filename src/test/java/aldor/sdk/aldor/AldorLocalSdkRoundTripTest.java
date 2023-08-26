@@ -14,10 +14,8 @@ import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScopesCore;
-import com.intellij.psi.stubs.StubUpdatingIndex;
 import com.intellij.testFramework.EdtTestUtil;
 import com.intellij.testFramework.fixtures.CodeInsightTestFixture;
-import com.intellij.util.indexing.FileBasedIndex;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -61,7 +59,7 @@ public class AldorLocalSdkRoundTripTest {
 
     @Test
     public void testMakeSimpleChange() throws ExecutionException, InterruptedException {
-        // Lets add a definition to a file..
+        // Let's add a definition to a file..
         PsiFile[] candidate = new PsiFile[1];
         Project project = testFixture.getProject();
 
@@ -85,10 +83,6 @@ public class AldorLocalSdkRoundTripTest {
         this.annotationTextFixture.compileFile(candidate[0].getVirtualFile(), project);
 
         EdtTestUtil.runInEdtAndWait(() -> {
-
-            FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
-                    FileBasedIndex.getInstance().ensureUpToDate(StubUpdatingIndex.INDEX_ID, project, null);
-
                     Collection<String> ll = AldorDefineTopLevelIndex.instance.getAllKeys(project);
                     assertTrue(ll.contains("Wibble"));
         });

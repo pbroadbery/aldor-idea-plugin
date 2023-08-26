@@ -139,7 +139,7 @@ public final class AldorPsiUtils {
         AldorDefine define = null;
         do {
             AldorDefine next = definingForm(current).orElse(null);
-            System.out.println("conv: " + current + " --> " + next);
+            //System.out.println("conv: " + current + " --> " + next);
             if (next == null) {
                 break;
             }

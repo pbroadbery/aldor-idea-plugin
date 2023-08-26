@@ -20,8 +20,8 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
 import com.intellij.util.ObjectUtils;
-import gnu.trove.TIntHashSet;
 import gnu.trove.TIntObjectHashMap;
+import it.unimi.dsi.fastutil.ints.IntSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.jps.builders.BuildTarget;
 import org.jetbrains.jps.builders.storage.SourceToOutputMapping;
@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.IntConsumer;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -103,16 +104,16 @@ public class BuildResult implements MessageHandler {
         Collections.sort(keys);
         stream.println("Begin Of OutputToTarget");
         for (Integer key : keys) {
-            TIntHashSet targetsIds = registry.getState(key);
+            IntSet targetsIds = registry.getState(key);
             if (targetsIds == null) {
                 continue;
             }
             final List<String> targetsNames = new ArrayList<>();
-            targetsIds.forEach(value -> {
+            IntConsumer consumer = value -> {
                 BuildTarget<?> target = id2Target.get(value);
                 targetsNames.add((target != null) ? getTargetIdWithTypeId(target) : ("<unknown " + value + ">"));
-                return true;
-            });
+            };
+            targetsIds.forEach(consumer);
             Collections.sort(targetsNames);
             stream.println(hashCodeToOutputPath.get(key) + " -> " + targetsNames);
         }
@@ -157,7 +158,7 @@ public class BuildResult implements MessageHandler {
 
     public BuildResult assertSuccessful() {
         if (!isSuccessful()) {
-            Function<BuildMessage, String> toStringFunction = StringUtil.createToStringFunction(BuildMessage.class);
+            Function<BuildMessage, String> toStringFunction = BuildMessage::toString;
             fail("TEST RESULT: Build failed.\n" +
                     " -- Errors:\n" + StringUtil.join(myErrorMessages, toStringFunction, "\n") + "\n" +
                     " -- Warnings:\n" + StringUtil.join(myWarnMessages, toStringFunction, "\n") + "\n" +

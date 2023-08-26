@@ -27,7 +27,7 @@ public class AldorScopeProcessor extends AbstractAldorScopeProcessor {
     }
 
     public AldorScopeProcessor(Options options, String name) {
-        LOG.info("Resolve " + name);
+        LOG.debug("Resolve " + name);
         this.myResultList = new ArrayList<>();
         this.options = options;
         this.name = name;
@@ -40,8 +40,8 @@ public class AldorScopeProcessor extends AbstractAldorScopeProcessor {
 
     @Override
     protected boolean executeDefinition(AldorDefine o, ResolveState state) {
-        AldorDefine.DefinitionType definitionType = state.get(FileScopeWalker.definitionTypeKey);
-        LOG.info("Definition: " + definitionType + " " + o.defineIdentifier().map(x -> x.getText()));
+        AldorDefine.DefinitionType definitionType = (o.definitionType() == AldorDefine.DefinitionType.CONSTANT) ? state.get(FileScopeWalker.definitionTypeKey) : o.definitionType();
+        LOG.debug("Definition: " + definitionType + " " + o.defineIdentifier().map(x -> x.getText()) + " accepted " + options.isAccepted(definitionType));
         Optional<AldorIdentifier> identMaybe = o.defineIdentifier();
         if (identMaybe.isPresent() && identMaybe.get().getText().equals(this.name) && options.isAccepted(definitionType)) {
             this.myResultList.add(o);

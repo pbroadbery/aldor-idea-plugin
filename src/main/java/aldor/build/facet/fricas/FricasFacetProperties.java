@@ -2,7 +2,6 @@ package aldor.build.facet.fricas;
 
 import aldor.builder.jps.SpadFacetProperties;
 import com.intellij.util.xmlb.annotations.Attribute;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;

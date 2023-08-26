@@ -1,6 +1,6 @@
 package aldor.builder.files;
 
-import aldor.make.FullCompiler;
+import aldor.make.FullCompileRunner;
 import com.intellij.openapi.diagnostic.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.jps.builders.BuildOutputConsumer;
@@ -28,12 +28,10 @@ public class AldorFileTargetBuilder extends TargetBuilder<AldorFileRootDescripto
         LOG.info("Build started");
     }
 
-
     @Override
     public void buildFinished(CompileContext context) {
         LOG.info("Build finished");
     }
-
 
     @Override
     public void build(@NotNull final AldorFileBuildTarget target,
@@ -41,7 +39,7 @@ public class AldorFileTargetBuilder extends TargetBuilder<AldorFileRootDescripto
                       @NotNull final BuildOutputConsumer outputConsumer, @NotNull final CompileContext context) throws ProjectBuildException, IOException {
         LOG.info("Building " + target + " " + holder.hasDirtyFiles());
 
-        Compiler compiler = new FullCompiler(target.getAldorTargetType().buildService(), context);
+        CompileRunner compiler = CompileRunner.logged(new FullCompileRunner(target.executor(), context));
         /*holder.processDirtyFiles((target1, file, descriptor) -> {
             outputConsumer.registerOutputFile(target.outputLocation(), Collections.singletonList(descriptor.getRootFile().toString()));
             return compiler.compileOneFile(target1, file, descriptor);
@@ -52,19 +50,17 @@ public class AldorFileTargetBuilder extends TargetBuilder<AldorFileRootDescripto
         File buildDirectory = target.buildDirectory();
         String targetName = target.makeTargetName();
 
-        if (!compiler.compileOneFile(buildDirectory, targetName)) {
+        if (compiler.compileOneFile(buildDirectory, targetName)) {
+            LOG.info(" .. Built " + target);
+        } else {
             throw new ProjectBuildException("Failed to compile " + targetName + " in " + buildDirectory);
         }
-      }
+    }
 
     @NotNull
     @Override
     public String getPresentableName() {
         return "Aldor-file-target-builder";
-    }
-
-    public interface Compiler {
-        boolean compileOneFile(File buildDirectory, String targetName);
     }
 
 }

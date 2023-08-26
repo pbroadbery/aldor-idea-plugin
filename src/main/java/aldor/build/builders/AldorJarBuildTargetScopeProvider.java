@@ -26,6 +26,7 @@ public class AldorJarBuildTargetScopeProvider extends BuildTargetScopeProvider {
             @NotNull final CompileScope baseScope,
             @NotNull final Project project,
             final boolean forceBuild) {
+        LOG.info("Jar scope provider: Scope type: " + baseScope.getClass().getSimpleName());
         if (!(baseScope instanceof AldorJarOnlyScope)) {
             return Collections.emptyList();
         }

@@ -18,7 +18,6 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
@@ -88,12 +87,12 @@ public class FricasInstalledSdkType extends SdkType implements FricasSdkType, Ax
     }
 
     @Override
-    public @Nullable String fricasPath(Sdk sdk) {
+    public @NotNull String fricasPath(Sdk sdk) {
         return versionQuery.fricasPath(sdk.getHomePath());
     }
 
     @Override
-    @Nonnull
+    @NotNull
     public String fricasSysName(Sdk sdk) {
         return "FRICASsys";
     }

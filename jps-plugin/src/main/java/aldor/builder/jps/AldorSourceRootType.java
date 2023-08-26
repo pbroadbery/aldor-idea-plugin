@@ -15,6 +15,20 @@ public final class AldorSourceRootType implements JpsModuleSourceRootType<AldorS
         this.isTest = isTest;
     }
 
+    public static boolean isMainInstance(JpsModuleSourceRootType<?> rootType) {
+        if (rootType instanceof AldorSourceRootType) {
+            return !((AldorSourceRootType) rootType).isTest;
+        }
+        return false;
+    }
+
+    public static boolean isTestInstance(JpsModuleSourceRootType<?> rootType) {
+        if (rootType instanceof AldorSourceRootType) {
+            return ((AldorSourceRootType) rootType).isTest;
+        }
+        return false;
+    }
+
     @Override
     public boolean isForTests() {
         return isTest;

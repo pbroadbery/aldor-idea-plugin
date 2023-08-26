@@ -44,7 +44,7 @@ public class AldorSdkTableListener implements ProjectJdkTable.Listener {
         if (!(sdk.getSdkType() instanceof AxiomInstalledSdkType)) {
             throw new IllegalArgumentException("sdk must be an installed Aldor/Fricas Sdk");
         }
-        final LibraryTable.ModifiableModel libraryTableModel = ModifiableModelsProvider.SERVICE.getInstance().getLibraryTableModifiableModel();
+        final LibraryTable.ModifiableModel libraryTableModel = ModifiableModelsProvider.getInstance().getLibraryTableModifiableModel();
         final Library library = libraryTableModel.createLibrary(ModuleModifyingFacetUtil.getFacetLibraryName((AxiomInstalledSdkType) sdk.getSdkType(), sdk.getName()));
         final Library.ModifiableModel model = library.getModifiableModel();
         for (String url : sdk.getRootProvider().getUrls(OrderRootType.CLASSES)) {
@@ -60,7 +60,7 @@ public class AldorSdkTableListener implements ProjectJdkTable.Listener {
         ApplicationManager.getApplication().invokeLater(() -> ApplicationManager.getApplication().runWriteAction(() -> {
             AxiomInstalledSdkType sdkType = (AxiomInstalledSdkType) sdk.getSdkType();
             final LibraryTable.ModifiableModel libraryTableModel =
-                    ModifiableModelsProvider.SERVICE.getInstance().getLibraryTableModifiableModel();
+                    ModifiableModelsProvider.getInstance().getLibraryTableModifiableModel();
             final Library library = libraryTableModel.getLibraryByName(ModuleModifyingFacetUtil.getFacetLibraryName(sdkType, sdk.getName()));
             if (library != null) {
                 libraryTableModel.removeLibrary(library);
@@ -73,7 +73,7 @@ public class AldorSdkTableListener implements ProjectJdkTable.Listener {
         ApplicationManager.getApplication().invokeLater(() -> ApplicationManager.getApplication().runWriteAction(() -> {
             AxiomInstalledSdkType sdkType = (AxiomInstalledSdkType) sdk.getSdkType();
             final LibraryTable.ModifiableModel libraryTableModel =
-                    ModifiableModelsProvider.SERVICE.getInstance().getLibraryTableModifiableModel();
+                    ModifiableModelsProvider.getInstance().getLibraryTableModifiableModel();
             final Library library = libraryTableModel.getLibraryByName(ModuleModifyingFacetUtil.getFacetLibraryName(sdkType, previousName));
             if (library != null) {
                 final Library.ModifiableModel model = library.getModifiableModel();

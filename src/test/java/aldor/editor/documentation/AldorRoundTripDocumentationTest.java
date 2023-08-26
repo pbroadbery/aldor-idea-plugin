@@ -7,6 +7,7 @@ import aldor.test_util.Htmls;
 import aldor.test_util.JUnits;
 import aldor.test_util.LightPlatformJUnit4TestRule;
 import aldor.test_util.SdkProjectDescriptors;
+import aldor.test_util.SourceFileStorageType;
 import com.google.common.collect.ImmutableMap;
 import com.intellij.codeInsight.documentation.DocumentationManager;
 import com.intellij.openapi.project.Project;
@@ -35,12 +36,13 @@ import static org.junit.Assert.assertTrue;
 public class AldorRoundTripDocumentationTest {
 
     private final ExecutablePresentRule aldorExecutableRule = new ExecutablePresentRule.Aldor();
-    private final CodeInsightTestFixture codeTestFixture = LightPlatformJUnit4TestRule.createFixture(SdkProjectDescriptors.aldorSdkProjectDescriptor(aldorExecutableRule, SdkProjectDescriptors.SourceFileStorageType.Real));
+    private final CodeInsightTestFixture codeTestFixture = LightPlatformJUnit4TestRule.createFixture(SdkProjectDescriptors.aldorSdkProjectDescriptor(aldorExecutableRule, SourceFileStorageType.Real));
     private final AnnotationFileTestFixture annotationTestFixture = new AnnotationFileTestFixture();
 
     @Rule
     public final TestRule platformTestRule =
             RuleChain.emptyRuleChain()
+                    .around(JUnits.setLogToDebugTestRule)
                     .around(aldorExecutableRule)
                     .around(new LightPlatformJUnit4TestRule(codeTestFixture, ""))
                     .around(annotationTestFixture.rule(codeTestFixture::getProject));

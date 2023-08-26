@@ -1,5 +1,6 @@
 package aldor.module.template.wizard;
 
+import aldor.module.template.git.TypedWizardField;
 import aldor.util.HasTypedValue;
 import aldor.util.TypedName;
 import com.intellij.ide.util.projectWizard.WizardInputField;
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class WizardFieldContainer {
     private final Map<String, WizardInputField<?>> additionalFieldsByName;
@@ -48,4 +50,13 @@ public class WizardFieldContainer {
         }
     }
 
+    @Override
+    public String toString() {
+        return "("+ additionalFieldsByName.entrySet().stream().map(e -> e.getKey() + "=" + e.getValue().getValue()).collect(Collectors.joining(",")) + ")";
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T field(TypedWizardField<T> name) {
+        return (T) field(name.name());
+    }
 }

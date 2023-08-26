@@ -16,7 +16,6 @@ import static aldor.lexer.AldorTokenTypes.KW_NewLine;
 import static aldor.lexer.AldorTokenTypes.TK_PostDoc;
 import static aldor.lexer.AldorTokenTypes.TK_PreDoc;
 import static aldor.lexer.AldorTokenTypes.TK_SysCmd;
-import static aldor.lexer.AldorTokenTypes.TK_SysCmdWS;
 import static aldor.lexer.LexMode.Spad;
 
 /**

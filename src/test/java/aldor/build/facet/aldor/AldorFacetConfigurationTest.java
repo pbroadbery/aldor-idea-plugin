@@ -1,22 +1,23 @@
 package aldor.build.facet.aldor;
 
-import aldor.builder.jps.module.AldorFacetExtensionProperties;
+import aldor.builder.jps.module.AldorFacetProperties;
 import com.intellij.util.xmlb.XmlSerializer;
-import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jdom.Element;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class AldorFacetConfigurationTest {
 
     @Test
     public void test() {
         AldorFacetConfiguration config = new AldorFacetConfiguration();
-        AldorFacetExtensionProperties state = config.getState().asBuilder().setRelativeOutputDirectory("hello").build();
+        assertNotNull(config.getState());
+        AldorFacetProperties state = config.getState().asBuilder().relativeOutputDirectory("hello").build();
         Element xml = XmlSerializer.serialize(state);
         System.out.println("xml: "+ xml);
-        AldorFacetExtensionProperties p2 = XmlSerializer.deserialize(xml, AldorFacetExtensionProperties.class);
+        AldorFacetProperties p2 = XmlSerializer.deserialize(xml, AldorFacetProperties.class);
         assertEquals(state, p2);
     }
 }

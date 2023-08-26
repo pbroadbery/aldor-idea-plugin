@@ -1,6 +1,5 @@
 package aldor.runconfiguration.spad;
 
-import aldor.build.facet.fricas.FricasFacet;
 import aldor.runconfiguration.spad.SpadInputRunConfigurationType.SpadInputConfigurationBean;
 import aldor.sdk.fricas.FricasInstalledSdkType;
 import aldor.test_util.AssumptionAware;
@@ -12,7 +11,6 @@ import com.intellij.openapi.projectRoots.ProjectJdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkModificator;
 import com.intellij.openapi.projectRoots.SdkTypeId;
-import com.intellij.openapi.projectRoots.impl.MockSdk;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;

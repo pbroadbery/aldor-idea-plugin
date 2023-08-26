@@ -3,6 +3,7 @@ package aldor.hierarchy;
 import aldor.hierarchy.util.ComparatorPriority;
 import aldor.hierarchy.util.NullHierarchyTreeStructure;
 import aldor.hierarchy.util.TypeHierarchyBrowserBaseEx;
+import aldor.language.AldorLanguage;
 import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxPsiParser;
 import aldor.syntax.SyntaxUtils;
@@ -12,6 +13,7 @@ import aldor.ui.AldorActions;
 import com.intellij.ide.hierarchy.HierarchyBrowserBaseEx;
 import com.intellij.ide.hierarchy.HierarchyNodeDescriptor;
 import com.intellij.ide.hierarchy.HierarchyTreeStructure;
+import com.intellij.ide.hierarchy.TypeHierarchyBrowserBase;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.ActionManager;
@@ -64,16 +66,16 @@ public class AldorTypeHierarchyBrowser extends TypeHierarchyBrowserBaseEx {
     }
 
     @Override
-    protected void createTrees(@NotNull Map<String, JTree> trees) {
+    protected void createTrees(@NotNull Map<? super String,? super JTree> trees) {
         createTreeAndSetupCommonActions(trees, AldorActions.GROUP_TYPE_HIERARCHY_POPUP);
     }
 
     @Override
-    protected void createTreeAndSetupCommonActions(@NotNull Map<String, JTree> trees, ActionGroup group) {
-        super.createTreeAndSetupCommonActions(trees, group);
+    protected void createTreeAndSetupCommonActions(@NotNull Map<? super String, ? super JTree> trees, String groupId) {
+        super.createTreeAndSetupCommonActions(trees, groupId);
         final BaseOnThisTypeAction baseOnThisTypeAction = createBaseOnThisAction();
         final JTree tree1 = createTree(true);
-        PopupHandler.installPopupHandler(tree1, group, ActionPlaces.TYPE_HIERARCHY_VIEW_POPUP, ActionManager.getInstance());
+        PopupHandler.installPopupMenu(tree1, groupId, ActionPlaces.TYPE_HIERARCHY_VIEW_POPUP);
         baseOnThisTypeAction
                 .registerCustomShortcutSet(ActionManager.getInstance().getAction(IdeActions.ACTION_TYPE_HIERARCHY).getShortcutSet(), tree1);
         //trees.put(AldorTypeHierarchyConstants.FLAT_HIERARCHY_TYPE, tree1);
@@ -114,6 +116,7 @@ public class AldorTypeHierarchyBrowser extends TypeHierarchyBrowserBaseEx {
     @Override
     @Nullable
     public HierarchyTreeStructure createHierarchyTreeStructure(@NotNull final String typeName, @NotNull final PsiElement element) {
+        boolean isAldor = (element.getContainingFile() != null) && element.getContainingFile().getLanguage().is(AldorLanguage.INSTANCE);
         Syntax syntax = SyntaxPsiParser.surroundingApplication(element, Leading);
         if (syntax == null) {
             return new NullHierarchyTreeStructure(element, "Invalid element - " + element);
@@ -123,7 +126,7 @@ public class AldorTypeHierarchyBrowser extends TypeHierarchyBrowserBaseEx {
             return new NullHierarchyTreeStructure(element, "Failed to find syntax form for " + element.getText());
         }
 
-        if (SUPERTYPES_HIERARCHY_TYPE.equals(typeName)) {
+        if (!isAldor && TypeHierarchyBrowserBase.getSupertypesHierarchyType().equals(typeName)) {
             return new AldorParentCategoryHierarchyTreeStructure(myProject, syntax);
         }
         /*

@@ -3,12 +3,9 @@ package aldor.build;
 import aldor.language.AldorLanguage;
 import aldor.test_util.AssumptionAware;
 import aldor.test_util.ExecutablePresentRule;
-import aldor.test_util.LightProjectDescriptors;
 import aldor.test_util.SdkProjectDescriptors;
 import com.intellij.psi.PsiFile;
 import com.intellij.testFramework.LightProjectDescriptor;
-import com.intellij.testFramework.fixtures.BasePlatformTestCase;
-import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import org.junit.Assert;
 import org.junit.Assume;
 

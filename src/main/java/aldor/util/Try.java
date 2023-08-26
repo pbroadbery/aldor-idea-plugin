@@ -39,6 +39,15 @@ public final class Try<T> {
         }
     }
 
+    public static <T> Try<T> ofUnsafe(UnsafeSupplier<T> fn) {
+        try {
+            return success(fn.get());
+        }
+        catch (Exception e) {
+            return failed(e);
+        }
+    }
+
     @SuppressWarnings("ProhibitedExceptionThrown")
     public T orElseThrow(Function<Throwable, RuntimeException> fn) {
         if (isPresent()) {

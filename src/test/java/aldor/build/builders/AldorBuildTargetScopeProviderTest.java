@@ -2,26 +2,39 @@ package aldor.build.builders;
 
 import aldor.test_util.AssumptionAware;
 import aldor.test_util.ExecutablePresentRule;
+import aldor.test_util.JUnits;
 import aldor.test_util.SdkProjectDescriptors;
 import aldor.util.VirtualFileTests;
 import com.intellij.compiler.impl.ModuleCompileScope;
 import com.intellij.openapi.compiler.CompileScope;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vcs.changes.ui.ChangesTreeImpl;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiFile;
 import com.intellij.testFramework.LightProjectDescriptor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.jps.api.CmdlineRemoteProto.Message.ControllerMessage.ParametersMessage.TargetTypeBuildScope;
 import org.junit.Assert;
 
-import java.io.IOException;
 import java.util.List;
 
 public class AldorBuildTargetScopeProviderTest extends AssumptionAware.LightIdeaTestCase {
     private static final Logger LOG = Logger.getInstance(AldorBuildTargetScopeProviderTest.class);
+    private JUnits.TearDownItem tearDown = new JUnits.TearDownItem();
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        tearDown.with(JUnits.setLogToDebug());
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        try {
+            tearDown.tearDown();
+        } finally {
+            super.tearDown();
+        }
+    }
 
     public void testEmptyModule() {
         AldorBuildTargetScopeProvider provider = new AldorBuildTargetScopeProvider();

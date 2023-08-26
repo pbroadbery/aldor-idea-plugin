@@ -13,7 +13,6 @@ import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -86,7 +85,7 @@ public class AldorGroupedHierarchyTreeStructure extends HierarchyTreeStructure {
         return createOperationNodeDescriptorMaybe(parent, operation);
     }
 
-    private Object createNodeDescriptorMaybe(AldorHierarchyNodeDescriptor parent, @Nonnull Syntax syntax, @Nullable Syntax condition) {
+    private Object createNodeDescriptorMaybe(AldorHierarchyNodeDescriptor parent, @NotNull Syntax syntax, @Nullable Syntax condition) {
         PsiElement psiElement = psiElementFromSyntax(syntax);
         if (psiElement == null) {
             return new ErrorNodeDescriptor(parent, "Unknown element - " + syntax.getClass().getSimpleName() + " "+ SyntaxPrinter.instance().toString(syntax));

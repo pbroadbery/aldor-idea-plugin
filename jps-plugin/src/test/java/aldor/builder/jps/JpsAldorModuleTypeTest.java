@@ -1,7 +1,8 @@
 package aldor.builder.jps;
 
-import aldor.builder.jps.module.AldorFacetExtensionProperties;
-import aldor.builder.jps.module.AldorModuleFacade;
+import aldor.builder.jps.module.AldorFacetProperties;
+import aldor.builder.jps.module.AldorFacetProperties.WithJava;
+import aldor.builder.jps.module.AldorJpsModuleFacade;
 import aldor.builder.jps.module.AldorModuleState;
 import aldor.builder.jps.module.MakeConvention;
 import org.junit.Test;
@@ -15,9 +16,16 @@ public class JpsAldorModuleTypeTest {
     @Test
     public void testSourceCase_Local_is_in_source() {
         for (String outputDir: new String[] {".", "./"}) {
-            AldorFacetExtensionProperties properties = new AldorFacetExtensionProperties("aldor-sdk", AldorFacetExtensionProperties.WithJava.Enabled, "java-sdk", MakeConvention.Source, "", "");
-            AldorModuleState moduleState = AldorModuleState.newBuilder().outputDirectory(outputDir).makeConvention(MakeConvention.Source).build();
-            AldorModuleFacade aldor = new AldorModuleFacade(moduleState, properties);
+            AldorFacetProperties properties = AldorFacetProperties.newBuilder()
+                    .sdkName("aldor-sdk")
+                    .java(WithJava.Enabled)
+                    .javaSdkName("java-sdk")
+                    .makeConvention(MakeConvention.Source)
+                    .outputDirectory("")
+                    .relativeOutputDirectory("")
+                    .build();
+            AldorModuleState moduleState = AldorModuleState.newBuilder().build();
+            AldorJpsModuleFacade aldor = new AldorJpsModuleFacade(moduleState, properties);
             File contentRoot = new File("/tmp/myproject");
             File sourceRoot = new File("/tmp/myproject");
             File sourceFile = new File("/tmp/myproject/foo.as");
@@ -31,25 +39,34 @@ public class JpsAldorModuleTypeTest {
     @Test
     public void testSourceCase_Local_SubDir_is_SubDir() {
         for (String outputDir: new String[] {"out/ao", "./out/ao", "./out/ao/.", "out/ao/."}) {
-            AldorFacetExtensionProperties properties = new AldorFacetExtensionProperties("aldor-sdk", AldorFacetExtensionProperties.WithJava.Enabled, "java-sdk", MakeConvention.Source, "", "");
-            AldorModuleState moduleState = AldorModuleState.newBuilder().makeConvention(MakeConvention.Source).relativeOutputDirectory(outputDir).build();
-            AldorModuleFacade aldor = new AldorModuleFacade(moduleState, properties);
+            AldorFacetProperties properties = AldorFacetProperties.newBuilder()
+                    .sdkName("aldor-sdk")
+                    .java(WithJava.Enabled)
+                    .javaSdkName("java-sdk")
+                    .makeConvention(MakeConvention.Source)
+                    .outputDirectory(outputDir)
+                    .relativeOutputDirectory("")
+                    .build();
+            AldorModuleState moduleState = AldorModuleState.newBuilder().build();
+            AldorJpsModuleFacade aldor = new AldorJpsModuleFacade(moduleState, properties);
             File contentRoot = new File("/tmp/myproject");
             File sourceRoot = new File("/tmp/myproject");
             File sourceFile = new File("/tmp/myproject/foo.as");
             File dir = aldor.buildDirectory(contentRoot, sourceRoot, sourceFile);
             String tgt = aldor.targetName(sourceRoot, sourceFile);
             assertEquals("/tmp/myproject", dir.toString());
-            assertEquals("out/ao/foo.ao", tgt);
+            assertEquals("foo.ao", tgt);
         }
     }
 
     @Test
     public void testSourceCase_Source_IsUsed() {
         for (String outputDir: new String[] {"out/ao", "./out/ao", "./out/ao/.", "out/ao/."}) {
-            AldorFacetExtensionProperties properties = new AldorFacetExtensionProperties("aldor-sdk", AldorFacetExtensionProperties.WithJava.Enabled, "java-sdk", MakeConvention.Source, "", "");
-            AldorModuleState moduleState = AldorModuleState.newBuilder().makeConvention(MakeConvention.Source).relativeOutputDirectory("out/ao").build();
-            AldorModuleFacade aldor = new AldorModuleFacade(moduleState, properties);
+            AldorFacetProperties properties = AldorFacetProperties.newBuilder().java(WithJava.Enabled)
+                    .makeConvention(MakeConvention.Source)
+                    .relativeOutputDirectory("out/ao").build();
+            AldorModuleState moduleState = AldorModuleState.newBuilder().build();
+            AldorJpsModuleFacade aldor = new AldorJpsModuleFacade(moduleState, properties);
             File contentRoot = new File("/tmp/myproject");
             File sourceRoot = new File("/tmp/myproject/source");
             File sourceFile = new File("/tmp/myproject/source/foo.as");
@@ -63,9 +80,9 @@ public class JpsAldorModuleTypeTest {
     @Test
     public void testSourceCase_Source_IsUsed_Subdir() {
         for (String outputDir: new String[] {"out/ao", "./out/ao", "./out/ao/.", "out/ao/."}) {
-            AldorFacetExtensionProperties properties = new AldorFacetExtensionProperties("aldor-sdk", AldorFacetExtensionProperties.WithJava.Enabled, "java-sdk", MakeConvention.Source, "", "");
-            AldorModuleState moduleState = AldorModuleState.newBuilder().makeConvention(MakeConvention.Source).outputDirectory(outputDir).relativeOutputDirectory("out/ao").build();
-            AldorModuleFacade aldor = new AldorModuleFacade(moduleState, properties);
+            AldorFacetProperties properties = AldorFacetProperties.newBuilder().java(WithJava.Enabled).makeConvention(MakeConvention.Source).outputDirectory(outputDir).relativeOutputDirectory("out/ao").build();
+            AldorModuleState moduleState = AldorModuleState.newBuilder().build();
+            AldorJpsModuleFacade aldor = new AldorJpsModuleFacade(moduleState, properties);
             File contentRoot = new File("/tmp/myproject");
             File sourceRoot = new File("/tmp/myproject/source");
             File sourceFile = new File("/tmp/myproject/source/bar/foo.as");
@@ -79,9 +96,9 @@ public class JpsAldorModuleTypeTest {
     @Test
     public void testSourceCase_NonLocal_SubDir_is_NonLocal() {
         for (String outputDir: new String[] {"/tmp/myproject/build", "/tmp/myproject/build/."}) {
-            AldorFacetExtensionProperties properties = new AldorFacetExtensionProperties("aldor-sdk", AldorFacetExtensionProperties.WithJava.Enabled, "java-sdk", MakeConvention.Source, "", "");
-            AldorModuleState moduleState = AldorModuleState.newBuilder().outputDirectory(outputDir).makeConvention(MakeConvention.Build).build();
-            AldorModuleFacade aldor = new AldorModuleFacade(moduleState, properties);
+            AldorFacetProperties properties = AldorFacetProperties.newBuilder().outputDirectory(outputDir).makeConvention(MakeConvention.Build).java(WithJava.Enabled).build();
+            AldorModuleState moduleState = AldorModuleState.newBuilder().build();
+            AldorJpsModuleFacade aldor = new AldorJpsModuleFacade(moduleState, properties);
             File contentRoot = new File("/tmp/myproject");
             File sourceRoot = new File("/tmp/myproject/source");
             File sourceFile = new File("/tmp/myproject/source/foo.as");
@@ -95,10 +112,9 @@ public class JpsAldorModuleTypeTest {
     @Test
     public void testBuildCase() {
         for (String outputDir: new String[] {"/tmp/myproject/build"}) {
-            AldorFacetExtensionProperties properties = new AldorFacetExtensionProperties("aldor-sdk",
-                    AldorFacetExtensionProperties.WithJava.Enabled, "java-sdk", MakeConvention.Source, "", "");
-            AldorModuleState moduleState = AldorModuleState.newBuilder().makeConvention(MakeConvention.Build).outputDirectory(outputDir).build();
-            AldorModuleFacade aldor = new AldorModuleFacade(moduleState, properties);
+            AldorFacetProperties properties = AldorFacetProperties.newBuilder().makeConvention(MakeConvention.Build).outputDirectory(outputDir).java(WithJava.Enabled).build();
+            AldorModuleState moduleState = AldorModuleState.newBuilder().build();
+            AldorJpsModuleFacade aldor = new AldorJpsModuleFacade(moduleState, properties);
             File contentRoot = new File("/tmp/myproject");
             File sourceRoot = new File("/tmp/myproject/source");
             File sourceFile = new File("/tmp/myproject/source/foo.as");
@@ -112,9 +128,9 @@ public class JpsAldorModuleTypeTest {
     @Test
     public void testBuildCase_subdir() {
         for (String outputDir: new String[] {"/tmp/myproject/build"}) {
-            AldorFacetExtensionProperties properties = new AldorFacetExtensionProperties("aldor-sdk", AldorFacetExtensionProperties.WithJava.Disabled, "java-sdk", MakeConvention.Source, "", "");
-            AldorModuleState moduleState = AldorModuleState.newBuilder().makeConvention(MakeConvention.Build).outputDirectory(outputDir).build();
-            AldorModuleFacade aldor = new AldorModuleFacade(moduleState, properties);
+            AldorFacetProperties properties = AldorFacetProperties.newBuilder().makeConvention(MakeConvention.Build).outputDirectory(outputDir).java(WithJava.Enabled).build();
+            AldorModuleState moduleState = AldorModuleState.newBuilder().build();
+            AldorJpsModuleFacade aldor = new AldorJpsModuleFacade(moduleState, properties);
             File contentRoot = new File("/tmp/myproject");
             File sourceRoot = new File("/tmp/myproject/source");
             File sourceFile = new File("/tmp/myproject/source/wibble/foo.as");
@@ -127,9 +143,16 @@ public class JpsAldorModuleTypeTest {
 
     @Test
     public void testSourceCase_missingOutDir() {
-        AldorFacetExtensionProperties properties = new AldorFacetExtensionProperties("aldor-sdk", AldorFacetExtensionProperties.WithJava.Disabled, "java-sdk", MakeConvention.Source, "", "");
+        AldorFacetProperties properties = AldorFacetProperties.newBuilder()
+                .sdkName("aldor-sdk")
+                .java(WithJava.Disabled)
+                .javaSdkName("java-sdk")
+                .makeConvention(MakeConvention.Source)
+                .outputDirectory("")
+                .relativeOutputDirectory("")
+                .build();
         AldorModuleState moduleState = AldorModuleState.newBuilder().build();
-        AldorModuleFacade aldor = new AldorModuleFacade(moduleState, properties);
+        AldorJpsModuleFacade aldor = new AldorJpsModuleFacade(moduleState, properties);
         File contentRoot = new File("/tmp/myproject");
         File sourceRoot = new File("/tmp/myproject");
         File sourceFile = new File("/tmp/myproject/foo.as");

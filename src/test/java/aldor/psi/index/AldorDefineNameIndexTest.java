@@ -6,6 +6,8 @@ import aldor.test_util.LightPlatformJUnit4TestRule;
 import aldor.test_util.LightProjectDescriptors;
 import aldor.util.VirtualFileTests;
 import com.google.common.collect.Sets;
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.FileIndexFacade;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -28,6 +30,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.stream.Collectors;
 
 import static aldor.psi.AldorPsiUtils.logPsi;
 import static aldor.util.VirtualFileTests.createFile;
@@ -60,17 +63,12 @@ public final class AldorDefineNameIndexTest {
         Project project = testFixture.getProject();
         VirtualFile file = createFile(getSourceRoot(), "foo.as", "a == b; c == d; e == " + System.currentTimeMillis());
 
-        FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
-        FileBasedIndex.getInstance().ensureUpToDate(StubUpdatingIndex.INDEX_ID, project, null);
-
-        Collection<String> ll = AldorDefineNameIndex.instance.getAllKeys(project);
+        Collection<String> ll = AldorDefineTopLevelIndex.instance.getAllKeys(project, GlobalSearchScope.fileScope(project, file));
         Assert.assertEquals(3, ll.size());
+
         VirtualFileTests.deleteFile(file);
 
-        FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
-        FileBasedIndex.getInstance().ensureUpToDate(StubUpdatingIndex.INDEX_ID, project, null);
-
-        Assert.assertEquals(0, AldorDefineNameIndex.instance.getAllKeys(project).size());
+        Assert.assertEquals(0, AldorDefineTopLevelIndex.instance.getAllKeys(project, GlobalSearchScope.fileScope(project, file)).size());
     }
 
 
@@ -79,25 +77,26 @@ public final class AldorDefineNameIndexTest {
         Project project = testFixture.getProject();
         VirtualFile file = createFile(getSourceRoot(), "foo.as", "Something(x: Wibble): with == stuff; aNumber == " + System.currentTimeMillis());
 
-        FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
-        FileBasedIndex.getInstance().ensureUpToDate(StubUpdatingIndex.INDEX_ID, project, null);
-
-        Collection<String> ll = AldorDefineNameIndex.instance.getAllKeys(project);
-        Assert.assertEquals(Sets.newHashSet("Something", "aNumber"), new HashSet<>(ll));
-        VirtualFileTests.deleteFile(file);
+        try {
+            Collection<String> ll = AldorDefineNameIndex.instance.getAllKeys(project, GlobalSearchScope.fileScope(project, file));
+            Assert.assertEquals(Sets.newHashSet("Something", "aNumber"), new HashSet<>(ll));
+        }
+        finally {
+            VirtualFileTests.deleteFile(file);
+        }
     }
 
     @Test
     public void testDefineTopLevelIndex() {
         Project project = testFixture.getProject();
         VirtualFile file = createFile(getSourceRoot(), "foo.as", "Something(x: Wibble): with == add { foo == bar }; aNumber == " + System.currentTimeMillis());
+        try {
 
-        FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
-        FileBasedIndex.getInstance().ensureUpToDate(StubUpdatingIndex.INDEX_ID, project, null);
-
-        Collection<String> ll = AldorDefineTopLevelIndex.instance.getAllKeys(project);
-        Assert.assertEquals(Sets.newHashSet("Something", "aNumber"), new HashSet<>(ll));
-        VirtualFileTests.deleteFile(file);
+            Collection<String> ll = AldorDefineTopLevelIndex.instance.getAllKeys(project, GlobalSearchScope.fileScope(project, file));
+            Assert.assertEquals(Sets.newHashSet("Something", "aNumber"), new HashSet<>(ll));
+        } finally {
+            VirtualFileTests.deleteFile(file);
+        }
     }
 
 
@@ -105,26 +104,25 @@ public final class AldorDefineNameIndexTest {
     public void testSpadDefineNameIndex() {
         Project project = testFixture.getProject();
         VirtualFile file = createFile(getSourceRoot(), "foo.spad", "Something(x: Wibble): with == add");
-        logPsi(PsiManager.getInstance(project).findFile(file));
-        FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
-        FileBasedIndex.getInstance().ensureUpToDate(StubUpdatingIndex.INDEX_ID, project, null);
+        try {
+            logPsi(PsiManager.getInstance(project).findFile(file));
 
-        Collection<String> ll = AldorDefineTopLevelIndex.instance.getAllKeys(project);
-        Assert.assertEquals(Sets.newHashSet("Something"), new HashSet<>(ll));
-        VirtualFileTests.deleteFile(file);
+            Collection<String> ll = AldorDefineNameIndex.instance.getAllKeys(project, GlobalSearchScope.fileScope(project, file));
+            Assert.assertEquals(Sets.newHashSet("Something"), new HashSet<>(ll));
+        } finally {
+            VirtualFileTests.deleteFile(file);
+        }
     }
 
 
     @Test
-    public void testDefineIndexGetKey() {
-        VirtualFile file = null;
+    public void testDefineIndexGetKey() throws IOException {
+        VirtualFile file = createFile(getSourceRoot(), "foo.as", "Something(x: Wibble): with == stuff; aNumber == " + System.currentTimeMillis());
         try {
             Project project = testFixture.getProject();
 
-            file = createFile(getSourceRoot(), "foo.as", "Something(x: Wibble): with == stuff; aNumber == " + System.currentTimeMillis());
-            FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
-            FileBasedIndex.getInstance().ensureUpToDate(StubUpdatingIndex.INDEX_ID, project, null);
-            Collection<String> ll = AldorDefineNameIndex.instance.getAllKeys(project);
+            Collection<String> ll = AldorDefineNameIndex.instance.getAllKeys(project, GlobalSearchScope.fileScope(project, file));
+
             Assert.assertEquals(Sets.newHashSet("Something", "aNumber"), new HashSet<>(ll));
 
             Collection<AldorDefine> items = AldorDefineNameIndex.instance.get("Something", testFixture.getProject(),
@@ -149,9 +147,8 @@ public final class AldorDefineNameIndexTest {
             Project project = testFixture.getProject();
 
             file = createFile(getSourceRoot(), "algcat.spad", fraText);
-            FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
-            FileBasedIndex.getInstance().ensureUpToDate(StubUpdatingIndex.INDEX_ID, project, null);
-            Collection<String> ll = AldorDefineNameIndex.instance.getAllKeys(project);
+
+            Collection<String> ll = AldorDefineNameIndex.instance.getAllKeys(project, GlobalSearchScope.fileScope(project, file));
 
             System.out.println("Words: "+ ll);
             Collection<String> topLevel = AldorDefineTopLevelIndex.instance.getAllKeys(project);

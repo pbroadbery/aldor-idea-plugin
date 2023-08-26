@@ -14,13 +14,15 @@ public class JpsAldorInstalledBuildTest extends AldorJpsTestCase {
         aldorFixture.createModule();
         createFile("foo.as", "X: with == add");
 
-        createFile("Makefile", "out/ao/foo.ao: foo.as\n"+
-                "\tmkdir -p $(dir $@)\n" +
-                "\techo compiling foo.as\n" +
-                "\ttouch $@\n" +
-                "out/jar/prj.jar: out/ao/foo.ao\n" +
-                "\tmkdir -p $(dir $@)" +
-                "\ttouch $@\n");
+        createFile("Makefile", """
+                out/ao/foo.ao: foo.as
+                --TAB--> mkdir -p $(dir $@)
+                --TAB--> echo compiling foo.as
+                --TAB--> touch $@
+                out/jar/prj.jar: out/ao/foo.ao
+                --TAB--> mkdir -p $(dir $@)
+                --TAB--> touch $@
+                """);
 
         Assert.assertTrue(fileForProjectPath("foo.as").exists());
 

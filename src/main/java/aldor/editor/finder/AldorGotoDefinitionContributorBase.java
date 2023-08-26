@@ -10,8 +10,11 @@ import com.intellij.psi.search.GlobalSearchScopesCore;
 import com.intellij.psi.search.ProjectScope;
 import com.intellij.psi.stubs.StringStubIndexExtension;
 import com.intellij.util.ArrayUtil;
+import com.intellij.util.ArrayUtilRt;
+import com.intellij.util.indexing.FindSymbolParameters;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,9 +31,17 @@ public abstract class AldorGotoDefinitionContributorBase implements ChooseByName
     @Override
     public String[] getNames(Project project,
                              @SuppressWarnings("NegativelyNamedBooleanVariable") boolean nonProjectItems) {
-        Collection<String> keys = index.getAllKeys(project);
-        return keys.toArray(ArrayUtil.EMPTY_STRING_ARRAY);
+        Collection<String> result = new ArrayList<>();
+        var scope = GlobalSearchScope.allScope(project);
+        index.processAllKeys(project, k -> {
+            if (!index.get(k, project, scope).isEmpty()) {
+                result.add(k);
+            }
+            return true;
+        });
+        return ArrayUtilRt.toStringArray(result);
     }
+
 
     @NotNull
     @Override

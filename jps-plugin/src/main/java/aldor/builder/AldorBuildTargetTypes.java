@@ -10,7 +10,6 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.jps.builders.BuildTarget;
 import org.jetbrains.jps.builders.BuildTargetLoader;
 import org.jetbrains.jps.builders.BuildTargetType;
-import org.jetbrains.jps.incremental.CompileScope;
 import org.jetbrains.jps.incremental.TargetBuilder;
 import org.jetbrains.jps.model.JpsModel;
 
@@ -30,10 +29,14 @@ public class AldorBuildTargetTypes {
     public final AldorFileBuildTargetType fileBuildTargetType;
     public final AldorJarBuildTargetType jarBuildTargetType;
 
+    @Nullable
+    private List<TargetBuilder<?, ?>> builders;
+
     public AldorBuildTargetTypes(AldorBuilderService service) {
         LOG.info("Builder: " + service);
         this.fileBuildTargetType = new AldorFileBuildTargetType(service);
         this.jarBuildTargetType = new AldorJarBuildTargetType(service);
+        this.builders = null;
     }
 
     public static <Target extends BuildTarget<?>> BuildTargetLoader<Target> createLoader(@NotNull final BuildTargetType<Target> type,
@@ -50,7 +53,7 @@ public class AldorBuildTargetTypes {
                 LOG.info("Creating loader for: " + type + ": " + targetId);
                 Target target = targetMap.get(targetId);
                 if (target == null) {
-                    LOG.info("Target id: "+ targetId + " " + targetMap.keySet().stream().findFirst());
+                    LOG.info("Target id: "+ targetId + " not in original set.. " + targetMap.keySet().stream().findFirst());
                 }
                 return target;
             }
@@ -62,11 +65,17 @@ public class AldorBuildTargetTypes {
         return Arrays.asList(jarBuildTargetType, fileBuildTargetType);
     }
 
-    public List<? extends TargetBuilder<?, ?>> createBuilders() {
-        List<TargetBuilder<?, ?>> list = new ArrayList<>();
-        list.add(new AldorFileTargetBuilder(fileBuildTargetType));
-        list.add(new AldorJarTargetBuilder(jarBuildTargetType));
-        return list;
+    public List<? extends TargetBuilder<?, ?>> builders() {
+        if (builders == null) {
+            List<TargetBuilder<?, ?>> list = new ArrayList<>();
+            list.add(new AldorFileTargetBuilder(fileBuildTargetType));
+            list.add(new AldorJarTargetBuilder(jarBuildTargetType));
+            //list.addAll(buildStaticModel.targetBuilders());
+            //list.add(new MakeTargetBuilder(makeBuildTargetType));
+            //list.add(new AutoconfTargetBuilder(autoconfTargetType));
+            builders = list;
+        }
+        return builders;
     }
 
 }

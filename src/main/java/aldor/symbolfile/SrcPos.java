@@ -21,10 +21,9 @@ public final class SrcPos implements Comparable<SrcPos> {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof SrcPos)) {
+        if (!(obj instanceof SrcPos other)) {
             return false;
         }
-        SrcPos other = (SrcPos) obj;
         return (this.lineNumber == other.lineNumber()) && (this.columnNumber == other.columnNumber());
     }
 

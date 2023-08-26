@@ -48,7 +48,7 @@ public final class ModuleModifyingFacetUtil {
                     }
                 }
                 if (name != null) {
-                    final ModifiableModelsProvider provider = ModifiableModelsProvider.SERVICE.getInstance();
+                    final ModifiableModelsProvider provider = ModifiableModelsProvider.getInstance();
                     final LibraryTable.ModifiableModel libraryTableModifiableModel = provider.getLibraryTableModifiableModel();
                     Library library = libraryTableModifiableModel.getLibraryByName(name);
                     provider.disposeLibraryTableModifiableModel(libraryTableModifiableModel);

@@ -12,7 +12,6 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
 import javax.swing.JComponent;
 
 public class FricasLocalSdkType extends SdkType implements FricasSdkType {
@@ -21,15 +20,13 @@ public class FricasLocalSdkType extends SdkType implements FricasSdkType {
         super("Fricas Local SDK");
     }
 
-    @Nullable
     @Override
-    public String fricasPath(Sdk sdk) {
+    public @NotNull String fricasPath(Sdk sdk) {
         return null;
     }
 
-    @Nonnull
     @Override
-    public String fricasSysName(Sdk sdk) {
+    public @NotNull String fricasSysName(Sdk sdk) {
         return "FRICASsys";
     }
 

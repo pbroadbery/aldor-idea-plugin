@@ -5,6 +5,7 @@ import aldor.symbolfile.AnnotationFile;
 import aldor.symbolfile.SrcPos;
 import aldor.symbolfile.Syme;
 import aldor.util.AnnotatedOptional;
+import aldor.util.LogSink;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
@@ -19,6 +20,7 @@ import java.util.Optional;
 
 public class DefaultAnnotationFileNavigator implements AnnotationFileNavigator {
     private static final Logger LOG = Logger.getInstance(DefaultAnnotationFileNavigator.class);
+    private static final LogSink LOGSINK = new LogSink(DefaultAnnotationFileNavigator.class);
     private static final Key<AnnotationFileNavigator> NAV_KEY = new Key<>(AnnotationFileNavigator.class.getSimpleName());
     private final AnnotationFileManager manager;
 
@@ -41,7 +43,7 @@ public class DefaultAnnotationFileNavigator implements AnnotationFileNavigator {
         AnnotationFile annotationFile = manager.annotationFile(element.getContainingFile());
         Syme syme = lookupAndSelectSyme(element, srcPos, annotationFile);
         if (syme == null) {
-            LOG.info("No Symbol found at " + srcPos);
+            LOGSINK.info("NoSym", srcPos, "No Symbol found at " + srcPos);
             return null;
         }
 
@@ -65,10 +67,11 @@ public class DefaultAnnotationFileNavigator implements AnnotationFileNavigator {
 
         }
         if (refSyme.srcpos() == null) {
-            LOG.info("No source pos for " + refSourceFile + " " + element.getText());
+            LOGSINK.info("NoSrcPos", refSyme, "No source pos for " + refSourceFile + " " + element.getText());
             return null;
         }
-        LOG.info("Found reference to " + element.getText() + " at " + refSyme.srcpos());
+
+        LOGSINK.info("FoundRef", refSyme.srcpos(), "Found reference to " + element.getText() + " at " + refSyme.srcpos());
         return findElementForSrcPos(refFile, refSyme.srcpos());
     }
 
@@ -131,4 +134,5 @@ public class DefaultAnnotationFileNavigator implements AnnotationFileNavigator {
         }
         return nav;
     }
+
 }

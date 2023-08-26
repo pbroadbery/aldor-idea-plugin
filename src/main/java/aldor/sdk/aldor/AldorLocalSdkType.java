@@ -42,6 +42,9 @@ public class AldorLocalSdkType extends SdkType implements AldorSdkType {
     @NotNull
     @Override
     public String suggestSdkName(String currentSdkName, String sdkHome) {
+        if (currentSdkName == null) {
+            return "local: " + sdkHome;
+        }
         return currentSdkName;
     }
 
@@ -49,12 +52,6 @@ public class AldorLocalSdkType extends SdkType implements AldorSdkType {
     @Override
     public String getPresentableName() {
         return "Local Aldor SDK";
-    }
-
-    @Nullable
-    @Override
-    public String aldorPath(Sdk sdk) {
-        return null;
     }
 
     @Override

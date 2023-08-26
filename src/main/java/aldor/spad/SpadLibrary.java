@@ -4,6 +4,7 @@ import aldor.syntax.Syntax;
 import aldor.syntax.SyntaxUtils;
 import aldor.syntax.components.Id;
 import aldor.typelib.Env;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.psi.PsiElement;
@@ -13,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public interface SpadLibrary {
+public interface SpadLibrary extends Disposable {
 
     List<Syntax> parentCategories(Syntax syntax);
     List<Operation> operations(Syntax syntax);

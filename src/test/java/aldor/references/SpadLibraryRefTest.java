@@ -13,11 +13,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiReference;
-import com.intellij.psi.stubs.StubUpdatingIndex;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
-import com.intellij.testFramework.fixtures.BasePlatformTestCase;
-import com.intellij.util.indexing.FileBasedIndex;
 import org.junit.Assert;
 
 import static com.intellij.testFramework.LightPlatformTestCase.getSourceRoot;
@@ -29,13 +26,15 @@ public class SpadLibraryRefTest extends AssumptionAware.BasePlatformTestCase {
         JUnits.setLogToDebug();
         String text = ")abbrev domain FOO Foo\nFoo: Category == Ring with\n";
         VirtualFile file = createSpadFile(text);
-        FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
 
         ProjectFileIndex.getInstance(getProject()).iterateContent(fileOrDir -> {
             LOG.info("Found file " + fileOrDir.getCanonicalPath());
             return true;
         });
-        ModuleRootManager.getInstance(getModule()).getFileIndex().iterateContent(f -> {LOG.info("Found module file " + f.getCanonicalPath()); return true;});
+        ModuleRootManager.getInstance(getModule()).getFileIndex().iterateContent(f -> {
+            LOG.info("Found module file " + f.getCanonicalPath());
+            return true;
+        });
 
         PsiFile whole = PsiManager.getInstance(getProject()).findFile(file);
 
@@ -60,4 +59,4 @@ public class SpadLibraryRefTest extends AssumptionAware.BasePlatformTestCase {
         return SdkProjectDescriptors.fricasSdkProjectDescriptor(fricasExecutableRule);
     }
 
-    }
+}

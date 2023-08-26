@@ -32,7 +32,8 @@ import java.util.function.Supplier;
 
 /**
  * Not real code, just test harness to get the browser working
- * Deprecated Test only
+ *
+ * @deprecated Test only
  */
 @Deprecated
 public class TestSpadLibrary implements SpadLibrary {
@@ -191,6 +192,11 @@ public class TestSpadLibrary implements SpadLibrary {
 
     static Syntax map(Syntax arg, Syntax ret) {
         return new Apply(Arrays.asList(Id.createMissingId(AldorTokenTypes.KW_MArrow, "->"), arg, ret));
+    }
+
+    @Override
+    public void dispose() {
+
     }
 
     public static class ParentInfo {

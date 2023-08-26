@@ -38,4 +38,9 @@ public final class SpadInputFileType  extends LanguageFileType {
         return AldorIcons.SPAD_INPUT_FILE;
     }
 
+    @Override
+    public @NotNull String getDisplayName() {
+        return "Spad Input";
+    }
+
 }

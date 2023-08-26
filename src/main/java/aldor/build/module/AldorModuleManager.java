@@ -3,6 +3,7 @@ package aldor.build.module;
 import aldor.annotations.AnnotationFileNavigator;
 import aldor.annotations.AnnotationFileNavigatorManager;
 import aldor.util.AnnotatedOptional;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
@@ -16,13 +17,14 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static aldor.util.StringUtilsAldorRt.trimExtension;
-import static java.util.Optional.ofNullable;
 
 public final class AldorModuleManager {
+    private static final Logger LOG = Logger.getInstance(AldorModuleManager.class);
     private static final Key<AldorModuleManager> key = new Key<>(AldorModuleManager.class.getName());
 
     public AldorModuleManager(Project project) {
@@ -78,42 +80,36 @@ public final class AldorModuleManager {
     }
 
     @Nullable
-    public String annotationFilePathForFile(Project project, @NotNull VirtualFile virtualFile) {
-        return ofNullable(buildPathForFile(project, virtualFile)).map(p -> p+"/"+virtualFile.getName()).orElse(null);
-    }
-
     public String annotationFileForSourceFile(Project project, @NotNull VirtualFile file) {
-        return buildPathForFile(project, file) + "/" + trimExtension(file.getName()) + ".abn";
+        String buildPath = buildPathForFile(project, file);
+        if (buildPath == null) {
+            return null;
+        }
+        String result = buildPath + "/" + trimExtension(file.getName()) + ".abn";
+        LOG.info("Annotation file for " + file + " --> " + result);
+        return result;
     }
 
     @Nullable // TODO: Return a File
     public String buildPathForFile(Project project, @NotNull VirtualFile virtualFile) {
-        VirtualFile sourceRoot = ProjectRootManager.getInstance(project).getFileIndex().getSourceRootForFile(virtualFile);
-        if (sourceRoot != null) {
-            return sourceRoot.getPath() + "/out/ao";
+        Module module = ProjectRootManager.getInstance(project).getFileIndex().getModuleForFile(virtualFile);
+        if (module == null) {
+            return null;
         }
-        VirtualFile root = ProjectRootManager.getInstance(project).getFileIndex().getContentRootForFile(virtualFile);
-        if (root == null) {
-            return (virtualFile.getParent() == null) ? null : virtualFile.getParent().getPath();
+        AldorModuleFacade facade = AldorModuleFacade.forModule(module).orElse(null);
+        if (facade == null) {
+            return null;
         }
-        return buildPathFromRoot(root, virtualFile.getParent());
-    }
 
-    private String buildPathFromRoot(@NotNull VirtualFile root, @NotNull VirtualFile virtualFile) {
-        if (virtualFile.equals(root)) {
-            return root.getPath();
-        }
-        else if (virtualFile.findChild("configure.ac") != null) {
-            return root.getPath() + "/build";
-        }
-        else {
-            return buildPathFromRoot(root, virtualFile.getParent()) + "/" + virtualFile.getName();
-        }
+        return Optional.ofNullable(facade.buildDirectory(virtualFile)).map(x -> x.getPath()).orElse(null);
     }
 
     @Nullable
     public String annotationFileForSourceFile(PsiFileSystemItem file) {
         if (file.getVirtualFile() == null) {
+            return null;
+        }
+        if (file.getVirtualFile().getFileSystem().getNioPath(file.getVirtualFile()) == null) {
             return null;
         }
         return annotationFileForSourceFile(file.getProject(), file.getVirtualFile());

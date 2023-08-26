@@ -40,7 +40,6 @@ import static aldor.lexer.AldorTokenTypes.KW_Where;
 import static aldor.lexer.AldorTokenTypes.KW_With;
 import static aldor.lexer.AldorTokenTypes.TK_PostDoc;
 import static aldor.lexer.AldorTokenTypes.TK_PreDoc;
-import static aldor.lexer.AldorTokenTypes.TK_SysCmd;
 import static aldor.lexer.AldorTokenTypes.TK_SysCmdAbbrev;
 import static aldor.lexer.AldorTokenTypes.WHITE_SPACE;
 import static aldor.lexer.LexMode.Spad;
@@ -118,7 +117,10 @@ public class Linearise {
     private IndentNode scan(PiledSection section, final int startIndex) {
         List<IndentNode> children = Lists.newArrayList();
         int prevIndex = startIndex;
-        assert !section.isBlank(prevIndex);
+        if (section.isBlank(prevIndex)) {
+            // !HACK: Ignore errors as far as possible..
+            return new IndentNode(startIndex, section.lines().size(), Collections.emptyList());
+        }
         int startIndent = section.indentForLine(startIndex);
         int index = startIndex + 1;
         while (true) {

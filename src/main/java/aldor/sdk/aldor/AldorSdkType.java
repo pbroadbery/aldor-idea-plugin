@@ -6,6 +6,4 @@ import org.jetbrains.annotations.Nullable;
 
 // TODO: Rename to SDK type
 public interface AldorSdkType extends AxiomSdk {
-    @Nullable
-    String aldorPath(Sdk sdk);
 }

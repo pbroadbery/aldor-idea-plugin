@@ -1,7 +1,10 @@
 package aldor.spad;
 
 import aldor.build.facet.SpadFacet;
+import aldor.build.module.AldorModuleFacade;
 import aldor.build.module.AldorModuleType;
+import aldor.build.module.SpadModuleFacade;
+import aldor.builder.jps.AldorSourceRootType;
 import aldor.builder.jps.SpadFacetProperties;
 import aldor.language.AldorLanguage;
 import aldor.sdk.AxiomSdk;
@@ -19,11 +22,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.ProjectJdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
-import com.intellij.openapi.roots.CompilerModuleExtension;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.roots.impl.DirectoryIndex;
-import com.intellij.openapi.roots.impl.DirectoryInfo;
+import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -33,6 +34,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -54,16 +56,24 @@ public final class SpadLibraryManager implements Disposable {
         return project.getService(SpadLibraryManager.class);
     }
 
-    public static AldorModuleSpadLibraryManager getInstance(Module module) {
-        return module.getService(AldorModuleSpadLibraryManager.class);
-    }
-
     @Nullable
     public SpadLibrary forModule(Module module, @NotNull FileType fileType) {
         assert !module.getProject().isDisposed();
+        return forModule1(module, fileType);
+    }
+
+    private SpadLibrary forModule1(Module module, FileType fileType) {
         ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
-        Sdk moduleSdk = Optional.ofNullable(AldorModuleType.instance().facetModuleType(module, fileType))
-                .flatMap(SpadFacet::getProperties)
+
+        var facade = SpadModuleFacade.forModule(module);
+        if (facade.map(SpadModuleFacade::isConfigured).orElse(false)) {
+            return forConfiguredModule(module, fileType);
+        }
+
+        Optional<SpadFacetProperties> properties = Optional.ofNullable(AldorModuleType.facetModuleType(module, fileType))
+                .flatMap(SpadFacet::getProperties);
+
+        Sdk moduleSdk = properties
                 .map(SpadFacetProperties::sdkName)
                 .map(name -> ProjectJdkTable.getInstance().findJdk(name))
                 .orElse(null);
@@ -79,6 +89,7 @@ public final class SpadLibraryManager implements Disposable {
             return forProject(module.getProject());
         }
 
+        /*
         if (SdkTypes.isLocalSdk(moduleSdk)) {
             VirtualFile path = rootManager.getModuleExtension(CompilerModuleExtension.class).getCompilerOutputPath(); // FIXME - use facet
             VirtualFile algebraPath = (path == null) ? null : path.findFileByRelativePath("src/algebra");
@@ -91,17 +102,44 @@ public final class SpadLibraryManager implements Disposable {
                     .orElse(null);
             @Nullable FricasSpadLibrary lib = createNRLibDirectory(module.getProject(), algebraPath, likelySourceDirectory);
             if (lib != null) {
-                getInstance(module).register(lib);
+                AldorModuleSpadLibraryManager.getInstance(module).register(lib);
                 return lib;
             }
             return null;
         }
-        else if (AldorModuleType.instance().is(module)) {
+        else */
+        if (AldorModuleFacade.isAldorModule(module)) {
             return forAldorModule(module, moduleSdk);
         }
         else {
             return forSdk(moduleSdk);
         }
+    }
+
+    @Nullable
+    private SpadLibrary forConfiguredModule(Module module, FileType fileType) {
+        var finalLib = new AldorModuleSpadLibraryBuilder(module);
+        List<VirtualFile> sourceRoots = ModuleRootManager.getInstance(module).getSourceRoots(AldorSourceRootType.INSTANCE);
+        if (sourceRoots.isEmpty()) {
+            return forProject(module.getProject());
+        }
+        if (sourceRoots.size() > 1) {
+            LOG.error("too many roots for module " + module.getName());
+        }
+        AldorModuleFacade facade = AldorModuleFacade.forModule(module).get();
+        if (facade.buildDirectory() == null) {
+            return null;
+        }
+        finalLib = finalLib.sourceRootDirectory(sourceRoots.get(0));
+        finalLib = finalLib.buildPath(facade.buildDirectory());
+        List<Module> deps = facade.moduleDependencies();
+        for (Module dependency: deps) {
+            SpadLibrary dep = forModule(dependency, fileType);
+            finalLib.dependency(dep);
+        }
+        var lib = finalLib.createFricasSpadLibrary();
+        Disposer.register(this, lib);
+        return lib;
     }
 
     @Nullable
@@ -113,8 +151,10 @@ public final class SpadLibraryManager implements Disposable {
             return sdkLibrary;
         }
         else {
-            FricasSpadLibrary lib = new AldorModuleSpadLibraryBuilder(module).rootDirectory(roots[0]).dependency(sdkLibrary).createFricasSpadLibrary();
-            Disposer.register(getInstance(module), lib);
+            FricasSpadLibrary lib = new AldorModuleSpadLibraryBuilder(module).sourceRootDirectory(roots[0])
+                    .dependency(sdkLibrary)
+                    .createFricasSpadLibrary();
+            AldorModuleSpadLibraryManager.getInstance(module).register(lib);
             return lib;
         }
     }
@@ -194,14 +234,15 @@ public final class SpadLibraryManager implements Disposable {
         if (file == null) {
             return null;
         }
-        DirectoryInfo info = DirectoryIndex.getInstance(psiElement.getProject()).getInfoForFile(file);
-        if (info.isInLibrarySource(file)) {
+        var fileIndex = ProjectFileIndex.getInstance(psiElement.getProject());
+        var sourceRoot = fileIndex.getSourceRootForFile(psiElement.getContainingFile().getVirtualFile());
+        if (fileIndex.isInLibrarySource(file)) {
             for (Sdk sdk : ProjectJdkTable.getInstance().getAllJdks()) {
                 if (!(sdk.getSdkType() instanceof AxiomSdk)) {
                     continue;
                 }
                 Optional<VirtualFile> any = Arrays.stream(sdk.getRootProvider().getFiles(OrderRootType.SOURCES))
-                                                    .filter(r -> Objects.equals(r, info.getSourceRoot())).findAny();
+                                                    .filter(r -> Objects.equals(r, sourceRoot)).findAny();
                 if (any.isPresent()) {
                     return forSdk(sdk);
                 }

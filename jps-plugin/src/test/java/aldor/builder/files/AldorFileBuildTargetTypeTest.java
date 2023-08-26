@@ -4,10 +4,11 @@ import aldor.builder.AldorBuilderService;
 import aldor.builder.jps.AldorSourceRootProperties;
 import aldor.builder.jps.AldorSourceRootType;
 import aldor.builder.jps.JpsAldorModelSerializerExtension;
-import aldor.builder.jps.module.AldorFacetExtensionProperties;
-import aldor.builder.jps.module.AldorModuleFacade;
+import aldor.builder.jps.module.AldorFacetProperties;
+import aldor.builder.jps.module.AldorJpsModuleFacade;
 import aldor.builder.jps.module.JpsAldorFacetExtension;
 import aldor.builder.jps.module.JpsAldorModuleType;
+import aldor.builder.jps.module.MakeConvention;
 import aldor.util.JUnitsRt;
 import com.intellij.openapi.util.io.FileUtilRt;
 import org.jetbrains.annotations.NotNull;
@@ -64,7 +65,7 @@ public class AldorFileBuildTargetTypeTest {
         addAldorSourceRoot("mod-1", "src");
         addSdk("mod-1", "aldor-sdk", "/tmp/aldor-sdk");
 
-        AldorModuleFacade facade = new AldorModuleFacade(model.getProject().getModules().get(0));
+        AldorJpsModuleFacade facade = new AldorJpsModuleFacade(model.getProject().getModules().get(0));
         //noinspection deprecation
         assertEquals("aldor-sdk", facade.facet().sdkName());
         assertEquals("/tmp/aldor-sdk", facade.sdkPath());
@@ -147,8 +148,8 @@ public class AldorFileBuildTargetTypeTest {
         JpsModel modifiable = model.createModifiableModel(dispatcher("sdk-" + sdkPath));
         JpsModule module = modifiable.getProject().getModules().stream().filter(mod -> mod.getName().equals(moduleName)).findFirst().orElseThrow();
 
-        AldorFacetExtensionProperties properties = facetProperties(module);
-        properties = properties.asBuilder().setSdkName(sdkName).build();
+        AldorFacetProperties properties = facetProperties(module);
+        properties = properties.asBuilder().sdkName(sdkName).makeConvention(MakeConvention.Source).build();
         setFacetProperties(module, properties);
 
         JpsAldorModelSerializerExtension.JpsAldorSdkType sdkType = JpsAldorModelSerializerExtension.JpsAldorSdkType.INSTALLED;
@@ -158,14 +159,14 @@ public class AldorFileBuildTargetTypeTest {
         modifiable.commit();
     }
 
-    private void setFacetProperties(JpsModule module, AldorFacetExtensionProperties properties) {
+    private void setFacetProperties(JpsModule module, AldorFacetProperties properties) {
         module.getContainer().setChild(JpsAldorFacetExtension.ROLE, new JpsAldorFacetExtension(properties));
     }
 
-    private AldorFacetExtensionProperties facetProperties(JpsModule module) {
+    private AldorFacetProperties facetProperties(JpsModule module) {
         return Optional.ofNullable(module.getContainer().getChild(JpsAldorFacetExtension.ROLE))
                 .map(JpsAldorFacetExtension::getProperties)
-                .orElse(AldorFacetExtensionProperties.builder().build());
+                .orElse(AldorFacetProperties.newBuilder().build());
     }
 
     @NotNull

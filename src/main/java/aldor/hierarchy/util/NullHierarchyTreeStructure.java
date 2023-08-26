@@ -3,10 +3,13 @@ package aldor.hierarchy.util;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.hierarchy.HierarchyNodeDescriptor;
 import com.intellij.ide.hierarchy.HierarchyTreeStructure;
+import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.editor.markup.TextAttributes;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ui.util.CompositeAppearance;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class NullHierarchyTreeStructure extends HierarchyTreeStructure {
     public static final Object[] EMPTY_OBJECTS = new Object[0];
@@ -20,7 +23,20 @@ public class NullHierarchyTreeStructure extends HierarchyTreeStructure {
     @NotNull
     @Override
     protected Object[] buildChildren(@NotNull HierarchyNodeDescriptor descriptor) {
-        return new Object[] {createDescriptor("Error: " + msg, descriptor)};
+        if (descriptor instanceof NullHierarchyDescriptor) {
+            return new Object[] {new ErrorNodeDescriptor(descriptor, msg)};
+        }
+        else {
+            return EMPTY_OBJECTS;
+        }
+    }
+
+    private static class NullLeafHierarchyDescriptor extends HierarchyNodeDescriptor {
+
+        protected NullLeafHierarchyDescriptor(@NotNull Project project, @Nullable NodeDescriptor parentDescriptor, @NotNull PsiElement element) {
+            super(project, parentDescriptor, element, false);
+        }
+
     }
 
     private static final class NullHierarchyDescriptor extends HierarchyNodeDescriptor {

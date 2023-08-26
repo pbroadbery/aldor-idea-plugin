@@ -17,8 +17,9 @@ import static aldor.make.CompileOutputParser.State.ErrorLocations;
 import static aldor.make.CompileOutputParser.State.NoError;
 import static java.util.regex.Pattern.compile;
 
-public class CompileOutputParser {
-    private static final Pattern firstLine = compile("\"([^\"]*)\", line (\\d+): .*$");
+public class CompileOutputParser implements GenericOutputParser {
+    private static final Pattern buildResetLine = compile("^ {2}[A-Z][A-Z].*$");
+    private static final Pattern firstLine = compile("^\"([^\"]*)\", line (\\d+): .*$");
     private static final int     firstLine_grp_1_file = 1;
     private static final int     firstLine_grp_2_file = 2;
     private static final Pattern locatorLine = compile("^\\[L(\\d+) C(\\d+)] #(\\d+) \\((\\w+)\\) (.*)$");
@@ -48,7 +49,8 @@ public class CompileOutputParser {
         this.messageBody = new ArrayList<>();
     }
 
-    void newMessage(String text) {
+    @Override
+    public void newMessage(String text) {
         CompilerMessage message = process(text);
         if (message != null) {
             listener.messageReceived(message);
@@ -67,8 +69,8 @@ public class CompileOutputParser {
                 throw new IllegalStateException("Unknown state: " + state);
         }
     }
-
-    void close() {
+    @Override
+    public void close() {
         CompilerMessage message = this.errorMessageForText(messageBody);
         if (message != null) {
             this.listener.messageReceived(message);
@@ -86,7 +88,6 @@ public class CompileOutputParser {
         file = matcher.group(firstLine_grp_1_file);
         return null;
     }
-
     @Nullable
     private CompilerMessage processErrorBody(String text) {
         Matcher matcher = locatorLine.matcher(text);
@@ -110,6 +111,13 @@ public class CompileOutputParser {
             this.processNoError(text);
             return message;
         }
+        else if (buildResetLine.matcher(text).matches()) {
+            CompilerMessage message = errorMessageForText(this.messageBody);
+            messageBody = new ArrayList<>();
+            this.processNoError(text);
+            state = NoError;
+            return message;
+        }
         else if (!text.isEmpty() && Character.isWhitespace(text.charAt(0))) {
             this.state = ErrorLocations;
             messageBody.add(text);
@@ -126,7 +134,7 @@ public class CompileOutputParser {
     }
 
     @Nullable
-    CompilerMessage addErrorMessage(String text) {
+    private CompilerMessage addErrorMessage(String text) {
         CompilerMessage message = errorMessageForText(messageBody);
         messageBody = new ArrayList<>();
         messageBody.add(text);
@@ -165,13 +173,10 @@ public class CompileOutputParser {
 
         }
     }
-    public interface Listener {
-        void messageReceived(CompilerMessage message);
-    }
 
     @SuppressWarnings("PackageVisibleInnerClass")
     enum State {
-        NoError, ErrorBody, ErrorLocations
+        NoError, ErrorBody, ErrorLocations;
     }
 
 

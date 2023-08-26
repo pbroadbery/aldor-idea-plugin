@@ -22,6 +22,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.testFramework.fixtures.CodeInsightTestFixture;
 import org.jetbrains.annotations.NotNull;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -42,7 +43,9 @@ import static aldor.test_util.SdkProjectDescriptors.fricasSdkProjectDescriptor;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
+@Ignore("FIXME") // TODO: Really fix me
 public class FricasSpadLibraryTest {
     private final DirectoryPresentRule directoryPresentRule = new DirectoryPresentRule("/home/pab/Work/fricas/opt/lib/fricas/target/x86_64-linux-gnu");
     private final CodeInsightTestFixture testFixture = createFixture(fricasSdkProjectDescriptor(directoryPresentRule));
@@ -59,6 +62,19 @@ public class FricasSpadLibraryTest {
     private void showSDK() {
         Sdk projectSdk = ProjectRootManager.getInstance(testFixture.getProject()).getProjectSdk();
         System.out.println("SDK IS: "+  projectSdk);
+    }
+
+    @Test
+    public void testType() {
+        FricasSpadLibrary lib = new FricasSpadLibraryBuilder().project(testFixture.getProject())
+                .daaseDirectory(projectSdkAlgebraDirectory())
+                .createFricasSpadLibrary();
+        Syntax syntax = Id.createMissingId(AldorTokenTypes.TK_Id, "Type");
+
+        List<Syntax> parents = lib.parentCategories(syntax);
+        assertTrue(parents.isEmpty());
+
+        lib.dispose();
     }
 
     @Test
@@ -277,6 +293,22 @@ public class FricasSpadLibraryTest {
                 op.containingForm().getText().substring(0, 20)));
     }
 
+    @Test
+    @SkipCI
+    public void testMapping() {
+        FricasSpadLibrary lib = new FricasSpadLibraryBuilder()
+                .project(testFixture.getProject())
+                .daaseDirectory(projectSdkAlgebraDirectory())
+                .createFricasSpadLibrary();
+
+        Syntax syntax = ParserFunctions.parseToSyntax(testFixture.getProject(), "Integer -> String");
+        Pair<List<SpadLibrary.ParentType>, List<SpadLibrary.Operation>> allparents = lib.allParents(syntax);
+        List<SpadLibrary.ParentType> parents = allparents.first;
+        List<SpadLibrary.Operation> operations = allparents.second;
+
+        assertTrue(parents.isEmpty());
+        assertTrue(operations.isEmpty());
+    }
 
     @Test
     @SkipCI

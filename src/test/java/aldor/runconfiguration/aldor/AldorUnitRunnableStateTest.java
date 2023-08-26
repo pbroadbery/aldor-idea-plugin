@@ -8,7 +8,6 @@ import aldor.test_util.AssumptionAware;
 import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.JUnits;
 import aldor.test_util.SdkProjectDescriptors;
-import aldor.test_util.SkipCI;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.PsiLocation;
 import com.intellij.execution.RunnerAndConfigurationSettings;
@@ -77,17 +76,19 @@ public class AldorUnitRunnableStateTest extends AssumptionAware.BasePlatformTest
         //getProject().getProjectFile().refresh(false, false);
         EdtTestUtil.runInEdtAndWait(() -> {
             VirtualFile file = createFile(getSourceRoot(), "foo.as",
-                    "#include \"aldor.as\"\n" +
-                            "#pile\n" +
-                            "ALDORUNIT__RUNNER ==> annotation==org_.junit_.runner_.RunWith(aldor_.aldorunit_.runner_.AldorUnitRunner.class)\n" +
-                            "ALDORUNIT__SOURCEFILE ==> annotation==aldor_.aldorunit_.SourceFile()\n" +
-                            "\n" +
-                            "export FooTest to Foreign Java(\"aldor.test\")\n" +
-                            "FooTest: with\n" +
-                            "    test: () -> ()\n" +
-                            "== add \n" +
-                            "    test(): () == return\n" +
-                            "\n");
+                    """
+                            #include "aldor.as"
+                            #pile
+                            ALDORUNIT__RUNNER ==> annotation==org_.junit_.runner_.RunWith(aldor_.aldorunit_.runner_.AldorUnitRunner.class)
+                            ALDORUNIT__SOURCEFILE ==> annotation==aldor_.aldorunit_.SourceFile()
+
+                            export FooTest to Foreign Java("aldor.test")
+                            FooTest: with
+                                test: () -> ()
+                            == add
+                                test(): () == return
+
+                            """);
 
             String makefileText = annotationFileTestFixture.makefileBuilder(aldorExecutableRule.executable(), Collections.singleton("foo.as"))
                     .withSourceDirectory(getSourceRoot())

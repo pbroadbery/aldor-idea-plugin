@@ -41,7 +41,7 @@ public class AldorEnvironment implements SpadEnvironment {
     }
 
     @Override
-    public boolean containsFile(VirtualFile file) {
+    public boolean containsBuildFile(VirtualFile file) {
         if (VfsUtilCore.isAncestor(sdkDirectory, file, true)) {
             return true;
         }

@@ -51,9 +51,6 @@ public abstract class SpadLibraryManagerTestCase {
         SpadLibrary.Operation theCons = ops.stream().filter(op -> Objects.equals("cons", op.name())).findFirst().orElse(null);
         assertNotNull(theCons);
         Assert.assertEquals("(Integer, %) -> %", SyntaxPrinter.instance().toString(theCons.type()));
-
-
-
     }
 
     @Test
@@ -76,9 +73,5 @@ public abstract class SpadLibraryManagerTestCase {
             System.out.println("Parent: " + parentSyntax + " " + lead.psiElement());
             assertNotNull(lead.psiElement());
         }
-
-
     }
-
-
 }

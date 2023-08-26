@@ -86,7 +86,7 @@ public class AldorFindUsagesProviderTest {
         assertNotNull(handler);
         FindUsagesOptions options = handler.getFindUsagesOptions();
 
-        return new PsiElement2UsageTargetAdapter(elt, options);
+        return new PsiElement2UsageTargetAdapter(elt, options, false);
     }
 
 }

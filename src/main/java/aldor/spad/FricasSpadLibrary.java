@@ -21,7 +21,6 @@ import aldor.typelib.TForm;
 import aldor.typelib.TfGeneral;
 import aldor.typelib.TypeExport;
 import aldor.typelib.TypePackage;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
@@ -47,7 +46,7 @@ import java.util.stream.Stream;
 import static aldor.syntax.AnnotatedSyntax.fromSyntax;
 import static aldor.syntax.AnnotatedSyntax.toSyntax;
 
-public class FricasSpadLibrary implements SpadLibrary, Disposable {
+public class FricasSpadLibrary implements SpadLibrary {
     private static final Logger LOG = Logger.getInstance(FricasSpadLibrary.class);
     public static final GlobalSearchScope[] EMPTY_SCOPE_ARRAY = new GlobalSearchScope[0];
 
@@ -99,8 +98,8 @@ public class FricasSpadLibrary implements SpadLibrary, Disposable {
         return new VirtualFileContentsChangedAdapter() {
             @Override
             protected void onFileChange(@NotNull VirtualFile file) {
-                LOG.info("File changed: " + file);
-                if (environment.containsFile(file)) {
+                if (environment.containsBuildFile(file)) {
+                    LOG.info("File changed: " + file + " - triggering reload");
                     axiomInterfaceContainer.needsReload();
                 }
             }
@@ -372,7 +371,6 @@ public class FricasSpadLibrary implements SpadLibrary, Disposable {
 
     @Override
     public void dispose() {
-        VirtualFileManager.getInstance().removeVirtualFileListener(listener);
         axiomInterfaceContainer.dispose();
     }
 

@@ -11,7 +11,7 @@ import javax.swing.JComponent;
 import javax.swing.JTextField;
 import java.util.function.Function;
 
-public class WizardTextField extends WizardInputField<JComponent> {
+public class WizardTextField extends WizardInputField<WizardTextField.ValidatingTextField> {
     private final String label;
     private final ValidatingTextField field;
     private final Function<String, String> validator;
@@ -21,6 +21,7 @@ public class WizardTextField extends WizardInputField<JComponent> {
         this.label = label;
         TextFieldValueEditor<String> valueEditor = new ValidatingValueEditor(defaultValue, label, validator);
         this.field = new ValidatingTextField(valueEditor);
+        this.field.setDefaultValue(defaultValue);
         this.validator = validator;
     }
 
@@ -30,7 +31,7 @@ public class WizardTextField extends WizardInputField<JComponent> {
     }
 
     @Override
-    public JComponent getComponent() {
+    public WizardTextField.ValidatingTextField getComponent() {
         return field;
     }
 
@@ -75,7 +76,7 @@ public class WizardTextField extends WizardInputField<JComponent> {
     }
 
     @SuppressWarnings({"serial", "SerializableHasSerializationMethods"})
-    private static class ValidatingTextField extends JBTextField {
+    public static class ValidatingTextField extends JBTextField {
         private final TextFieldValueEditor<String> myValueEditor;
 
         ValidatingTextField(TextFieldValueEditor<String> editor) {
@@ -92,6 +93,7 @@ public class WizardTextField extends WizardInputField<JComponent> {
         }
 
         public void setDefaultValue(@NotNull String defaultValue) {
+            getEmptyText().setText("default value: " + defaultValue);
             myValueEditor.setDefaultValue(defaultValue);
         }
 

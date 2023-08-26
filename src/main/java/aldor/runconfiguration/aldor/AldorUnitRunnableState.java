@@ -3,7 +3,7 @@ package aldor.runconfiguration.aldor;
 import aldor.build.facet.aldor.AldorFacet;
 import aldor.build.facet.aldor.AldorFacetConfiguration;
 import aldor.build.facet.aldor.AldorFacetType;
-import aldor.builder.jps.module.AldorFacetExtensionProperties;
+import aldor.builder.jps.module.AldorFacetProperties;
 import aldor.util.Mavens;
 import aldor.util.StringUtilsAldorRt;
 import com.intellij.execution.CantRunException;
@@ -39,13 +39,15 @@ import org.jetbrains.idea.maven.utils.library.RepositoryLibraryProperties;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class AldorUnitRunnableState extends AbstractAldorUnitRunnableState<AldorUnitConfiguration> {
-    private static final Logger LOG = Logger.getInstance(AldorUnitRunnableState.class);
     public static final String FRAMEWORK_NAME = "AldorUnit";
+    private static final Logger LOG = Logger.getInstance(AldorUnitRunnableState.class);
     private final AldorUnitConfiguration configuration;
+    private Collection<OrderRoot> junitRoots = Collections.emptyList();
 
     protected AldorUnitRunnableState(AldorUnitConfiguration configuration, @NotNull ExecutionEnvironment environment) {
         super(environment);
@@ -120,7 +122,7 @@ public class AldorUnitRunnableState extends AbstractAldorUnitRunnableState<Aldor
         Optional<String> sdkName = Optional.ofNullable(facet)
                 .map(Facet::getConfiguration)
                 .map(AldorFacetConfiguration::getState)
-                .map(AldorFacetExtensionProperties::sdkName);
+                .map(AldorFacetProperties::sdkName);
         Optional<Sdk> sdk = sdkName.map(name -> ProjectJdkTable.getInstance().findJdk(name));
         if (!sdk.isPresent()) {
             LOG.error("Missing aldor implementation for " + configuration.getName() + " implementation: " + sdkName.orElse("<missing>")
@@ -135,22 +137,25 @@ public class AldorUnitRunnableState extends AbstractAldorUnitRunnableState<Aldor
         }
     }
 
-    private void configureJUnitClassPath(PathsList classPath) throws CantRunException {
+    @Override
+    protected final void prepareRoots() throws CantRunException {
         Project project = this.configuration.getProject();
-        Collection<OrderRoot> roots;
         try {
-            roots = Mavens.downloadDependenciesWhenRequired(project,
+            junitRoots = Mavens.downloadDependenciesWhenRequired(project,
                     new RepositoryLibraryProperties("junit", "junit", Mavens.JUNIT_VERSION));
         } catch (Mavens.MavenDownloadException e) {
-            throw new CantRunException(e.getMessage() + " when running " + this.configuration.getName(), e);
+            throw new CantRunException("Failed to download junit runtime");
         }
+    }
 
-        for (OrderRoot root : roots) {
+    private void configureJUnitClassPath(PathsList classPath) throws CantRunException {
+        for (OrderRoot root : junitRoots) {
             //noinspection ObjectEquality
             if (root.getType() == OrderRootType.CLASSES) {
                 classPath.add(root.getFile());
             }
-        }}
+        }
+    }
 
     private void configureSdkClassPath(PathsList classPath) {
         classPath.addFirst(JavaSdkUtil.getIdeaRtJarPath());

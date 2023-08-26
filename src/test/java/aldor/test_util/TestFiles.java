@@ -9,7 +9,7 @@ public final class TestFiles {
     @NotNull
     public static File existingFile(String pathname) {
         File file = new File(pathname);
-        Assume.assumeTrue(file.exists());
+        Assume.assumeTrue("File does not exist: " + pathname, file.exists());
         return file;
     }
 

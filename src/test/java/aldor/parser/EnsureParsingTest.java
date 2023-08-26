@@ -294,6 +294,7 @@ public class EnsureParsingTest extends AssumptionAware.BasePlatformTestCase {
     private PsiElement parseText(CharSequence text, IElementType eltType) {
         return ParserFunctions.parseAldorText(getProject(), text, eltType);
     }    @NotNull
+
     private List<PsiErrorElement> parseFile(Project project, File file) {
         Assert.assertTrue(file.exists());
         VirtualFile vf = LocalFileSystem.getInstance().findFileByIoFile(file);

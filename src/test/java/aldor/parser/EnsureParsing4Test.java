@@ -176,6 +176,25 @@ public class EnsureParsing4Test {
         Assert.assertTrue(badFiles.isEmpty());
     }
 
+
+    @Test
+    @SkipCI
+    public void testAldorAx0() {
+        Assert.assertNotNull(getProject());
+
+        File base = existingFile("/home/pab/Work/aldorgit/aldor/aldor/lib/ax0/src");
+        Multimap<ParserFunctions.FailReason, File> badFiles = parseLibrary(getProject(), base, null, Sets.newHashSet());
+
+        for (Map.Entry<ParserFunctions.FailReason, File> ent: badFiles.entries()) {
+            System.out.println("Failed: " + ent.getKey() + " --> " + ent.getValue());
+        }
+
+        for (Map.Entry<ParserFunctions.FailReason, File> ent: badFiles.entries()) {
+            System.out.println("Failed: " + ent.getKey() + " --> " + ent.getValue() + "\n" + ent.getKey().details());
+        }
+        Assert.assertTrue(badFiles.isEmpty());
+    }
+
     @Test
     @SkipCI
     public void testAlgebraLibrary() {

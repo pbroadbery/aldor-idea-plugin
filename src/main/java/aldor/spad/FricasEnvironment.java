@@ -65,7 +65,7 @@ public class FricasEnvironment implements SpadEnvironment {
     }
 
     @Override
-    public boolean containsFile(VirtualFile file) {
+    public boolean containsBuildFile(VirtualFile file) {
         if ((daaseDirectory != null) && VfsUtilCore.isAncestor(daaseDirectory, file, true)) {
             return true;
         }

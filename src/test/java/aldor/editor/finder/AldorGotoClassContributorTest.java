@@ -8,10 +8,7 @@ import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.stubs.StubUpdatingIndex;
 import com.intellij.testFramework.LightProjectDescriptor;
-import com.intellij.testFramework.fixtures.BasePlatformTestCase;
-import com.intellij.util.indexing.FileBasedIndex;
 import org.junit.Assert;
 
 import static aldor.util.VirtualFileTests.createFile;
@@ -23,8 +20,6 @@ public class AldorGotoClassContributorTest extends AssumptionAware.BasePlatformT
     public void testGotoClass() {
         Project project = getProject();
         VirtualFile file = createFile(getSourceRoot(), "foo.as", "Something(x: Wibble): with == stuff; aNumber == " + System.currentTimeMillis());
-
-        FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
 
         ChooseByNameContributor gotoClassContributor = new AldorGotoClassContributor();
 
@@ -42,8 +37,6 @@ public class AldorGotoClassContributorTest extends AssumptionAware.BasePlatformT
     public void testGotoClass2() {
         Project project = getProject();
         VirtualFile file = createFile(getSourceRoot(), "foo.as", "Something(x: Wibble): with == add { foo == bar }; aNumber == " + System.currentTimeMillis());
-
-        FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
 
         ChooseByNameContributor gotoClassContributor = new AldorGotoClassContributor();
 

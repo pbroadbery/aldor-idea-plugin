@@ -140,12 +140,6 @@ public class AldorInstalledSdkType extends SdkType implements AldorSdkType, Axio
     }
 
     @Override
-    @NotNull
-    public String aldorPath(Sdk sdk) {
-        return sdk.getHomePath() + "/bin/aldor";
-    }
-
-    @Override
     public boolean isLocalInstall() {
         return false;
     }

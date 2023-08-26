@@ -1,7 +1,7 @@
 package aldor.sdk;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public interface AxiomInstalledSdkType extends AxiomSdk {
-    @Nonnull String librarySuffix();
+    @NotNull String librarySuffix();
 }

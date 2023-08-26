@@ -1,19 +1,14 @@
 package aldor.build.facet.aldor;
 
 import aldor.build.facet.MissingSdkType;
-import aldor.builder.jps.module.AldorFacetExtensionProperties;
+import aldor.builder.jps.module.AldorFacetProperties;
 import aldor.sdk.aldor.AldorInstalledSdkType;
 import com.google.common.annotations.VisibleForTesting;
 import com.intellij.facet.ui.FacetEditorValidator;
 import com.intellij.facet.ui.FacetValidatorsManager;
 import com.intellij.facet.ui.ValidationResult;
-import com.intellij.ide.util.BrowseFilesListener;
-import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
-import com.intellij.openapi.fileChooser.FileChooserFactory;
 import com.intellij.openapi.projectRoots.JavaSdk;
 import com.intellij.openapi.projectRoots.ProjectJdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
@@ -22,19 +17,16 @@ import com.intellij.openapi.projectRoots.SdkTypeId;
 import com.intellij.openapi.roots.ui.configuration.JdkComboBox;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectSdksModel;
 import com.intellij.openapi.util.Condition;
-import com.intellij.ui.FieldPanel;
-import com.intellij.ui.InsertPathAction;
-import com.intellij.ui.components.fields.ExtendableTextField;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
-import java.awt.event.ActionEvent;
 import java.util.Objects;
 import java.util.Optional;
+
+import static aldor.builder.jps.module.AldorFacetProperties.*;
 
 /*
  * TODO: Java components should toggled
@@ -120,16 +112,16 @@ public class AldorFacetEditorForm {
 
     @NotNull
     @VisibleForTesting
-    public AldorFacetExtensionProperties currentState() {
-        return AldorFacetExtensionProperties.builder()
-            .setSdkName(Optional.ofNullable(aldorSdkComboBox.getSelectedJdk()).map(Sdk::getName).orElse(null))
-            .setBuildJavaComponents(buildJavaCheckBox.isSelected())
-            .setJavaSdkName(Optional.ofNullable(javaSdkComboBox.getSelectedJdk()).map(Sdk::getName).orElse(null))
+    public AldorFacetProperties currentState() {
+        return newBuilder()
+            .sdkName(Optional.ofNullable(aldorSdkComboBox.getSelectedJdk()).map(Sdk::getName).orElse(null))
+                .java(buildJavaCheckBox.isSelected() ? WithJava.Enabled : WithJava.Disabled)
+            .javaSdkName(Optional.ofNullable(javaSdkComboBox.getSelectedJdk()).map(Sdk::getName).orElse(null))
             .build();
     }
 
     public void reset() {
-        AldorFacetExtensionProperties state = editor.facetState();
+        AldorFacetProperties state = editor.facetState();
         if (state == null) {
             aldorSdkComboBox.setSelectedJdk(null);
             aldorSdkComboBox.setSelectedJdk(null);

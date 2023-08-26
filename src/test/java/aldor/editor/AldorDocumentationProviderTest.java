@@ -6,6 +6,7 @@ import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.JUnits;
 import aldor.test_util.LightPlatformJUnit4TestRule;
 import aldor.test_util.SdkProjectDescriptors;
+import aldor.test_util.SourceFileStorageType;
 import com.intellij.codeInsight.documentation.DocumentationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
@@ -53,10 +54,12 @@ public class AldorDocumentationProviderTest {
     }
 
     public void xtestDocumentationLocal() throws Exception {
-        String program = "#include \"aldor\"\n"
-                + "+++ This is a domain\n"
-                + "Dom: with == add;\n"
-                + "f(x: Dom): Dom == x;\n";
+        String program = """
+                #include "aldor"
+                +++ This is a domain
+                Dom: with == add;
+                f(x: Dom): Dom == x;
+                """;
         VirtualFile sourceFile = annotationTextFixture.createFile(codeTestFixture.getProject(),"foo.as", program);
         annotationTextFixture.createFile(codeTestFixture.getProject(),"Makefile",
                 "out/ao/foo.ao: foo.as\n" +
@@ -124,9 +127,11 @@ public class AldorDocumentationProviderTest {
 
     @Test
     public void testImportDocco() throws Exception {
-        String program = "#include \"aldor\"\n"
-                + "import from Integer;\n"
-                + "myabs := abs;\n";
+        String program = """
+                #include "aldor"
+                import from Integer;
+                myabs := abs;
+                """;
         VirtualFile sourceFile = annotationTextFixture.createFile(codeTestFixture.getProject(), "bar.as", program);
         String sourceBaseName = annotationTextFixture.sourceDirectory(codeTestFixture.getProject()).getName();
         annotationTextFixture.createFile(codeTestFixture.getProject(), "Makefile",
@@ -152,6 +157,6 @@ public class AldorDocumentationProviderTest {
     }
 
     protected LightProjectDescriptor getProjectDescriptor() {
-       return SdkProjectDescriptors.aldorSdkProjectDescriptor(aldorExecutableRule, SdkProjectDescriptors.SourceFileStorageType.Real);
+       return SdkProjectDescriptors.aldorSdkProjectDescriptor(aldorExecutableRule, SourceFileStorageType.Real);
     }
 }

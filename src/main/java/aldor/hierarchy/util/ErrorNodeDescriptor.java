@@ -1,6 +1,5 @@
 package aldor.hierarchy.util;
 
-import aldor.hierarchy.AldorHierarchyNodeDescriptor;
 import com.intellij.ide.hierarchy.HierarchyNodeDescriptor;
 import com.intellij.openapi.roots.ui.util.CompositeAppearance;
 import org.jetbrains.annotations.NotNull;
@@ -11,7 +10,7 @@ public class ErrorNodeDescriptor extends HierarchyNodeDescriptor implements Comp
     private final String text;
     private final Throwable e;
 
-    public ErrorNodeDescriptor(@NotNull AldorHierarchyNodeDescriptor parent, String s) {
+    public ErrorNodeDescriptor(@NotNull HierarchyNodeDescriptor parent, String s) {
         this(parent, s, null);
     }
 

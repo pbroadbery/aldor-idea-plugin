@@ -4,7 +4,6 @@ package aldor.syntax;
 import aldor.lexer.AldorTokenTypes;
 import aldor.psi.AldorDefine;
 import aldor.psi.AldorIdentifier;
-import aldor.psi.AldorRecoverableExpression;
 import aldor.references.AldorReference;
 import aldor.syntax.components.Apply;
 import aldor.syntax.components.Comma;

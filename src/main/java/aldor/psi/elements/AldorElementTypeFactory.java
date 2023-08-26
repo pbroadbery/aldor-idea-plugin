@@ -41,8 +41,8 @@ public class AldorElementTypeFactory {
         try {
             stubFactory = new AldorStubFactoryImpl();
             SPAD_ABBREV_ELEMENT_TYPE = new SpadAbbrevElementType(stubFactory.abbrevCodec());
-            ALDOR_FILE_ELEMENT_TYPE = new FileStubElementType(AldorLanguage.INSTANCE, stubFactory.getVersion());
-            SPAD_FILE_ELEMENT_TYPE = new FileStubElementType(SpadLanguage.INSTANCE, stubFactory.getVersion());
+            ALDOR_FILE_ELEMENT_TYPE = new FileStubElementType("aldor-element", AldorLanguage.INSTANCE, stubFactory.getVersion());
+            SPAD_FILE_ELEMENT_TYPE = new FileStubElementType("spad-element", SpadLanguage.INSTANCE, stubFactory.getVersion());
             instance = new AldorElementTypeFactory();
         }
         catch (Throwable e) {
@@ -100,8 +100,8 @@ public class AldorElementTypeFactory {
     public static final class FileStubElementType extends IStubFileElementType<PsiFileStub<PsiFile>> {
         private final int stubVersion;
 
-        private FileStubElementType(Language language, int stubVersion) {
-            super("aldorFile", language);
+        private FileStubElementType(String debugName, Language language, int stubVersion) {
+            super(debugName, language);
             this.stubVersion = stubVersion;
         }
 

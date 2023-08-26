@@ -3,7 +3,6 @@ package aldor.hierarchy;
 import aldor.lexer.AldorTokenTypes;
 import aldor.spad.AldorExecutor;
 import aldor.spad.SpadLibrary;
-import aldor.spad.SpadLibraryManager;
 import aldor.syntax.Syntax;
 import aldor.syntax.components.Id;
 import aldor.test_util.EnsureClosedRule;
@@ -15,6 +14,7 @@ import aldor.typelib.AxiomInterface;
 import aldor.typelib.Env;
 import aldor.util.Assertions;
 import com.intellij.ide.hierarchy.HierarchyProvider;
+import com.intellij.ide.hierarchy.TypeHierarchyBrowserBase;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
@@ -42,7 +42,6 @@ import org.junit.runners.model.Statement;
 import java.util.Collections;
 import java.util.List;
 
-import static com.intellij.ide.hierarchy.TypeHierarchyBrowserBase.SUPERTYPES_HIERARCHY_TYPE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -96,12 +95,12 @@ public class AldorTypeHierarchyBrowserMissingLibTest {
         HierarchyProvider provider = new AldorTypeHierarchyProvider();
         PsiElement elt = whole.findElementAt(text.indexOf("List"));
 
-        DataContext context = SimpleDataContext.getSimpleContext(CommonDataKeys.PSI_ELEMENT.getName(), elt,
+        DataContext context = SimpleDataContext.getSimpleContext(CommonDataKeys.PSI_ELEMENT, elt,
                 SimpleDataContext.getProjectContext(codeTestFixture.getProject()));
 
         PsiElement target = provider.getTarget(context);
         assertNotNull(target);
-        try (TestBrowser browser = new TestBrowser(ensureClosedRule, new AldorTypeHierarchyProvider(), elt, SUPERTYPES_HIERARCHY_TYPE)) {
+        try (TestBrowser browser = new TestBrowser(ensureClosedRule, new AldorTypeHierarchyProvider(), elt, TypeHierarchyBrowserBase.getSupertypesHierarchyType())) {
             browser.update();
 
             System.out.println("Root: " + browser.rootDescriptor() + " children: " + browser.childElements().size() + " " + browser.childElements());
@@ -189,6 +188,11 @@ public class AldorTypeHierarchyBrowserMissingLibTest {
 
         @Override
         public void needsReload() {
+        }
+
+        @Override
+        public void dispose() {
+
         }
     }
 }

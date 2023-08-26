@@ -18,7 +18,7 @@
     </change-notes>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-    <idea-version since-build="201.6668.114" until-build="203.*"/>
+    <idea-version since-build="201.6668.114" until-build="225.*"/>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
@@ -27,6 +27,7 @@
     -->
 
     <depends>com.intellij.modules.java</depends>
+    <depends>Git4Idea</depends>
 
     <application-components>
         <component>
@@ -72,6 +73,7 @@
         <moduleType id="ALDOR-MODULE" classpathProvider="false"
                     implementationClass="aldor.build.module.AldorModuleType"/>
         <moduleConfigurationEditorProvider implementation="aldor.build.module.AldorModuleConfigEditorProvider"/>
+        <moduleConfigurationEditorProvider implementation="aldor.build.facet.cfgroot.ConfigModuleEditorProvider"/>
         <moduleExtension implementation="aldor.build.module.AldorModuleExtension"/>
         <moduleExtension implementation="aldor.build.module.AldorEnabledModuleExtension"/>
 
@@ -111,6 +113,7 @@
         <lang.parserDefinition language="Aldor" implementationClass="aldor.parser.AldorParserDefinition"/>
 
         <facetType implementation="aldor.build.facet.aldor.AldorFacetType"/>
+        <facetType implementation="aldor.build.facet.cfgroot.ConfigRootFacetType"/>
         <!-- <library.type implementation="aldor.library.AldorLibraryType"/> -->
         <sdkType implementation="aldor.sdk.aldor.AldorInstalledSdkType"/>
         <sdkType implementation="aldor.sdk.aldor.AldorLocalSdkType"/>
@@ -122,6 +125,9 @@
 
         <configurationType implementation="aldor.runconfiguration.aldor.AldorUnitRunConfigurationType" />
         <runConfigurationProducer implementation = "aldor.runconfiguration.aldor.AldorUnitConfigurationProducer"/>
+
+        <projectStructureDetector implementation="aldor.module.template.detect.AldorRepoProjectDetector"/>
+
         <!--<elementDescriptionProvider implementation="aldor.editor.AldorElementDescriptionProvider"/> -->
 
         <!-- Spad extras -->
@@ -178,8 +184,8 @@
             <reference ref="FindUsages"/>
             <reference ref="RefactoringMenu"/>
             <separator/>
-            <reference ref="AddToFavorites"/>
-            <separator/>
+            <!--<reference ref="AddToFavorites"/>
+            <separator/>-->
             <reference ref="VersionControlsGroup"/>
             <separator/>
         </group>

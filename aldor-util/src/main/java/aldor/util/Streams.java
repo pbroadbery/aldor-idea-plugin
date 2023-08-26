@@ -1,7 +1,5 @@
 package aldor.util;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -18,7 +16,7 @@ public final class Streams {
         return opt.map(Collections::singletonList).orElse(Collections.emptyList()).stream();
     }
 
-    public static <T> Stream<T> toStream(@Nullable T opt) {
+    public static <T> Stream<T> toStream(T opt) {
         Collection<T> coll = (opt == null) ? Collections.emptyList() : Collections.singleton(opt);
         return coll.stream();
     }

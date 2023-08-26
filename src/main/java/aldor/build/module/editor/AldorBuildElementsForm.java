@@ -92,10 +92,7 @@ public class AldorBuildElementsForm {
     }
 
     private AldorModuleState getState() {
-        AldorModuleState state = AldorModuleState.newBuilder()
-                .outputDirectory(outputDirectoryFieldPanel.getText())
-                .build();
-        return state;
+        return AldorModuleState.newBuilder().build();
     }
 
     public JPanel panel() {

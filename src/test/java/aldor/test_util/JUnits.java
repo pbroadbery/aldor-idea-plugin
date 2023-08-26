@@ -17,21 +17,16 @@ import com.intellij.execution.process.ProcessOutputTypes;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.diagnostic.LogLevel;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.ProjectJdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.testFramework.EdtTestUtil;
-import com.intellij.testFramework.TestLoggerFactory;
 import com.intellij.testFramework.fixtures.IdeaTestFixture;
 import jetbrains.buildServer.messages.serviceMessages.ServiceMessage;
-import org.apache.log4j.Appender;
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.Level;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.PatternLayout;
+import junit.framework.TestCase;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.rules.TestRule;
@@ -39,27 +34,26 @@ import org.junit.runners.model.Statement;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
-import static org.apache.log4j.Level.DEBUG;
-import static org.apache.log4j.helpers.UtilLoggingLevel.INFO;
 import static org.junit.Assert.assertTrue;
 
 /**
  * Fun things that unit tests can use.
  */
 public final class JUnits {
-    public static final TestRule setLogToInfoTestRule = prePostTestRule(JUnits::setLogToInfo, LogManager::resetConfiguration);
-    public static final TestRule setLogToDebugTestRule = prePostTestRule(JUnits::setLogToDebug, LogManager::resetConfiguration);
+    public static final TestRule setLogToInfoTestRule = prePostTestRule(JUnits::setLogToInfo, JUnits::setLogToInfo); // FIXME: Really should trace logging state correctly
+    public static final TestRule setLogToDebugTestRule = prePostTestRule(JUnits::setLogToDebug, JUnits::setLogToInfo);
     private static final Logger LOG = Logger.getInstance(JUnits.class);
 
     public static Runnable setLogToDebug() {
-        return isCIBuild() ? () -> {} : setLogLevel(DEBUG);
+        return isCIBuild() ? () -> {} : setLogLevel(LogLevel.DEBUG);
     }
 
     public static Runnable setLogToInfo() {
-        return isCIBuild() ? () -> {} : setLogLevel(INFO);
+        return isCIBuild() ? () -> {} : setLogLevel(LogLevel.INFO);
     }
 
     @NotNull
@@ -69,7 +63,8 @@ public final class JUnits {
         return null;
     }
 
-    private static Runnable setLogLevel(Level level) {
+    private static Runnable setLogLevel(LogLevel level) {
+        /*
         LogManager.resetConfiguration();
         EdtTestUtil.runInEdtAndWait(() -> {
             String threadName = Thread.currentThread().getName();
@@ -85,6 +80,12 @@ public final class JUnits {
         Logger.setFactory(TestLoggerFactory.class);
 
         return () -> LogManager.getRootLogger().removeAppender(appender);
+        */
+        Logger.getInstance("").setLevel(level);
+        return () -> {
+            var logger = Logger.getInstance("");
+            logger.setLevel(level);
+        };
     }
 
     public enum JpsDebuggingState { ON, OFF }
@@ -266,4 +267,64 @@ public final class JUnits {
         }
     }
 
+    public interface TearDownAware {
+        JUnit3TearDown tearDownTracker();
+
+        default void withTearDown(UnsafeRunnable r) {
+            tearDownTracker().add(r);
+        }
+
+        default void withSafeTearDown(Runnable r) {
+            tearDownTracker().add(() -> r.run());
+        }
+
+        default void loggedTearDown(String name, UnsafeRunnable r) {
+            tearDownTracker().addLogged(name, r);
+        }
+
+    }
+
+    public static class JUnit3TearDown {
+        private final List<UnsafeRunnable> tearDowns = new LinkedList<>();
+        private boolean isSetUp = false;
+
+        public void setup(Class<? extends TestCase> clzz, UnsafeRunnable teardown) {
+            if (this.isSetUp) {
+                throw new RuntimeException("Already set up");
+            }
+            this.isSetUp = true;
+            addLogged("Parent (" + clzz.getCanonicalName() + ")", teardown);
+        }
+
+        public void add(UnsafeRunnable runnable) {
+            tearDowns.add(0, runnable);
+        }
+
+        void tearDown() {
+            for (UnsafeRunnable r : tearDowns) {
+                //noinspection OverlyBroadCatchBlock
+                try {
+                    r.run();
+                } catch (Exception e) {
+                    LOG.error("Failed to close down test");
+                    LOG.error(e);
+                }
+            }
+        }
+
+        public void addLogged(String name, UnsafeRunnable r) {
+            add(() ->{
+                LOG.info("Tear down " + name);
+                boolean ok = false;
+                try {
+                    r.run();
+                    ok = true;
+                }
+                finally {
+                    LOG.info("Tear down complete" + name + " (OK: "+ ok + ")");
+                }
+
+            });
+        }
+    }
 }

@@ -1,6 +1,6 @@
 package aldor.build.facet.aldor;
 
-import aldor.builder.jps.module.AldorFacetExtensionProperties;
+import aldor.builder.jps.module.AldorFacetProperties;
 import aldor.test_util.AssumptionAware;
 import aldor.test_util.ExecutablePresentRule;
 import aldor.test_util.FormHelper;
@@ -15,6 +15,7 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ui.configuration.JdkComboBox;
 import com.intellij.openapi.roots.ui.configuration.ModuleEditor;
 import com.intellij.openapi.roots.ui.configuration.ModulesConfigurator;
+import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.testFramework.LightProjectDescriptor;
 import org.jetbrains.annotations.NotNull;
@@ -33,7 +34,7 @@ public class AldorFacetEditorFormTest extends AssumptionAware.LightIdeaTestCase 
     }
 
     public void testForm() {
-        ModulesConfigurator configurator = new ModulesConfigurator(getProject());
+        ModulesConfigurator configurator = new ModulesConfigurator(getProject(), ProjectStructureConfigurable.getInstance(getProject()));
         configurator.setContext(new StructureConfigurableContext(getProject(), configurator));
         ProjectFacetsConfigurator facetConfigurator = configurator.getFacetsConfigurator();
         configurator.getOrCreateModuleEditor(getModule());
@@ -50,7 +51,7 @@ public class AldorFacetEditorFormTest extends AssumptionAware.LightIdeaTestCase 
     }
 
     public void test_change() throws ConfigurationException {
-        ModulesConfigurator configurator = new ModulesConfigurator(getProject());
+        ModulesConfigurator configurator = new ModulesConfigurator(getProject(), ProjectStructureConfigurable.getInstance(getProject()));
         configurator.setContext(new StructureConfigurableContext(getProject(), configurator));
         ProjectFacetsConfigurator facetConfigurator = configurator.getFacetsConfigurator();
         configurator.getOrCreateModuleEditor(getModule());
@@ -71,11 +72,11 @@ public class AldorFacetEditorFormTest extends AssumptionAware.LightIdeaTestCase 
             LOG.info("SDK: "+ allJdk);
         }
 
-        ModulesConfigurator configurator = new ModulesConfigurator(getProject());
+        ModulesConfigurator configurator = new ModulesConfigurator(getProject(), ProjectStructureConfigurable.getInstance(getProject()));
         configurator.setContext(new StructureConfigurableContext(getProject(), configurator));
         ProjectFacetsConfigurator facetConfigurator = configurator.getFacetsConfigurator();
         AldorFacet facet = AldorFacet.forModule(getModule());
-        AldorFacetExtensionProperties state = facet.getConfiguration().getState();
+        AldorFacetProperties state = facet.getConfiguration().getState();
         facet.getConfiguration().updateState(state);
         @NotNull ModuleEditor moduleEditor = configurator.getOrCreateModuleEditor(getModule());
         FacetEditorImpl editor = facetConfigurator.getOrCreateEditor(facet);
@@ -95,14 +96,14 @@ public class AldorFacetEditorFormTest extends AssumptionAware.LightIdeaTestCase 
             LOG.info("SDK: "+ allJdk);
         }
 
-        ModulesConfigurator configurator = new ModulesConfigurator(getProject());
+        ModulesConfigurator configurator = new ModulesConfigurator(getProject(), ProjectStructureConfigurable.getInstance(getProject()));
         configurator.setContext(new StructureConfigurableContext(getProject(), configurator));
         ProjectFacetsConfigurator facetConfigurator = configurator.getFacetsConfigurator();
         AldorFacet facet = AldorFacet.forModule(getModule());
-        AldorFacetExtensionProperties state = facet.getConfiguration().getState();
+        AldorFacetProperties state = facet.getConfiguration().getState();
         Assert.assertNotNull(state);
 //        facet.getConfiguration().updateState(state.asBuilder().setSdkName("Not a current SDK").build());
-        facet.getConfiguration().updateState(state.asBuilder().setSdkName("nope").build());
+        facet.getConfiguration().updateState(state.asBuilder().sdkName("nope").build());
 
         @NotNull ModuleEditor moduleEditor = configurator.getOrCreateModuleEditor(getModule()); // needed to keep next fn happy
         FacetEditorImpl editor = facetConfigurator.getOrCreateEditor(facet);

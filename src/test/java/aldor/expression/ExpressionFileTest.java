@@ -7,14 +7,13 @@ import aldor.test_util.SdkProjectDescriptors;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.FileIndexFacade;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.stubs.StubUpdatingIndex;
 import com.intellij.testFramework.LightProjectDescriptor;
-import com.intellij.testFramework.fixtures.BasePlatformTestCase;
-import com.intellij.util.indexing.FileBasedIndex;
 import org.junit.Assert;
 import org.junit.Assume;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import static aldor.util.VirtualFileTests.createFile;
 import static com.intellij.testFramework.LightPlatformTestCase.getSourceRoot;
@@ -34,10 +33,9 @@ public class ExpressionFileTest extends AssumptionAware.BasePlatformTestCase {
         Assert.assertTrue(FileIndexFacade.getInstance(project).isInSource(file));
         Assert.assertFalse(FileIndexFacade.getInstance(project).isExcludedFile(file));
 
-        FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
-
         Collection<String> ll = ExpressionDefineStubIndex.instance.getAllKeys(project);
         Assert.assertEquals(2, ll.size());
+        Assert.assertEquals(Set.of("a == b", "c == d"), new HashSet<>(ExpressionDefineStubIndex.instance.getAllKeys(project)));
     }
 
     @Override

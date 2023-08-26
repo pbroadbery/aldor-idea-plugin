@@ -15,24 +15,20 @@
  */
 package aldor.jps;
 
-import aldor.builder.jps.module.AldorFacetExtensionProperties;
 import aldor.builder.jps.AldorSourceRootType;
 import aldor.builder.jps.JpsAldorModelSerializerExtension;
+import aldor.builder.jps.module.AldorFacetProperties;
 import aldor.builder.jps.module.AldorModuleState;
 import aldor.builder.jps.module.JpsAldorFacetExtension;
 import aldor.builder.jps.module.JpsAldorModuleType;
 import aldor.builder.jps.module.MakeConvention;
 import aldor.test_util.AssumptionAware;
+import com.intellij.openapi.diagnostic.LogLevel;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileSystemUtil;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.testFramework.TestLoggerFactory;
 import com.intellij.util.TimeoutUtil;
-import org.apache.log4j.Appender;
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.PatternLayout;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.jps.api.CanceledStatus;
@@ -73,17 +69,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.apache.log4j.Level.DEBUG;
-
 public abstract class AldorJpsTestCase extends AssumptionAware.UsefulTestCase {
-    static {
-        LogManager.resetConfiguration();
-        Appender appender = new ConsoleAppender(new PatternLayout(PatternLayout.TTCC_CONVERSION_PATTERN));
-        appender.setName("Console");
-        LogManager.getRootLogger().addAppender(appender);
-        LogManager.getRootLogger().setLevel(DEBUG);
-        Logger.setFactory(TestLoggerFactory.class);
-    }
     private static final Logger LOG = Logger.getInstance(AldorJpsTestCase.class);
 
     private File myProjectDir = null;
@@ -97,7 +83,7 @@ public abstract class AldorJpsTestCase extends AssumptionAware.UsefulTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        LOG.setLevel(DEBUG);
+        LOG.setLevel(LogLevel.DEBUG);
         myModel = JpsElementFactory.getInstance().createModel();
         myProject = myModel.getProject();
         myDataStorageRoot = FileUtil.createTempDirectory("compile-server-" + getProjectName(), null);
@@ -120,7 +106,8 @@ public abstract class AldorJpsTestCase extends AssumptionAware.UsefulTestCase {
             PathRelativizerService relativizer = new PathRelativizerService(myModel.getProject());
             ProjectStamps timestamps = new ProjectStamps(myDataStorageRoot, targetsState, relativizer);
             BuildDataManager dataManager = new BuildDataManager(dataPaths, targetsState, relativizer);
-            return new ProjectDescriptor(myModel, new BuildFSState(true), timestamps, dataManager, buildLoggingManager, index, targetsState,
+            return new ProjectDescriptor(myModel, new BuildFSState(true), timestamps, dataManager,
+                    buildLoggingManager, index,
                     targetIndex, buildRootIndex, ignoredFileIndex);
         } catch (IOException e) {
             //noinspection ProhibitedExceptionThrown
@@ -152,9 +139,7 @@ public abstract class AldorJpsTestCase extends AssumptionAware.UsefulTestCase {
     }
 
     JpsModule addAldorModule(String moduleName) {
-        AldorModuleState properties = AldorModuleState.newBuilder()
-                .relativeOutputDirectory("out/ao")
-                .build();
+        AldorModuleState properties = AldorModuleState.newBuilder().build();
         // AldorModuleExtensionProperties properties = new AldorModuleExtensionProperties("aldor-sdk", "out/ao",
         //                JpsAldorMakeDirectoryOption.Source, AldorModuleExtensionProperties.WithJava.Enabled, "java-sdk");
         //
@@ -168,8 +153,6 @@ public abstract class AldorJpsTestCase extends AssumptionAware.UsefulTestCase {
     }
 
     private JpsModule addLocalAldorModule(String moduleName, String outputDirectoryName) {
-        AldorFacetExtensionProperties data = new AldorFacetExtensionProperties("aldor-sdk", AldorFacetExtensionProperties.WithJava.Enabled, "java-sdk",
-                MakeConvention.Source, "", "");
         AldorModuleState properties = AldorModuleState.newBuilder().build();
         JpsSimpleElement<AldorModuleState> simpleElement = JpsElementFactory.getInstance().createSimpleElement(properties);
         JpsModule module = new JpsModuleImpl<>(JpsAldorModuleType.INSTANCE, moduleName, simpleElement);
@@ -252,10 +235,11 @@ public abstract class AldorJpsTestCase extends AssumptionAware.UsefulTestCase {
         return FileUtil.toSystemIndependentName(dir.getAbsolutePath());
     }
 
-    public String createFile(String relativePath, final String text) {
+    public String createFile(String relativePath, String text) {
         try {
             File file = fileForProjectPath(relativePath);
-            FileUtil.writeToFile(file, text);
+            var subtext = text.replace("--TAB--> ", "\t");
+            FileUtil.writeToFile(file, subtext);
             return FileUtil.toSystemIndependentName(file.getAbsolutePath());
         }
         catch (IOException e) {
@@ -340,7 +324,7 @@ public abstract class AldorJpsTestCase extends AssumptionAware.UsefulTestCase {
 
             // This is wrong for a local aldor git clone
             module.getContainer().setChild(JpsAldorFacetExtension.ROLE,
-                    new JpsAldorFacetExtension(AldorFacetExtensionProperties.builder().build()));
+                    new JpsAldorFacetExtension(AldorFacetProperties.newBuilder().build()));
 
             return module;
         }
@@ -370,9 +354,10 @@ public abstract class AldorJpsTestCase extends AssumptionAware.UsefulTestCase {
                                                           elementFactory.createSdkReference("Local",
                                                                                     JpsAldorModelSerializerExtension.JpsAldorSdkType.LOCAL));
             module.getContainer().setChild(JpsAldorFacetExtension.ROLE,
-                    new JpsAldorFacetExtension(AldorFacetExtensionProperties.builder()
-                            .setSdkName("Local")
-                            .setRelativeOutputDirectory("out/ao")
+                    new JpsAldorFacetExtension(AldorFacetProperties.newBuilder()
+                            .makeConvention(MakeConvention.Source)
+                            .sdkName("Local")
+                            .relativeOutputDirectory("out/ao")
                             .build()));
 
             return module;

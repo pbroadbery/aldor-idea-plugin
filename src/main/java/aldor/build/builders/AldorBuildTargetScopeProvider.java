@@ -1,38 +1,61 @@
 package aldor.build.builders;
 
-import aldor.build.facet.SpadFacet;
-import aldor.build.facet.aldor.AldorFacet;
-import aldor.build.facet.aldor.AldorFacetType;
-import aldor.build.module.AldorModuleType;
+import aldor.build.module.AldorModuleFacade;
 import aldor.builder.AldorTargetIds;
-import aldor.builder.jps.SpadFacetProperties;
-import aldor.builder.jps.module.AldorModuleFacade;
+import aldor.builder.jps.AldorSourceRootType;
 import aldor.file.AldorFileType;
-import aldor.file.SpadFileType;
 import com.intellij.compiler.impl.BuildTargetScopeProvider;
 import com.intellij.openapi.compiler.CompileScope;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.roots.ProjectFileIndex;
+import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.jps.api.CmdlineRemoteProto.Message.ControllerMessage.ParametersMessage.TargetTypeBuildScope;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static aldor.builder.AldorBuildConstants.ALDOR_FILE_TARGET;
 import static aldor.builder.AldorBuildConstants.ALDOR_JAR_TARGET;
+import static aldor.builder.AldorBuildConstants.PHONY_ALDOR_FILE_TARGET;
 
 /**
  * Maps a change list into a bunch of stuff to do for the compiler
  */
 public class AldorBuildTargetScopeProvider extends BuildTargetScopeProvider {
     private static final Logger LOG = Logger.getInstance(AldorBuildTargetScopeProvider.class);
+
+    public static List<TargetTypeBuildScope> scopeForOneFile(Project project, VirtualFile file) {
+        var projectFileIndex = ProjectFileIndex.getInstance(project);
+        final Collection<Pair<String, String>> targetIds = new ArrayList<>();
+
+        Module module = ProjectFileIndex.getInstance(project).getModuleForFile(file);
+        Optional<AldorModuleFacade> facade = AldorModuleFacade.forModule(module);
+        if (facade.isEmpty()) {
+            return Collections.emptyList();
+        }
+        collectIds(targetIds, projectFileIndex, file);
+
+        var ids = reformatIds(true, targetIds);
+        if (facade.get().isConfigured()) {
+            ids.add(TargetTypeBuildScope.newBuilder()
+                    .setForceBuild(false)
+                    .setTypeId("Script")
+                    .setAllTargets(true)
+                    .build());
+        }
+        return ids;
+    }
 
     @NotNull
     @Override
@@ -46,44 +69,117 @@ public class AldorBuildTargetScopeProvider extends BuildTargetScopeProvider {
         LOG.info("get build targets - files: " + Arrays.asList(baseScope.getFiles(AldorFileType.INSTANCE, true)));
 
         // produce a list of target ids
-        final Collection<String> targetIds = new ArrayList<>();
-        VirtualFile[] files = baseScope.getFiles(AldorFileType.INSTANCE, false); // TODO: Account for 'excluded'
-        for (VirtualFile file: files) {
-            targetIds.add(AldorTargetIds.aldorFileTargetId(file.getPath()));
-        }
+        final Collection<Pair<String, String>> targetIds = new ArrayList<>();
+        VirtualFile[] files = baseScope.getFiles(AldorFileType.INSTANCE, true); // TODO: Account for 'excluded'
 
         List<TargetTypeBuildScope> targetTypeBuildScopes = new ArrayList<>();
-
-        if (!targetIds.isEmpty()) {
-            TargetTypeBuildScope req = TargetTypeBuildScope.newBuilder()
-                    .setTypeId(ALDOR_FILE_TARGET)
-                    .setForceBuild(forceBuild)
-                    .addAllTargetId(targetIds)
-                    .build();
-            targetTypeBuildScopes.add(req);
+        var projectFileIndex = ProjectFileIndex.getInstance(project);
+        if (files.length == 0) {
+            return Collections.emptyList();
         }
 
-        Arrays.stream(baseScope.getAffectedModules())
-                .filter(AldorModuleType.instance()::is)
-                .filter(module -> shouldCreateJarFile(module))
-                .map(module -> ModuleRootManager.getInstance(module).getSourceRoots())
-                .flatMap(Arrays::stream)
-                .peek(vf -> LOG.info("Found source root: " + vf.getCanonicalPath()))
-                .map(root -> (TargetTypeBuildScope) TargetTypeBuildScope.newBuilder()
-                        .setTypeId(ALDOR_JAR_TARGET)
+        for (VirtualFile file: files) {
+            collectIds(targetIds, projectFileIndex, file);
+        }
+
+        targetTypeBuildScopes.addAll(reformatIds(forceBuild, targetIds));
+        boolean foundConfigured = false;
+        for (Module module: baseScope.getAffectedModules()) {
+            Optional<AldorModuleFacade> facadeMaybe = AldorModuleFacade.forModule(module);
+            if (facadeMaybe.map(x -> x.isConfigured()).orElse(false)) {
+                foundConfigured = true;
+            }
+        }
+        for (Module module : baseScope.getAffectedModules()) {
+            Optional<AldorModuleFacade> facadeMaybe = AldorModuleFacade.forModule(module);
+            if (facadeMaybe.isPresent()) {
+                AldorModuleFacade facade = facadeMaybe.get();
+                if (!facade.isConfigured()) {
+                    if (facade.hasJava()) {
+                        VirtualFile[] sourceRoots = ModuleRootManager.getInstance(module).getSourceRoots();
+                        for (VirtualFile vf : sourceRoots) {
+                            LOG.info("Found source root: " + vf.getCanonicalPath());
+                            TargetTypeBuildScope build = TargetTypeBuildScope.newBuilder()
+                                    .setTypeId(ALDOR_JAR_TARGET)
+                                    .setForceBuild(forceBuild)
+                                    .addTargetId(AldorTargetIds.aldorJarTargetId(vf.getPath()))
+                                    .build();
+                            targetTypeBuildScopes.add(build);
+                        }
+                    }
+                }
+            }
+        }
+
+        for (Module module : baseScope.getAffectedModules()) {
+            Optional<AldorModuleFacade> facadeMaybe = AldorModuleFacade.forModule(module).filter(x -> x.isConfigured());
+            if (facadeMaybe.isPresent()) {
+                AldorModuleFacade facade = facadeMaybe.get();
+                TargetTypeBuildScope build = TargetTypeBuildScope.newBuilder()
+                        .setTypeId(PHONY_ALDOR_FILE_TARGET)
                         .setForceBuild(forceBuild)
-                        .addTargetId(AldorTargetIds.aldorJarTargetId(root.getPath()))
-                        .build())
-                .forEach(targetTypeBuildScopes::add);
-
-        targetTypeBuildScopes.forEach(scope -> LOG.info("get build targets: --> " + scope.getTypeId() + " "+ scope.getTargetIdList()));
-
+                        .addTargetId(configuredPhonyTargetModuleId(module))
+                        .build();
+                targetTypeBuildScopes.add(build);
+            }
+        }
+        if (foundConfigured) {
+            TargetTypeBuildScope ttscope = TargetTypeBuildScope.newBuilder()
+                    .setForceBuild(forceBuild)
+                    .setTypeId("Script")
+                    .setAllTargets(true)
+                    .build();
+            targetTypeBuildScopes.add(ttscope);
+        }
         return targetTypeBuildScopes;
     }
 
-    @Nullable
-    private boolean shouldCreateJarFile(com.intellij.openapi.module.Module module) {
-        Optional<AldorFacet> facetMaybe = AldorFacetType.instance().facetIfPresent(module);
-        return facetMaybe.flatMap(x -> x.getProperties()).map(x -> x.buildJavaComponents()).orElse(false);
+    private static List<TargetTypeBuildScope> reformatIds(boolean forceBuild, Collection<Pair<String, String>> targetIds) {
+        List<TargetTypeBuildScope> targetTypeBuildScopes = new ArrayList<>();
+        for (String type: List.of(ALDOR_FILE_TARGET, PHONY_ALDOR_FILE_TARGET)) {
+            TargetTypeBuildScope req = TargetTypeBuildScope.newBuilder()
+                    .setTypeId(type)
+                    .setForceBuild(forceBuild)
+                    .addAllTargetId(targetIds.stream()
+                            .filter(x -> x.first.equals(type))
+                            .map(x -> x.second)
+                            .collect(Collectors.toList()))
+                    .build();
+
+            if (!req.getTargetIdList().isEmpty()) {
+                targetTypeBuildScopes.add(req);
+            }
+        }
+        return targetTypeBuildScopes;
+    }
+
+    private static void collectIds(Collection<Pair<String, String>> targetIds, ProjectFileIndex projectFileIndex, VirtualFile file) {
+        Module module = projectFileIndex.getModuleForFile(file);
+        Optional<AldorModuleFacade> facadeMaybe = AldorModuleFacade.forModule(module);
+        if (facadeMaybe.isPresent()) {
+            AldorModuleFacade facade = facadeMaybe.get();
+            if (facade.isConfigured()) {
+                configuredPhonyTargetId(module, file)
+                        .ifPresent(id -> targetIds.add(Pair.create(PHONY_ALDOR_FILE_TARGET, id)));
+            } else {
+                targetIds.add(Pair.create(ALDOR_FILE_TARGET, file.getCanonicalPath()));
+            }
+        }
+    }
+
+    private static Optional<String> configuredPhonyTargetId(Module module, VirtualFile file) {
+        var roots = ModuleRootManager.getInstance(module).getSourceRoots(AldorSourceRootType.INSTANCE);
+        if (roots.size() != 1) {
+            return Optional.empty();
+        }
+        else {
+            var theRoot = roots.get(0);
+            String relPath = FileUtil.getRelativePath(theRoot.toNioPath().toFile(), file.toNioPath().toFile());
+            return Optional.of(String.format("{%s}-{%s}", module.getName(), relPath));
+        }
+    }
+
+    private static String configuredPhonyTargetModuleId(Module module) {
+        return String.format("{%s}", module.getName());
     }
 }

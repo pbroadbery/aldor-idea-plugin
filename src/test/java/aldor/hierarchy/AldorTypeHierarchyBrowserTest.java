@@ -10,6 +10,7 @@ import aldor.test_util.LightPlatformJUnit4TestRule;
 import aldor.test_util.SdkProjectDescriptors;
 import aldor.util.Streams;
 import com.intellij.ide.hierarchy.HierarchyProvider;
+import com.intellij.ide.hierarchy.TypeHierarchyBrowserBase;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.progress.ProgressManager;
@@ -29,7 +30,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static aldor.hierarchy.AldorTypeHierarchyConstants.GROUPED_HIERARCHY_TYPE;
-import static com.intellij.ide.hierarchy.TypeHierarchyBrowserBase.SUPERTYPES_HIERARCHY_TYPE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -54,7 +54,7 @@ public class AldorTypeHierarchyBrowserTest {
 
         PsiElement elt = whole.findElementAt(0);
 
-        try (TestBrowser browser = new TestBrowser(ensureClosedRule, new AldorTypeHierarchyProvider(), elt, SUPERTYPES_HIERARCHY_TYPE)) {
+        try (TestBrowser browser = new TestBrowser(ensureClosedRule, new AldorTypeHierarchyProvider(), elt, TypeHierarchyBrowserBase.getSupertypesHierarchyType())) {
 
             browser.update();
             assertEquals(2, browser.hierarchy.getChildElements(browser.rootDescriptor()).length);
@@ -70,7 +70,7 @@ public class AldorTypeHierarchyBrowserTest {
 
         PsiElement elt = whole.findElementAt(text.indexOf("List"));
 
-        try (TestBrowser browser = new TestBrowser(ensureClosedRule, new AldorTypeHierarchyProvider(), elt, SUPERTYPES_HIERARCHY_TYPE)) {
+        try (TestBrowser browser = new TestBrowser(ensureClosedRule, new AldorTypeHierarchyProvider(), elt, TypeHierarchyBrowserBase.getSupertypesHierarchyType())) {
 
             browser.update();
             System.out.println("Root: " + browser.rootDescriptor());
@@ -87,7 +87,7 @@ public class AldorTypeHierarchyBrowserTest {
         HierarchyProvider provider = new AldorTypeHierarchyProvider();
         PsiElement elt = whole.findElementAt(text.indexOf("Ring"));
 
-        try (TestBrowser browser = new TestBrowser(ensureClosedRule, new AldorTypeHierarchyProvider(), elt, SUPERTYPES_HIERARCHY_TYPE)) {
+        try (TestBrowser browser = new TestBrowser(ensureClosedRule, new AldorTypeHierarchyProvider(), elt, TypeHierarchyBrowserBase.getSupertypesHierarchyType())) {
             browser.update();
             System.out.println("Root: " + browser.rootDescriptor());
             System.out.println("Children: " + browser.childElements());
@@ -128,7 +128,7 @@ public class AldorTypeHierarchyBrowserTest {
 
         AldorIdentifier theId = items.stream().findFirst().flatMap(AldorDefine::defineIdentifier).orElse(null);
 
-        try (TestBrowser browser = new TestBrowser(ensureClosedRule, new AldorTypeHierarchyProvider(), theId, SUPERTYPES_HIERARCHY_TYPE)) {
+        try (TestBrowser browser = new TestBrowser(ensureClosedRule, new AldorTypeHierarchyProvider(), theId, TypeHierarchyBrowserBase.getSupertypesHierarchyType())) {
             browser.update();
             System.out.println("Root: " + browser.rootDescriptor());
             System.out.println("Children: " + browser.childElements());
@@ -145,7 +145,7 @@ public class AldorTypeHierarchyBrowserTest {
         Collection<AldorDefine> items = AldorDefineTopLevelIndex.instance.get("EltableAggregate", codeTestFixture.getProject(), GlobalSearchScope.allScope(codeTestFixture.getProject()));
 
         AldorIdentifier theId = items.stream().findFirst().flatMap(AldorDefine::defineIdentifier).orElse(null);
-        try (TestBrowser browser = new TestBrowser(ensureClosedRule, new AldorTypeHierarchyProvider(), theId, SUPERTYPES_HIERARCHY_TYPE)) {
+        try (TestBrowser browser = new TestBrowser(ensureClosedRule, new AldorTypeHierarchyProvider(), theId, TypeHierarchyBrowserBase.getSupertypesHierarchyType())) {
            browser.update();
             System.out.println("Root: " + browser.rootDescriptor());
             List<NodeDescriptor<?>> childElements = browser.childElements();
@@ -161,7 +161,7 @@ public class AldorTypeHierarchyBrowserTest {
                 codeTestFixture.getProject(), GlobalSearchScope.allScope(codeTestFixture.getProject()));
 
         AldorIdentifier theId = items.stream().findFirst().flatMap(AldorDefine::defineIdentifier).orElse(null);
-        try (TestBrowser browser = new TestBrowser(ensureClosedRule, new AldorTypeHierarchyProvider(), theId, SUPERTYPES_HIERARCHY_TYPE)) {
+        try (TestBrowser browser = new TestBrowser(ensureClosedRule, new AldorTypeHierarchyProvider(), theId, TypeHierarchyBrowserBase.getSupertypesHierarchyType())) {
 
             browser.update();
 

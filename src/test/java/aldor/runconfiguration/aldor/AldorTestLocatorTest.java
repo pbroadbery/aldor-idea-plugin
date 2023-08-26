@@ -36,9 +36,6 @@ public class AldorTestLocatorTest  {
         String text = "Test: with blah == add { testFoo(): () == never}";
         PsiFile file = testFixture.addFileToProject("foo.as", text);
 
-        FileBasedIndex.getInstance().requestRebuild(StubUpdatingIndex.INDEX_ID);
-        FileBasedIndex.getInstance().ensureUpToDate(StubUpdatingIndex.INDEX_ID, testFixture.getProject(), null);
-
         //noinspection rawtypes
         List<Location> ll = locator.getLocation("java:test", "aldor.test.Test/testFoo", testFixture.getProject(), GlobalSearchScope.fileScope(file));
         System.out.println("Loc: " + ll);

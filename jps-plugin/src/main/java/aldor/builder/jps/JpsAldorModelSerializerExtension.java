@@ -1,8 +1,10 @@
 package aldor.builder.jps;
 
 import aldor.build.facet.aldor.AldorFacetConstants;
-import aldor.builder.jps.module.AldorFacetExtensionProperties;
+import aldor.builder.jps.module.AldorFacetProperties;
+import aldor.builder.jps.module.ConfigRootFacetProperties;
 import aldor.builder.jps.module.JpsAldorFacetExtension;
+import aldor.builder.jps.module.JpsConfiguredRootFacetExtension;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.xmlb.XmlSerializer;
 import org.jdom.Content;
@@ -25,7 +27,6 @@ import org.jetbrains.jps.model.serialization.module.JpsModulePropertiesSerialize
 import org.jetbrains.jps.model.serialization.module.JpsModuleSourceRootPropertiesSerializer;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,7 +45,7 @@ public class JpsAldorModelSerializerExtension extends JpsModelSerializerExtensio
     @NotNull
     @Override
     public List<? extends JpsModulePropertiesSerializer<?>> getModulePropertiesSerializers() {
-        return Collections.singletonList(new AldorModuleStateSerializer());
+        return List.of(new AldorModuleStateSerializer());
     }
 
     @Override
@@ -79,12 +80,15 @@ public class JpsAldorModelSerializerExtension extends JpsModelSerializerExtensio
     @NotNull
     @Override
     public List<? extends JpsFacetConfigurationSerializer<?>> getFacetConfigurationSerializers() {
-        return Collections.singletonList(new JpsAldorFacetConfigurationSerializer());
+        return List.of(
+                new JpsAldorFacetConfigurationSerializer(),
+                new JpsRootFacetConfigurationSerializer()
+                );
     }
 
     @Override
     public @NotNull List<? extends JpsModuleSourceRootPropertiesSerializer<?>> getModuleSourceRootPropertiesSerializers() {
-        return Collections.singletonList(new JpsAldorSourceRootSerializer());
+        return List.of(new JpsAldorSourceRootSerializer());
     }
 
     private static class AldorLocalSdkPropertiesSerializer extends JpsSdkPropertiesSerializer<JpsDummyElement>{
@@ -130,14 +134,27 @@ public class JpsAldorModelSerializerExtension extends JpsModelSerializerExtensio
 
     private static final class JpsAldorFacetConfigurationSerializer extends JpsFacetConfigurationSerializer<JpsAldorFacetExtension> {
         private JpsAldorFacetConfigurationSerializer() {
-            super(JpsAldorFacetExtension.ROLE, AldorFacetConstants.ID, AldorFacetConstants.NAME);
+            super(JpsAldorFacetExtension.ROLE, AldorFacetConstants.ALDOR_FACET_ID, AldorFacetConstants.ALDOR_FACET_NAME);
         }
 
         @Override
         protected JpsAldorFacetExtension loadExtension(@NotNull Element facetConfigElement, String name, JpsElement parent, JpsModule module) {
-            AldorFacetExtensionProperties props = XmlSerializer.deserialize(facetConfigElement, AldorFacetExtensionProperties.class);
+            AldorFacetProperties props = XmlSerializer.deserialize(facetConfigElement, AldorFacetProperties.class);
             LOG.info("Loaded facet extension " + props + " " + props.buildJavaComponents());
             return new JpsAldorFacetExtension(props);
+        }
+    }
+
+    private static final class JpsRootFacetConfigurationSerializer extends JpsFacetConfigurationSerializer<JpsConfiguredRootFacetExtension> {
+        private JpsRootFacetConfigurationSerializer() {
+            super(JpsConfiguredRootFacetExtension.ROLE, AldorFacetConstants.ROOT_FACET_ID, AldorFacetConstants.ROOT_FACET_NAME);
+        }
+
+        @Override
+        protected JpsConfiguredRootFacetExtension loadExtension(@NotNull Element facetConfigElement, String name, JpsElement parent, JpsModule module) {
+            ConfigRootFacetProperties props = XmlSerializer.deserialize(facetConfigElement, ConfigRootFacetProperties.class);
+            LOG.info("Loaded facet extension " + props + " ");
+            return new JpsConfiguredRootFacetExtension(props);
         }
     }
 

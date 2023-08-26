@@ -4,6 +4,7 @@ import aldor.psi.AldorIdentifier;
 import com.intellij.ide.hierarchy.HierarchyBrowser;
 import com.intellij.ide.hierarchy.HierarchyBrowserBaseEx;
 import com.intellij.ide.hierarchy.HierarchyProvider;
+import com.intellij.ide.hierarchy.TypeHierarchyBrowserBase;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.diagnostic.Logger;
@@ -15,8 +16,6 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import static com.intellij.ide.hierarchy.TypeHierarchyBrowserBase.SUPERTYPES_HIERARCHY_TYPE;
 
 public class AldorTypeHierarchyProvider implements HierarchyProvider {
     private static final Logger LOG = Logger.getInstance(AldorTypeHierarchyProvider.class);
@@ -57,6 +56,6 @@ public class AldorTypeHierarchyProvider implements HierarchyProvider {
 
     @Override
     public void browserActivated(@NotNull HierarchyBrowser hierarchyBrowser) {
-        ((HierarchyBrowserBaseEx) hierarchyBrowser).changeView(SUPERTYPES_HIERARCHY_TYPE, true);
+        ((HierarchyBrowserBaseEx) hierarchyBrowser).changeView(TypeHierarchyBrowserBase.getSupertypesHierarchyType(), true);
     }
 }

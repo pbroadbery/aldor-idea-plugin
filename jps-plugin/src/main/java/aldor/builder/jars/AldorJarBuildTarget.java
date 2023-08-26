@@ -81,7 +81,7 @@ public class AldorJarBuildTarget extends BuildTarget<AldorJarRootDescriptor> {
     @Override
     public AldorJarRootDescriptor findRootDescriptor(String rootId, BuildRootIndex rootIndex) {
         LOG.info("Find root descriptor: " + this + " " + rootId);
-        return null;
+        return rootIndex.getTargetRoots(this, null).get(0);
     }
 
     @NotNull

@@ -6,7 +6,7 @@ import org.junit.runners.model.Statement;
 
 import java.io.File;
 
-//@deprecated Use executable present rule
+//Use executable present rule
 @Deprecated
 public class DirectoryPresentRule implements PathBasedTestRule {
     private final String path;
@@ -17,7 +17,7 @@ public class DirectoryPresentRule implements PathBasedTestRule {
 
     @Override
     public Statement apply(Statement statement, Description description) {
-        Assume.assumeTrue(shouldRunTest());
+        Assume.assumeTrue("Expected directory: " + path, shouldRunTest());
         return statement;
     }
 

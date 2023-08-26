@@ -6,7 +6,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.util.Disposer;
 
-public final class AldorModuleSpadLibraryManagerImpl implements AldorModuleSpadLibraryManager, Disposable {
+public final class AldorModuleSpadLibraryManagerImpl implements AldorModuleSpadLibraryManager {
     private static final Logger LOG = Logger.getInstance(AldorModuleSpadLibraryManagerImpl.class);
 
     private final Module module;
@@ -16,12 +16,12 @@ public final class AldorModuleSpadLibraryManagerImpl implements AldorModuleSpadL
     }
     // This is a bit horrible - this class should be responsible for creating SpadLibraries for specific modules
     @Override
-    public void register(FricasSpadLibrary library) {
+    public void register(SpadLibrary library) {
         Disposer.register(this, library);
     }
 
     @Override
     public void dispose() {
-        LOG.info("Disposing stuff for module.");
+        LOG.info("Disposing stuff for module." + module.getName());
     }
 }
